@@ -1,0 +1,29 @@
+import { addRxPlugin, createRxDatabase } from "rxdb";
+import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+import { gameSchema } from "./schema/game.schema";
+
+export const initialize = async () => {
+  if (process.env.NODE_ENV === "development") {
+    console.log("Dev mode db baby!!");
+    await import("rxdb/plugins/dev-mode").then((module) =>
+      addRxPlugin(module.RxDBDevModePlugin)
+    );
+  }
+
+  const db = await createRxDatabase({
+    eventReduce: true,
+    ignoreDuplicate: false,
+    multiInstance: false,
+    name: "test_database",
+    password: "123", // TODO
+    storage: getRxStorageDexie(),
+  });
+
+  await db.addCollections({
+    games: {
+      schema: gameSchema,
+    },
+  });
+
+  return db;
+};

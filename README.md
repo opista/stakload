@@ -6,10 +6,6 @@ An empty Neutralinojs app, extend as you wish
 neu create myapp --template neutralinojs/neutralinojs-zero
 ```
 
-https://neutralino.js.org/docs/getting-started/using-frontend-libraries/#configuring-neutralinojs-project
-
-https://github.com/JustPilz/neu-react-ts-vite-template/tree/main
-
 https://rxdb.info/quickstart.html
 https://github.com/cvara/rxdb-hooks
 

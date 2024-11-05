@@ -1,26 +1,22 @@
 import { useEffect, useState } from "react";
 
-import { computer } from "@neutralinojs/lib";
+import { initialize } from "./database/initialize";
+import { Provider } from "rxdb-hooks";
+import { RxDatabase } from "rxdb";
 
 export function App() {
-  const [osInfo, setOsInfo] = useState<computer.OSInfo>();
+  const [db, setDb] = useState<RxDatabase>();
 
   useEffect(() => {
-    async function getOSInfo() {
-      const data = await computer.getOSInfo();
-      setOsInfo(data);
-    }
-    getOSInfo();
+    initialize().then(setDb);
   }, []);
 
   return (
-    <div>
-      <p>Neutralinojs + React + TS + Vite template</p>
-      <p>
-        {osInfo?.name} {osInfo?.version}
-      </p>
-      <p>binaryVersion: {window.NL_VERSION}</p>
-      <p>clientVersion: {window.NL_CVERSION}</p>
-    </div>
+    <Provider db={db}>
+      <div>
+        <p>binaryVersion: {window.NL_VERSION}</p>
+        <p>clientVersion: {window.NL_CVERSION}</p>
+      </div>
+    </Provider>
   );
 }
