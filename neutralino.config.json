@@ -1,0 +1,55 @@
+{
+  "applicationId": "com.opista.trulaunch",
+  "version": "1.0.2",
+  "defaultMode": "window",
+  "documentRoot": "/src/build/",
+  "url": "/",
+  "enableServer": true,
+  "enableNativeAPI": true,
+  "singlePageServe": true,
+  "tokenSecurity": "one-time",
+  "nativeAllowList": [
+    "app.*",
+    "computer.*",
+    "window.*"
+  ],
+  "logging": {
+    "enabled": true,
+    "writeToLogFile": true
+  },
+  "modes": {
+    "window": {
+      "title": "Trulaunch",
+      "width": 1024,
+      "height": 800,
+      "minWidth": 1024,
+      "minHeight": 800,
+      "fullScreen": false,
+      "alwaysOnTop": false,
+      "icon": "/public/assets/images/vite.png",
+      "enableInspector": false,
+      "borderless": false,
+      "maximize": true,
+      "hidden": false,
+      "resizable": true,
+      "exitProcessOnClose": false,
+      "useSavedState": false,
+      "center": true
+    }
+  },
+  "cli": {
+    "binaryName": "application",
+    "resourcesPath": "/src/build/",
+    "extensionsPath": "/extensions/",
+    "binaryVersion": "5.4.0",
+    "clientVersion": "5.4.0",
+    "frontendLibrary": {
+      "patchFile": "/src/index.html",
+      "devUrl": "http://localhost:3000",
+      "projectPath": "/src/",
+      "initCommand": "npm install",
+      "devCommand": "npm run vite-dev",
+      "buildCommand": "npm run vite-build"
+    }
+  }
+}
