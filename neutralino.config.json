@@ -4,12 +4,17 @@
   "defaultMode": "window",
   "documentRoot": "/src/build/",
   "url": "/",
+  "enableExtensions": true,
   "enableServer": true,
   "enableNativeAPI": true,
   "singlePageServe": true,
   "tokenSecurity": "one-time",
   "nativeAllowList": [
-    "app.*"
+    "app.*",
+    "events.*",
+    "extensions.*",
+    "os.*",
+    "process.*"
   ],
   "logging": {
     "enabled": true,

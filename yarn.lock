@@ -2378,6 +2378,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-to-curl@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "fetch-to-curl@npm:0.6.0"
+  checksum: 10c0/1fc21e8055de1a5d08e79f270b899d631c9fa3df628b23455017127d4806b648cd5f7ed654217f031a48b4eab4c0d4a1a8cdad2240aaefd8a2331ccaf1ba0876
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
@@ -4203,6 +4210,7 @@ __metadata:
     eslint: "npm:^8.56.0"
     eslint-plugin-react-hooks: "npm:^4.6.2"
     eslint-plugin-react-refresh: "npm:^0.4.12"
+    fetch-to-curl: "npm:^0.6.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     rxdb: "npm:^15.37.0"
