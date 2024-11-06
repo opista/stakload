@@ -8,6 +8,7 @@ import {
   ColorSchemeScript,
   createTheme,
   MantineProvider,
+  Modal,
 } from "@mantine/core";
 import DesktopView from "./views/desktop/DesktopView";
 import { useSettings } from "./hooks/use-settings";
@@ -17,6 +18,12 @@ const theme = createTheme({
     Button: Button.extend({
       defaultProps: {
         radius: "md",
+      },
+    }),
+    Modal: Modal.extend({
+      defaultProps: {
+        radius: "md",
+        size: "xl",
       },
     }),
     TextInput: Button.extend({
