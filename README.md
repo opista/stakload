@@ -28,6 +28,8 @@ https://github.com/marcio199226/ytd/tree/v2-wails
 
 - Get list of games - https://api.steampowered.com/IPlayerService/GetOwnedGames/v1/?key={API_KEY_HERE}&steamid=76561198021450658&include_appinfo=true&include_played_free_games=true
 
+- https://www.reddit.com/r/Steam/comments/132s6zz/why_has_steam_still_not_made_this_change_in_the/#lightbox
+
 ### Gettings game process path
 
 - How to identify if process is running? https://github.com/JosefNemec/Playnite/blob/fdb2a8652a34fc2ff08ec5a416f2cb50e85907e7/source/Playnite/Common/Extensions/ProcessExtensions.cs#L66
