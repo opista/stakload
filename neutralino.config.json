@@ -14,7 +14,8 @@
     "events.*",
     "extensions.*",
     "os.*",
-    "process.*"
+    "process.*",
+    "window.*"
   ],
   "logging": {
     "enabled": true,
@@ -32,11 +33,11 @@
       "icon": "/public/assets/images/vite.png",
       "enableInspector": false,
       "borderless": false,
-      "maximize": true,
+      "maximize": false,
       "hidden": false,
       "resizable": true,
       "exitProcessOnClose": false,
-      "useSavedState": false,
+      "useSavedState": true,
       "center": true
     }
   },

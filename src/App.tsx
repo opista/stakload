@@ -10,6 +10,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import DesktopView from "./views/desktop/DesktopView";
+import { curl } from "./util/curl";
 
 const theme = createTheme({
   components: {
@@ -35,6 +36,15 @@ export function App() {
   // useEffect(() => {
   // initialize().then(setDb);
   // }, []);
+
+  useEffect(() => {
+    curl("https://jsonplaceholder.typicode.com/todos/1", {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+      },
+    }).then(console.log);
+  });
 
   return (
     // <Provider db={db}>
