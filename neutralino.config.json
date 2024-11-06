@@ -15,6 +15,7 @@
     "extensions.*",
     "os.*",
     "process.*",
+    "storage.*",
     "window.*"
   ],
   "logging": {

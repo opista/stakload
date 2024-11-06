@@ -10,7 +10,7 @@ import {
   MantineProvider,
 } from "@mantine/core";
 import DesktopView from "./views/desktop/DesktopView";
-import { curl } from "./util/curl";
+import { useSettings } from "./hooks/use-settings";
 
 const theme = createTheme({
   components: {
@@ -32,6 +32,7 @@ const theme = createTheme({
 
 export function App() {
   // const [db, setDb] = useState<RxDatabase>();
+  const { settings, updateSetting } = useSettings();
 
   // useEffect(() => {
   // initialize().then(setDb);
@@ -44,11 +45,16 @@ export function App() {
       <MantineProvider defaultColorScheme="auto" theme={theme}>
         <DesktopView />
         <div>
+          settings: {JSON.stringify(settings, null, "\t")}
           <p className="text-3xl font-bold underline">
             binaryVersion: {window.NL_VERSION}
           </p>
           <p>clientVersion: {window.NL_CVERSION}</p>
         </div>
+
+        <button onClick={() => updateSetting("bar", Math.random())}>
+          update
+        </button>
       </MantineProvider>
     </>
     // </Provider>
