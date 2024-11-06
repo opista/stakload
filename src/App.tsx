@@ -37,15 +37,6 @@ export function App() {
   // initialize().then(setDb);
   // }, []);
 
-  useEffect(() => {
-    curl("https://jsonplaceholder.typicode.com/todos/1", {
-      method: "GET",
-      headers: {
-        accept: "application/json",
-      },
-    }).then(console.log);
-  });
-
   return (
     // <Provider db={db}>
     <>

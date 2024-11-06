@@ -51,9 +51,9 @@
       "patchFile": "/src/index.html",
       "devUrl": "http://localhost:3000",
       "projectPath": "/src/",
-      "initCommand": "npm install",
-      "devCommand": "npm run vite-dev",
-      "buildCommand": "npm run vite-build"
+      "initCommand": "yarn install",
+      "devCommand": "yarn vite-dev",
+      "buildCommand": "yarn vite-build"
     }
   }
 }
