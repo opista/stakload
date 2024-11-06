@@ -1,28 +1,33 @@
-import { rem, Button } from "@mantine/core";
+import { rem } from "@mantine/core";
 import {
   Spotlight as MantineSpotlight,
   SpotlightActionData,
-  spotlight,
 } from "@mantine/spotlight";
 import { IconSearch, IconSettings } from "@tabler/icons-react";
-
-const actions: SpotlightActionData[] = [
-  {
-    id: "settings",
-    label: "Settings",
-    description: "Update your settings",
-    onClick: () => console.log("Settings"),
-    leftSection: (
-      <IconSettings style={{ width: rem(24), height: rem(24) }} stroke={1.5} />
-    ),
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function Spotlight() {
+  const { t } = useTranslation();
+
+  const actions: SpotlightActionData[] = [
+    {
+      id: "settings",
+      label: t("settings"),
+      description: t("updateYourSettings"),
+      onClick: () => console.log("Settings was clicked"), // TODO
+      leftSection: (
+        <IconSettings
+          style={{ width: rem(24), height: rem(24) }}
+          stroke={1.5}
+        />
+      ),
+    },
+  ];
+
   return (
     <MantineSpotlight
       actions={actions}
-      nothingFound="Nothing found..."
+      nothingFound={t("noResultsFound")}
       highlightQuery
       searchProps={{
         leftSection: (
@@ -31,7 +36,7 @@ export default function Spotlight() {
             stroke={1.5}
           />
         ),
-        placeholder: "Search...",
+        placeholder: t("search"),
       }}
     />
   );

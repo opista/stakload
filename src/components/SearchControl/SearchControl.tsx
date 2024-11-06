@@ -4,7 +4,6 @@ import {
   BoxProps,
   ElementProps,
   Group,
-  Kbd,
   rem,
   Text,
   UnstyledButton,
@@ -19,6 +18,7 @@ export default function SearchControl({
   ...others
 }: SearchControlProps) {
   const key = window.NL_OS === "Darwin" ? "⌘" : "Ctrl";
+
   return (
     <UnstyledButton
       {...others}

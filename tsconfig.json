@@ -24,7 +24,8 @@
   },
   "include": [
     "src",
-    "vite-env.d.ts"
+    "vite-env.d.ts",
+    "i18next.d.ts"
   ],
   "references": [
     {

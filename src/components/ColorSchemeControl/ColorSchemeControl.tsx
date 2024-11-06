@@ -5,14 +5,17 @@ import {
   useComputedColorScheme,
   useMantineColorScheme,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 export default function ColorSchemeControl() {
+  const { t } = useTranslation();
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme("light", {
     getInitialValueInEffect: true,
   });
 
-  const nextMode = `${computedColorScheme === "dark" ? "Light" : "Dark"} mode`;
+  const nextMode =
+    computedColorScheme === "dark" ? t("lightMode") : t("darkMode");
 
   return (
     <Tooltip label={nextMode}>
@@ -23,7 +26,7 @@ export default function ColorSchemeControl() {
         }
         size="lg"
         radius="md"
-        aria-label="Toggle color scheme"
+        aria-label={t("toggleColorScheme")}
       >
         {computedColorScheme === "light" ? (
           <IconMoon style={{ width: "22px", height: "22px" }} stroke={1.5} />
