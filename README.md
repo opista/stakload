@@ -39,3 +39,7 @@ https://github.com/marcio199226/ytd/tree/v2-wails
 ### Getting game data
 
 - https://api-docs.igdb.com/#game
+
+## WORKING ON
+
+- games list

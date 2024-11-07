@@ -9,7 +9,7 @@ import {
   Modal,
   Select,
 } from "@mantine/core";
-import { DesktopView } from "./desktop/views/DesktopView";
+import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { useEffect, useState } from "react";
 
 const theme = createTheme({

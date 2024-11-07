@@ -22,6 +22,7 @@ export const curl = async <T extends any>(
   options?: RequestInit
 ): Promise<T> => {
   const command = fetchToCurl(url, options);
+
   const result = await os.execCommand(`${getCurlPath()}/${command} -k`);
 
   if (result?.exitCode !== 0) {

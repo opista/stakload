@@ -1,7 +1,7 @@
 import { ScrollArea } from "@mantine/core";
 import { IconLibrary, IconDeviceImac, IconUser } from "@tabler/icons-react";
 import classes from "./SettingsNavBar.module.css";
-import { LinksGroup } from "../../Navigation/NavBarLinksGroup/NavBarLinksGroup";
+import { LinksGroup } from "../../../../components/Navigation/NavBarLinksGroup/NavBarLinksGroup";
 
 const settingsMenuItems = [
   { label: "Interface", icon: IconDeviceImac, link: "/interface" },

@@ -1,10 +1,10 @@
-import { ActionIcon, Modal, Tooltip } from "@mantine/core";
+import { ActionIcon, Tooltip } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconSettings } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { SettingsModal } from "../SettingsModal/SettingsModal";
 
-export default function SettingsControl() {
+export const SettingsControl = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
 
@@ -25,4 +25,4 @@ export default function SettingsControl() {
       <SettingsModal onClose={close} opened={opened} />
     </>
   );
-}
+};

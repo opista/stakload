@@ -6,7 +6,7 @@ import {
 import { IconSearch, IconSettings } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
-export default function Spotlight() {
+export const Spotlight = () => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] = [
@@ -40,4 +40,4 @@ export default function Spotlight() {
       }}
     />
   );
-}
+};

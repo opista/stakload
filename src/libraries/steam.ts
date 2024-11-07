@@ -1,5 +1,5 @@
 import { buildQueryParams } from "../util/build-query-params";
-import { neutralinoCurl } from "../util/curl";
+import { curl } from "../util/curl";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
 
@@ -33,10 +33,18 @@ const steamApiRequest = async <T extends any>(
   const query = buildQueryParams({ key: apiKey, ...params });
 
   try {
-    return await neutralinoCurl<T>(`${STEAM_API_BASE_URL}/${path}${query}`);
+    const response = await curl<string>(
+      `${STEAM_API_BASE_URL}/${path}${query}`,
+      {
+        method: "GET",
+        headers: { accept: "application/json" },
+      }
+    );
+
+    return JSON.parse(response);
   } catch (err) {
     const message = "Request to Steam API failed";
-    console.error(message, { path, params });
+    console.error(message, { err, path, params });
     throw new Error(message);
   }
 };

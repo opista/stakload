@@ -14,10 +14,7 @@ import { useTranslation } from "react-i18next";
 
 interface SearchControlProps extends BoxProps, ElementProps<"button"> {}
 
-export default function SearchControl({
-  className,
-  ...others
-}: SearchControlProps) {
+export const SearchControl = ({ className, ...others }: SearchControlProps) => {
   const { t } = useTranslation();
   const key = window.NL_OS === "Darwin" ? "⌘" : "Ctrl";
 
@@ -38,4 +35,4 @@ export default function SearchControl({
       </Group>
     </UnstyledButton>
   );
-}
+};
