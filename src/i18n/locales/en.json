@@ -3,7 +3,10 @@
   "settings": "Settings",
   "noResultsFound": "No results found",
   "updateYourSettings": "Update your settings",
-  "toggleColorScheme": "Toggle color scheme",
-  "lightMode": "Light mode",
-  "darkMode": "Dark mode"
+  "theme": {
+    "desktopColorScheme": "Desktop color scheme",
+    "dark": "Dark",
+    "light": "Light",
+    "system": "System"
+  }
 }

@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { initialize } from "./database/initialize";
 import { Provider } from "rxdb-hooks";
 import { RxDatabase } from "rxdb";
@@ -9,9 +7,10 @@ import {
   createTheme,
   MantineProvider,
   Modal,
+  Select,
 } from "@mantine/core";
-import DesktopView from "./views/desktop/DesktopView";
-import { useSettings } from "./hooks/use-settings";
+import { DesktopView } from "./desktop/views/DesktopView";
+import { useEffect, useState } from "react";
 
 const theme = createTheme({
   components: {
@@ -26,6 +25,11 @@ const theme = createTheme({
         size: "xl",
       },
     }),
+    Select: Select.extend({
+      defaultProps: {
+        radius: "md",
+      },
+    }),
     TextInput: Button.extend({
       defaultProps: {
         radius: "md",
@@ -34,36 +38,21 @@ const theme = createTheme({
   },
   primaryColor: "orange",
   respectReducedMotion: true,
-  /** Your theme override here */
 });
 
 export function App() {
-  // const [db, setDb] = useState<RxDatabase>();
-  const { settings, updateSetting } = useSettings();
+  const [db, setDb] = useState<RxDatabase>();
 
-  // useEffect(() => {
-  // initialize().then(setDb);
-  // }, []);
+  useEffect(() => {
+    initialize().then(setDb);
+  }, []);
 
   return (
-    // <Provider db={db}>
-    <>
+    <Provider db={db}>
       <ColorSchemeScript defaultColorScheme="auto" />
       <MantineProvider defaultColorScheme="auto" theme={theme}>
         <DesktopView />
-        <div>
-          settings: {JSON.stringify(settings, null, "\t")}
-          <p className="text-3xl font-bold underline">
-            binaryVersion: {window.NL_VERSION}
-          </p>
-          <p>clientVersion: {window.NL_CVERSION}</p>
-        </div>
-
-        <button onClick={() => updateSetting("bar", Math.random())}>
-          update
-        </button>
       </MantineProvider>
-    </>
-    // </Provider>
+    </Provider>
   );
 }

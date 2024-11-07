@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import classes from "./SearchControl.module.css";
 import { spotlight } from "@mantine/spotlight";
+import { useTranslation } from "react-i18next";
 
 interface SearchControlProps extends BoxProps, ElementProps<"button"> {}
 
@@ -17,6 +18,7 @@ export default function SearchControl({
   className,
   ...others
 }: SearchControlProps) {
+  const { t } = useTranslation();
   const key = window.NL_OS === "Darwin" ? "⌘" : "Ctrl";
 
   return (
@@ -27,8 +29,8 @@ export default function SearchControl({
     >
       <Group gap="xs">
         <IconSearch style={{ width: rem(15), height: rem(15) }} stroke={1.5} />
-        <Text fz="sm" c="dimmed" pr={80}>
-          Search
+        <Text className={classes.text} fz="sm" c="dimmed" pr={80}>
+          {t("search")}
         </Text>
         <Text fw={700} className={classes.shortcut}>
           {key} + K
