@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
 import path from "node:path";
 import react from "@vitejs/plugin-react-swc";
+import autoprefixer from "autoprefixer";
 
 const _dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -55,6 +56,15 @@ const neutralino = (): Plugin => {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), neutralino()],
+  css: {
+    postcss: {
+      plugins: [
+        autoprefixer({
+          remove: true,
+        }), // add options if needed
+      ],
+    },
+  },
   server: {
     port: 3000,
     strictPort: true,

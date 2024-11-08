@@ -16,7 +16,6 @@ interface SearchControlProps extends BoxProps, ElementProps<"button"> {}
 
 export const SearchControl = ({ className, ...others }: SearchControlProps) => {
   const { t } = useTranslation();
-  const key = window.NL_OS === "Darwin" ? "⌘" : "Ctrl";
 
   return (
     <UnstyledButton
@@ -30,7 +29,7 @@ export const SearchControl = ({ className, ...others }: SearchControlProps) => {
           {t("search")}
         </Text>
         <Text fw={700} className={classes.shortcut}>
-          {key} + K
+          Ctrl + K
         </Text>
       </Group>
     </UnstyledButton>

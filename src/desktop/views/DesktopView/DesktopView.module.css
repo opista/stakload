@@ -1,0 +1,19 @@
+.allotment {
+  position: fixed !important;
+  top: var(--app-shell-header-height);
+  bottom: 0;
+  height: calc(100% - var(--app-shell-header-height));
+}
+
+.navbar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border-inline-end: 1px solid var(--app-shell-border-color);
+}
+
+.main {
+  flex: 1;
+  width: 100%;
+  min-height: 100%;
+}

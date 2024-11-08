@@ -9,20 +9,7 @@ import { useTranslation } from "react-i18next";
 export const Spotlight = () => {
   const { t } = useTranslation();
 
-  const actions: SpotlightActionData[] = [
-    {
-      id: "settings",
-      label: t("settings"),
-      description: t("updateYourSettings"),
-      onClick: () => console.log("Settings was clicked"), // TODO
-      leftSection: (
-        <IconSettings
-          style={{ width: rem(24), height: rem(24) }}
-          stroke={1.5}
-        />
-      ),
-    },
-  ];
+  const actions: SpotlightActionData[] = [];
 
   return (
     <MantineSpotlight

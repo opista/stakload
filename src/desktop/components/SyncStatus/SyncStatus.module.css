@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.loader {
+  margin-right: var(--mantine-spacing-sm);
+}

@@ -2,11 +2,5 @@
   "search": "Search",
   "settings": "Settings",
   "noResultsFound": "No results found",
-  "updateYourSettings": "Update your settings",
-  "theme": {
-    "desktopColorScheme": "Desktop color scheme",
-    "dark": "Dark",
-    "light": "Light",
-    "system": "System"
-  }
+  "updateYourSettings": "Update your settings"
 }

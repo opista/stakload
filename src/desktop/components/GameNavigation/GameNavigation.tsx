@@ -1,27 +1,41 @@
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { GameStoreModel } from "../../../database/schema/game.schema";
-import classes from "./GameNavigation.module.css";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+
 type GameNavigationProps = {
   games: GameStoreModel[];
 };
 
 export const GameNavigation = ({ games }: GameNavigationProps) => {
-  return games.map((game) => (
-    <Button
-      classNames={{
-        root: "my-root-class",
-        label: "my-label-class",
-        inner: classes.inner,
-      }}
-      className={classes.button}
-      key={game._id}
-      justify="flex-start"
-      fullWidth
-      variant="subtle"
-      color="gray"
-      radius="md"
-    >
-      {game.name}
-    </Button>
-  ));
+  const Row = ({ index, style }: ListChildComponentProps<any>) => (
+    <div style={style}>
+      <Button
+        color="gray"
+        fullWidth
+        justify="flex-start"
+        key={games[index]._id}
+        radius="md"
+        title={games[index].name}
+        variant="subtle"
+      >
+        <Text truncate="end">{games[index].name}</Text>
+      </Button>
+    </div>
+  );
+
+  return (
+    <AutoSizer disableWidth>
+      {({ height }) => (
+        <List
+          height={height}
+          itemCount={games.length}
+          itemSize={36}
+          width="100%"
+        >
+          {Row}
+        </List>
+      )}
+    </AutoSizer>
+  );
 };

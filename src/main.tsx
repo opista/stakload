@@ -2,6 +2,8 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import "@mantine/notifications/styles.css";
 import "@mantine/spotlight/styles.css";
+import "allotment/dist/style.css";
+import "./styles/styles.css";
 
 import { app, events, init, window as neuWindow } from "@neutralinojs/lib";
 
@@ -12,7 +14,6 @@ import "./i18n";
 import { App } from "./App";
 
 init();
-
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

@@ -7,10 +7,14 @@ import {
   createTheme,
   MantineProvider,
   Modal,
+  Paper,
+  Progress,
+  ScrollArea,
   Select,
 } from "@mantine/core";
 import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { useEffect, useState } from "react";
+import classes from "./App.module.css";
 
 const theme = createTheme({
   components: {
@@ -23,6 +27,21 @@ const theme = createTheme({
       defaultProps: {
         radius: "md",
         size: "xl",
+      },
+    }),
+    Paper: Paper.extend({
+      defaultProps: {
+        radius: "md",
+      },
+    }),
+    Progress: Progress.extend({
+      defaultProps: {
+        radius: "md",
+      },
+    }),
+    ScrollArea: ScrollArea.extend({
+      classNames: {
+        viewport: classes.viewport,
       },
     }),
     Select: Select.extend({
@@ -49,8 +68,8 @@ export function App() {
 
   return (
     <Provider db={db}>
-      <ColorSchemeScript defaultColorScheme="auto" />
-      <MantineProvider defaultColorScheme="auto" theme={theme}>
+      <ColorSchemeScript defaultColorScheme="dark" />
+      <MantineProvider defaultColorScheme="dark" theme={theme}>
         <DesktopView />
       </MantineProvider>
     </Provider>
