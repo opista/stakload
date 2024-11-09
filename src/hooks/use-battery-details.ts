@@ -12,7 +12,7 @@ const getBatteryDetails = async (): Promise<BatteryDetails> => {
   // const result = await os.execCommand("WMIC PATH Win32_Battery Get EstimatedChargeRemaining")
   // console.log(result)
   return Promise.resolve({
-    isCharging: true,
+    isCharging: false,
     percentage: Math.ceil(Math.random() * 100),
   });
 };

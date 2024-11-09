@@ -38,7 +38,7 @@ export const BatteryIndicator = ({
   if (!percentage) return null;
 
   const Icon = BatteryIcon(isCharging, percentage);
-  const label = isCharging
+  const tooltipLabel = isCharging
     ? `${t("charging")} - ${percentage}%`
     : `${percentage}%`;
 
@@ -47,7 +47,9 @@ export const BatteryIndicator = ({
       {showPercentage && <Text size="sm">{percentage}%</Text>}
       <ConditionalWrapper
         condition={!showPercentage}
-        wrapper={(children) => <Tooltip label={label}>{children}</Tooltip>}
+        wrapper={(children) => (
+          <Tooltip label={tooltipLabel}>{children}</Tooltip>
+        )}
       >
         <Icon color={percentage <= 15 ? "red" : undefined} />
       </ConditionalWrapper>
