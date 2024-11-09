@@ -37,6 +37,12 @@ export function App() {
     initialize().then(setDb);
   }, []);
 
+  // TODO
+  /**
+   * - Trigger any syncs
+   * - Get device type (can device be charged??)
+   */
+
   return (
     <Provider db={db}>
       <ColorSchemeScript defaultColorScheme="dark" />

@@ -1,7 +1,7 @@
 import { Divider, Group } from "@mantine/core";
 import { SettingsControl } from "../Settings/SettingsControl/SettingsControl";
 import { SyncStatus } from "../SyncStatus/SyncStatus";
-import classes from "./Header.module.css";
+import { BatteryIndicator } from "../../../components/BatteryIndicator/BatteryIndicator";
 
 export const Header = () => {
   return (
@@ -10,11 +10,9 @@ export const Header = () => {
         TRULAUNCH
         <Group gap="md">
           <SyncStatus />
-          <Divider
-            className={classes.divider}
-            orientation="vertical"
-            size="xs"
-          />
+          <Divider orientation="vertical" size="xs" />
+          <BatteryIndicator showPercentage={false} />
+          <Divider orientation="vertical" size="xs" />
           <SettingsControl />
         </Group>
       </Group>

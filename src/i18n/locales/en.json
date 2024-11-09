@@ -4,5 +4,6 @@
   "noResultsFound": "No results found",
   "updateYourSettings": "Update your settings",
   "lastPlayed": "Last played {{date, datetime}}",
-  "neverPlayed": "Never played"
+  "neverPlayed": "Never played",
+  "charging": "Charging"
 }
