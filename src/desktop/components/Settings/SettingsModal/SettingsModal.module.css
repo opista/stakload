@@ -1,11 +1,3 @@
 .container {
   display: flex;
 }
-
-.tabs {
-  flex-grow: 1;
-}
-
-.tabPanel {
-  padding: var(--mantine-spacing-md);
-}

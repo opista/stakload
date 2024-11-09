@@ -1,0 +1,28 @@
+.tabs {
+  flex-grow: 1;
+}
+
+.tabPanel {
+  padding-top: var(--mantine-spacing-md);
+  padding-left: var(--mantine-spacing-md);
+}
+
+.tab {
+  z-index: 1;
+  color: inherit;
+
+  &[data-active] {
+    color: inherti;
+    border: none;
+
+    &:hover {
+      background: transparent;
+    }
+  }
+}
+
+.indicator {
+  background-color: var(--mantine-primary-color-filled);
+  border-top-left-radius: var(--mantine-radius-md);
+  border-bottom-left-radius: var(--mantine-radius-md);
+}

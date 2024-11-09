@@ -1,4 +1,4 @@
-import { Divider, Modal, rem, Tabs } from "@mantine/core";
+import { Divider, Modal } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import classes from "./SettingsModal.module.css";
 import {
@@ -7,10 +7,10 @@ import {
   IconLibrary,
   IconUser,
 } from "@tabler/icons-react";
-import { useState } from "react";
 import { InterfaceSettingsView } from "../InterfaceSettingsView/InterfaceSettingsView";
-import { AboutSettingsView } from "../AboutSettingsView/AboutSettingsView";
+import { AboutView } from "../AboutView/AboutView";
 import { ShortcutsView } from "../ShortcutsView/ShortcutsView";
+import { VerticalTabs } from "../../../../components/VerticalTabs/VerticalTabs";
 
 type SettingsModalProps = {
   onClose: () => void;
@@ -19,13 +19,36 @@ type SettingsModalProps = {
 
 export const SettingsModal = ({ onClose, opened }: SettingsModalProps) => {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<string | null>("interface");
 
-  const iconStyle = { width: rem(12), height: rem(12) };
+  const tabs = [
+    {
+      content: <InterfaceSettingsView />,
+      icon: IconDeviceImac,
+      key: "interface",
+      label: t("settingsNavigation.interface"),
+    },
+    {
+      content: <></>,
+      icon: IconLibrary,
+      key: "library",
+      label: t("settingsNavigation.library"),
+    },
+    {
+      content: <ShortcutsView />,
+      icon: IconCommand,
+      key: "shortcuts",
+      label: t("settingsNavigation.shortcuts"),
+    },
+    {
+      content: <AboutView />,
+      icon: IconUser,
+      key: "about",
+      label: t("settingsNavigation.about"),
+    },
+  ];
 
   return (
     <Modal
-      centered
       opened={opened}
       onClose={onClose}
       withCloseButton
@@ -39,54 +62,7 @@ export const SettingsModal = ({ onClose, opened }: SettingsModalProps) => {
     >
       <Divider></Divider>
       <div className={classes.container}>
-        <Tabs
-          activateTabWithKeyboard
-          className={classes.tabs}
-          keepMounted={false}
-          onChange={setActiveTab}
-          orientation="vertical"
-          value={activeTab}
-        >
-          <Tabs.List>
-            <Tabs.Tab
-              leftSection={<IconDeviceImac style={iconStyle} />}
-              value="interface"
-            >
-              {t("settingsNavigation.interface")}
-            </Tabs.Tab>
-            <Tabs.Tab
-              leftSection={<IconLibrary style={iconStyle} />}
-              value="library"
-            >
-              {t("settingsNavigation.library")}
-            </Tabs.Tab>
-            <Tabs.Tab
-              leftSection={<IconCommand style={iconStyle} />}
-              value="shortcuts"
-            >
-              {t("settingsNavigation.shortcuts")}
-            </Tabs.Tab>
-            <Tabs.Tab
-              leftSection={<IconUser style={iconStyle} />}
-              value="about"
-            >
-              {t("settingsNavigation.about")}
-            </Tabs.Tab>
-          </Tabs.List>
-
-          <Tabs.Panel className={classes.tabPanel} value="interface">
-            <InterfaceSettingsView />
-          </Tabs.Panel>
-          <Tabs.Panel className={classes.tabPanel} value="library">
-            Messages tab content
-          </Tabs.Panel>
-          <Tabs.Panel className={classes.tabPanel} value="shortcuts">
-            <ShortcutsView />
-          </Tabs.Panel>
-          <Tabs.Panel className={classes.tabPanel} value="about">
-            <AboutSettingsView />
-          </Tabs.Panel>
-        </Tabs>
+        <VerticalTabs tabs={tabs} defaultTab={tabs[0].key} />
       </div>
     </Modal>
   );

@@ -3,7 +3,7 @@ import { os } from "@neutralinojs/lib";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { homepage, version } from "../../../../../package.json";
 
-export const AboutSettingsView = () => {
+export const AboutView = () => {
   return (
     <div>
       <Text>
