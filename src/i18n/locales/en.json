@@ -2,5 +2,7 @@
   "search": "Search",
   "settings": "Settings",
   "noResultsFound": "No results found",
-  "updateYourSettings": "Update your settings"
+  "updateYourSettings": "Update your settings",
+  "lastPlayed": "Last played {{date, datetime}}",
+  "neverPlayed": "Never played"
 }
