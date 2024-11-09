@@ -1,10 +1,25 @@
 {
+  "action": "Action",
+  "charging": "Charging",
   "search": "Search",
   "settings": "Settings",
-  "noResultsFound": "No results found",
-  "updateYourSettings": "Update your settings",
-  "lastPlayed": "Last played {{date, datetime}}",
-  "neverPlayed": "Never played",
-  "charging": "Charging",
-  "shortcut": "Shortcut: {{value}}"
+  "shortcut": "Shortcut",
+  "shortcutWithValue": "Shortcut: {{value}}",
+  "gameDetails": {
+    "lastPlayed": "Last played {{date, datetime}}",
+    "neverPlayed": "Never played"
+  },
+  "settingsNavigation": {
+    "interface": "Interface",
+    "library": "Library",
+    "shortcuts": "Shortcuts",
+    "about": "About"
+  },
+  "shortcutLabel": {
+    "openSettings": "Open settings",
+    "searchLibrary": "Search library"
+  },
+  "spotlight": {
+    "noResultsFound": "No results found"
+  }
 }

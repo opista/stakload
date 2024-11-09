@@ -51,28 +51,32 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
     rowIndex: number;
   }) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
-    return data?.[index]._id;
+    const game = data[index];
+    return game ? game._id : index;
   };
 
   return (
-    <>
-      <AutoSizer>
-        {({ height, width }) => (
-          <Grid
-            columnCount={columnCount}
-            columnWidth={() => width / columnCount}
-            height={height}
-            itemKey={itemKey}
-            outerRef={containerRef}
-            rowCount={Math.ceil(games.length / columnCount)}
-            rowHeight={() => 200}
-            width={width}
-          >
-            {Cell}
-          </Grid>
-        )}
-      </AutoSizer>
-      <BackToTop container={containerRef.current} />
-    </>
+    games.length && (
+      <>
+        <AutoSizer>
+          {({ height, width }) => (
+            <Grid
+              columnCount={columnCount}
+              columnWidth={() => width / columnCount}
+              height={height}
+              itemData={games}
+              itemKey={itemKey}
+              outerRef={containerRef}
+              rowCount={Math.ceil(games.length / columnCount)}
+              rowHeight={() => 200}
+              width={width}
+            >
+              {Cell}
+            </Grid>
+          )}
+        </AutoSizer>
+        <BackToTop container={containerRef.current} />
+      </>
+    )
   );
 };

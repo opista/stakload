@@ -18,7 +18,7 @@
   font-size: 11px;
   line-height: 1;
   padding: 4px 7px;
-  border-radius: var(--ai-radius, var(--mantine-radius-default));
+  border-radius: var(--ai-radius, var(--mantine-radius-sm));
   border: 1px solid;
   font-weight: bold;
   color: var(--mantine-color-dark-0);

@@ -17,7 +17,7 @@ export const Spotlight = () => {
   const actions: SpotlightActionData[] = games.map(({ _id, name }) => ({
     id: _id,
     label: name,
-    description: t("lastPlayed", {
+    description: t("gameDetails.lastPlayed", {
       date: new Date(),
       defaultValue: "Never",
       formatParams: {
@@ -39,7 +39,7 @@ export const Spotlight = () => {
     <MantineSpotlight
       actions={actions}
       limit={7}
-      nothingFound={t("noResultsFound")}
+      nothingFound={t("spotlight.noResultsFound")}
       searchProps={{
         leftSection: (
           <IconSearch

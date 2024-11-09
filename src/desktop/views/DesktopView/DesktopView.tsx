@@ -8,12 +8,16 @@ import { GameStoreModel } from "../../../database/schema/game.schema";
 import { Allotment } from "allotment";
 import classes from "./DesktopView.module.css";
 import { GameListView } from "../GameListView/GameListView";
+import { useState } from "react";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");
   const query = collection?.find({ sort: [{ name: "asc" }] });
+  const [selectedGame, setSelectedGame] = useState<number | null>(null);
 
   const { result: games } = useRxQuery(query);
+
+  const onGameSelectionChange = (index: number) => setSelectedGame(index);
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
@@ -30,7 +34,11 @@ export const DesktopView = () => {
             </AppShell.Section>
 
             <AppShell.Section flex={1}>
-              <GameNavigation games={games} />
+              <GameNavigation
+                games={games}
+                onChange={onGameSelectionChange}
+                selectedGame={selectedGame}
+              />
             </AppShell.Section>
           </Box>
         </Allotment.Pane>

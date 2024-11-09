@@ -5,18 +5,25 @@ import { FixedSizeList as List, ListChildComponentProps } from "react-window";
 
 type GameNavigationProps = {
   games: GameStoreModel[];
+  onChange: (index: number) => void;
+  selectedGame: number | null;
 };
 
-export const GameNavigation = ({ games }: GameNavigationProps) => {
+export const GameNavigation = ({
+  games,
+  onChange,
+  selectedGame,
+}: GameNavigationProps) => {
   const Row = ({ index, style }: ListChildComponentProps<any>) => (
     <div style={style}>
       <Button
-        color="gray"
+        color={selectedGame === index ? "orange" : "gray"}
         fullWidth
         justify="flex-start"
         key={games[index]._id}
         title={games[index].name}
-        variant="subtle"
+        variant={selectedGame === index ? "filled" : "subtle"}
+        onClick={() => onChange(index)}
       >
         <Text truncate="end">{games[index].name}</Text>
       </Button>

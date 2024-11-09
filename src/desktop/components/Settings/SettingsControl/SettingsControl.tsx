@@ -16,7 +16,7 @@ export const SettingsControl = () => {
         variant="default"
         size="lg"
         aria-label={t("settings")}
-        title={t("shortcut", { value: "Q" })}
+        title={t("shortcutWithValue", { value: "Q" })}
         onClick={open}
       >
         <VisuallyHidden>{t("settings")}</VisuallyHidden>
