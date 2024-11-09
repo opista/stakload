@@ -15,7 +15,6 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
         fullWidth
         justify="flex-start"
         key={games[index]._id}
-        radius="md"
         title={games[index].name}
         variant="subtle"
       >

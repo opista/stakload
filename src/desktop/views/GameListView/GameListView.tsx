@@ -5,6 +5,8 @@ import {
 import AutoSizer from "react-virtualized-auto-sizer";
 import { GameStoreModel } from "../../../database/schema/game.schema";
 import { Box, Paper } from "@mantine/core";
+import { BackToTop } from "../../components/BackToTop/BackToTop";
+import { useRef } from "react";
 
 type GameListViewProps = {
   columnCount: number;
@@ -12,6 +14,8 @@ type GameListViewProps = {
 };
 
 export const GameListView = ({ columnCount, games }: GameListViewProps) => {
+  const containerRef = useRef<Element>(null);
+
   const Cell = ({
     columnIndex,
     rowIndex,
@@ -28,19 +32,23 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
   };
 
   return (
-    <AutoSizer>
-      {({ height, width }) => (
-        <Grid
-          columnCount={columnCount}
-          columnWidth={() => width / columnCount}
-          height={height}
-          rowCount={Math.ceil(games.length / columnCount)}
-          rowHeight={() => 200}
-          width={width}
-        >
-          {Cell}
-        </Grid>
-      )}
-    </AutoSizer>
+    <>
+      <AutoSizer>
+        {({ height, width }) => (
+          <Grid
+            columnCount={columnCount}
+            columnWidth={() => width / columnCount}
+            height={height}
+            outerRef={containerRef}
+            rowCount={Math.ceil(games.length / columnCount)}
+            rowHeight={() => 200}
+            width={width}
+          >
+            {Cell}
+          </Grid>
+        )}
+      </AutoSizer>
+      <BackToTop container={containerRef.current} />
+    </>
   );
 };
