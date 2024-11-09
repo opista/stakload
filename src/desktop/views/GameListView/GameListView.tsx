@@ -13,6 +13,12 @@ type GameListViewProps = {
   games: GameStoreModel[];
 };
 
+const getItemIndex = (
+  rowIndex: number,
+  columnIndex: number,
+  columnCount: number
+) => rowIndex * columnCount + columnIndex;
+
 export const GameListView = ({ columnCount, games }: GameListViewProps) => {
   const containerRef = useRef<Element>(null);
 
@@ -21,14 +27,31 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
     rowIndex,
     style,
   }: GridChildComponentProps<any>) => {
-    const index = rowIndex * columnIndex + columnIndex;
+    const index = getItemIndex(rowIndex, columnIndex, columnCount);
+    const game = games[index];
+
+    if (!game) return null;
+
     return (
       <Box p="xs" style={style}>
         <Paper shadow="sm" h="100%" withBorder>
-          {games[index].name}
+          {game.name}
         </Paper>
       </Box>
     );
+  };
+
+  const itemKey = ({
+    columnIndex,
+    data,
+    rowIndex,
+  }: {
+    columnIndex: number;
+    data: GameStoreModel[];
+    rowIndex: number;
+  }) => {
+    const index = getItemIndex(rowIndex, columnIndex, columnCount);
+    return data?.[index]._id;
   };
 
   return (
@@ -39,6 +62,7 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
             columnCount={columnCount}
             columnWidth={() => width / columnCount}
             height={height}
+            itemKey={itemKey}
             outerRef={containerRef}
             rowCount={Math.ceil(games.length / columnCount)}
             rowHeight={() => 200}
