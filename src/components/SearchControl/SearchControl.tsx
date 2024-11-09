@@ -25,9 +25,7 @@ export const SearchControl = ({ className, ...others }: SearchControlProps) => {
     >
       <Group gap="xs">
         <IconSearch style={{ width: rem(15), height: rem(15) }} stroke={1.5} />
-        <Text className={classes.text} fz="sm" c="dimmed" pr={80}>
-          {t("search")}
-        </Text>
+        <Text className={classes.text}>{t("search")}</Text>
         <Text fw={700} className={classes.shortcut}>
           Ctrl + K
         </Text>

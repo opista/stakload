@@ -12,8 +12,8 @@
   color: inherit;
 
   &[data-active] {
+    border-color: transparent;
     color: inherti;
-    border: none;
 
     &:hover {
       background: transparent;

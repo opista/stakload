@@ -1,4 +1,4 @@
-import { AppShell, Box, Divider } from "@mantine/core";
+import { ActionIcon, AppShell, Box, Divider } from "@mantine/core";
 import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
 import { Header } from "../../components/Header/Header";
@@ -9,6 +9,7 @@ import { Allotment } from "allotment";
 import classes from "./DesktopView.module.css";
 import { GameListView } from "../GameListView/GameListView";
 import { useState } from "react";
+import { IconAdjustments } from "@tabler/icons-react";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");
@@ -26,10 +27,18 @@ export const DesktopView = () => {
         <Header />
       </AppShell.Header>
       <Allotment className={classes.allotment} proportionalLayout={false}>
-        <Allotment.Pane minSize={260} maxSize={500} preferredSize={300}>
+        <Allotment.Pane minSize={240} maxSize={500} preferredSize={300}>
           <Box p="md" className={classes.navbar}>
             <AppShell.Section>
-              <SearchControl />
+              <Box className={classes.searchAndFilters}>
+                <SearchControl />
+                <ActionIcon size={34} ml={"xs"} variant="default">
+                  <IconAdjustments
+                    style={{ width: "70%", height: "70%" }}
+                    stroke={1.5}
+                  />
+                </ActionIcon>
+              </Box>
               <Divider my="md" />
             </AppShell.Section>
 

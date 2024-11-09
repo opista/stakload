@@ -17,3 +17,9 @@
   width: 100%;
   min-height: 100%;
 }
+
+.searchAndFilters {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
