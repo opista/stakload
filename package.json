@@ -1,8 +1,20 @@
 {
   "name": "trulaunch",
-  "license": "MIT",
   "version": "0.0.1",
+  "description": "A unified experience that aggregates all of your favourite game launchers",
+  "author": {
+    "name": "metacurb",
+    "email": "metacurb@opista.com",
+    "url": "http://opista.com/"
+  },
+  "homepage": "https://github.com/opista/trulaunch#readme",
+  "bugs": "https://github.com/opista/trulaunch/issues",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:opista/trulaunch.git"
+  },
   "scripts": {
     "build": "neu build",
     "dev": "neu run -- --window-enable-inspector",
@@ -54,7 +66,10 @@
     "vite": "^5.2.12"
   },
   "engines": {
-    "node": ">=18.20.3"
+    "node": ">=18.20.3",
+    "pnpm": "please-use-yarn",
+    "npm": "please-use-yarn",
+    "yarn": ">= 1.17.3"
   },
   "packageManager": "yarn@4.5.1"
 }
