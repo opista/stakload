@@ -37,10 +37,20 @@ export function App() {
     initialize().then(setDb);
   }, []);
 
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") {
+      const handleContextMenu = (event: MouseEvent) => event.preventDefault();
+      document.addEventListener("contextmenu", handleContextMenu);
+      return () =>
+        document.removeEventListener("contextmenu", handleContextMenu);
+    }
+  }, []);
+
   // TODO
   /**
    * - Trigger any syncs
    * - Get device type (can device be charged??)
+   * - Move initialisation work to somewhere else? (disabling context menus etc?)
    */
 
   return (
