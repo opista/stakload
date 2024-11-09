@@ -3,12 +3,13 @@ import { SettingsControl } from "../Settings/SettingsControl/SettingsControl";
 import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { BatteryIndicator } from "../../../components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "../../../components/Clock/Clock";
+import { Logo } from "../../../components/Logo/Logo";
 
 export const Header = () => {
   return (
     <Group h="100%" px="md">
       <Group justify="space-between" style={{ flex: 1 }}>
-        TRULAUNCH
+        <Logo />
         <Group gap="md">
           <Divider orientation="vertical" size="xs" />
           <SyncStatus />
