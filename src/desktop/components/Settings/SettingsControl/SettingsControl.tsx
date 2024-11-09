@@ -14,7 +14,6 @@ export const SettingsControl = () => {
         <ActionIcon
           variant="default"
           size="lg"
-          radius="md"
           aria-label={t("settings")}
           onClick={open}
         >

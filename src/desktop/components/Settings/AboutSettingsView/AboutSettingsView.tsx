@@ -8,7 +8,6 @@ export const AboutSettingsView = () => {
       <ActionIcon
         aria-label="Github repository"
         color="gray"
-        radius="md"
         size="xl"
         variant="white"
         onClick={() => os.open("https://github.com/opista/trulaunch")}
