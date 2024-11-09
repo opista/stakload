@@ -36,7 +36,7 @@ export const DesktopView = () => {
         </Allotment.Pane>
         <Allotment.Pane>
           <Box p="md" className={classes.main}>
-            <GameListView games={games} columnCount={4} />
+            <GameListView games={games} columnCount={5} />
           </Box>
         </Allotment.Pane>
       </Allotment>

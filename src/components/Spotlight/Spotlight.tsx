@@ -11,7 +11,7 @@ import { GameStoreModel } from "../../database/schema/game.schema";
 export const Spotlight = () => {
   const { t } = useTranslation();
   const { result: games } = useRxData<GameStoreModel>("games", (collection) =>
-    collection.find()
+    collection.find({ sort: [{ name: "asc" }] })
   );
 
   const actions: SpotlightActionData[] = games.map(({ _id, name }) => ({
