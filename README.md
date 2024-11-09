@@ -17,6 +17,7 @@ https://github.com/JosefNemec/Playnite/blob/master/source/PlayniteSDK/Database/I
 - Look at styling
 - Headless components
 - Database for games
+- Look at Fastmail UI!
 
 ## Notes
 
