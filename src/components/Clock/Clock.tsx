@@ -3,7 +3,6 @@ import { useTime } from "../../hooks/use-time";
 import classes from "./Clock.module.css";
 
 type ClockProps = {
-  format?: "12h" | "24h";
   showSeconds?: boolean;
 };
 

@@ -12,13 +12,7 @@ const createFormatter = (showSeconds: boolean) =>
 
 export const useTime = ({ showSeconds = true }: UseTimeOptions = {}) => {
   const [date, setDate] = useState<Date>(new Date());
-  const [timeFormatter, setTimeFormatter] = useState<Intl.DateTimeFormat>(
-    createFormatter(showSeconds)
-  );
-
-  useEffect(() => {
-    setTimeFormatter(createFormatter(showSeconds));
-  }, [showSeconds]);
+  const timeFormatter = createFormatter(showSeconds);
 
   const interval = useInterval(() => setDate(new Date()), 1000);
 
