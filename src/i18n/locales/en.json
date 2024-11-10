@@ -16,11 +16,11 @@
     "about": "About"
   },
   "generalSettings": {
-    "title": "General"
+    "title": "General",
+    "theme": "Theme"
   },
   "timeSettings": {
     "title": "Time",
-    "theme": "Theme",
     "displayTime": "Display time",
     "displaySeconds": "Display seconds"
   },

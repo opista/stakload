@@ -1,0 +1,12 @@
+.button {
+  background-color: transparent;
+  border: 2px solid transparent;
+
+  &.active {
+    border-color: var(--mantine-primary-color-contrast);
+  }
+}
+
+.swatch {
+  cursor: pointer;
+}

@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import classes from "./InterfaceSettingsView.module.css";
 import { useTimeSettings } from "../../../../hooks/use-time-settings";
 import { useState } from "react";
+import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 
 type FormattedCheckboxProps = {
   checked: boolean;
@@ -24,7 +25,11 @@ const FormattedCheckbox = ({
 }: FormattedCheckboxProps) => (
   <Checkbox
     checked={checked}
-    classNames={{ body: classes.checkboxBody, root: classes.checkbox }}
+    classNames={{
+      body: classes.checkboxBody,
+      labelWrapper: classes.checkboxLabelWrapper,
+      root: classes.checkbox,
+    }}
     label={label}
     labelPosition="left"
     onChange={(event) => onChange(event.currentTarget.checked)}
@@ -41,21 +46,7 @@ const GeneralSettings = () => {
       <Title className={classes.title} order={2} size="h3">
         {t("generalSettings.title")}
       </Title>
-      {color}
-      <ColorPicker
-        classNames={{}}
-        format="hex"
-        value={color}
-        onChange={setColor}
-        withPicker={false}
-        swatches={[
-          colors.red["8"],
-          colors.pink["8"],
-          colors.blue["8"],
-          colors.green["8"],
-          colors.orange["8"],
-        ]}
-      />
+      <ThemeSelector value={color} onChange={setColor} />
     </>
   );
 };

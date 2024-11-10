@@ -34,6 +34,7 @@
     "@neutralinojs/lib": "^5.4.0",
     "@tabler/icons-react": "^3.21.0",
     "allotment": "^1.20.2",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "fetch-to-curl": "patch:fetch-to-curl@npm%3A0.6.0#~/.yarn/patches/fetch-to-curl-npm-0.6.0-8d0b21d9ab.patch",
     "i18next": "^23.16.4",

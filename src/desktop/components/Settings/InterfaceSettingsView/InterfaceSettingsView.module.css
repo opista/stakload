@@ -7,8 +7,13 @@
   justify-content: space-between;
 }
 
+.checkboxLabelWrapper {
+  flex: 1;
+}
+
 .divider {
   margin-top: var(--mantine-spacing-sm);
+  margin-bottom: var(--mantine-spacing-sm);
 }
 
 .title {
