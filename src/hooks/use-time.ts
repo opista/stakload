@@ -2,20 +2,25 @@ import { useInterval } from "@mantine/hooks";
 import { useEffect, useState } from "react";
 
 type UseTimeOptions = {
-  intervalMs?: number;
   showSeconds?: boolean;
 };
 
-export const useTime = ({
-  intervalMs = 1000,
-  showSeconds = true,
-}: UseTimeOptions = {}) => {
-  const [date, setDate] = useState<Date>(new Date());
-  const timeFormatter = new Intl.DateTimeFormat(navigator.language, {
+const createFormatter = (showSeconds: boolean) =>
+  new Intl.DateTimeFormat(navigator.language, {
     timeStyle: showSeconds ? "medium" : "short",
   });
 
-  const interval = useInterval(() => setDate(new Date()), intervalMs);
+export const useTime = ({ showSeconds = true }: UseTimeOptions = {}) => {
+  const [date, setDate] = useState<Date>(new Date());
+  const [timeFormatter, setTimeFormatter] = useState<Intl.DateTimeFormat>(
+    createFormatter(showSeconds)
+  );
+
+  useEffect(() => {
+    setTimeFormatter(createFormatter(showSeconds));
+  }, [showSeconds]);
+
+  const interval = useInterval(() => setDate(new Date()), 1000);
 
   useEffect(() => {
     interval.start();

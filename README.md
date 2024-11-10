@@ -19,8 +19,6 @@ https://github.com/JosefNemec/Playnite/blob/master/source/PlayniteSDK/Database/I
 - Database for games
 - Look at Fastmail UI!
 - Check dependency graph
-- wire up settings to storage
-- Sort dynamic theme
 
 ## Notes
 

@@ -7,7 +7,8 @@ import { Logo } from "../../../components/Logo/Logo";
 import { useInterfaceSettingsStore } from "../../../store/interface-settings-store";
 
 export const Header = () => {
-  const { displayTime, displaySeconds } = useInterfaceSettingsStore();
+  const { displayBattery, displayBatteryPercent, displayTime, displaySeconds } =
+    useInterfaceSettingsStore();
 
   return (
     <Group h="100%" px="md">
@@ -23,7 +24,11 @@ export const Header = () => {
             </>
           )}
           <Divider orientation="vertical" size="xs" />
-          <BatteryIndicator showPercentage={false} />
+          {displayBattery && (
+            <>
+              <BatteryIndicator showPercentage={displayBatteryPercent} />
+            </>
+          )}
           <Divider orientation="vertical" size="xs" />
           <SettingsControl />
         </Group>

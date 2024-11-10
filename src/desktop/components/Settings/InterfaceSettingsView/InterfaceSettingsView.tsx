@@ -37,7 +37,7 @@ const GeneralSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("generalSettings.title")}
+        {t("interfaceSettings.general")}
       </Title>
       <ThemeSelector value={theme} onChange={setTheme} />
     </>
@@ -52,18 +52,47 @@ const TimeSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("timeSettings.title")}
+        {t("interfaceSettings.time")}
       </Title>
       <FormattedCheckbox
         checked={displayTime}
-        label={t("timeSettings.displayTime")}
+        label={t("interfaceSettings.displayTime")}
         onCheckboxChange={setDisplayTime}
       />
       <FormattedCheckbox
         checked={displaySeconds}
         disabled={!displayTime}
-        label={t("timeSettings.displaySeconds")}
+        label={t("interfaceSettings.displaySeconds")}
         onCheckboxChange={setDisplaySeconds}
+      />
+    </>
+  );
+};
+
+const BatterySettings = () => {
+  const {
+    displayBattery,
+    displayBatteryPercent,
+    setDisplayBattery,
+    setDisplayBatteryPercent,
+  } = useInterfaceSettingsStore();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Title className={classes.title} order={2} size="h3">
+        {t("interfaceSettings.battery")}
+      </Title>
+      <FormattedCheckbox
+        checked={displayBattery}
+        label={t("interfaceSettings.displayBattery")}
+        onCheckboxChange={setDisplayBattery}
+      />
+      <FormattedCheckbox
+        checked={displayBatteryPercent}
+        disabled={!displayBattery}
+        label={t("interfaceSettings.displayBatteryPercentage")}
+        onCheckboxChange={setDisplayBatteryPercent}
       />
     </>
   );
@@ -76,6 +105,7 @@ export const InterfaceSettingsView = () => {
       <Divider className={classes.divider} />
       <TimeSettings />
       <Divider className={classes.divider} />
+      <BatterySettings />
     </>
   );
 };

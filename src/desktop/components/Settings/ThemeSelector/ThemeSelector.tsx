@@ -25,7 +25,7 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
 
   return (
     <Flex align="center" justify="space-between">
-      <Text>{t("generalSettings.theme")}</Text>
+      <Text>{t("interfaceSettings.theme")}</Text>
       <Group gap={0}>
         {Object.entries(options).map(([color, hex]) => (
           <ColorSwatch

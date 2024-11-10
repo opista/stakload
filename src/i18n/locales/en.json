@@ -15,14 +15,15 @@
     "shortcuts": "Shortcuts",
     "about": "About"
   },
-  "generalSettings": {
-    "title": "General",
-    "theme": "Theme"
-  },
-  "timeSettings": {
-    "title": "Time",
+  "interfaceSettings": {
+    "general": "General",
+    "theme": "Theme",
+    "time": "Time",
     "displayTime": "Display time",
-    "displaySeconds": "Display seconds"
+    "displaySeconds": "Display seconds",
+    "battery": "Battery",
+    "displayBattery": "Display battery",
+    "displayBatteryPercentage": "Display battery percentage"
   },
   "shortcutLabel": {
     "openSettings": "Open settings",
