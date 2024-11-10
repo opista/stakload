@@ -4,10 +4,10 @@ import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { BatteryIndicator } from "../../../components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "../../../components/Clock/Clock";
 import { Logo } from "../../../components/Logo/Logo";
-import { useTimeSettings } from "../../../hooks/use-time-settings";
+import { useInterfaceSettingsStore } from "../../../store/interface-settings-store";
 
 export const Header = () => {
-  const { timeSettings } = useTimeSettings();
+  const { displayTime, displaySeconds } = useInterfaceSettingsStore();
 
   return (
     <Group h="100%" px="md">
@@ -16,10 +16,10 @@ export const Header = () => {
         <Group gap="md">
           <Divider orientation="vertical" size="xs" />
           <SyncStatus />
-          {timeSettings.displayTime && (
+          {displayTime && (
             <>
               <Divider orientation="vertical" size="xs" />
-              <Clock showSeconds={timeSettings.displaySeconds} />
+              <Clock showSeconds={displaySeconds} />
             </>
           )}
           <Divider orientation="vertical" size="xs" />

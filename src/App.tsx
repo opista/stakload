@@ -12,11 +12,12 @@ import {
 import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { useEffect, useState } from "react";
 import classes from "./App.module.css";
+import { useInterfaceSettingsStore } from "./store/interface-settings-store";
+import { storage } from "@neutralinojs/lib";
 
 export function App() {
   const [db, setDb] = useState<RxDatabase>();
-
-  const colors = ["orange", "blue", "pink", "green"];
+  const { theme: primaryColor } = useInterfaceSettingsStore();
 
   const theme = createTheme({
     defaultRadius: "md",
@@ -37,7 +38,7 @@ export function App() {
         },
       }),
     },
-    primaryColor: colors[Math.floor(Math.random() * colors.length)],
+    primaryColor,
     respectReducedMotion: true,
   });
 

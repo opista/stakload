@@ -1,29 +1,23 @@
-import {
-  Checkbox,
-  ColorPicker,
-  DEFAULT_THEME,
-  Divider,
-  Title,
-  useMantineTheme,
-} from "@mantine/core";
+import { Checkbox, CheckboxProps, Divider, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import classes from "./InterfaceSettingsView.module.css";
-import { useTimeSettings } from "../../../../hooks/use-time-settings";
-import { useState } from "react";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
+import { useInterfaceSettingsStore } from "../../../../store/interface-settings-store";
 
 type FormattedCheckboxProps = {
   checked: boolean;
   label: string;
-  onChange: (checked: boolean) => void;
+  onCheckboxChange: (checked: boolean) => void;
 };
 
 const FormattedCheckbox = ({
   checked,
   label,
-  onChange,
-}: FormattedCheckboxProps) => (
+  onCheckboxChange,
+  ...props
+}: FormattedCheckboxProps & CheckboxProps) => (
   <Checkbox
+    {...props}
     checked={checked}
     classNames={{
       body: classes.checkboxBody,
@@ -32,27 +26,27 @@ const FormattedCheckbox = ({
     }}
     label={label}
     labelPosition="left"
-    onChange={(event) => onChange(event.currentTarget.checked)}
+    onChange={(event) => onCheckboxChange(event.currentTarget.checked)}
   />
 );
 
 const GeneralSettings = () => {
+  const { theme, setTheme } = useInterfaceSettingsStore();
   const { t } = useTranslation();
-  const { colors } = useMantineTheme();
-  const [color, setColor] = useState(colors.orange["8"]);
 
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
         {t("generalSettings.title")}
       </Title>
-      <ThemeSelector value={color} onChange={setColor} />
+      <ThemeSelector value={theme} onChange={setTheme} />
     </>
   );
 };
 
 const TimeSettings = () => {
-  const { timeSettings, updateTimeSetting } = useTimeSettings();
+  const { displaySeconds, displayTime, setDisplaySeconds, setDisplayTime } =
+    useInterfaceSettingsStore();
   const { t } = useTranslation();
 
   return (
@@ -61,14 +55,15 @@ const TimeSettings = () => {
         {t("timeSettings.title")}
       </Title>
       <FormattedCheckbox
-        checked={timeSettings.displayTime}
+        checked={displayTime}
         label={t("timeSettings.displayTime")}
-        onChange={(checked) => updateTimeSetting("displayTime", checked)}
+        onCheckboxChange={setDisplayTime}
       />
       <FormattedCheckbox
-        checked={timeSettings.displaySeconds}
+        checked={displaySeconds}
+        disabled={!displayTime}
         label={t("timeSettings.displaySeconds")}
-        onChange={(checked) => updateTimeSetting("displaySeconds", checked)}
+        onCheckboxChange={setDisplaySeconds}
       />
     </>
   );

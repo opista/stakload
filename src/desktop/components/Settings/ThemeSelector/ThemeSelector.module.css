@@ -6,7 +6,3 @@
     border-color: var(--mantine-primary-color-contrast);
   }
 }
-
-.swatch {
-  cursor: pointer;
-}
