@@ -10,6 +10,7 @@ import classes from "./DesktopView.module.css";
 import { GameListView } from "../GameListView/GameListView";
 import { useState } from "react";
 import { IconAdjustments } from "@tabler/icons-react";
+import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");
@@ -32,12 +33,7 @@ export const DesktopView = () => {
             <AppShell.Section>
               <Box className={classes.searchAndFilters}>
                 <SearchControl />
-                <ActionIcon size={34} ml={"xs"} variant="default">
-                  <IconAdjustments
-                    style={{ width: "70%", height: "70%" }}
-                    stroke={1.5}
-                  />
-                </ActionIcon>
+                <GamesFilter />
               </Box>
               <Divider my="md" />
             </AppShell.Section>
@@ -53,7 +49,7 @@ export const DesktopView = () => {
         </Allotment.Pane>
         <Allotment.Pane>
           <Box p="md" className={classes.main}>
-            <GameListView games={games} columnCount={5} />
+            <GameListView games={games} columnCount={3} />
           </Box>
         </Allotment.Pane>
       </Allotment>
