@@ -17,7 +17,7 @@ export const GameNavigation = ({
   const Row = ({ index, style }: ListChildComponentProps<any>) => (
     <div style={style}>
       <Button
-        color={selectedGame === index ? "orange" : "gray"}
+        color={selectedGame === index ? undefined : "gray"}
         fullWidth
         justify="flex-start"
         key={games[index]._id}
