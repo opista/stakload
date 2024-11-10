@@ -1,4 +1,16 @@
 .checkbox {
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.checkboxBody {
   display: flex;
   justify-content: space-between;
+}
+
+.divider {
+  margin-top: var(--mantine-spacing-sm);
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-sm);
 }

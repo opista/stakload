@@ -2,6 +2,7 @@ import { initialize } from "./database/initialize";
 import { Provider } from "rxdb-hooks";
 import { RxDatabase } from "rxdb";
 import {
+  Checkbox,
   ColorSchemeScript,
   createTheme,
   MantineProvider,
@@ -12,26 +13,33 @@ import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { useEffect, useState } from "react";
 import classes from "./App.module.css";
 
-const theme = createTheme({
-  defaultRadius: "md",
-  components: {
-    Modal: Modal.extend({
-      defaultProps: {
-        size: "xl",
-      },
-    }),
-    ScrollArea: ScrollArea.extend({
-      classNames: {
-        viewport: classes.viewport,
-      },
-    }),
-  },
-  primaryColor: "orange",
-  respectReducedMotion: true,
-});
-
 export function App() {
   const [db, setDb] = useState<RxDatabase>();
+
+  const colors = ["orange", "blue", "pink", "green"];
+
+  const theme = createTheme({
+    defaultRadius: "md",
+    components: {
+      Checkbox: Checkbox.extend({
+        defaultProps: {
+          radius: "sm",
+        },
+      }),
+      Modal: Modal.extend({
+        defaultProps: {
+          size: "xl",
+        },
+      }),
+      ScrollArea: ScrollArea.extend({
+        classNames: {
+          viewport: classes.viewport,
+        },
+      }),
+    },
+    primaryColor: colors[Math.floor(Math.random() * colors.length)],
+    respectReducedMotion: true,
+  });
 
   useEffect(() => {
     initialize().then(setDb);

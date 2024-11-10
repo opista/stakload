@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { SettingsModal } from "../SettingsModal/SettingsModal";
 
 export const SettingsControl = () => {
-  const [opened, { open, close }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(true);
   const { t } = useTranslation();
 
   useHotkeys([["Q", open]]);

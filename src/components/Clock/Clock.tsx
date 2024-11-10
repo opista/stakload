@@ -7,11 +7,8 @@ type ClockProps = {
   showSeconds?: boolean;
 };
 
-export const Clock = ({
-  format = "24h",
-  showSeconds = true,
-}: ClockProps = {}) => {
-  const time = useTime({ format, showSeconds });
+export const Clock = ({ showSeconds = true }: ClockProps = {}) => {
+  const time = useTime({ showSeconds });
 
   return (
     <Box>

@@ -4,8 +4,11 @@ import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { BatteryIndicator } from "../../../components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "../../../components/Clock/Clock";
 import { Logo } from "../../../components/Logo/Logo";
+import { useTimeSettings } from "../../../hooks/use-time-settings";
 
 export const Header = () => {
+  const { timeSettings } = useTimeSettings();
+
   return (
     <Group h="100%" px="md">
       <Group justify="space-between" style={{ flex: 1 }}>
@@ -13,8 +16,12 @@ export const Header = () => {
         <Group gap="md">
           <Divider orientation="vertical" size="xs" />
           <SyncStatus />
-          <Divider orientation="vertical" size="xs" />
-          <Clock />
+          {timeSettings.displayTime && (
+            <>
+              <Divider orientation="vertical" size="xs" />
+              <Clock showSeconds={timeSettings.displaySeconds} />
+            </>
+          )}
           <Divider orientation="vertical" size="xs" />
           <BatteryIndicator showPercentage={false} />
           <Divider orientation="vertical" size="xs" />

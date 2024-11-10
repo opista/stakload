@@ -18,6 +18,7 @@ https://github.com/JosefNemec/Playnite/blob/master/source/PlayniteSDK/Database/I
 - Headless components
 - Database for games
 - Look at Fastmail UI!
+- Check dependency graph
 
 ## Notes
 

@@ -15,6 +15,15 @@
     "shortcuts": "Shortcuts",
     "about": "About"
   },
+  "generalSettings": {
+    "title": "General"
+  },
+  "timeSettings": {
+    "title": "Time",
+    "theme": "Theme",
+    "displayTime": "Display time",
+    "displaySeconds": "Display seconds"
+  },
   "shortcutLabel": {
     "openSettings": "Open settings",
     "searchLibrary": "Search library"
