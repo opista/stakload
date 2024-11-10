@@ -42,6 +42,10 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
         {tabs.map(({ icon: Icon, key, label }) => (
           <Tabs.Tab
             className={classes.tab}
+            classNames={{
+              tabLabel: classes.tabLabel,
+              tabSection: classes.tabSection,
+            }}
             key={key}
             leftSection={<Icon style={iconStyle} />}
             ref={setControlRef(key)}

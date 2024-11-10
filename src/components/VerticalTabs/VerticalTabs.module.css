@@ -21,6 +21,11 @@
   }
 }
 
+.tabLabel,
+.tabSection {
+  pointer-events: none;
+}
+
 .indicator {
   background-color: var(--mantine-primary-color-filled);
   border-top-left-radius: var(--mantine-radius-md);
