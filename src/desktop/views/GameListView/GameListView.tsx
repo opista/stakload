@@ -1,8 +1,5 @@
 import { Box, Paper } from "@mantine/core";
-import {
-  VariableSizeGrid as Grid,
-  GridChildComponentProps,
-} from "react-window";
+import { VariableSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
 import { BackToTop } from "../../components/BackToTop/BackToTop";
@@ -13,20 +10,13 @@ interface GameListViewProps {
   games: GameStoreModel[];
 }
 
-const getItemIndex = (
-  rowIndex: number,
-  columnIndex: number,
-  columnCount: number
-) => rowIndex * columnCount + columnIndex;
+const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
+  rowIndex * columnCount + columnIndex;
 
 export const GameListView = ({ columnCount, games }: GameListViewProps) => {
   const containerRef = useRef<Element>(null);
 
-  const Cell = ({
-    columnIndex,
-    rowIndex,
-    style,
-  }: GridChildComponentProps<unknown>) => {
+  const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps<unknown>) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
 
@@ -55,28 +45,27 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
     return game ? game._id : index;
   };
 
-  return (
-    games.length && (
-      <>
-        <AutoSizer>
-          {({ height, width }) => (
-            <Grid
-              columnCount={columnCount}
-              columnWidth={() => width / columnCount}
-              height={height}
-              itemData={games}
-              itemKey={itemKey}
-              outerRef={containerRef}
-              rowCount={Math.ceil(games.length / columnCount)}
-              rowHeight={() => 200}
-              width={width}
-            >
-              {Cell}
-            </Grid>
-          )}
-        </AutoSizer>
-        <BackToTop container={containerRef.current} />
-      </>
-    )
-  );
+  return games.length ? (
+    <>
+      <AutoSizer>
+        {({ height, width }) => (
+          <Grid
+            columnCount={columnCount}
+            columnWidth={() => width / columnCount}
+            height={height}
+            itemData={games}
+            itemKey={itemKey}
+            outerRef={containerRef}
+            rowCount={Math.ceil(games.length / columnCount)}
+            rowHeight={() => 200}
+            width={width}
+          >
+            {Cell}
+          </Grid>
+        )}
+      </AutoSizer>
+      <BackToTop container={containerRef.current} />
+    </>
+  ) : undefined;
+  // TODO - "NO games found" screen
 };

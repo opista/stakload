@@ -35,7 +35,7 @@ export const useBatteryDetails = (updateFrequencyMs = 60000) => {
     updateBatteryDetails();
     interval.start();
     return () => interval.stop();
-  }, [interval]);
+  }, []);
 
   return batteryDetails;
 };

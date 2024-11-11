@@ -11,12 +11,12 @@ export const useTime = ({ showSeconds = true }: UseTimeOptions = {}) => {
     timeStyle: showSeconds ? "medium" : "short",
   });
 
-  const interval = useInterval(() => setDate(new Date()), 1000);
+  const interval = useInterval(() => setDate(new Date()), showSeconds ? 1000 : 60000);
 
   useEffect(() => {
     interval.start();
     return () => interval.stop();
-  }, [interval]);
+  }, [showSeconds]);
 
   return timeFormatter.format(date);
 };
