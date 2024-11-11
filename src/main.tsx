@@ -7,24 +7,15 @@ import "./styles/styles.css";
 
 import "./i18n";
 
-import { app, events, init, window as neuWindow } from "@neutralinojs/lib";
-
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
+import { init } from "./backend";
 
 init();
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
-
-function onWindowClose() {
-  app.exit();
-}
-
-events.on("windowClose", onWindowClose);
-
-neuWindow.focus();

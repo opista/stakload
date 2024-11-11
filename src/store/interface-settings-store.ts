@@ -1,6 +1,6 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
-import { neutralinoStorage } from "../util/neutralino-storage";
+import { storage } from "../backend";
 
 interface InterfaceSettingsState {
   displayBattery: boolean;
@@ -11,15 +11,11 @@ interface InterfaceSettingsState {
 }
 
 interface InterfaceSettingsActions {
-  setDisplayBattery: (
-    displayBattery: InterfaceSettingsState["displayBattery"]
-  ) => void;
+  setDisplayBattery: (displayBattery: InterfaceSettingsState["displayBattery"]) => void;
   setDisplayBatteryPercent: (
-    displayBatteryPercent: InterfaceSettingsState["displayBatteryPercent"]
+    displayBatteryPercent: InterfaceSettingsState["displayBatteryPercent"],
   ) => void;
-  setDisplaySeconds: (
-    displaySeconds: InterfaceSettingsState["displaySeconds"]
-  ) => void;
+  setDisplaySeconds: (displaySeconds: InterfaceSettingsState["displaySeconds"]) => void;
   setDisplayTime: (displayTime: InterfaceSettingsState["displayTime"]) => void;
   setTheme: (theme: InterfaceSettingsState["theme"]) => void;
 }
@@ -35,15 +31,14 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       displayTime: true,
       theme: "orange",
       setDisplayBattery: (displayBattery) => set({ displayBattery }),
-      setDisplayBatteryPercent: (displayBatteryPercent) =>
-        set({ displayBatteryPercent }),
+      setDisplayBatteryPercent: (displayBatteryPercent) => set({ displayBatteryPercent }),
       setDisplaySeconds: (displaySeconds) => set({ displaySeconds }),
       setDisplayTime: (displayTime) => set({ displayTime }),
       setTheme: (theme) => set({ theme }),
     }),
     {
       name: "interface_settings",
-      storage: createJSONStorage(() => neutralinoStorage),
-    }
-  )
+      storage: createJSONStorage(() => storage),
+    },
+  ),
 );
