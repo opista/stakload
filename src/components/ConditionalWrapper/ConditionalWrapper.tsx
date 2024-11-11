@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
 
-type ConditionalWrapperProps = {
+interface ConditionalWrapperProps {
   condition: boolean;
   wrapper: (children: ReactNode) => ReactNode;
   children: ReactNode;
-};
+}
 
 export const ConditionalWrapper = ({
   condition,

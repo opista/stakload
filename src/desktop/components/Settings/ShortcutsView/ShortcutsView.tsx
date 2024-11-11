@@ -1,7 +1,7 @@
 import { Kbd, Table } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import classes from "./ShortcutsView.module.css";
+import { useTranslation } from "react-i18next";
 
 const elements = [
   { name: "shortcutLabel.openSettings", shortcuts: ["Q"] },
@@ -12,7 +12,7 @@ export const ShortcutsView = () => {
   const { t } = useTranslation();
   const rows = elements.map(({ name, shortcuts }) => (
     <Table.Tr key={name}>
-      <Table.Td>{t(name as any)}</Table.Td>
+      <Table.Td>{t(name)}</Table.Td>
       <Table.Td className={classes.shortcutColumn}>
         {shortcuts.map((key, index) => (
           <Fragment key={index}>

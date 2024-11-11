@@ -1,10 +1,10 @@
 import { MantineSize, Text } from "@mantine/core";
 import classes from "./Logo.module.css";
 
-type LogoProps = {
+interface LogoProps {
   size?: MantineSize;
   useGradient?: boolean;
-};
+}
 
 export const Logo = ({ size = "xl", useGradient = true }: LogoProps = {}) => (
   <Text

@@ -1,11 +1,11 @@
 import { RxJsonSchema } from "rxdb";
 
-export type GameStoreModel = {
+export interface GameStoreModel {
   _id: string;
   appId: string;
   name: string;
   platform: string;
-};
+}
 
 export const gameSchema: RxJsonSchema<GameStoreModel> = {
   title: "Game schema",

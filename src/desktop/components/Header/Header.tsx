@@ -1,9 +1,9 @@
 import { Divider, Group } from "@mantine/core";
-import { SettingsControl } from "../Settings/SettingsControl/SettingsControl";
-import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { BatteryIndicator } from "../../../components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "../../../components/Clock/Clock";
 import { Logo } from "../../../components/Logo/Logo";
+import { SettingsControl } from "../Settings/SettingsControl/SettingsControl";
+import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { useInterfaceSettingsStore } from "../../../store/interface-settings-store";
 
 export const Header = () => {

@@ -1,14 +1,14 @@
 import { Checkbox, CheckboxProps, Divider, Title } from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import classes from "./InterfaceSettingsView.module.css";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
+import classes from "./InterfaceSettingsView.module.css";
 import { useInterfaceSettingsStore } from "../../../../store/interface-settings-store";
+import { useTranslation } from "react-i18next";
 
-type FormattedCheckboxProps = {
+interface FormattedCheckboxProps {
   checked: boolean;
   label: string;
   onCheckboxChange: (checked: boolean) => void;
-};
+}
 
 const FormattedCheckbox = ({
   checked,

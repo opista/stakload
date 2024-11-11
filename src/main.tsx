@@ -5,17 +5,17 @@ import "@mantine/spotlight/styles.css";
 import "allotment/dist/style.css";
 import "./styles/styles.css";
 
+import "./i18n";
+
 import { app, events, init, window as neuWindow } from "@neutralinojs/lib";
 
-import React from "react";
-import ReactDOM from "react-dom/client";
-
-import "./i18n";
 import { App } from "./App";
+import * as React from "react";
+import { createRoot } from "react-dom/client";
 
 init();
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>

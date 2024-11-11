@@ -1,14 +1,19 @@
 import type { Plugin, ResolvedConfig } from "vite";
 
+import autoprefixer from "autoprefixer";
 import { defineConfig } from "vite";
-import { dirname } from "node:path";
+import path, { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs/promises";
-import path from "node:path";
 import react from "@vitejs/plugin-react-swc";
-import autoprefixer from "autoprefixer";
 
 const _dirname = dirname(fileURLToPath(import.meta.url));
+
+interface AuthInfo {
+  nlConnectToken: string;
+  nlPort: string;
+  nlToken: string;
+}
 
 const neutralino = (): Plugin => {
   let config: ResolvedConfig;
@@ -32,15 +37,15 @@ const neutralino = (): Plugin => {
       }
 
       if (config.mode === "development") {
-        const auth_info_file = await fs.readFile(
+        const authInfoFile = await fs.readFile(
           path.join(_dirname, ".tmp", "auth_info.json"),
           {
             encoding: "utf-8",
           }
         );
 
-        const auth_info = JSON.parse(auth_info_file);
-        const port = auth_info.nlPort;
+        const authInfo = JSON.parse(authInfoFile) as AuthInfo;
+        const port = authInfo.nlPort;
 
         return html.replace(
           regex,

@@ -1,4 +1,4 @@
-import { Popover, Text, ActionIcon } from "@mantine/core";
+import { ActionIcon, Popover, Text } from "@mantine/core";
 import { IconAdjustments } from "@tabler/icons-react";
 
 const buttonSize = 34;

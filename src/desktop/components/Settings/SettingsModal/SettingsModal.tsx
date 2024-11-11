@@ -1,21 +1,21 @@
 import { Divider, Modal } from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import classes from "./SettingsModal.module.css";
 import {
   IconCommand,
   IconDeviceImac,
   IconLibrary,
   IconUser,
 } from "@tabler/icons-react";
-import { InterfaceSettingsView } from "../InterfaceSettingsView/InterfaceSettingsView";
 import { AboutView } from "../AboutView/AboutView";
+import { InterfaceSettingsView } from "../InterfaceSettingsView/InterfaceSettingsView";
 import { ShortcutsView } from "../ShortcutsView/ShortcutsView";
 import { VerticalTabs } from "../../../../components/VerticalTabs/VerticalTabs";
+import classes from "./SettingsModal.module.css";
+import { useTranslation } from "react-i18next";
 
-type SettingsModalProps = {
+interface SettingsModalProps {
   onClose: () => void;
   opened: boolean;
-};
+}
 
 export const SettingsModal = ({ onClose, opened }: SettingsModalProps) => {
   const { t } = useTranslation();

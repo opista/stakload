@@ -1,3 +1,4 @@
+import { Box, Text, Tooltip } from "@mantine/core";
 import {
   IconBatteryCharging,
   IconBatteryVertical1,
@@ -5,15 +6,14 @@ import {
   IconBatteryVertical3,
   IconBatteryVertical4,
 } from "@tabler/icons-react";
-import { useBatteryDetails } from "../../hooks/use-battery-details";
-import { Box, Text, Tooltip } from "@mantine/core";
-import classes from "./BatteryIndicator.module.css";
 import { ConditionalWrapper } from "../ConditionalWrapper/ConditionalWrapper";
+import classes from "./BatteryIndicator.module.css";
+import { useBatteryDetails } from "../../hooks/use-battery-details";
 import { useTranslation } from "react-i18next";
 
-type BatteryIndicatorProps = {
+interface BatteryIndicatorProps {
   showPercentage?: boolean;
-};
+}
 
 const BatteryIcon = (isCharging: boolean, percentage: number) => {
   if (isCharging) {

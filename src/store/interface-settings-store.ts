@@ -1,16 +1,16 @@
+import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 import { neutralinoStorage } from "../util/neutralino-storage";
 
-type InterfaceSettingsState = {
+interface InterfaceSettingsState {
   displayBattery: boolean;
   displayBatteryPercent: boolean;
   displaySeconds: boolean;
   displayTime: boolean;
   theme: string;
-};
+}
 
-type InterfaceSettingsActions = {
+interface InterfaceSettingsActions {
   setDisplayBattery: (
     displayBattery: InterfaceSettingsState["displayBattery"]
   ) => void;
@@ -22,7 +22,7 @@ type InterfaceSettingsActions = {
   ) => void;
   setDisplayTime: (displayTime: InterfaceSettingsState["displayTime"]) => void;
   setTheme: (theme: InterfaceSettingsState["theme"]) => void;
-};
+}
 
 type InterfaceSettingsStore = InterfaceSettingsState & InterfaceSettingsActions;
 

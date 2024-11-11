@@ -1,20 +1,20 @@
 import { Button, Text } from "@mantine/core";
-import { GameStoreModel } from "../../../database/schema/game.schema";
-import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { GameStoreModel } from "../../../database/schema/game.schema";
 
-type GameNavigationProps = {
+interface GameNavigationProps {
   games: GameStoreModel[];
   onChange: (index: number) => void;
   selectedGame: number | null;
-};
+}
 
 export const GameNavigation = ({
   games,
   onChange,
   selectedGame,
 }: GameNavigationProps) => {
-  const Row = ({ index, style }: ListChildComponentProps<any>) => (
+  const Row = ({ index, style }: ListChildComponentProps<unknown>) => (
     <div style={style}>
       <Button
         color={selectedGame === index ? undefined : "gray"}

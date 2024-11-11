@@ -1,19 +1,19 @@
-import { rem, Tabs, FloatingIndicator } from "@mantine/core";
+import { FloatingIndicator, Tabs, rem } from "@mantine/core";
 import { FunctionComponent, ReactNode, useState } from "react";
-import classes from "./VerticalTabs.module.css";
 import { IconProps } from "@tabler/icons-react";
+import classes from "./VerticalTabs.module.css";
 
-type Tab = {
+interface Tab {
   content: ReactNode;
   icon: FunctionComponent<IconProps>;
   key: string;
   label: string;
-};
+}
 
-type VerticalTabsProps = {
+interface VerticalTabsProps {
   defaultTab: string;
   tabs: Tab[];
-};
+}
 
 export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
   const [activeTab, setActiveTab] = useState<string | null>(defaultTab);

@@ -3,7 +3,7 @@ import { curl } from "../util/curl";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
 
-type GetOwnedGamesGame = {
+interface GetOwnedGamesGame {
   appid: number;
   content_descriptorids: number[];
   has_community_visible_stats: boolean;
@@ -16,16 +16,16 @@ type GetOwnedGamesGame = {
   playtime_mac_forever: number;
   playtime_windows_forever: number;
   rtime_last_played: number;
-};
+}
 
-type GetOwnedGamesResponse = {
+interface GetOwnedGamesResponse {
   response: {
     game_count: number;
     games: GetOwnedGamesGame[];
   };
-};
+}
 
-const steamApiRequest = async <T extends any>(
+const steamApiRequest = async <T>(
   path: string,
   apiKey: string,
   params?: Record<string, string | number | boolean>
@@ -41,7 +41,7 @@ const steamApiRequest = async <T extends any>(
       }
     );
 
-    return JSON.parse(response);
+    return JSON.parse(response) as T;
   } catch (err) {
     const message = "Request to Steam API failed";
     console.error(message, { err, path, params });

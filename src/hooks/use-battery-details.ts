@@ -1,11 +1,10 @@
-import { useInterval } from "@mantine/hooks";
-import { os } from "@neutralinojs/lib";
 import { useEffect, useState } from "react";
+import { useInterval } from "@mantine/hooks";
 
-export type BatteryDetails = {
+export interface BatteryDetails {
   isCharging: boolean;
   percentage: number | null;
-};
+}
 
 const getBatteryDetails = async (): Promise<BatteryDetails> => {
   // https://learn.microsoft.com/en-gb/windows/win32/cimwin32prov/win32-battery?redirectedfrom=MSDN
@@ -28,16 +27,15 @@ export const useBatteryDetails = (updateFrequencyMs = 60000) => {
     setBatteryDetails(details);
   };
 
-  const interval = useInterval(
-    async () => await updateBatteryDetails(),
-    updateFrequencyMs
-  );
+  const interval = useInterval(() => {
+    updateBatteryDetails();
+  }, updateFrequencyMs);
 
   useEffect(() => {
     updateBatteryDetails();
     interval.start();
     () => interval.stop;
-  }, []);
+  }, [interval]);
 
   return batteryDetails;
 };

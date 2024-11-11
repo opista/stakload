@@ -1,17 +1,17 @@
+import { Box, Paper } from "@mantine/core";
 import {
   VariableSizeGrid as Grid,
   GridChildComponentProps,
 } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { GameStoreModel } from "../../../database/schema/game.schema";
-import { Box, Paper } from "@mantine/core";
 import { BackToTop } from "../../components/BackToTop/BackToTop";
+import { GameStoreModel } from "../../../database/schema/game.schema";
 import { useRef } from "react";
 
-type GameListViewProps = {
+interface GameListViewProps {
   columnCount: number;
   games: GameStoreModel[];
-};
+}
 
 const getItemIndex = (
   rowIndex: number,
@@ -26,7 +26,7 @@ export const GameListView = ({ columnCount, games }: GameListViewProps) => {
     columnIndex,
     rowIndex,
     style,
-  }: GridChildComponentProps<any>) => {
+  }: GridChildComponentProps<unknown>) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
 

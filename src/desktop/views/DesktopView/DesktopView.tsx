@@ -1,16 +1,15 @@
-import { ActionIcon, AppShell, Box, Divider } from "@mantine/core";
+import { AppShell, Box, Divider } from "@mantine/core";
+import { useRxCollection, useRxQuery } from "rxdb-hooks";
+import { Allotment } from "allotment";
+import { GameListView } from "../GameListView/GameListView";
+import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
+import { GameStoreModel } from "../../../database/schema/game.schema";
+import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
+import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
-import { Header } from "../../components/Header/Header";
-import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
-import { useRxCollection, useRxQuery } from "rxdb-hooks";
-import { GameStoreModel } from "../../../database/schema/game.schema";
-import { Allotment } from "allotment";
 import classes from "./DesktopView.module.css";
-import { GameListView } from "../GameListView/GameListView";
 import { useState } from "react";
-import { IconAdjustments } from "@tabler/icons-react";
-import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");

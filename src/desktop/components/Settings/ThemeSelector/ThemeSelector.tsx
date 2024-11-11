@@ -1,12 +1,12 @@
-import { Group, ColorSwatch, useMantineTheme, Flex, Text } from "@mantine/core";
-import clsx from "clsx";
+import { ColorSwatch, Flex, Group, Text, useMantineTheme } from "@mantine/core";
 import classes from "./ThemeSelector.module.css";
+import { clsx } from "clsx";
 import { useTranslation } from "react-i18next";
 
-type ThemeSelectorProps = {
+interface ThemeSelectorProps {
   onChange: (color: string) => void;
   value: string;
-};
+}
 
 export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
   const { t } = useTranslation();

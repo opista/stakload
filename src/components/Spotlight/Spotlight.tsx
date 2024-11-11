@@ -1,12 +1,12 @@
-import { rem } from "@mantine/core";
+import { IconHome, IconSearch } from "@tabler/icons-react";
 import {
   Spotlight as MantineSpotlight,
   SpotlightActionData,
 } from "@mantine/spotlight";
-import { IconHome, IconSearch } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
-import { useRxData } from "rxdb-hooks";
 import { GameStoreModel } from "../../database/schema/game.schema";
+import { rem } from "@mantine/core";
+import { useRxData } from "rxdb-hooks";
+import { useTranslation } from "react-i18next";
 
 export const Spotlight = () => {
   const { t } = useTranslation();

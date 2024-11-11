@@ -1,9 +1,9 @@
-import { os } from "@neutralinojs/lib";
+import { OperatingSystem, os } from "@neutralinojs/lib";
 import fetchToCurl from "fetch-to-curl";
 
 const getCurlPath = () => {
   const extensionPath = "extensions/curl";
-  if (window.NL_OS === "Windows") {
+  if (window.NL_OS === OperatingSystem.Windows) {
     return [
       window.NL_CWD,
       extensionPath,
@@ -17,7 +17,7 @@ const getCurlPath = () => {
   );
 };
 
-export const curl = async <T extends any>(
+export const curl = async <T>(
   url: string,
   options?: RequestInit
 ): Promise<T> => {

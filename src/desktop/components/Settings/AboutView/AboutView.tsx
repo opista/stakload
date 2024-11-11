@@ -1,10 +1,14 @@
 import { ActionIcon, Code, Flex } from "@mantine/core";
-import { os } from "@neutralinojs/lib";
-import { IconBrandGithub } from "@tabler/icons-react";
 import { homepage, version } from "../../../../../package.json";
+import { IconBrandGithub } from "@tabler/icons-react";
 import { Logo } from "../../../../components/Logo/Logo";
+import { os } from "@neutralinojs/lib";
 
 export const AboutView = () => {
+  const onClickGithub = () => {
+    os.open(homepage);
+  };
+
   return (
     <div>
       <ActionIcon
@@ -12,7 +16,7 @@ export const AboutView = () => {
         color="gray"
         size="xl"
         variant="white"
-        onClick={() => os.open(homepage)}
+        onClick={onClickGithub}
       >
         <IconBrandGithub />
       </ActionIcon>

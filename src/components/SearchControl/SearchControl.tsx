@@ -1,14 +1,14 @@
-import { IconSearch } from "@tabler/icons-react";
-import cx from "clsx";
 import {
   BoxProps,
   ElementProps,
   Group,
-  rem,
   Text,
   UnstyledButton,
+  rem,
 } from "@mantine/core";
+import { IconSearch } from "@tabler/icons-react";
 import classes from "./SearchControl.module.css";
+import cx from "clsx";
 import { spotlight } from "@mantine/spotlight";
 import { useTranslation } from "react-i18next";
 

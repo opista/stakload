@@ -1,19 +1,18 @@
-import { initialize } from "./database/initialize";
-import { Provider } from "rxdb-hooks";
-import { RxDatabase } from "rxdb";
 import {
   Checkbox,
   ColorSchemeScript,
-  createTheme,
   MantineProvider,
   Modal,
   ScrollArea,
+  createTheme,
 } from "@mantine/core";
-import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { useEffect, useState } from "react";
+import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
+import { Provider } from "rxdb-hooks";
+import { RxDatabase } from "rxdb";
 import classes from "./App.module.css";
+import { initialize } from "./database/initialize";
 import { useInterfaceSettingsStore } from "./store/interface-settings-store";
-import { storage } from "@neutralinojs/lib";
 
 export function App() {
   const [db, setDb] = useState<RxDatabase>();

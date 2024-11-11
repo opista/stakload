@@ -18,7 +18,7 @@
   "scripts": {
     "build": "neu build",
     "dev": "neu run -- --window-enable-inspector",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "preview": "vite preview",
     "vite-build": "tsc && vite build",
     "vite-dev": "vite --host"
@@ -50,6 +50,7 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "^5.60.1",
     "@types/node": "^20.11.20",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
@@ -59,8 +60,11 @@
     "@vitejs/plugin-react-swc": "^3.7.1",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.56.0",
+    "eslint-import-resolver-typescript": "^3.6.3",
+    "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.12",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "postcss": "^8.4.47",
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
