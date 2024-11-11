@@ -7,9 +7,9 @@ import {
   createTheme,
 } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import { Provider } from "rxdb-hooks";
 import { RxDatabase } from "rxdb";
+import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import classes from "./App.module.css";
 import { initialize } from "./database/initialize";
 import { useInterfaceSettingsStore } from "./store/interface-settings-store";

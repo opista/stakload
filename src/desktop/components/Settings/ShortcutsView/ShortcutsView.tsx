@@ -1,7 +1,7 @@
 import { Kbd, Table } from "@mantine/core";
 import { Fragment } from "react/jsx-runtime";
-import classes from "./ShortcutsView.module.css";
 import { useTranslation } from "react-i18next";
+import classes from "./ShortcutsView.module.css";
 
 const elements = [
   { name: "shortcutLabel.openSettings", shortcuts: ["Q"] },

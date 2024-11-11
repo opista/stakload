@@ -1,6 +1,7 @@
 import { AppShell, Box, Divider } from "@mantine/core";
 import { useRxCollection, useRxQuery } from "rxdb-hooks";
 import { Allotment } from "allotment";
+import { useState } from "react";
 import { GameListView } from "../GameListView/GameListView";
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GameStoreModel } from "../../../database/schema/game.schema";
@@ -9,7 +10,6 @@ import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
 import classes from "./DesktopView.module.css";
-import { useState } from "react";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");

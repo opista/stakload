@@ -6,10 +6,10 @@ import {
   IconBatteryVertical3,
   IconBatteryVertical4,
 } from "@tabler/icons-react";
-import { ConditionalWrapper } from "../ConditionalWrapper/ConditionalWrapper";
-import classes from "./BatteryIndicator.module.css";
-import { useBatteryDetails } from "../../hooks/use-battery-details";
 import { useTranslation } from "react-i18next";
+import { ConditionalWrapper } from "../ConditionalWrapper/ConditionalWrapper";
+import { useBatteryDetails } from "../../hooks/use-battery-details";
+import classes from "./BatteryIndicator.module.css";
 
 interface BatteryIndicatorProps {
   showPercentage?: boolean;

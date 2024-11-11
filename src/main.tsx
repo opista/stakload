@@ -9,9 +9,9 @@ import "./i18n";
 
 import { app, events, init, window as neuWindow } from "@neutralinojs/lib";
 
-import { App } from "./App";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
+import { App } from "./App";
 
 init();
 

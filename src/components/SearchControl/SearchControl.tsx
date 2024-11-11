@@ -7,10 +7,10 @@ import {
   rem,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
-import classes from "./SearchControl.module.css";
 import cx from "clsx";
 import { spotlight } from "@mantine/spotlight";
 import { useTranslation } from "react-i18next";
+import classes from "./SearchControl.module.css";
 
 interface SearchControlProps extends BoxProps, ElementProps<"button"> {}
 

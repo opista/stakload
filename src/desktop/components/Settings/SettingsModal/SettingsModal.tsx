@@ -5,12 +5,12 @@ import {
   IconLibrary,
   IconUser,
 } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 import { AboutView } from "../AboutView/AboutView";
 import { InterfaceSettingsView } from "../InterfaceSettingsView/InterfaceSettingsView";
 import { ShortcutsView } from "../ShortcutsView/ShortcutsView";
 import { VerticalTabs } from "../../../../components/VerticalTabs/VerticalTabs";
 import classes from "./SettingsModal.module.css";
-import { useTranslation } from "react-i18next";
 
 interface SettingsModalProps {
   onClose: () => void;

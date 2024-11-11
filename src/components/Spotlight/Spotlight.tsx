@@ -3,10 +3,10 @@ import {
   Spotlight as MantineSpotlight,
   SpotlightActionData,
 } from "@mantine/spotlight";
-import { GameStoreModel } from "../../database/schema/game.schema";
 import { rem } from "@mantine/core";
 import { useRxData } from "rxdb-hooks";
 import { useTranslation } from "react-i18next";
+import { GameStoreModel } from "../../database/schema/game.schema";
 
 export const Spotlight = () => {
   const { t } = useTranslation();

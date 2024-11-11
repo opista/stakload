@@ -34,7 +34,7 @@ export const useBatteryDetails = (updateFrequencyMs = 60000) => {
   useEffect(() => {
     updateBatteryDetails();
     interval.start();
-    () => interval.stop;
+    return () => interval.stop();
   }, [interval]);
 
   return batteryDetails;

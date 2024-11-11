@@ -1,6 +1,6 @@
 import { addRxPlugin, createRxDatabase } from "rxdb";
-import { gameSchema } from "./schema/game.schema";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
+import { gameSchema } from "./schema/game.schema";
 
 let dbPromise: ReturnType<typeof _create> | null = null;
 

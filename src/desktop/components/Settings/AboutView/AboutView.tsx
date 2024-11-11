@@ -1,8 +1,8 @@
 import { ActionIcon, Code, Flex } from "@mantine/core";
-import { homepage, version } from "../../../../../package.json";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { Logo } from "../../../../components/Logo/Logo";
 import { os } from "@neutralinojs/lib";
+import { homepage, version } from "../../../../../package.json";
+import { Logo } from "../../../../components/Logo/Logo";
 
 export const AboutView = () => {
   const onClickGithub = () => {

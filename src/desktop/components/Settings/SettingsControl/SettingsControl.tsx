@@ -1,8 +1,8 @@
 import { ActionIcon, VisuallyHidden } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { IconSettings } from "@tabler/icons-react";
-import { SettingsModal } from "../SettingsModal/SettingsModal";
 import { useTranslation } from "react-i18next";
+import { SettingsModal } from "../SettingsModal/SettingsModal";
 
 export const SettingsControl = () => {
   const [opened, { open, close }] = useDisclosure(false);

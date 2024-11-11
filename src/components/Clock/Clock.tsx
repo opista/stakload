@@ -1,6 +1,6 @@
 import { Box, Text } from "@mantine/core";
-import classes from "./Clock.module.css";
 import { useTime } from "../../hooks/use-time";
+import classes from "./Clock.module.css";
 
 interface ClockProps {
   showSeconds?: boolean;

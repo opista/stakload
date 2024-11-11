@@ -4,9 +4,9 @@ import {
   GridChildComponentProps,
 } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
+import { useRef } from "react";
 import { BackToTop } from "../../components/BackToTop/BackToTop";
 import { GameStoreModel } from "../../../database/schema/game.schema";
-import { useRef } from "react";
 
 interface GameListViewProps {
   columnCount: number;
