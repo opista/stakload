@@ -25,5 +25,3 @@ export const AboutView = () => {
     </div>
   );
 };
-
-// style={{ width: "70%", height: "70%" }} stroke={1.5}

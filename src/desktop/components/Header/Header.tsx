@@ -24,9 +24,9 @@ export const Header = () => {
               <Clock showSeconds={displaySeconds} />
             </>
           )}
-          <Divider orientation="vertical" size="xs" />
           {displayBattery && (
             <>
+              <Divider orientation="vertical" size="xs" />
               <BatteryIndicator showPercentage={displayBatteryPercent} />
             </>
           )}

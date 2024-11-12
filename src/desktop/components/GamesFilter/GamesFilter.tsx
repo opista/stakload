@@ -1,6 +1,7 @@
 import { ActionIcon, Popover, Text } from "@mantine/core";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
+import classes from "./GamesFilter.module.css";
 
 export const GamesFilter = () => {
   const [opened, setOpened] = useState(false);
@@ -18,7 +19,12 @@ export const GamesFilter = () => {
       onChange={setOpened}
     >
       <Popover.Target>
-        <ActionIcon size="lg" ml="xs" variant="default" onClick={() => setOpened((o) => !o)}>
+        <ActionIcon
+          className={classes.icon}
+          size="lg"
+          variant="default"
+          onClick={() => setOpened((o) => !o)}
+        >
           <Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />
         </ActionIcon>
       </Popover.Target>
