@@ -1,20 +1,18 @@
 import { IconHome, IconSearch } from "@tabler/icons-react";
-import {
-  Spotlight as MantineSpotlight,
-  SpotlightActionData,
-} from "@mantine/spotlight";
+import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
 import { rem } from "@mantine/core";
-import { useRxData } from "rxdb-hooks";
 import { useTranslation } from "react-i18next";
 import { GameStoreModel } from "../../database/schema/game.schema";
 
-export const Spotlight = () => {
-  const { t } = useTranslation();
-  const { result: games } = useRxData<GameStoreModel>("games", (collection) =>
-    collection.find({ sort: [{ name: "asc" }] })
-  );
+type SpotlightProps = {
+  games: GameStoreModel[];
+  onClick: (index: number) => void;
+};
 
-  const actions: SpotlightActionData[] = games.map(({ _id, name }) => ({
+export const Spotlight = ({ games, onClick }: SpotlightProps) => {
+  const { t } = useTranslation();
+
+  const actions: SpotlightActionData[] = games.map(({ _id, name }, index) => ({
     id: _id,
     label: name,
     description: t("gameDetails.lastPlayed", {
@@ -28,11 +26,9 @@ export const Spotlight = () => {
           day: "numeric",
         },
       },
-    }), // TODO
-    onClick: () => console.log("Play game"), // TODO
-    leftSection: (
-      <IconHome style={{ width: rem(24), height: rem(24) }} stroke={1.5} />
-    ),
+    }),
+    onClick: () => onClick(index),
+    leftSection: <IconHome style={{ width: rem(24), height: rem(24) }} stroke={1.5} />,
   }));
 
   return (
@@ -41,12 +37,7 @@ export const Spotlight = () => {
       limit={7}
       nothingFound={t("spotlight.noResultsFound")}
       searchProps={{
-        leftSection: (
-          <IconSearch
-            style={{ width: rem(20), height: rem(20) }}
-            stroke={1.5}
-          />
-        ),
+        leftSection: <IconSearch style={{ width: rem(20), height: rem(20) }} stroke={1.5} />,
         placeholder: t("search"),
       }}
     />

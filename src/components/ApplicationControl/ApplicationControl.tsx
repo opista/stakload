@@ -7,7 +7,7 @@ import { SHORTCUT_KEYS } from "../../constants/shortcuts";
 const shortcut = SHORTCUT_KEYS.QUIT.join("+");
 
 export const ApplicationControl = () => {
-  // TODO
+  // TODO, this should open a modal to close the app, shut down or put PC to sleep
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
 

@@ -27,7 +27,7 @@ export const DesktopView = () => {
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
-      <Spotlight />
+      <Spotlight games={games} onClick={setSelectedGame} />
       <AppShell.Header>
         <Header />
       </AppShell.Header>
