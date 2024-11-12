@@ -1,7 +1,8 @@
 import { Button, Text } from "@mantine/core";
-import { FixedSizeList as List, ListChildComponentProps } from "react-window";
+import { FixedSizeList, FixedSizeList as List, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { GameStoreModel } from "../../../database/schema/game.schema";
+import { createRef, useEffect } from "react";
 
 interface GameNavigationProps {
   games: GameStoreModel[];
@@ -9,11 +10,14 @@ interface GameNavigationProps {
   selectedGame: number | null;
 }
 
-export const GameNavigation = ({
-  games,
-  onChange,
-  selectedGame,
-}: GameNavigationProps) => {
+export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigationProps) => {
+  const listRef = createRef<FixedSizeList<unknown>>();
+
+  useEffect(() => {
+    if (selectedGame === null) return;
+    listRef?.current?.scrollToItem(selectedGame);
+  }, [selectedGame]);
+
   const Row = ({ index, style }: ListChildComponentProps<unknown>) => (
     <div style={style}>
       <Button
@@ -33,12 +37,7 @@ export const GameNavigation = ({
   return (
     <AutoSizer disableWidth>
       {({ height }) => (
-        <List
-          height={height}
-          itemCount={games.length}
-          itemSize={36}
-          width="100%"
-        >
+        <List height={height} itemCount={games.length} itemSize={36} ref={listRef} width="100%">
           {Row}
         </List>
       )}
