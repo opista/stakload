@@ -1,30 +1,29 @@
 import { ActionIcon, Popover, Text } from "@mantine/core";
-import { IconAdjustments } from "@tabler/icons-react";
-
-const buttonSize = 34;
+import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
+import { useState } from "react";
 
 export const GamesFilter = () => {
+  const [opened, setOpened] = useState(false);
+
+  const Icon = opened ? IconFilterFilled : IconFilter;
+
   return (
     <Popover
-      arrowOffset={buttonSize / 2}
       closeOnEscape
       position="right-start"
       shadow="sm"
       width={200}
       withArrow
+      opened={opened}
+      onChange={setOpened}
     >
       <Popover.Target>
-        <ActionIcon size={buttonSize} ml={"xs"} variant="default">
-          <IconAdjustments
-            style={{ width: "70%", height: "70%" }}
-            stroke={1.5}
-          />
+        <ActionIcon size="lg" ml="xs" variant="default" onClick={() => setOpened((o) => !o)}>
+          <Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown>
-        <Text size="xs">
-          This is uncontrolled popover, it is opened when button is clicked
-        </Text>
+        <Text size="xs">TODO - Filters here</Text>
       </Popover.Dropdown>
     </Popover>
   );
