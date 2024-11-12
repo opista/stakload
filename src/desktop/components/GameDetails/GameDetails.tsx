@@ -67,7 +67,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-6.png"
         >
           <Flex className={classes.heroContent}>
-            <Text className={classes.heroText} title={game.name}>
+            <Text className={classes.heroText} lineClamp={3} title={game.name}>
               {game.name}
             </Text>
             <Group>
