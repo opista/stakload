@@ -1,0 +1,34 @@
+.container {
+  flex-direction: column;
+  height: 100%;
+}
+
+.body {
+  min-height: 0;
+}
+
+.hero {
+  position: relative;
+  height: 400px;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  flex-direction: column;
+  align-items: start;
+  padding: var(--mantine-spacing-xl);
+}
+
+.heroText {
+  color: var(--mantine-primary-color-contrast);
+  font-weight: 900;
+  font-size: 50px;
+}
+
+.overlay {
+  z-index: 1;
+}

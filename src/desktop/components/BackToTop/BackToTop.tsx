@@ -20,10 +20,7 @@ export const BackToTop = ({ container }: BackToTopProps) => {
             title={t("backToTop")}
             onClick={() => container?.scrollTo({ behavior: "smooth", top: 0 })}
           >
-            <IconArrowBigUpFilled
-              style={{ width: "70%", height: "70%" }}
-              stroke={1.5}
-            />
+            <IconArrowBigUpFilled style={{ width: "70%", height: "70%" }} stroke={1.5} />
           </ActionIcon>
         )}
       </Transition>

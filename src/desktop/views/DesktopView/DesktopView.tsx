@@ -2,7 +2,7 @@ import { AppShell, Box, Divider } from "@mantine/core";
 import { useRxCollection, useRxQuery } from "rxdb-hooks";
 import { Allotment } from "allotment";
 import { useState } from "react";
-import { GameListView } from "../GameListView/GameListView";
+import { GamesGrid } from "../../components/GamesGrid/GamesGrid";
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GameStoreModel } from "../../../database/schema/game.schema";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
@@ -10,6 +10,7 @@ import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
 import classes from "./DesktopView.module.css";
+import { GameDetails } from "../../components/GameDetails/GameDetails";
 
 export const DesktopView = () => {
   const collection = useRxCollection<GameStoreModel>("games");
@@ -18,8 +19,6 @@ export const DesktopView = () => {
 
   const { result: games } = useRxQuery(query);
 
-  const onGameSelectionChange = (index: number) => setSelectedGame(index);
-
   return (
     <AppShell header={{ height: 60 }} padding="md">
       <Spotlight />
@@ -27,7 +26,7 @@ export const DesktopView = () => {
         <Header />
       </AppShell.Header>
       <Allotment className={classes.allotment} proportionalLayout={false}>
-        <Allotment.Pane minSize={240} maxSize={500} preferredSize={300}>
+        <Allotment.Pane minSize={250} maxSize={500} preferredSize={300}>
           <Box p="md" className={classes.navbar}>
             <AppShell.Section>
               <Box className={classes.searchAndFilters}>
@@ -36,11 +35,10 @@ export const DesktopView = () => {
               </Box>
               <Divider my="md" />
             </AppShell.Section>
-
             <AppShell.Section flex={1}>
               <GameNavigation
                 games={games}
-                onChange={onGameSelectionChange}
+                onChange={setSelectedGame}
                 selectedGame={selectedGame}
               />
             </AppShell.Section>
@@ -48,7 +46,11 @@ export const DesktopView = () => {
         </Allotment.Pane>
         <Allotment.Pane>
           <Box p="md" className={classes.main}>
-            <GameListView games={games} columnCount={3} />
+            {selectedGame !== null ? (
+              <GameDetails game={games[selectedGame]} onBack={() => setSelectedGame(null)} />
+            ) : (
+              <GamesGrid games={games} columnCount={3} onClick={setSelectedGame} />
+            )}
           </Box>
         </Allotment.Pane>
       </Allotment>

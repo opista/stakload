@@ -32,5 +32,11 @@
   "spotlight": {
     "noResultsFound": "No results found"
   },
-  "backToTop": "Back to top"
+  "backToTop": "Back to top",
+  "goBack": "Go back",
+  "platform": {
+    "steam": "Steam"
+  },
+  "thisIsALibraryGame": "This game is in your {{platform}} library",
+  "platformNotRecognised": "This game is from an unrecognised library"
 }

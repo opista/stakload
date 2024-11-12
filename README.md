@@ -20,7 +20,10 @@ https://github.com/JosefNemec/Playnite/blob/master/source/PlayniteSDK/Database/I
 - Look at Fastmail UI!
 - Check dependency graph
 - Bug with clock
+- Bug with back to top
 - Game filters
+- Refactor components
+- Break down GameDetails
 
 ## Notes
 
