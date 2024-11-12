@@ -1,66 +1,49 @@
 import { buildQueryParams } from "../util/build-query-params";
 import { curl } from "../util/curl";
+import { AppDetailsResponse } from "./steam/types/app-details";
+import { OwnedGamesResponse } from "./steam/types/owned-game";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
+const STEAM_STORE_API_BASE_URL = "https://store.steampowered.com/api";
 
-interface GetOwnedGamesGame {
-  appid: number;
-  content_descriptorids: number[];
-  has_community_visible_stats: boolean;
-  img_icon_url: string;
-  name: string;
-  playtime_deck_forever: number;
-  playtime_disconnected: number;
-  playtime_forever: number;
-  playtime_linux_forever: number;
-  playtime_mac_forever: number;
-  playtime_windows_forever: number;
-  rtime_last_played: number;
-}
-
-interface GetOwnedGamesResponse {
-  response: {
-    game_count: number;
-    games: GetOwnedGamesGame[];
-  };
-}
-
-const steamApiRequest = async <T>(
-  path: string,
-  apiKey: string,
-  params?: Record<string, string | number | boolean>
-): Promise<T> => {
-  const query = buildQueryParams({ key: apiKey, ...params });
-
+const apiRequest = async <T>(path: string): Promise<T> => {
   try {
-    const response = await curl<string>(
-      `${STEAM_API_BASE_URL}/${path}${query}`,
-      {
-        method: "GET",
-        headers: { accept: "application/json" },
-      }
-    );
+    const response = await curl<string>(path, {
+      method: "GET",
+      headers: { accept: "application/json" },
+    });
+
+    console.log(response);
 
     return JSON.parse(response) as T;
   } catch (err) {
     const message = "Request to Steam API failed";
-    console.error(message, { err, path, params });
+    console.error(message, { err, path });
     throw new Error(message);
   }
 };
 
-export const getOwnedGames = async (apiKey: string, steamId: string) => {
-  const query = {
+export const getOwnedGames = async (key: string, steamId: string) => {
+  const query = buildQueryParams({
+    key,
     include_appinfo: "true",
     include_played_free_games: "true",
     steamid: steamId,
-  };
-
-  const result = await steamApiRequest<GetOwnedGamesResponse>(
-    "/IPlayerService/GetOwnedGames/v1",
-    apiKey,
-    query
+  });
+  const result = await apiRequest<OwnedGamesResponse>(
+    `${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`,
   );
 
   return result.response;
+};
+
+export const getAppDetails = async (appId: number) => {
+  const appIdString = String(appId);
+  const query = buildQueryParams({ appids: appIdString, l: "english" });
+
+  const result = await apiRequest<AppDetailsResponse>(
+    `${STEAM_STORE_API_BASE_URL}/appdetails${query}`,
+  );
+
+  return result[appIdString].data;
 };

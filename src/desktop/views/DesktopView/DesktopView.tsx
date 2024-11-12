@@ -19,6 +19,12 @@ export const DesktopView = () => {
 
   const { result: games } = useRxQuery(query);
 
+  // useEffect(() => {
+  //   getOwnedGames()
+  //     .then(({ games }) => getAppDetails(games[0].appid))
+  //     .then((v) => console.log(v));
+  // }, []);
+
   return (
     <AppShell header={{ height: 60 }} padding="md">
       <Spotlight />
