@@ -29,7 +29,7 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       displayBatteryPercent: true,
       displaySeconds: true,
       displayTime: true,
-      theme: "orange",
+      theme: "violet",
       setDisplayBattery: (displayBattery) => set({ displayBattery }),
       setDisplayBatteryPercent: (displayBatteryPercent) => set({ displayBatteryPercent }),
       setDisplaySeconds: (displaySeconds) => set({ displaySeconds }),
