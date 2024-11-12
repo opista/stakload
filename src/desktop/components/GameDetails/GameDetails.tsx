@@ -27,9 +27,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollToTop = () => containerRef.current!.scrollTo({ top: 0 });
 
-  useEffect(() => {
-    scrollToTop();
-  }, [game._id]);
+  useEffect(() => scrollToTop(), [game._id]);
 
   return (
     <Flex className={classes.container}>
@@ -62,14 +60,14 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
         </Group>
       </Flex>
       <Divider mt="md" />
-      <ScrollArea className={classes.body} ref={containerRef}>
+      <ScrollArea className={classes.body} viewportRef={containerRef}>
         <BackToTop container={containerRef.current} />
         <BackgroundImage
           className={classes.hero}
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-6.png"
         >
           <Flex className={classes.heroContent}>
-            <Text className={classes.heroText} title={game.name} truncate="end">
+            <Text className={classes.heroText} title={game.name}>
               {game.name}
             </Text>
             <Group>

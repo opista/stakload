@@ -27,6 +27,7 @@
   color: var(--mantine-primary-color-contrast);
   font-weight: 900;
   font-size: 50px;
+  width: 100%;
 }
 
 .overlay {

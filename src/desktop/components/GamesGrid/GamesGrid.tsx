@@ -1,4 +1,4 @@
-import { Box, Paper, UnstyledButton } from "@mantine/core";
+import { Paper, UnstyledButton } from "@mantine/core";
 import { VariableSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
