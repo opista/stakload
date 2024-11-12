@@ -5,6 +5,7 @@ import { Logo } from "../../../components/Logo/Logo";
 import { SettingsControl } from "../Settings/SettingsControl/SettingsControl";
 import { SyncStatus } from "../SyncStatus/SyncStatus";
 import { useInterfaceSettingsStore } from "../../../store/interface-settings-store";
+import { ApplicationControl } from "../../../components/ApplicationControl/ApplicationControl";
 
 export const Header = () => {
   const { displayBattery, displayBatteryPercent, displayTime, displaySeconds } =
@@ -30,7 +31,10 @@ export const Header = () => {
             </>
           )}
           <Divider orientation="vertical" size="xs" />
-          <SettingsControl />
+          <Group gap="xs">
+            <SettingsControl />
+            <ApplicationControl />
+          </Group>
         </Group>
       </Group>
     </Group>
