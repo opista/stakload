@@ -1,3 +1,10 @@
+.container {
+  background-color:var(--mantine-color-white);
+  border-radius: var(--mantine-radius-md);
+  padding-left: var(--mantine-spacing-sm);
+  padding-right: var(--mantine-spacing-sm);
+}
+
 .logo {
   font-weight: 900;
 }

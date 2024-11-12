@@ -1,13 +1,13 @@
 import { ActionIcon, VisuallyHidden } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
-import { IconSettings } from "@tabler/icons-react";
+import { IconPower } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { SettingsModal } from "../SettingsModal/SettingsModal";
-import { SHORTCUT_KEYS } from "../../../../constants/shortcuts";
+import { SHORTCUT_KEYS } from "../../constants/shortcuts";
 
-const shortcut = SHORTCUT_KEYS.SETTINGS.join("+");
+const shortcut = SHORTCUT_KEYS.QUIT.join("+");
 
-export const SettingsControl = () => {
+export const ApplicationControl = () => {
+  // TODO
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
 
@@ -18,15 +18,13 @@ export const SettingsControl = () => {
       <ActionIcon
         variant="default"
         size="lg"
-        aria-label={t("settings")}
+        aria-label={t("quit")}
         title={t("shortcutWithValue", { value: shortcut })}
         onClick={open}
       >
-        <VisuallyHidden>{t("settings")}</VisuallyHidden>
-        <IconSettings style={{ width: "70%", height: "70%" }} stroke={1.5} />
+        <VisuallyHidden>{t("quit")}</VisuallyHidden>
+        <IconPower style={{ width: "70%", height: "70%" }} stroke={1.5} />
       </ActionIcon>
-
-      <SettingsModal onClose={close} opened={opened} />
     </>
   );
 };

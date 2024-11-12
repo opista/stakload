@@ -25,7 +25,7 @@ export const LibraryIcon = ({ game, size, ...rest }: LibraryIconProps & IconProp
   return (
     <Tooltip label={t("thisIsALibraryGame", { platform })} position="bottom-start">
       <ThemeIcon size={size} variant="default">
-        <Icon {...rest} />
+        <Icon {...rest} style={{ width: "80%", height: "80%" }} stroke={1.5} />
       </ThemeIcon>
     </Tooltip>
   );

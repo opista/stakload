@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import classes from "./ShortcutsView.module.css";
 
 const elements = [
-  { name: "shortcutLabel.openSettings", shortcuts: ["Q"] },
+  { name: "shortcutLabel.openSettings", shortcuts: ["S"] },
+  { name: "shortcutLabel.quitApplication", shortcuts: ["Q"] },
   { name: "shortcutLabel.searchLibrary", shortcuts: ["Ctrl", "K"] },
 ];
 
@@ -12,7 +13,7 @@ export const ShortcutsView = () => {
   const { t } = useTranslation();
   const rows = elements.map(({ name, shortcuts }) => (
     <Table.Tr key={name}>
-      <Table.Td>{t(name)}</Table.Td>
+      <Table.Td>{t(name as never)}</Table.Td>
       <Table.Td className={classes.shortcutColumn}>
         {shortcuts.map((key, index) => (
           <Fragment key={index}>
@@ -29,9 +30,7 @@ export const ShortcutsView = () => {
       <Table.Thead>
         <Table.Tr>
           <Table.Th>{t("action")}</Table.Th>
-          <Table.Th className={classes.shortcutColumn}>
-            {t("shortcut")}
-          </Table.Th>
+          <Table.Th className={classes.shortcutColumn}>{t("shortcut")}</Table.Th>
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>{rows}</Table.Tbody>

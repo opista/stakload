@@ -4,6 +4,7 @@
   "search": "Search",
   "settings": "Settings",
   "shortcut": "Shortcut",
+  "quit": "quit",
   "shortcutWithValue": "Shortcut: {{value}}",
   "gameDetails": {
     "lastPlayed": "Last played {{date, datetime}}",
@@ -27,7 +28,8 @@
   },
   "shortcutLabel": {
     "openSettings": "Open settings",
-    "searchLibrary": "Search library"
+    "searchLibrary": "Search library",
+    "quitApplication": "Quit application"
   },
   "spotlight": {
     "noResultsFound": "No results found"
