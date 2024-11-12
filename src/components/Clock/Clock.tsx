@@ -1,4 +1,4 @@
-import { Box, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useTime } from "../../hooks/use-time";
 import classes from "./Clock.module.css";
 
@@ -8,10 +8,5 @@ interface ClockProps {
 
 export const Clock = ({ showSeconds = true }: ClockProps = {}) => {
   const time = useTime({ showSeconds });
-
-  return (
-    <Box>
-      <Text className={classes.text}>{time}</Text>
-    </Box>
-  );
+  return <Text className={classes.text}>{time}</Text>;
 };
