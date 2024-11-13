@@ -13,8 +13,6 @@ const apiRequest = async <T>(path: string): Promise<T> => {
       headers: { accept: "application/json" },
     });
 
-    console.log(response);
-
     return JSON.parse(response) as T;
   } catch (err) {
     const message = "Request to Steam API failed";

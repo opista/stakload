@@ -49,8 +49,7 @@ export function App() {
     if (process.env.NODE_ENV !== "development") {
       const handleContextMenu = (event: MouseEvent) => event.preventDefault();
       document.addEventListener("contextmenu", handleContextMenu);
-      return () =>
-        document.removeEventListener("contextmenu", handleContextMenu);
+      return () => document.removeEventListener("contextmenu", handleContextMenu);
     }
   }, []);
 
