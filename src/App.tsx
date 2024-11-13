@@ -6,16 +6,13 @@ import {
   ScrollArea,
   createTheme,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { Provider } from "rxdb-hooks";
-import { RxDatabase } from "rxdb";
+import { useEffect } from "react";
 import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import classes from "./App.module.css";
-import { initialize } from "./database/initialize";
 import { useInterfaceSettingsStore } from "./store/interface-settings-store";
 
 export function App() {
-  const [db, setDb] = useState<RxDatabase>();
+  // const [db, setDb] = useState<RxDatabase>();
   const { theme: primaryColor } = useInterfaceSettingsStore();
 
   const theme = createTheme({
@@ -42,10 +39,6 @@ export function App() {
   });
 
   useEffect(() => {
-    initialize().then(setDb);
-  }, []);
-
-  useEffect(() => {
     if (process.env.NODE_ENV !== "development") {
       const handleContextMenu = (event: MouseEvent) => event.preventDefault();
       document.addEventListener("contextmenu", handleContextMenu);
@@ -61,11 +54,11 @@ export function App() {
    */
 
   return (
-    <Provider db={db}>
+    <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <DesktopView />
       </MantineProvider>
-    </Provider>
+    </>
   );
 }

@@ -7,15 +7,13 @@ let dbPromise: ReturnType<typeof _create> | null = null;
 export const _create = async () => {
   if (process.env.NODE_ENV === "development") {
     console.log("Dev mode db baby!!");
-    await import("rxdb/plugins/dev-mode").then((module) =>
-      addRxPlugin(module.RxDBDevModePlugin)
-    );
+    await import("rxdb/plugins/dev-mode").then((module) => addRxPlugin(module.RxDBDevModePlugin));
   }
 
   const db = await createRxDatabase({
     eventReduce: true,
     ignoreDuplicate: false,
-    multiInstance: false,
+    multiInstance: true,
     name: "test_database",
     password: "123", // TODO
     storage: getRxStorageDexie(),
