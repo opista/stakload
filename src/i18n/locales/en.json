@@ -36,11 +36,8 @@
   },
   "backToTop": "Back to top",
   "goBack": "Go back",
-  "platform": {
-    "steam": "Steam"
-  },
-  "thisIsALibraryGame": "This game is in your {{platform}} library",
-  "platformNotRecognised": "This game is from an unrecognised library",
+  "libraryNotRecognised": "This game is from an unrecognised library",
+  "thisIsALibraryGame": "This game is in your {{library}} library",
   "sync": {
     "syncing": "Syncing",
     "updatingLibrary": "Updating game library ({{processing}} / {{total}})",

@@ -48,7 +48,7 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
   }) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = data[index];
-    return game ? game._id : index;
+    return game?.id || index;
   };
 
   return games.length ? (

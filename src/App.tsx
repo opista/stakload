@@ -53,6 +53,14 @@ export function App() {
    * - Move initialisation work to somewhere else? (disabling context menus etc?)
    */
 
+  // useEffect(() => {
+  //   getOwnedGames().then(({ games }) => {
+  //     const mapped = games.map((game) => mapOwnedGameDetailsToGameStoreModel(game, "steam"));
+
+  //     return db.games.bulkAdd(mapped);
+  //   });
+  // }, []);
+
   return (
     <>
       <ColorSchemeScript defaultColorScheme="dark" />

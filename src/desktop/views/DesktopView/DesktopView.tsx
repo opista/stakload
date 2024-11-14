@@ -14,7 +14,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 
 export const DesktopView = () => {
   const [selectedGame, setSelectedGame] = useState<number | null>(null);
-  const games = useLiveQuery(() => db.games.toArray());
+  const games = useLiveQuery(() => db.games.orderBy("name").toArray());
 
   return (
     <AppShell header={{ height: 60 }} padding="md">

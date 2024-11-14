@@ -1,37 +1,42 @@
 import { exposeWorker } from "react-hooks-worker";
-import { db, GameStoreModel } from "../database";
+import { GameStoreModel } from "../database";
 
-export type GameSyncResult = {
-  status: "PROCESSING" | "COMPLETE";
-  processed: number;
+export type GameSyncInput = {
+  games: GameStoreModel[];
+  processing: number;
   total: number;
 };
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+export type GameSyncResult = {
+  status: "PROCESSING" | "COMPLETE";
+  processing: number;
+  total: number;
+};
 
-async function* gameSync({
-  games = [],
-}: {
-  games: GameStoreModel[];
-}): AsyncGenerator<GameSyncResult> {
-  let processed = 0;
-  const total = games?.length;
+async function* gameSync(games: GameStoreModel[]): AsyncGenerator<GameSyncResult> {
+  if (!games.length) return;
 
-  if (!total) return;
+  let idx = 0;
 
-  while (processed < total) {
-    yield { status: "PROCESSING", processed, total };
+  while (idx < games.length) {
+    yield { status: "PROCESSING", processing: idx + 1, total: games.length };
+    // await sleep(5000);
 
-    await db.games.update(games[processed].id, {
-      metadataSyncedAt: new Date(),
-    });
+    // const game = games[idx];
 
-    await sleep(10000);
+    // TODO, figure out how to access window context vars for request
+    // const appDetails = await getAppDetails(game.gameId);
+    // const mapped = mapAppDetailsToGameStoreModel(game, appDetails);
 
-    processed += 1;
+    // await db.games.update(game.id, {
+    //   ...mapped,
+    //   metadataSyncedAt: new Date(),
+    // });
+
+    idx++;
   }
 
-  yield { status: "COMPLETE", processed, total };
+  yield { status: "COMPLETE", processing: idx + 1, total: games.length };
 }
 
 exposeWorker(gameSync);

@@ -36,15 +36,14 @@ export const getOwnedGames = async (key: string, steamId: string) => {
   return result.response;
 };
 
-export const getAppDetails = async (appId: number) => {
-  const appIdString = String(appId);
-  const query = buildQueryParams({ appids: appIdString, l: "english" });
+export const getAppDetails = async (appId: string) => {
+  const query = buildQueryParams({ appids: appId, l: "english" });
 
   const result = await apiRequest<AppDetailsResponse>(
     `${STEAM_STORE_API_BASE_URL}/appdetails${query}`,
   );
 
-  return result[appIdString].data;
+  return result[appId].data;
 };
 
 export const getAppReviews = async (appId: number) => {

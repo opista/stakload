@@ -13,8 +13,8 @@ export const Spotlight = ({ games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
-    games?.map(({ _id, name }, index) => ({
-      id: _id,
+    games?.map(({ id, name }, index) => ({
+      id,
       label: name,
       description: t("gameDetails.lastPlayed", {
         date: new Date(),

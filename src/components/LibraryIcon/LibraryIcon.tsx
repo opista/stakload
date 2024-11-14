@@ -1,7 +1,7 @@
 import { IconBrandSteam, IconHelpHexagon, IconProps } from "@tabler/icons-react";
-import { GameStoreModel } from "../../database/schema/game.schema";
 import { MantineSize, ThemeIcon, Tooltip } from "@mantine/core";
 import { useTranslation } from "react-i18next";
+import { GameStoreModel } from "../../database";
 
 type LibraryIconProps = {
   game: GameStoreModel;
@@ -11,19 +11,22 @@ type LibraryIconProps = {
 export const LibraryIcon = ({ game, size, ...rest }: LibraryIconProps & IconProps) => {
   const { t } = useTranslation();
 
-  const configSelector = (platform: string) => {
-    switch (platform) {
+  const configSelector = (library: string) => {
+    switch (library) {
       case "steam":
-        return { Icon: IconBrandSteam, platform: t("platform.steam") };
+        return { Icon: IconBrandSteam, library: "Steam" };
       default:
-        return { Icon: IconHelpHexagon, platform: t("platformNotRecognised") };
+        return { Icon: IconHelpHexagon, library: null };
     }
   };
 
-  const { Icon, platform } = configSelector(game.platform);
+  const { Icon, library } = configSelector(game.library);
 
   return (
-    <Tooltip label={t("thisIsALibraryGame", { platform })} position="bottom-start">
+    <Tooltip
+      label={library ? t("thisIsALibraryGame", { library }) : t("libraryNotRecognised")}
+      position="bottom-start"
+    >
       <ThemeIcon size={size} variant="default">
         <Icon {...rest} style={{ width: "80%", height: "80%" }} stroke={1.5} />
       </ThemeIcon>
