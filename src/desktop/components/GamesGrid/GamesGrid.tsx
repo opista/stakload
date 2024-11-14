@@ -3,11 +3,11 @@ import { VariableSizeGrid as Grid, GridChildComponentProps } from "react-window"
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
 import { BackToTop } from "../BackToTop/BackToTop";
-import { GameStoreModel } from "../../../database/schema/game.schema";
+import { GameStoreModel } from "../../../database";
 
 interface GamesGridProps {
   columnCount: number;
-  games: GameStoreModel[];
+  games?: GameStoreModel[];
   onClick: (index: number) => void;
 }
 
@@ -17,6 +17,11 @@ const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number
 export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
   const containerRef = useRef<Element>(null);
 
+  if (!games?.length) {
+    // TODO
+    return <>no game found, add some info here</>;
+  }
+
   const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps<unknown>) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
@@ -24,7 +29,7 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
     if (!game) return null;
 
     return (
-      <UnstyledButton onClick={() => onClick(index)} p="xs" style={style}>
+      <UnstyledButton key={game.id} onClick={() => onClick(index)} p="xs" style={style}>
         <Paper shadow="sm" h="100%" withBorder>
           {game.name}
         </Paper>

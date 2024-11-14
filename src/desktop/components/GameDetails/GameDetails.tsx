@@ -19,12 +19,18 @@ import { useEffect, useRef } from "react";
 import { BackToTop } from "../BackToTop/BackToTop";
 
 type GameDetailsProps = {
-  game: GameStoreModel;
+  game?: GameStoreModel;
   onBack: () => void;
 };
 
 export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // TODO
+  if (!game) {
+    return <>no game found info</>;
+  }
+
   const scrollToTop = () => containerRef.current!.scrollTo({ top: 0 });
 
   useEffect(() => scrollToTop(), [game._id]);

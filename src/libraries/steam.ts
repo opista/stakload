@@ -1,6 +1,7 @@
 import { buildQueryParams } from "../util/build-query-params";
 import { curl } from "../util/curl";
 import { AppDetailsResponse } from "./steam/types/app-details";
+import { AppReviewResponse } from "./steam/types/app-review";
 import { OwnedGamesResponse } from "./steam/types/owned-game";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
@@ -44,4 +45,14 @@ export const getAppDetails = async (appId: number) => {
   );
 
   return result[appIdString].data;
+};
+
+export const getAppReviews = async (appId: number) => {
+  const query = buildQueryParams({ json: "1", purchase_type: "all", language: "all" });
+
+  const result = await apiRequest<AppReviewResponse>(
+    `${STEAM_STORE_API_BASE_URL}/appreviews/${appId}${query}`,
+  );
+
+  return result;
 };

@@ -2,8 +2,8 @@ import Dexie, { type EntityTable } from "dexie";
 
 interface GameStoreModel {
   id: string;
-  _id: string;
-  appId: string;
+  gameId: string;
+  metadataSyncedAt: Date | 0;
   name: string;
   platform: string;
 }
@@ -14,7 +14,7 @@ const db = new Dexie("trulaunch") as Dexie & {
 
 // Schema declaration:
 db.version(1).stores({
-  games: "++id", // primary key "id" (for the runtime!)
+  games: "++id, metadataSyncedAt",
 });
 
 export type { GameStoreModel };

@@ -40,5 +40,13 @@
     "steam": "Steam"
   },
   "thisIsALibraryGame": "This game is in your {{platform}} library",
-  "platformNotRecognised": "This game is from an unrecognised library"
+  "platformNotRecognised": "This game is from an unrecognised library",
+  "sync": {
+    "syncing": "Syncing",
+    "updatingLibrary": "Updating game library ({{processing}} / {{total}})",
+    "syncComplete": "Sync complete",
+    "gamesUpdated_one": "{{count}} game updated",
+    "gamesUpdated_other": "{{count}} games updated"
+  },
+  "hideNotification": "Hide notification"
 }

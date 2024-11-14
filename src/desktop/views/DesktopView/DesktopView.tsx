@@ -9,29 +9,12 @@ import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
 import classes from "./DesktopView.module.css";
 import { GameDetails } from "../../components/GameDetails/GameDetails";
-import { useWorker } from "react-hooks-worker";
-import { GameStoreModel } from "../../../database";
-
-const createWorker = () =>
-  new Worker(new URL("../../../workers/game-sync.worker.ts", import.meta.url), { type: "module" });
+import { db } from "../../../database";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export const DesktopView = () => {
-  const { result } = useWorker(createWorker, ["foo", "bar"]);
-  // const collection = useRxCollection<GameStoreModel>("games");
-  // const query = collection?.find({ sort: [{ name: "asc" }] });
   const [selectedGame, setSelectedGame] = useState<number | null>(null);
-
-  // const { result: games } = useRxQuery(query);
-
-  const games: GameStoreModel[] = [];
-
-  console.log("foobar", result);
-
-  // useEffect(() => {
-  //   getOwnedGames()
-  //     .then(({ games }) => getAppDetails(games[0].appid))
-  //     .then((v) => console.log(v));
-  // }, []);
+  const games = useLiveQuery(() => db.games.toArray());
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
@@ -59,11 +42,9 @@ export const DesktopView = () => {
           </Box>
         </Allotment.Pane>
         <Allotment.Pane>
-          <>here: {result}</>
-
-          <Box p="md" className={classes.main}>
+          <Box className={classes.main}>
             {selectedGame !== null ? (
-              <GameDetails game={games[selectedGame]} onBack={() => setSelectedGame(null)} />
+              <GameDetails game={games?.[selectedGame]} onBack={() => setSelectedGame(null)} />
             ) : (
               <GamesGrid games={games} columnCount={3} onClick={setSelectedGame} />
             )}

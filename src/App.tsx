@@ -10,9 +10,9 @@ import { useEffect } from "react";
 import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import classes from "./App.module.css";
 import { useInterfaceSettingsStore } from "./store/interface-settings-store";
+import { Notifications } from "@mantine/notifications";
 
 export function App() {
-  // const [db, setDb] = useState<RxDatabase>();
   const { theme: primaryColor } = useInterfaceSettingsStore();
 
   const theme = createTheme({
@@ -57,6 +57,7 @@ export function App() {
     <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <Notifications />
         <DesktopView />
       </MantineProvider>
     </>

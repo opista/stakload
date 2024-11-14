@@ -1,11 +1,11 @@
 import { Button, Text } from "@mantine/core";
 import { FixedSizeList, FixedSizeList as List, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { GameStoreModel } from "../../../database/schema/game.schema";
 import { createRef, useEffect } from "react";
+import { GameStoreModel } from "../../../database";
 
 interface GameNavigationProps {
-  games: GameStoreModel[];
+  games?: GameStoreModel[];
   onChange: (index: number) => void;
   selectedGame: number | null;
 }
@@ -17,6 +17,11 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
     if (selectedGame === null) return;
     listRef?.current?.scrollToItem(selectedGame);
   }, [selectedGame]);
+
+  // TODO
+  if (!games?.length) {
+    return <>No game found info, maybe button needed?</>;
+  }
 
   const Row = ({ index, style }: ListChildComponentProps<unknown>) => (
     <div style={style}>

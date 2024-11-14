@@ -1,16 +1,37 @@
 import { exposeWorker } from "react-hooks-worker";
+import { db, GameStoreModel } from "../database";
 
-async function* gameSync(ids: string[]) {
-  const total = ids.length;
+export type GameSyncResult = {
+  status: "PROCESSING" | "COMPLETE";
+  processed: number;
+  total: number;
+};
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function* gameSync({
+  games = [],
+}: {
+  games: GameStoreModel[];
+}): AsyncGenerator<GameSyncResult> {
   let processed = 0;
+  const total = games?.length;
+
+  if (!total) return;
 
   while (processed < total) {
-    console.log("processing", ids[processed]);
-    processed++;
-    yield { state: "PENDING", processed, total };
+    yield { status: "PROCESSING", processed, total };
+
+    await db.games.update(games[processed].id, {
+      metadataSyncedAt: new Date(),
+    });
+
+    await sleep(10000);
+
+    processed += 1;
   }
 
-  yield { state: "COMPLETE", processed, total };
+  yield { status: "COMPLETE", processed, total };
 }
 
 exposeWorker(gameSync);
