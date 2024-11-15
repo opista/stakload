@@ -1,0 +1,11 @@
+.emptyContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.importButton {
+  margin-top: var(--mantine-spacing-md);
+}

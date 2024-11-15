@@ -36,9 +36,16 @@
   },
   "backToTop": "Back to top",
   "goBack": "Go back",
-  "platform": {
-    "steam": "Steam"
+  "libraryNotRecognised": "This game is from an unrecognised library",
+  "thisIsALibraryGame": "This game is in your {{library}} library",
+  "importLibrary": "Import library",
+  "sync": {
+    "syncing": "Syncing",
+    "updatingLibrary": "Updating game library ({{processing}} / {{total}})",
+    "syncComplete": "Sync complete",
+    "gamesUpdated_one": "{{count}} game updated",
+    "gamesUpdated_other": "{{count}} games updated"
   },
-  "thisIsALibraryGame": "This game is in your {{platform}} library",
-  "platformNotRecognised": "This game is from an unrecognised library"
+  "noGamesFound": "No games found",
+  "hideNotification": "Hide notification"
 }

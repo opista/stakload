@@ -1,33 +1,24 @@
 import { AppShell, Box, Divider } from "@mantine/core";
-import { useRxCollection, useRxQuery } from "rxdb-hooks";
 import { Allotment } from "allotment";
 import { useState } from "react";
 import { GamesGrid } from "../../components/GamesGrid/GamesGrid";
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
-import { GameStoreModel } from "../../../database/schema/game.schema";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../../components/Spotlight/Spotlight";
 import classes from "./DesktopView.module.css";
 import { GameDetails } from "../../components/GameDetails/GameDetails";
+import { db } from "../../../database";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export const DesktopView = () => {
-  const collection = useRxCollection<GameStoreModel>("games");
-  const query = collection?.find({ sort: [{ name: "asc" }] });
   const [selectedGame, setSelectedGame] = useState<number | null>(null);
-
-  const { result: games } = useRxQuery(query);
-
-  // useEffect(() => {
-  //   getOwnedGames()
-  //     .then(({ games }) => getAppDetails(games[0].appid))
-  //     .then((v) => console.log(v));
-  // }, []);
+  const games = useLiveQuery(() => db.games.orderBy("name").toArray());
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
-      <Spotlight />
+      <Spotlight disabled={!games?.length} games={games} onClick={setSelectedGame} />
       <AppShell.Header>
         <Header />
       </AppShell.Header>
@@ -36,8 +27,8 @@ export const DesktopView = () => {
           <Box p="md" className={classes.navbar}>
             <AppShell.Section>
               <Box className={classes.searchAndFilters}>
-                <SearchControl />
-                <GamesFilter />
+                <SearchControl disabled={!games?.length} />
+                <GamesFilter disabled={!games?.length} />
               </Box>
               <Divider my="md" />
             </AppShell.Section>
@@ -51,9 +42,9 @@ export const DesktopView = () => {
           </Box>
         </Allotment.Pane>
         <Allotment.Pane>
-          <Box p="md" className={classes.main}>
+          <Box className={classes.main}>
             {selectedGame !== null ? (
-              <GameDetails game={games[selectedGame]} onBack={() => setSelectedGame(null)} />
+              <GameDetails game={games?.[selectedGame]} onBack={() => setSelectedGame(null)} />
             ) : (
               <GamesGrid games={games} columnCount={3} onClick={setSelectedGame} />
             )}

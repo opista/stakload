@@ -6,16 +6,13 @@ import {
   ScrollArea,
   createTheme,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
-import { Provider } from "rxdb-hooks";
-import { RxDatabase } from "rxdb";
+import { useEffect } from "react";
 import { DesktopView } from "./desktop/views/DesktopView/DesktopView";
 import classes from "./App.module.css";
-import { initialize } from "./database/initialize";
 import { useInterfaceSettingsStore } from "./store/interface-settings-store";
+import { Notifications } from "@mantine/notifications";
 
 export function App() {
-  const [db, setDb] = useState<RxDatabase>();
   const { theme: primaryColor } = useInterfaceSettingsStore();
 
   const theme = createTheme({
@@ -42,15 +39,10 @@ export function App() {
   });
 
   useEffect(() => {
-    initialize().then(setDb);
-  }, []);
-
-  useEffect(() => {
     if (process.env.NODE_ENV !== "development") {
       const handleContextMenu = (event: MouseEvent) => event.preventDefault();
       document.addEventListener("contextmenu", handleContextMenu);
-      return () =>
-        document.removeEventListener("contextmenu", handleContextMenu);
+      return () => document.removeEventListener("contextmenu", handleContextMenu);
     }
   }, []);
 
@@ -61,12 +53,21 @@ export function App() {
    * - Move initialisation work to somewhere else? (disabling context menus etc?)
    */
 
+  // useEffect(() => {
+  //   getOwnedGames().then(({ games }) => {
+  //     const mapped = games.map((game) => mapOwnedGameDetailsToGameStoreModel(game, "steam"));
+
+  //     return db.games.bulkAdd(mapped);
+  //   });
+  // }, []);
+
   return (
-    <Provider db={db}>
+    <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <Notifications />
         <DesktopView />
       </MantineProvider>
-    </Provider>
+    </>
   );
 }

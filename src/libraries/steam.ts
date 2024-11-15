@@ -1,6 +1,7 @@
 import { buildQueryParams } from "../util/build-query-params";
 import { curl } from "../util/curl";
 import { AppDetailsResponse } from "./steam/types/app-details";
+import { AppReviewResponse } from "./steam/types/app-review";
 import { OwnedGamesResponse } from "./steam/types/owned-game";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
@@ -12,8 +13,6 @@ const apiRequest = async <T>(path: string): Promise<T> => {
       method: "GET",
       headers: { accept: "application/json" },
     });
-
-    console.log(response);
 
     return JSON.parse(response) as T;
   } catch (err) {
@@ -37,13 +36,22 @@ export const getOwnedGames = async (key: string, steamId: string) => {
   return result.response;
 };
 
-export const getAppDetails = async (appId: number) => {
-  const appIdString = String(appId);
-  const query = buildQueryParams({ appids: appIdString, l: "english" });
+export const getAppDetails = async (appId: string) => {
+  const query = buildQueryParams({ appids: appId, l: "english" });
 
   const result = await apiRequest<AppDetailsResponse>(
     `${STEAM_STORE_API_BASE_URL}/appdetails${query}`,
   );
 
-  return result[appIdString].data;
+  return result[appId].data;
+};
+
+export const getAppReviews = async (appId: number) => {
+  const query = buildQueryParams({ json: "1", purchase_type: "all", language: "all" });
+
+  const result = await apiRequest<AppReviewResponse>(
+    `${STEAM_STORE_API_BASE_URL}/appreviews/${appId}${query}`,
+  );
+
+  return result;
 };

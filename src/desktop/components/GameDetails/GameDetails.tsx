@@ -19,12 +19,18 @@ import { useEffect, useRef } from "react";
 import { BackToTop } from "../BackToTop/BackToTop";
 
 type GameDetailsProps = {
-  game: GameStoreModel;
+  game?: GameStoreModel;
   onBack: () => void;
 };
 
 export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // TODO
+  if (!game) {
+    return <>no game found info</>;
+  }
+
   const scrollToTop = () => containerRef.current!.scrollTo({ top: 0 });
 
   useEffect(() => scrollToTop(), [game._id]);
@@ -67,7 +73,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
           src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-6.png"
         >
           <Flex className={classes.heroContent}>
-            <Text className={classes.heroText} title={game.name}>
+            <Text className={classes.heroText} lineClamp={3} title={game.name}>
               {game.name}
             </Text>
             <Group>

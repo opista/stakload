@@ -18,9 +18,7 @@ interface VerticalTabsProps {
 export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
   const [activeTab, setActiveTab] = useState<string | null>(defaultTab);
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
-  const [controlsRefs, setControlsRefs] = useState<
-    Record<string, HTMLButtonElement | null>
-  >({});
+  const [controlsRefs, setControlsRefs] = useState<Record<string, HTMLButtonElement | null>>({});
 
   const setControlRef = (val: string) => (node: HTMLButtonElement) => {
     controlsRefs[val] = node;
@@ -56,9 +54,9 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
         ))}
 
         <FloatingIndicator
-          target={activeTab ? controlsRefs[activeTab] : null}
-          parent={rootRef}
           className={classes.indicator}
+          parent={rootRef}
+          target={activeTab ? controlsRefs[activeTab] : null}
         />
       </Tabs.List>
 
