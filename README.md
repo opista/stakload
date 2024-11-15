@@ -27,6 +27,7 @@ yarn dev
 
 - Frontend
 
+  - Look at migrating over to Next.js? Routing will be easier, can offload tasks to backend
   - [BUG] Back to top doesn't always appear when scrolling (list and details)
   - [BUG] Clock freezes on mac (not really relevant as this is a windows only app)
   - Collapse entire sidebar? Look at fastmail UI for inspo. Header also moves with sidebar resize
