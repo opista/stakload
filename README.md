@@ -13,7 +13,7 @@ An AIO games library manager.
 ## Architecture
 
 - Frontend - [React](https://react.dev/git)
-  - Local-first database, [RxDB](https://rxdb.info/quickstart.html)
+  - Local-first database, [Dexie](https://dexie.org/)
 - Backend - [Neutralinojs](https://neutralino.js.org/)
 
 ## Development

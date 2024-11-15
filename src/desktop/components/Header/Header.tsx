@@ -16,7 +16,6 @@ export const Header = () => {
       <Group justify="space-between" style={{ flex: 1 }}>
         <Logo />
         <Group gap="md">
-          <Divider orientation="vertical" size="xs" />
           <GameSync />
           {displayTime && (
             <>

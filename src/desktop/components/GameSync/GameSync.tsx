@@ -1,4 +1,4 @@
-import { Loader, Text, Box, rem } from "@mantine/core";
+import { Loader, Text, Box, rem, Divider } from "@mantine/core";
 import classes from "./GameSync.module.css";
 import { useTranslation } from "react-i18next";
 import { db, GameStoreModel } from "../../../database";
@@ -55,17 +55,20 @@ export const GameSync = () => {
   }
 
   return (
-    <Box className={classes.container}>
-      <Loader className={classes.loader} size={24} type="bars" />
-      <div>
-        <Text size="sm">{t("sync.syncing")}</Text>
-        <Text size="xs">
-          {t("sync.updatingLibrary", {
-            processing: result?.processing || 1,
-            total: gamesToSync?.length,
-          })}
-        </Text>
-      </div>
-    </Box>
+    <>
+      <Divider orientation="vertical" size="xs" />
+      <Box className={classes.container}>
+        <Loader className={classes.loader} size={24} type="bars" />
+        <div>
+          <Text size="sm">{t("sync.syncing")}</Text>
+          <Text size="xs">
+            {t("sync.updatingLibrary", {
+              processing: result?.processing || 1,
+              total: gamesToSync?.length,
+            })}
+          </Text>
+        </div>
+      </Box>
+    </>
   );
 };
