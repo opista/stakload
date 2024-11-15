@@ -1,9 +1,12 @@
-import { Paper, UnstyledButton } from "@mantine/core";
+import { Box, Button, Paper, Text, UnstyledButton } from "@mantine/core";
 import { VariableSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
 import { BackToTop } from "../BackToTop/BackToTop";
 import { GameStoreModel } from "../../../database";
+import classes from "./GamesGrid.module.css";
+import { useTranslation } from "react-i18next";
+import { IconSquareRoundedPlus } from "@tabler/icons-react";
 
 interface GamesGridProps {
   columnCount: number;
@@ -16,10 +19,27 @@ const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number
 
 export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
   const containerRef = useRef<Element>(null);
+  const { t } = useTranslation();
+
+  // TODO
+  const onImportClick = () => {
+    console.log("Open library settings");
+  };
 
   if (!games?.length) {
+    return (
+      <Box className={classes.emptyContainer}>
+        <Text c="dimmed">{t("noGamesFound")}</Text>
+        <Button
+          className={classes.importButton}
+          leftSection={<IconSquareRoundedPlus />}
+          onClick={onImportClick}
+        >
+          {t("importLibrary")}
+        </Button>
+      </Box>
+    );
     // TODO
-    return <>no game found, add some info here</>;
   }
 
   const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps<unknown>) => {
@@ -51,7 +71,7 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
     return game?.id || index;
   };
 
-  return games.length ? (
+  return (
     <>
       <AutoSizer>
         {({ height, width }) => (
@@ -72,6 +92,5 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
       </AutoSizer>
       <BackToTop container={containerRef.current} />
     </>
-  ) : undefined;
-  // TODO - "NO games found" screen
+  );
 };

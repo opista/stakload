@@ -3,7 +3,11 @@ import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import classes from "./GamesFilter.module.css";
 
-export const GamesFilter = () => {
+type GamesFilterProps = {
+  disabled?: boolean;
+};
+
+export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
 
   const Icon = opened ? IconFilterFilled : IconFilter;
@@ -11,19 +15,21 @@ export const GamesFilter = () => {
   return (
     <Popover
       closeOnEscape
+      disabled={disabled}
+      onChange={setOpened}
+      opened={opened}
       position="right-start"
       shadow="sm"
       width={200}
       withArrow
-      opened={opened}
-      onChange={setOpened}
     >
       <Popover.Target>
         <ActionIcon
           className={classes.icon}
+          disabled={disabled}
+          onClick={() => setOpened((o) => !o)}
           size="lg"
           variant="default"
-          onClick={() => setOpened((o) => !o)}
         >
           <Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />
         </ActionIcon>

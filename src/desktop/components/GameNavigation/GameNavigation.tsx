@@ -18,9 +18,8 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
     listRef?.current?.scrollToItem(selectedGame);
   }, [selectedGame]);
 
-  // TODO
   if (!games?.length) {
-    return <>No game found info, maybe button needed?</>;
+    return null;
   }
 
   const Row = ({ index, style }: ListChildComponentProps<unknown>) => (
@@ -29,7 +28,7 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
         color={selectedGame === index ? undefined : "gray"}
         fullWidth
         justify="flex-start"
-        key={games[index]._id}
+        key={games[index].id}
         title={games[index].name}
         variant={selectedGame === index ? "filled" : "subtle"}
         onClick={() => onChange(index)}

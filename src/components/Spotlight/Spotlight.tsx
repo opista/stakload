@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 import { GameStoreModel } from "../../database";
 
 type SpotlightProps = {
+  disabled?: boolean;
   games?: GameStoreModel[];
   onClick: (index: number) => void;
 };
 
-export const Spotlight = ({ games, onClick }: SpotlightProps) => {
+export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
@@ -35,6 +36,7 @@ export const Spotlight = ({ games, onClick }: SpotlightProps) => {
   return (
     <MantineSpotlight
       actions={actions}
+      disabled={disabled}
       limit={7}
       nothingFound={t("spotlight.noResultsFound")}
       searchProps={{

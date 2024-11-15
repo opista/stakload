@@ -38,6 +38,7 @@
   "goBack": "Go back",
   "libraryNotRecognised": "This game is from an unrecognised library",
   "thisIsALibraryGame": "This game is in your {{library}} library",
+  "importLibrary": "Import library",
   "sync": {
     "syncing": "Syncing",
     "updatingLibrary": "Updating game library ({{processing}} / {{total}})",
@@ -45,5 +46,6 @@
     "gamesUpdated_one": "{{count}} game updated",
     "gamesUpdated_other": "{{count}} games updated"
   },
+  "noGamesFound": "No games found",
   "hideNotification": "Hide notification"
 }

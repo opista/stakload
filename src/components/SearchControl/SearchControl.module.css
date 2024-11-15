@@ -8,11 +8,18 @@
   width: 100%;
   border-color: var(--mantine-color-dark-4);
   background-color: var(--mantine-color-dark-6);
+
+  &.disabled {
+    border: calc(0.0625rem * var(--mantine-scale)) solid transparent;
+    background-color: var(--mantine-color-dark-6);
+    color: var(--mantine-color-dark-3);
+    cursor: not-allowed;
+  }
 }
 
 .text {
   flex: 1;
-  color: var(--mantine-color-dimmed);
+  color: inherit;
   font-size: var(--mantine-font-size-sm);
 }
 
@@ -27,4 +34,8 @@
   color: var(--mantine-color-dark-0);
   border-color: var(--mantine-color-dark-7);
   background-color: var(--mantine-color-dark-7);
+
+  &.disabled {
+    display: none;
+  }
 }

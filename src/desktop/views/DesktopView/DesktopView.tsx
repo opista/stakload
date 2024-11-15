@@ -18,7 +18,7 @@ export const DesktopView = () => {
 
   return (
     <AppShell header={{ height: 60 }} padding="md">
-      <Spotlight games={games} onClick={setSelectedGame} />
+      <Spotlight disabled={!games?.length} games={games} onClick={setSelectedGame} />
       <AppShell.Header>
         <Header />
       </AppShell.Header>
@@ -27,8 +27,8 @@ export const DesktopView = () => {
           <Box p="md" className={classes.navbar}>
             <AppShell.Section>
               <Box className={classes.searchAndFilters}>
-                <SearchControl />
-                <GamesFilter />
+                <SearchControl disabled={!games?.length} />
+                <GamesFilter disabled={!games?.length} />
               </Box>
               <Divider my="md" />
             </AppShell.Section>
