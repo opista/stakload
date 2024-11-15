@@ -3,6 +3,8 @@ import { useInterval } from "@mantine/hooks";
 import { executeCommand } from "../backend";
 import { parseXml } from "../util/parseXml";
 
+const BATTERY_DETAILS_UPDATE_FREQUENCY = 60_000;
+
 export interface BatteryDetails {
   isCharging: boolean;
   percentage: number | null;
@@ -45,7 +47,7 @@ const getBatteryDetails = async (): Promise<BatteryDetails> => {
   };
 };
 
-export const useBatteryDetails = (updateFrequencyMs = 60000) => {
+export const useBatteryDetails = () => {
   const [batteryDetails, setBatteryDetails] = useState<BatteryDetails>({
     isCharging: false,
     percentage: null,
@@ -61,7 +63,7 @@ export const useBatteryDetails = (updateFrequencyMs = 60000) => {
 
   const interval = useInterval(() => {
     updateBatteryDetails();
-  }, updateFrequencyMs);
+  }, BATTERY_DETAILS_UPDATE_FREQUENCY);
 
   useEffect(() => {
     updateBatteryDetails();
