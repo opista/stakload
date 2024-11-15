@@ -38,6 +38,7 @@
     "dayjs": "^1.11.13",
     "dexie": "^4.0.9",
     "dexie-react-hooks": "^1.1.7",
+    "fast-xml-parser": "^4.5.0",
     "fetch-to-curl": "patch:fetch-to-curl@npm%3A0.6.0#~/.yarn/patches/fetch-to-curl-npm-0.6.0-8d0b21d9ab.patch",
     "i18next": "^23.16.4",
     "react": "^18.3.1",

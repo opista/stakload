@@ -50,6 +50,7 @@ yarn dev
     - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
 
 - Backend
+  - Set up a logger
   - Create temporary "fake" API to fetch data from Steam and [igdb](https://api-docs.igdb.com/#game)
     - Move igdb to external service with caching later
   - Identify running processes

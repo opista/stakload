@@ -71,6 +71,14 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
     return game?.id || index;
   };
 
+  /**
+   * TODO
+   * When a user clicks back from the game details
+   * view, we lose the original scroll position of
+   * this list. We should record it and return the
+   * user back to where they were
+   */
+
   return (
     <>
       <AutoSizer>

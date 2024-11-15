@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
+import { executeCommand } from "../backend";
+import { parseXml } from "../util/parseXml";
 
 export interface BatteryDetails {
   isCharging: boolean;
@@ -8,12 +10,39 @@ export interface BatteryDetails {
 
 const getBatteryDetails = async (): Promise<BatteryDetails> => {
   // https://learn.microsoft.com/en-gb/windows/win32/cimwin32prov/win32-battery?redirectedfrom=MSDN
-  // const result = await os.execCommand("WMIC PATH Win32_Battery Get EstimatedChargeRemaining")
-  // console.log(result)
-  return Promise.resolve({
+  const result = await executeCommand(
+    "WMIC PATH Win32_Battery Get EstimatedChargeRemaining /format:RAWXML",
+  );
+
+  const parsed = parseXml(result.stdOut);
+  const data = parsed?.COMMAND?.RESULTS;
+  const err = data?.ERROR?.DESCRIPTION;
+
+  if (!data || err) {
+    //   /**
+    //    * TODO - We should probably disable the battery option
+    //    * here to prevent it constantly trying to fetch the
+    //    * information when we know it doesn't exist. Alternatively
+    //    * we can check the device type and turn this on/off based
+    //    * upon that. If the device type is not a portable device,
+    //    * we can just always shows 100% battery
+    //    */
+    console.debug("Failed to fetch battery status:", err);
+    return {
+      isCharging: false,
+      percentage: 100,
+    };
+  }
+
+  /**
+   * TODO - I need a battery-powered windows
+   * device so that I can parse the response
+   */
+
+  return {
     isCharging: false,
     percentage: Math.ceil(Math.random() * 100),
-  });
+  };
 };
 
 export const useBatteryDetails = (updateFrequencyMs = 60000) => {
@@ -24,6 +53,9 @@ export const useBatteryDetails = (updateFrequencyMs = 60000) => {
 
   const updateBatteryDetails = async () => {
     const details = await getBatteryDetails();
+
+    if (!details) return;
+
     setBatteryDetails(details);
   };
 
