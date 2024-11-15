@@ -9,7 +9,9 @@ export const mapOwnedGameDetailsToGameStoreModel = (
 ): GameStoreModel => ({
   id: uuid(),
   gameId: String(ownedGameDetails.appid),
-  icon: `http://media.steampowered.com/steamcommunity/public/images/apps/${ownedGameDetails.appid}/${ownedGameDetails.img_icon_url}.jpg`,
+  icon: ownedGameDetails.img_icon_url
+    ? `http://media.steampowered.com/steamcommunity/public/images/apps/${ownedGameDetails.appid}/${ownedGameDetails.img_icon_url}.jpg`
+    : "",
   library,
   metadataSyncedAt: 0,
   name: removeSpecialChars(ownedGameDetails.name),

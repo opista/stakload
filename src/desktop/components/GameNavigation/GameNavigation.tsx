@@ -3,12 +3,25 @@ import { FixedSizeList, FixedSizeList as List, ListChildComponentProps } from "r
 import AutoSizer from "react-virtualized-auto-sizer";
 import { createRef, useEffect } from "react";
 import { GameStoreModel } from "../../../database";
+import { Image } from "@mantine/core";
+import { IconDeviceGamepad2 } from "@tabler/icons-react";
+import classes from "./GameNavigation.module.css";
 
 interface GameNavigationProps {
   games?: GameStoreModel[];
   onChange: (index: number) => void;
   selectedGame: number | null;
 }
+
+const DefaultIcon = <IconDeviceGamepad2 className={classes.iconDefault} stroke={1.5} />;
+
+const LeftSection = ({ icon }: { icon?: string }) => {
+  if (!icon?.length) {
+    return DefaultIcon;
+  } else {
+    return <Image className={classes.iconImage} radius="md" src={icon} />;
+  }
+};
 
 export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigationProps) => {
   const listRef = createRef<FixedSizeList<unknown>>();
@@ -22,21 +35,26 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
     return null;
   }
 
-  const Row = ({ index, style }: ListChildComponentProps<unknown>) => (
-    <div style={style}>
-      <Button
-        color={selectedGame === index ? undefined : "gray"}
-        fullWidth
-        justify="flex-start"
-        key={games[index].id}
-        title={games[index].name}
-        variant={selectedGame === index ? "filled" : "subtle"}
-        onClick={() => onChange(index)}
-      >
-        <Text truncate="end">{games[index].name}</Text>
-      </Button>
-    </div>
-  );
+  const Row = ({ index, style }: ListChildComponentProps<unknown>) => {
+    const game = games[index];
+    return (
+      <div style={style}>
+        <Button
+          className={classes.button}
+          color={selectedGame === index ? undefined : "gray"}
+          fullWidth
+          justify="flex-start"
+          key={game.id}
+          leftSection={<LeftSection icon={game.icon} />}
+          title={game.name}
+          variant={selectedGame === index ? "filled" : "subtle"}
+          onClick={() => onChange(index)}
+        >
+          <Text truncate="end">{game.name}</Text>
+        </Button>
+      </div>
+    );
+  };
 
   return (
     <AutoSizer disableWidth>

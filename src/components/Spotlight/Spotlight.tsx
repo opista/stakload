@@ -1,8 +1,10 @@
-import { IconHome, IconSearch } from "@tabler/icons-react";
+import { IconDeviceGamepad2, IconSearch } from "@tabler/icons-react";
 import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
 import { rem } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { GameStoreModel } from "../../database";
+import { Image } from "@mantine/core";
+import classes from "./Spotlight.module.css";
 
 type SpotlightProps = {
   disabled?: boolean;
@@ -10,14 +12,32 @@ type SpotlightProps = {
   onClick: (index: number) => void;
 };
 
+const DefaultIcon = <IconDeviceGamepad2 style={{ width: rem(24), height: rem(24) }} stroke={1.5} />;
+
+const LeftSection = ({ icon }: { icon?: string }) => {
+  if (!icon?.length) {
+    return DefaultIcon;
+  } else {
+    return <Image className={classes.icon} radius="md" src={icon} />;
+  }
+};
+
 export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
-    games?.map(({ id, name }, index) => ({
+    games?.map(({ icon, id, name }, index) => ({
       id,
       label: name,
       description: t("gameDetails.lastPlayed", {
+        /**
+         * TODO
+         * Pluck this from synced data. I think we'll
+         * need to be smart about this later if we
+         * want to track the user's playtime ourselves
+         * post-sync. Maybe we don't do that and we just
+         * fetch the latest game data?
+         */
         date: new Date(),
         defaultValue: "Never",
         formatParams: {
@@ -30,7 +50,7 @@ export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
         },
       }),
       onClick: () => onClick(index),
-      leftSection: <IconHome style={{ width: rem(24), height: rem(24) }} stroke={1.5} />,
+      leftSection: <LeftSection icon={icon} />,
     })) || [];
 
   return (
