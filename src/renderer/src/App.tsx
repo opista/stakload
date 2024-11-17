@@ -53,7 +53,7 @@ export const App = () => {
   //   });
   // }, []);
 
-  // TODO
+  // TODO - abstract initial app load actions here
   useEffect(() => {
     getLocale().then((locale) => i18n.changeLanguage(locale));
   }, []);

@@ -36,7 +36,6 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
         </Button>
       </Box>
     );
-    // TODO
   }
 
   const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps<unknown>) => {

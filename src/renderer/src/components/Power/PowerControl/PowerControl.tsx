@@ -8,8 +8,6 @@ import { PowerModal } from "../PowerModal/PowerModal";
 const shortcut = SHORTCUT_KEYS.QUIT.join("+");
 
 export const PowerControl = () => {
-  // TODO, this should open a modal to close the app, shut down or put PC to sleep
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [opened, { open, close }] = useDisclosure(false);
   const { t } = useTranslation();
 
