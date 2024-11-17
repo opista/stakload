@@ -12,13 +12,13 @@ type SpotlightProps = {
   onClick: (index: number) => void;
 };
 
-const DefaultIcon = <IconDeviceGamepad2 style={{ width: rem(24), height: rem(24) }} stroke={1.5} />;
+const DefaultIcon = <IconDeviceGamepad2 className={classes.defaultIcon} stroke={1.5} />;
 
 const LeftSection = ({ icon }: { icon?: string }) => {
   if (!icon?.length) {
     return DefaultIcon;
   } else {
-    return <Image className={classes.icon} radius="md" src={icon} />;
+    return <Image className={classes.icon} src={icon} />;
   }
 };
 
