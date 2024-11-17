@@ -1,7 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
 import { FETCH, GET_BATTERY_INFO, GET_LOCALE, OPEN_WEBPAGE } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
@@ -11,14 +10,43 @@ import { getLocale } from "./channels/get-locale";
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
-    show: false,
     autoHideMenuBar: true,
-    ...(process.platform === "linux" ? { icon } : {}),
+    center: true,
+    closable: true,
+    enableLargerThanScreen: false,
+    focusable: true,
+    frame: true,
+    fullscreenable: true,
+    height: 600,
+    maximizable: true,
+    minimizable: true,
+    movable: true,
+    resizable: true,
+    roundedCorners: true,
+    show: true,
+    title: "Trulaunch",
+    width: 800,
     webPreferences: {
+      accessibleTitle: "Trulaunch",
+      allowRunningInsecureContent: false,
+      autoplayPolicy: "document-user-activation-required",
+      contextIsolation: true,
+      devTools: false,
+      enableWebSQL: false,
+      experimentalFeatures: false,
+      imageAnimationPolicy: "animate",
+      images: true,
+      javascript: true,
+      navigateOnDragDrop: false,
+      nodeIntegrationInWorker: true,
+      plugins: false,
       preload: join(__dirname, "../preload/index.mjs"),
       sandbox: false,
+      scrollBounce: false,
+      spellcheck: false,
+      textAreasAreResizable: false,
+      webSecurity: true,
+      zoomFactor: 1.0,
     },
   });
 
