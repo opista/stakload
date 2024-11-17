@@ -1,11 +1,11 @@
 import { use } from "i18next";
 import { initReactI18next } from "react-i18next";
-import en from "./locales/en.json";
+import enGB from "./locales/en-GB.json";
 
 void use(initReactI18next).init({
   debug: true,
-  fallbackLng: "en",
+  fallbackLng: "en-GB",
   resources: {
-    en: { translation: en },
+    "en-GB": { translation: enGB },
   },
 });

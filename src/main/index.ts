@@ -2,10 +2,11 @@ import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
-import { FETCH, GET_BATTERY_INFO, OPEN_WEBPAGE } from "../preload/channels";
+import { FETCH, GET_BATTERY_INFO, GET_LOCALE, OPEN_WEBPAGE } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
 import { getBatteryInfo } from "./channels/get-battery-info";
+import { getLocale } from "./channels/get-locale";
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,6 +55,7 @@ app.whenReady().then(() => {
   });
 
   ipcMain.handle(GET_BATTERY_INFO, getBatteryInfo);
+  ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(FETCH, nodeFetch);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
 

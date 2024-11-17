@@ -1,4 +1,6 @@
-export const executeCommand = (command: string) => window.api.executeCommand(command);
+export const getBatteryInfo = () => window.api.getBatteryInfo();
+
+export const getLocale = () => window.api.getLocale();
 
 export const openWebpage = (url: string) => window.api.openWebpage(url);
 

@@ -3,9 +3,13 @@ import { DesktopView } from "./views/DesktopView/DesktopView";
 import classes from "./App.module.css";
 import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings-store";
+import { useEffect } from "react";
+import { getLocale } from "./api";
+import { useTranslation } from "react-i18next";
 
 export const App = () => {
   const { theme: primaryColor } = useInterfaceSettingsStore();
+  const { i18n } = useTranslation();
 
   const theme = createTheme({
     defaultRadius: "md",
@@ -44,6 +48,11 @@ export const App = () => {
   //     return db.games.bulkAdd(mapped);
   //   });
   // }, []);
+
+  // TODO
+  useEffect(() => {
+    getLocale().then((locale) => i18n.changeLanguage(locale));
+  }, []);
 
   return (
     <>

@@ -5,6 +5,7 @@ declare global {
     electron: ElectronAPI;
     api: {
       getBatteryInfo: () => Promise<BatteryInfo>;
+      getLocale: () => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       openWebpage: (url: string) => void;
     };

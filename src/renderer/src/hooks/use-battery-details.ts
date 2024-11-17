@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
+import { getBatteryInfo } from "@api/index";
 
 const BATTERY_DETAILS_UPDATE_FREQUENCY = 60_000;
 
@@ -10,7 +11,7 @@ export interface BatteryDetails {
 
 const getBatteryDetails = async (): Promise<BatteryDetails> => {
   try {
-    const data = await window.api.getBatteryInfo();
+    const data = await getBatteryInfo();
 
     return {
       isCharging: !data.isOnBatteryPower,
