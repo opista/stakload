@@ -11,9 +11,3 @@ export const power = {
   shutdownDevice: window.api.shutdownDevice,
   sleepDevice: window.api.sleepDevice,
 };
-
-export const storage = {
-  getItem: (key: string) => localStorage.getItem(key),
-  setItem: (key: string, value: string) => localStorage.setItem(key, value),
-  removeItem: (key: string) => localStorage.removeItem(key),
-};

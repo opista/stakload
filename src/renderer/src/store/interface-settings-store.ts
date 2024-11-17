@@ -1,6 +1,5 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
-import { storage } from "../api";
 
 interface InterfaceSettingsState {
   displayBattery: boolean;
@@ -36,7 +35,7 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
     }),
     {
       name: "interface_settings",
-      storage: createJSONStorage(() => storage),
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );
