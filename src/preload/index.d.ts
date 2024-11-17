@@ -8,6 +8,11 @@ declare global {
       getLocale: () => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       openWebpage: (url: string) => void;
+      closeApp: () => void;
+      restartApp: () => void;
+      restartDevice: () => void;
+      shutdownDevice: () => void;
+      sleepDevice: () => void;
     };
   }
 }

@@ -1,11 +1,22 @@
 import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import { FETCH, GET_BATTERY_INFO, GET_LOCALE, OPEN_WEBPAGE } from "../preload/channels";
+import {
+  CLOSE_APP,
+  FETCH,
+  GET_BATTERY_INFO,
+  GET_LOCALE,
+  OPEN_WEBPAGE,
+  RESTART_APP,
+  RESTART_DEVICE,
+  SHUTDOWN_DEVICE,
+  SLEEP_DEVICE,
+} from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
 import { getBatteryInfo } from "./channels/get-battery-info";
 import { getLocale } from "./channels/get-locale";
+import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 
 function createWindow(): void {
   // Create the browser window.
@@ -31,7 +42,7 @@ function createWindow(): void {
       allowRunningInsecureContent: false,
       autoplayPolicy: "document-user-activation-required",
       contextIsolation: true,
-      devTools: false,
+      devTools: true,
       enableWebSQL: false,
       experimentalFeatures: false,
       imageAnimationPolicy: "animate",
@@ -86,6 +97,11 @@ app.whenReady().then(() => {
   ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(FETCH, nodeFetch);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
+  ipcMain.on(CLOSE_APP, closeApp);
+  ipcMain.on(RESTART_APP, restartApp);
+  ipcMain.on(RESTART_DEVICE, restartDevice);
+  ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
+  ipcMain.on(SLEEP_DEVICE, sleepDevice);
 
   createWindow();
 
