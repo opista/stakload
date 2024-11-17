@@ -47,5 +47,12 @@
     "gamesUpdated_other": "{{count}} games updated"
   },
   "noGamesFound": "No games found",
-  "hideNotification": "Hide notification"
+  "hideNotification": "Hide notification",
+  "power": {
+    "closeApp": "Close Trulaunch",
+    "restartApp": "Restart Trulaunch",
+    "shutdown": "Shut down",
+    "restart": "Restart",
+    "sleep": "Sleep"
+  }
 }

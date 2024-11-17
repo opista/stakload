@@ -43,18 +43,7 @@ export const SettingsModal = ({ onClose, opened }: SettingsModalProps) => {
   ];
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onClose}
-      withCloseButton
-      overlayProps={{
-        backgroundOpacity: 0.55,
-        blur: 3,
-      }}
-      padding="sm"
-      size="lg"
-      title={t("settings")}
-    >
+    <Modal onClose={onClose} opened={opened} padding="sm" size="lg" title={t("settings")} withCloseButton>
       <Divider></Divider>
       <div className={classes.container}>
         <VerticalTabs tabs={tabs} defaultTab={tabs[0].key} />

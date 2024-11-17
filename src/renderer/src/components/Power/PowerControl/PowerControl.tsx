@@ -3,10 +3,11 @@ import { ActionIcon, VisuallyHidden } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { IconPower } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { PowerModal } from "../PowerModal/PowerModal";
 
 const shortcut = SHORTCUT_KEYS.QUIT.join("+");
 
-export const ApplicationControl = () => {
+export const PowerControl = () => {
   // TODO, this should open a modal to close the app, shut down or put PC to sleep
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [opened, { open, close }] = useDisclosure(false);
@@ -26,6 +27,8 @@ export const ApplicationControl = () => {
         <VisuallyHidden>{t("quit")}</VisuallyHidden>
         <IconPower style={{ width: "70%", height: "70%" }} stroke={1.5} />
       </ActionIcon>
+
+      <PowerModal onClose={close} opened={opened} />
     </>
   );
 };

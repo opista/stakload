@@ -1,0 +1,8 @@
+.buttonLabel {
+  flex: 1;
+}
+
+.divider {
+  margin-top: var(--mantine-spacing-md);
+  margin-bottom: var(--mantine-spacing-md);
+}

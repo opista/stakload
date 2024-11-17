@@ -1,7 +1,7 @@
 import { Divider, Group } from "@mantine/core";
 
 import { GameSync } from "../GameSync/GameSync";
-import { ApplicationControl } from "@components/ApplicationControl/ApplicationControl";
+import { PowerControl } from "@components/Power/PowerControl/PowerControl";
 import { BatteryIndicator } from "@components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "@components/Clock/Clock";
 import { Logo } from "@components/Logo/Logo";
@@ -32,7 +32,7 @@ export const Header = () => {
           <Divider orientation="vertical" size="xs" />
           <Group gap="xs">
             <SettingsControl />
-            <ApplicationControl />
+            <PowerControl />
           </Group>
         </Group>
       </Group>

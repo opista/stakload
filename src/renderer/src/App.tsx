@@ -22,6 +22,10 @@ export const App = () => {
       Modal: Modal.extend({
         defaultProps: {
           size: "xl",
+          overlayProps: {
+            backgroundOpacity: 0.55,
+            blur: 3,
+          },
         },
       }),
       ScrollArea: ScrollArea.extend({
