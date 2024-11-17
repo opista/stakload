@@ -1,13 +1,15 @@
 import { FloatingIndicator, Tabs, rem } from "@mantine/core";
-import { FunctionComponent, ReactNode, useState } from "react";
+import { FC, useState } from "react";
 import { IconProps } from "@tabler/icons-react";
 import classes from "./VerticalTabs.module.css";
+import { useTranslation } from "react-i18next";
+import { ParseKeys } from "i18next";
 
-interface Tab {
-  content: ReactNode;
-  icon: FunctionComponent<IconProps>;
+export interface Tab {
+  Content: () => JSX.Element;
+  Icon: FC<IconProps>;
   key: string;
-  label: string;
+  label: ParseKeys;
 }
 
 interface VerticalTabsProps {
@@ -16,6 +18,7 @@ interface VerticalTabsProps {
 }
 
 export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<string | null>(defaultTab);
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
   const [controlsRefs, setControlsRefs] = useState<Record<string, HTMLButtonElement | null>>({});
@@ -37,7 +40,7 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
       value={activeTab}
     >
       <Tabs.List ref={setRootRef}>
-        {tabs.map(({ icon: Icon, key, label }) => (
+        {tabs.map(({ Icon, key, label }) => (
           <Tabs.Tab
             className={classes.tab}
             classNames={{
@@ -49,7 +52,7 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
             ref={setControlRef(key)}
             value={key}
           >
-            {label}
+            {t(label)}
           </Tabs.Tab>
         ))}
 
@@ -60,9 +63,9 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
         />
       </Tabs.List>
 
-      {tabs.map(({ content, key }) => (
+      {tabs.map(({ Content, key }) => (
         <Tabs.Panel className={classes.tabPanel} key={key} value={key}>
-          {content}
+          <Content />
         </Tabs.Panel>
       ))}
     </Tabs>
