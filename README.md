@@ -14,13 +14,33 @@ An AIO games library manager.
 
 - Frontend - [React](https://react.dev/git)
   - Local-first database, [Dexie](https://dexie.org/)
-- Backend - [Neutralinojs](https://neutralino.js.org/)
+- Backend - [Electron](https://www.electronjs.org/)
 
-## Development
+## Project Setup
+
+### Install
 
 ```bash
-yarn
-yarn dev
+$ npm install
+```
+
+### Development
+
+```bash
+$ npm run dev
+```
+
+### Build
+
+```bash
+# For windows
+$ npm run build:win
+
+# For macOS
+$ npm run build:mac
+
+# For Linux
+$ npm run build:linux
 ```
 
 ## TODO
@@ -39,7 +59,7 @@ yarn dev
   - Refactor any components that are:
     - Using prop styling, move it to CSS Modules
     - Too big and should be broken down
-  - Ensure that Neutralino lib is only being called from the `./backend` so that we can swap to a different backend solution if need-be
+  - Ensure that eletron lib is only being called from the `./api` dir so that we can swap to a different backend solution if need-be
   - Ensure that all strings are stored in i18n and there is no static text
   - Is there anything we can do to optimise the build? The app needs to be as least resource-hungry as possible
   - Build "fullscreen" mode, a-la Steam Big Picture

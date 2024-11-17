@@ -1,7 +1,6 @@
-.git/
-.storage/
-.tmp/
-bin/
-dist/
-env.d.ts
-node_modules/
+out
+dist
+pnpm-lock.yaml
+LICENSE.md
+tsconfig.json
+tsconfig.*.json
