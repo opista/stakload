@@ -1,43 +1,38 @@
 import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
-import { getBatteryInfo } from "@api/index";
 
 const BATTERY_DETAILS_UPDATE_FREQUENCY = 60_000;
 
-export interface BatteryDetails {
-  isCharging: boolean;
-  percentage: number | null;
+interface BatteryType {
+  charging: boolean;
+  chargingTime: number;
+  dischargingTime: number;
+  level: number;
+  onchargingchange: number | null;
+  onchargingtimechange: number | null;
+  ondischargingtimechange: number | null;
+  onlevelchange: number | null;
 }
 
-const getBatteryDetails = async (): Promise<BatteryDetails> => {
-  try {
-    const data = await getBatteryInfo();
+type BatteryDetails = {
+  isCharging: boolean;
+  percentage: number;
+};
 
-    return {
-      isCharging: !data.isOnBatteryPower,
-      percentage: Math.ceil(Math.random() * 100),
-    };
-  } catch (err) {
-    //   //   /**
-    //   //    * TODO - We should probably disable the battery option
-    //   //    * here to prevent it constantly trying to fetch the
-    //   //    * information when we know it doesn't exist. Alternatively
-    //   //    * we can check the device type and turn this on/off based
-    //   //    * upon that. If the device type is not a portable device,
-    //   //    * we can just always shows 100% battery
-    //   //    */
-    //   console.debug("Failed to fetch battery status:", err);
-    return {
-      isCharging: false,
-      percentage: 100,
-    };
-  }
+const getBatteryDetails = async (): Promise<BatteryDetails> => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const data = (await (window.navigator as any).getBattery()) as BatteryType;
+
+  return {
+    isCharging: data.charging,
+    percentage: data.level * 100,
+  };
 };
 
 export const useBatteryDetails = () => {
   const [batteryDetails, setBatteryDetails] = useState<BatteryDetails>({
     isCharging: false,
-    percentage: null,
+    percentage: 100,
   });
 
   const updateBatteryDetails = async () => {

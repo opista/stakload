@@ -1,5 +1,3 @@
-export const getBatteryInfo = () => window.api.getBatteryInfo();
-
 export const getLocale = () => window.api.getLocale();
 
 export const openWebpage = (url: string) => window.api.openWebpage(url);

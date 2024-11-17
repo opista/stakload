@@ -1,20 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
-import {
-  CLOSE_APP,
-  FETCH,
-  GET_BATTERY_INFO,
-  GET_LOCALE,
-  SLEEP_DEVICE,
-  OPEN_WEBPAGE,
-  RESTART_APP,
-  SHUTDOWN_DEVICE,
-} from "./channels";
-import { BatteryInfo } from "../main/channels/get-battery-info";
+import { CLOSE_APP, FETCH, GET_LOCALE, SLEEP_DEVICE, OPEN_WEBPAGE, RESTART_APP, SHUTDOWN_DEVICE } from "./channels";
 
 // Custom APIs for renderer
 const api = {
-  getBatteryInfo: (): Promise<BatteryInfo> => ipcRenderer.invoke(GET_BATTERY_INFO),
   getLocale: (): Promise<string> => ipcRenderer.invoke(GET_LOCALE),
   fetch: <T>(...args: Parameters<typeof fetch>): Promise<T> => ipcRenderer.invoke(FETCH, ...args),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),

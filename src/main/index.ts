@@ -4,7 +4,6 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import {
   CLOSE_APP,
   FETCH,
-  GET_BATTERY_INFO,
   GET_LOCALE,
   OPEN_WEBPAGE,
   RESTART_APP,
@@ -14,7 +13,6 @@ import {
 } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
-import { getBatteryInfo } from "./channels/get-battery-info";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 
@@ -93,7 +91,6 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  ipcMain.handle(GET_BATTERY_INFO, getBatteryInfo);
   ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(FETCH, nodeFetch);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
