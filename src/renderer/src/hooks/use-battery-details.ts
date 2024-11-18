@@ -25,7 +25,7 @@ const getBatteryDetails = async (): Promise<BatteryDetails> => {
 
   return {
     isCharging: data.charging,
-    percentage: data.level * 100,
+    percentage: Math.round(data.level * 100),
   };
 };
 
