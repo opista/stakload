@@ -10,13 +10,15 @@ import {
   RESTART_DEVICE,
   SHUTDOWN_DEVICE,
   SLEEP_DEVICE,
+  SYNC_GAMES,
 } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
+import { syncManager } from "./channels/sync-manager";
 
-function createWindow(): void {
+function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     autoHideMenuBar: true,
@@ -75,6 +77,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
+
+  return mainWindow;
 }
 
 // This method will be called when Electron has finished
@@ -91,16 +95,17 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
+  const browserWindow = createWindow();
+
   ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(FETCH, nodeFetch);
+  ipcMain.on(SYNC_GAMES, syncManager(browserWindow.webContents));
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
   ipcMain.on(SLEEP_DEVICE, sleepDevice);
-
-  createWindow();
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

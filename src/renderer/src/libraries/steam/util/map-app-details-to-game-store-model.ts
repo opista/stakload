@@ -9,9 +9,9 @@ const mapPlatform = (appDetails: AppDetails): Platform[] => {
   ].filter((val): val is Platform => Boolean(val));
 };
 
-export const mapAppDetailsToGameStoreModel = (game: GameStoreModel, appDetails: AppDetails): GameStoreModel => ({
-  ...game,
+export const mapAppDetailsToGameStoreModel = (appDetails: AppDetails): Partial<GameStoreModel> => ({
   backgroundImage: appDetails.background_raw,
+  description: appDetails.detailed_description,
   listImage: appDetails.header_image,
   platform: mapPlatform(appDetails),
   type: appDetails.type,

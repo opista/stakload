@@ -26,6 +26,8 @@ type GameDetailsProps = {
 export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  console.log(game);
+
   if (!game) {
     onBack();
     return;
@@ -58,10 +60,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
       <Divider mt="md" />
       <ScrollArea className={classes.body} viewportRef={containerRef}>
         <BackToTop container={containerRef.current} />
-        <BackgroundImage
-          className={classes.hero}
-          src="https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-6.png"
-        >
+        <BackgroundImage className={classes.hero} src={game.backgroundImage || ""}>
           <Flex className={classes.heroContent}>
             <Text className={classes.heroText} lineClamp={3} title={game.name}>
               {game.name}

@@ -5,6 +5,7 @@ export type Platform = "linux" | "max" | "windows";
 
 export type GameStoreModel = {
   backgroundImage?: string;
+  description?: string;
   listImage?: string;
   icon?: string;
   id: string;
