@@ -2,7 +2,6 @@ import { Button, Divider, Modal, Stack } from "@mantine/core";
 import { IconPower, IconRefresh, IconRotateClockwise2, IconX, IconZzz } from "@tabler/icons-react";
 import classes from "./PowerModal.module.css";
 import { useTranslation } from "react-i18next";
-import { power } from "@api/index";
 
 interface PowerModalProps {
   onClose: () => void;
@@ -14,12 +13,12 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
 
   const appPowerControls = [
     {
-      onClick: () => power.closeApp(),
+      onClick: () => window.api.closeApp(),
       Icon: IconX,
       label: t("power.closeApp"),
     },
     {
-      onClick: () => power.restartApp(),
+      onClick: () => window.api.restartApp(),
       Icon: IconRotateClockwise2,
       label: t("power.restartApp"),
     },
@@ -27,17 +26,17 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
 
   const devicePowerControls = [
     {
-      onClick: () => power.shutdownDevice(),
+      onClick: () => window.api.shutdownDevice(),
       Icon: IconPower,
       label: t("power.shutdown"),
     },
     {
-      onClick: () => power.restartDevice(),
+      onClick: () => window.api.restartDevice(),
       Icon: IconRefresh,
       label: t("power.restart"),
     },
     {
-      onClick: () => power.sleepDevice(),
+      onClick: () => window.api.sleepDevice(),
       Icon: IconZzz,
       label: t("power.sleep"),
     },

@@ -59,7 +59,6 @@ $ npm run build:linux
   - Refactor any components that are:
     - Using prop styling, move it to CSS Modules
     - Too big and should be broken down
-  - Ensure that eletron lib is only being called from the `./api` dir so that we can swap to a different backend solution if need-be
   - Ensure that all strings are stored in i18n and there is no static text
   - Is there anything we can do to optimise the build? The app needs to be as least resource-hungry as possible
   - Build "fullscreen" mode, a-la Steam Big Picture

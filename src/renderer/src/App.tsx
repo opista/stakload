@@ -4,7 +4,6 @@ import classes from "./App.module.css";
 import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings-store";
 import { useEffect } from "react";
-import { getLocale } from "./api";
 import { useTranslation } from "react-i18next";
 
 export const App = () => {
@@ -55,7 +54,7 @@ export const App = () => {
 
   // TODO - abstract initial app load actions here
   useEffect(() => {
-    getLocale().then((locale) => i18n.changeLanguage(locale));
+    window.api.getLocale().then((locale) => i18n.changeLanguage(locale));
   }, []);
 
   return (
