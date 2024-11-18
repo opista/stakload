@@ -17,6 +17,7 @@ import { useEffect, useRef } from "react";
 import { GameStoreModel } from "@database/schema/games";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
+import { RawHtml } from "@components/RawHtml/RawHtml";
 
 type GameDetailsProps = {
   game?: GameStoreModel;
@@ -76,7 +77,9 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
             opacity={0.85}
           />
         </BackgroundImage>
-        <Box h={7000} />
+        <Box h={7000}>
+          <RawHtml html={game.description} />
+        </Box>
       </ScrollArea>
     </Flex>
   );
