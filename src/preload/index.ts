@@ -14,6 +14,7 @@ import {
   METADATA_SYNC_INSERTED,
 } from "./channels";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
+import { exposeConf } from "electron-conf/preload";
 
 // Custom APIs for renderer
 const api = {
@@ -51,3 +52,5 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api;
 }
+
+exposeConf();

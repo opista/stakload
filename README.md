@@ -14,6 +14,7 @@ An AIO games library manager.
 
 - Frontend - [React](https://react.dev/git)
   - Local-first database, [Dexie](https://dexie.org/)
+  - State is managed using [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction), and is persisted using [electron-conf](https://github.com/alex8088/electron-conf)
 - Backend - [Electron](https://www.electronjs.org/)
 
 ## Project Setup

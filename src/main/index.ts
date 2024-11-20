@@ -17,6 +17,11 @@ import { openWebpage } from "./channels/open-webpage";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 import { syncManager } from "./channels/sync-manager";
+import { Conf } from "electron-conf/main";
+
+const conf = new Conf();
+
+conf.registerRendererListener();
 
 function createWindow() {
   // Create the browser window.

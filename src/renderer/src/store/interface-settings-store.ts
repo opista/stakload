@@ -1,5 +1,11 @@
 import { createJSONStorage, persist } from "zustand/middleware";
 import { create } from "zustand";
+import { Conf } from "electron-conf/renderer";
+import { createConfStoreWrapper } from "./create-conf-store-wrapper";
+
+const conf = new Conf();
+
+const STORE_NAME = "interface_settings";
 
 interface InterfaceSettingsState {
   displayBattery: boolean;
@@ -34,8 +40,8 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: "interface_settings",
-      storage: createJSONStorage(() => localStorage),
+      name: STORE_NAME,
+      storage: createJSONStorage(() => createConfStoreWrapper(conf, STORE_NAME)),
     },
   ),
 );

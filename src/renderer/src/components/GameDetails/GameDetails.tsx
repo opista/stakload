@@ -27,8 +27,6 @@ type GameDetailsProps = {
 export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  console.log(game);
-
   if (!game) {
     onBack();
     return;
