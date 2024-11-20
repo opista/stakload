@@ -77,7 +77,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
             opacity={0.85}
           />
         </BackgroundImage>
-        <Box h={7000}>
+        <Box>
           <RawHtml html={game.description} />
         </Box>
       </ScrollArea>
