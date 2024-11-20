@@ -5,7 +5,7 @@ import {
   VisuallyHidden,
 } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
-import { FC } from "react";
+import { FC, forwardRef } from "react";
 import classes from "./ActionIcon.module.css";
 
 type ActionIconProps = {
@@ -13,11 +13,13 @@ type ActionIconProps = {
   "aria-label": string;
 } & PolymorphicComponentProps<"button", MantineActionIconProps>;
 
-export const ActionIcon = ({ icon: Icon, size = "lg", variant = "default", ...props }: ActionIconProps) => {
+export const Component = ({ icon: Icon, size = "lg", variant = "default", ...props }: ActionIconProps, ref) => {
   return (
-    <MantineActionIcon variant={variant} size={size} {...props}>
+    <MantineActionIcon ref={ref} size={size} variant={variant} {...props}>
       <VisuallyHidden>{props["aria-label"]}</VisuallyHidden>
       <Icon className={classes.icon} stroke={1.5} />
     </MantineActionIcon>
   );
 };
+
+export const ActionIcon = forwardRef<unknown, ActionIconProps>(Component);
