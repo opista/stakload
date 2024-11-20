@@ -9,3 +9,23 @@
 .importButton {
   margin-top: var(--mantine-spacing-md);
 }
+
+.cardContainer {
+  display: flex;
+  justify-content: center;
+  padding: var(--mantine-spacing-xs);
+}
+
+.card {
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.cardInner {
+  width: 100%;
+  height: 100%;
+}

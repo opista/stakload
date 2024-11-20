@@ -1,5 +1,5 @@
 import { Box, Button, Paper, Text, UnstyledButton } from "@mantine/core";
-import { VariableSizeGrid as Grid, GridChildComponentProps } from "react-window";
+import { FixedSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
 
@@ -9,8 +9,11 @@ import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "@database/schema/games";
 
+const COVER_ART_RATIO = 3 / 4;
+const COVER_ART_HEIGHT = 200;
+const COVER_ART_WIDTH = COVER_ART_HEIGHT * COVER_ART_RATIO;
+
 interface GamesGridProps {
-  columnCount: number;
   games?: GameStoreModel[];
   onClick: (index: number) => void;
 }
@@ -18,7 +21,7 @@ interface GamesGridProps {
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
-export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
+export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
   const containerRef = useRef<Element>(null);
   const { t } = useTranslation();
 
@@ -38,33 +41,42 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
     );
   }
 
-  const Cell = ({ columnIndex, rowIndex, style }: GridChildComponentProps<unknown>) => {
+  const Cell = ({
+    columnCount,
+    columnIndex,
+    rowIndex,
+    style,
+  }: GridChildComponentProps<unknown> & { columnCount: number }) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
 
     if (!game) return null;
 
     return (
-      <UnstyledButton key={game.id} onClick={() => onClick(index)} p="xs" style={style}>
-        <Paper shadow="sm" h="100%" withBorder>
-          {game.name}
-        </Paper>
-      </UnstyledButton>
+      <Box className={classes.cardContainer} style={style}>
+        <UnstyledButton className={classes.card} key={game.id} onClick={() => onClick(index)}>
+          <Paper className={classes.cardInner} shadow="sm" withBorder>
+            <Text truncate>{game.name}</Text>
+          </Paper>
+        </UnstyledButton>
+      </Box>
     );
   };
 
-  const itemKey = ({
-    columnIndex,
-    data,
-    rowIndex,
-  }: {
-    columnIndex: number;
-    data: GameStoreModel[];
-    rowIndex: number;
-  }) => {
+  const itemKey = (
+    {
+      columnIndex,
+      data: games,
+      rowIndex,
+    }: {
+      columnIndex: number;
+      data: GameStoreModel[];
+      rowIndex: number;
+    },
+    columnCount: number,
+  ) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
-    const game = data[index];
-    return game?.id || index;
+    return games[index]?.id || index;
   };
 
   /**
@@ -78,21 +90,27 @@ export const GamesGrid = ({ columnCount, games, onClick }: GamesGridProps) => {
   return (
     <>
       <AutoSizer>
-        {({ height, width }) => (
-          <Grid
-            columnCount={columnCount}
-            columnWidth={() => width / columnCount}
-            height={height}
-            itemData={games}
-            itemKey={itemKey}
-            outerRef={containerRef}
-            rowCount={Math.ceil(games.length / columnCount)}
-            rowHeight={() => 200}
-            width={width}
-          >
-            {Cell}
-          </Grid>
-        )}
+        {({ height, width }) => {
+          const columnCount = Math.floor(width / (COVER_ART_WIDTH + 8));
+          const columnWidth = width / columnCount;
+          const rowCount = Math.ceil(games.length / columnCount);
+
+          return (
+            <Grid
+              columnCount={columnCount}
+              columnWidth={columnWidth}
+              height={height}
+              itemData={games}
+              itemKey={(args) => itemKey(args, columnCount)}
+              outerRef={containerRef}
+              rowCount={rowCount}
+              rowHeight={COVER_ART_HEIGHT}
+              width={width}
+            >
+              {(props) => <Cell columnCount={columnCount} {...props} />}
+            </Grid>
+          );
+        }}
       </AutoSizer>
       <BackToTop container={containerRef.current} />
     </>
