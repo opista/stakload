@@ -5,6 +5,8 @@
   "settings": "Settings",
   "shortcut": "Shortcut",
   "quit": "quit",
+  "filters": "Filters",
+  "githubRepository": "Github repository",
   "shortcutWithValue": "Shortcut: {{value}}",
   "gameDetails": {
     "lastPlayed": "Last played {{date, datetime}}",
@@ -36,6 +38,8 @@
   },
   "backToTop": "Back to top",
   "goBack": "Go back",
+  "edit": "Edit",
+  "delete": "Delete",
   "libraryNotRecognised": "This game is from an unrecognised library",
   "thisIsALibraryGame": "This game is in your {{library}} library",
   "importLibrary": "Import library",

@@ -1,6 +1,7 @@
 import useScrollPosition from "@hooks/use-scroll-position";
-import { ActionIcon, Affix, Transition } from "@mantine/core";
+import { Affix, Transition } from "@mantine/core";
 import { IconArrowBigUpFilled } from "@tabler/icons-react";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
 
 interface BackToTopProps {
@@ -8,20 +9,21 @@ interface BackToTopProps {
 }
 
 export const BackToTop = ({ container }: BackToTopProps) => {
-  const { t } = useTranslation();
   const containerScrollPosition = useScrollPosition(container);
+  const { t } = useTranslation();
 
   return (
     <Affix position={{ bottom: 20, right: 20 }}>
       <Transition transition="slide-left" mounted={containerScrollPosition > 0}>
         {(transitionStyles) => (
           <ActionIcon
+            aria-label={t("backToTop")}
+            icon={IconArrowBigUpFilled}
+            onClick={() => container?.scrollTo({ behavior: "smooth", top: 0 })}
             style={transitionStyles}
             title={t("backToTop")}
-            onClick={() => container?.scrollTo({ behavior: "smooth", top: 0 })}
-          >
-            <IconArrowBigUpFilled style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
+            variant="filled"
+          />
         )}
       </Transition>
     </Affix>

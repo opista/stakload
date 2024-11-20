@@ -1,23 +1,13 @@
-import {
-  ActionIcon,
-  BackgroundImage,
-  Box,
-  Divider,
-  Flex,
-  Group,
-  Overlay,
-  ScrollArea,
-  Text,
-  VisuallyHidden,
-} from "@mantine/core";
+import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Text } from "@mantine/core";
 import { IconArrowLeft, IconPencil, IconTrash } from "@tabler/icons-react";
-import { t } from "i18next";
 import classes from "./GameDetails.module.css";
 import { useEffect, useRef } from "react";
 import { GameStoreModel } from "@database/schema/games";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { RawHtml } from "@components/RawHtml/RawHtml";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { useTranslation } from "react-i18next";
 
 type GameDetailsProps = {
   game?: GameStoreModel;
@@ -26,6 +16,7 @@ type GameDetailsProps = {
 
 export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
 
   if (!game) {
     onBack();
@@ -40,20 +31,11 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
     <Flex className={classes.container}>
       <Flex justify="space-between">
         <Group>
-          <ActionIcon variant="default" size="lg" aria-label={t("goBack")} onClick={onBack}>
-            <VisuallyHidden>{t("goBack")}</VisuallyHidden>
-            <IconArrowLeft style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
+          <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={onBack} />
         </Group>
         <Group gap="xs">
-          <ActionIcon variant="default" size="lg" aria-label={t("goBack")} onClick={() => console.log("edit")}>
-            <VisuallyHidden>{t("goBack")}</VisuallyHidden>
-            <IconPencil style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
-          <ActionIcon variant="default" size="lg" aria-label={t("goBack")} onClick={() => console.log("delete")}>
-            <VisuallyHidden>{t("goBack")}</VisuallyHidden>
-            <IconTrash style={{ width: "70%", height: "70%" }} stroke={1.5} />
-          </ActionIcon>
+          <ActionIcon aria-label={t("edit")} icon={IconPencil} onClick={() => console.log("edit")} />
+          <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={() => console.log("delete")} />
         </Group>
       </Flex>
       <Divider mt="md" />

@@ -1,9 +1,9 @@
 import { SHORTCUT_KEYS } from "@constants/shortcuts";
-import { ActionIcon, VisuallyHidden } from "@mantine/core";
 import { useDisclosure, useHotkeys } from "@mantine/hooks";
 import { IconPower } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { PowerModal } from "../PowerModal/PowerModal";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 
 const shortcut = SHORTCUT_KEYS.QUIT.join("+");
 
@@ -16,15 +16,11 @@ export const PowerControl = () => {
   return (
     <>
       <ActionIcon
-        variant="default"
-        size="lg"
         aria-label={t("quit")}
-        title={t("shortcutWithValue", { value: shortcut })}
+        icon={IconPower}
         onClick={open}
-      >
-        <VisuallyHidden>{t("quit")}</VisuallyHidden>
-        <IconPower style={{ width: "70%", height: "70%" }} stroke={1.5} />
-      </ActionIcon>
+        title={t("shortcutWithValue", { value: shortcut })}
+      />
 
       <PowerModal onClose={close} opened={opened} />
     </>

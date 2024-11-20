@@ -1,7 +1,9 @@
-import { ActionIcon, Popover, Text } from "@mantine/core";
+import { Popover, Text } from "@mantine/core";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import classes from "./GamesFilter.module.css";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { useTranslation } from "react-i18next";
 
 type GamesFilterProps = {
   disabled?: boolean;
@@ -9,6 +11,7 @@ type GamesFilterProps = {
 
 export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
+  const { t } = useTranslation();
 
   const Icon = opened ? IconFilterFilled : IconFilter;
 
@@ -25,14 +28,13 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
     >
       <Popover.Target>
         <ActionIcon
+          aria-label={t("filters")}
           className={classes.icon}
           disabled={disabled}
+          icon={Icon}
           onClick={() => setOpened((o) => !o)}
           size="lg"
-          variant="default"
-        >
-          <Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />
-        </ActionIcon>
+        />
       </Popover.Target>
       <Popover.Dropdown>
         <Text size="xs">TODO - Filters here</Text>
