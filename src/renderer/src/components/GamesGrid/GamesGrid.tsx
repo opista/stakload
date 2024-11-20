@@ -91,7 +91,7 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
     <>
       <AutoSizer>
         {({ height, width }) => {
-          const columnCount = Math.floor(width / (COVER_ART_WIDTH + 8));
+          const columnCount = Math.floor(width / (COVER_ART_WIDTH + 8)) || 1;
           const columnWidth = width / columnCount;
           const rowCount = Math.ceil(games.length / columnCount);
 

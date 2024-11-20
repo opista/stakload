@@ -32,7 +32,7 @@ function createWindow() {
     maximizable: true,
     minimizable: true,
     minHeight: 400,
-    minWidth: 800,
+    minWidth: 450,
     movable: true,
     resizable: true,
     roundedCorners: true,
