@@ -1,6 +1,4 @@
-import { db } from "@database/index";
 import { useState, useEffect } from "react";
-import { mapAppDetailsToGameStoreModel } from "../libraries/steam/util/map-app-details-to-game-store-model";
 
 export const useGameSync = () => {
   const [processing, setProcessing] = useState(0);
@@ -14,19 +12,11 @@ export const useGameSync = () => {
         setProcessing(1);
       }
     });
-
     return () => window.api.offSyncInserted();
   }, []);
 
   useEffect(() => {
-    window.api.onSyncProcessed(async (_event, { id, appDetails }) => {
-      // TODO - let's offload database updates entirely to backend
-      const mapped = mapAppDetailsToGameStoreModel(appDetails);
-      await db.games.update(id, { ...mapped, metadataSyncedAt: new Date() });
-
-      setProcessing((prev) => prev + 1);
-    });
-
+    window.api.onSyncProcessed(async (_event) => setProcessing((prev) => prev + 1));
     return () => window.api.offSyncProcessed();
   }, []);
 
@@ -35,7 +25,6 @@ export const useGameSync = () => {
       setProcessing(0);
       setTotal(0);
     });
-
     return () => window.api.offSyncComplete();
   }, []);
 

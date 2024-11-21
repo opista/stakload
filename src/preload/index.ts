@@ -12,13 +12,15 @@ import {
   METADATA_SYNC_PROCESSED,
   METADATA_SYNC_COMPLETE,
   METADATA_SYNC_INSERTED,
+  GET_FILTERED_GAMES,
 } from "./channels";
-import { AppDetails } from "../main/libraries/steam/types/app-details";
 import { exposeConf } from "electron-conf/preload";
+import { AppDetails } from "../main/libraries/steam/types/app-details";
 
 // Custom APIs for renderer
 const api = {
   syncGames: (games) => ipcRenderer.send(SYNC_GAMES, games),
+  getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
   onSyncInserted: (cb: (event, count) => void) => ipcRenderer.on(METADATA_SYNC_INSERTED, cb),
   offSyncInserted: () => ipcRenderer.removeAllListeners(METADATA_SYNC_INSERTED),
   onSyncProcessed: (cb: (event, args: { id: string; appDetails: AppDetails }) => void) =>

@@ -2,12 +2,12 @@ import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Text }
 import { IconArrowLeft, IconPencil, IconTrash } from "@tabler/icons-react";
 import classes from "./GameDetails.module.css";
 import { useEffect, useRef } from "react";
-import { GameStoreModel } from "@database/schema/games";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { RawHtml } from "@components/RawHtml/RawHtml";
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
+import { GameStoreModel } from "../../schema/games";
 
 type GameDetailsProps = {
   game?: GameStoreModel;

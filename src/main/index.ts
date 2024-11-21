@@ -4,6 +4,7 @@ import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import {
   CLOSE_APP,
   FETCH,
+  GET_FILTERED_GAMES,
   GET_LOCALE,
   OPEN_WEBPAGE,
   RESTART_APP,
@@ -18,6 +19,8 @@ import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 import { syncManager } from "./channels/sync-manager";
 import { Conf } from "electron-conf/main";
+import { db } from "./database";
+import { getFilteredGameLibrary } from "./channels/games";
 
 const conf = new Conf();
 
@@ -56,6 +59,7 @@ function createWindow() {
       images: true,
       javascript: true,
       navigateOnDragDrop: false,
+      // TODO - should this really be true? Not sure we need this anymore
       nodeIntegrationInWorker: true,
       plugins: false,
       preload: join(__dirname, "../preload/index.mjs"),
@@ -91,35 +95,39 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  // Set app user model id for windows
-  electronApp.setAppUserModelId("com.electron");
+app
+  .whenReady()
+  .then(() => db.ready())
+  .then(() => {
+    // Set app user model id for windows
+    electronApp.setAppUserModelId("com.opista.trulaunch");
 
-  // Default open or close DevTools by F12 in development
-  // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-  app.on("browser-window-created", (_, window) => {
-    optimizer.watchWindowShortcuts(window);
+    // Default open or close DevTools by F12 in development
+    // and ignore CommandOrControl + R in production.
+    // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+    app.on("browser-window-created", (_, window) => {
+      optimizer.watchWindowShortcuts(window);
+    });
+
+    const browserWindow = createWindow();
+
+    ipcMain.handle(GET_LOCALE, getLocale);
+    ipcMain.handle(FETCH, nodeFetch);
+    ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
+    ipcMain.on(SYNC_GAMES, syncManager(browserWindow.webContents));
+    ipcMain.on(OPEN_WEBPAGE, openWebpage);
+    ipcMain.on(CLOSE_APP, closeApp);
+    ipcMain.on(RESTART_APP, restartApp);
+    ipcMain.on(RESTART_DEVICE, restartDevice);
+    ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
+    ipcMain.on(SLEEP_DEVICE, sleepDevice);
+
+    app.on("activate", function () {
+      // On macOS it's common to re-create a window in the app when the
+      // dock icon is clicked and there are no other windows open.
+      if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    });
   });
-
-  const browserWindow = createWindow();
-
-  ipcMain.handle(GET_LOCALE, getLocale);
-  ipcMain.handle(FETCH, nodeFetch);
-  ipcMain.on(SYNC_GAMES, syncManager(browserWindow.webContents));
-  ipcMain.on(OPEN_WEBPAGE, openWebpage);
-  ipcMain.on(CLOSE_APP, closeApp);
-  ipcMain.on(RESTART_APP, restartApp);
-  ipcMain.on(RESTART_DEVICE, restartDevice);
-  ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
-  ipcMain.on(SLEEP_DEVICE, sleepDevice);
-
-  app.on("activate", function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
-});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

@@ -4,7 +4,7 @@ import { rem } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { Image } from "@mantine/core";
 import classes from "./Spotlight.module.css";
-import { GameStoreModel } from "@database/schema/games";
+import { GameStoreModel } from "../../schema/games";
 
 type SpotlightProps = {
   disabled?: boolean;

@@ -7,7 +7,7 @@ import classes from "./GamesGrid.module.css";
 import { useTranslation } from "react-i18next";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
-import { GameStoreModel } from "@database/schema/games";
+import { GameStoreModel } from "../../schema/games";
 
 const COVER_ART_RATIO = 3 / 4;
 const COVER_ART_HEIGHT = 200;

@@ -6,15 +6,16 @@ import { OwnedGamesResponse } from "./types/owned-game";
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
 const STEAM_STORE_API_BASE_URL = "https://store.steampowered.com/api";
 
-const request = async <T>(baseUrl: string, path: string, query?: Record<string, string>): Promise<T> => {
-  const querystring = buildQueryParams(query);
+const apiRequest = async <T>(path: string): Promise<T> => {
   try {
-    const response = await fetch(`${baseUrl}${path}${querystring}`, {
+    const response = await fetch(path, {
       method: "GET",
       headers: { accept: "application/json" },
     });
 
-    return await response.json();
+    const parsed = await response.json();
+
+    return parsed as T;
   } catch (err) {
     const message = "Request to Steam API failed";
     console.error(message, { err, path });
@@ -22,35 +23,30 @@ const request = async <T>(baseUrl: string, path: string, query?: Record<string, 
   }
 };
 
-const steamApiRequest = <T>(path: string, query?: Record<string, string>) =>
-  request<T>(STEAM_API_BASE_URL, path, query);
-const steamStoreApiRequest = <T>(path: string, query?: Record<string, string>) =>
-  request<T>(STEAM_STORE_API_BASE_URL, path, query);
-
 export const getOwnedGames = async (key: string, steamId: string) => {
-  const result = await steamApiRequest<OwnedGamesResponse>("/IPlayerService/GetOwnedGames/v1", {
+  const query = buildQueryParams({
     key,
     include_appinfo: "true",
     include_played_free_games: "true",
     steamid: steamId,
   });
+  const result = await apiRequest<OwnedGamesResponse>(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`);
 
   return result.response;
 };
 
 export const getAppDetails = async (appId: string) => {
-  const result = await steamStoreApiRequest<AppDetailsResponse>("/appdetails", {
-    appids: appId,
-    l: "english",
-  });
+  const query = buildQueryParams({ appids: appId, l: "english" });
+
+  const result = await apiRequest<AppDetailsResponse>(`${STEAM_STORE_API_BASE_URL}/appdetails${query}`);
 
   return result[appId].data;
 };
 
 export const getAppReviews = async (appId: number) => {
-  return await steamStoreApiRequest<AppReviewResponse>(`/appreviews/${appId}`, {
-    json: "1",
-    purchase_type: "all",
-    language: "all",
-  });
+  const query = buildQueryParams({ json: "1", purchase_type: "all", language: "all" });
+
+  const result = await apiRequest<AppReviewResponse>(`${STEAM_STORE_API_BASE_URL}/appreviews/${appId}${query}`);
+
+  return result;
 };

@@ -1,24 +1,24 @@
-import { EntityTable } from "dexie";
+/**
+ * TODO - This should be a shared contract between
+ * the backend and frontend
+ */
 
 export type Library = "steam";
 export type Platform = "linux" | "max" | "windows";
 
 export type GameStoreModel = {
   backgroundImage?: string;
+  createdAt: Date;
+  deletedAt?: Date;
   description?: string;
   listImage?: string;
   icon?: string;
   id: string;
   gameId: string;
   library: Library;
-  metadataSyncedAt: Date | 0;
+  metadataSyncedAt?: Date;
   name: string;
   platform?: Platform[];
   type?: "app" | "game";
+  updatedAt?: Date;
 };
-
-export type GameEntityTable = EntityTable<GameStoreModel, "id">;
-
-const index = "++id, metadataSyncedAt, name";
-
-export default index;

@@ -22,9 +22,6 @@
       "@constants/*": [
         "src/renderer/src/constants/*"
       ],
-      "@database/*": [
-        "src/renderer/src/database/*"
-      ],
       "@hooks/*": [
         "src/renderer/src/hooks/*"
       ],

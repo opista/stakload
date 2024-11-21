@@ -5,7 +5,7 @@ import { createRef, useEffect } from "react";
 import { Image } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import classes from "./GameNavigation.module.css";
-import { GameStoreModel } from "@database/schema/games";
+import { GameStoreModel } from "../../schema/games";
 
 interface GameNavigationProps {
   games?: GameStoreModel[];

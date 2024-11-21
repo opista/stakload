@@ -1,4 +1,4 @@
-import { GameStoreModel, Platform } from "@database/schema/games";
+import { GameStoreModel, Platform } from "../../../database/games";
 import { AppDetails } from "../types/app-details";
 
 const mapPlatform = (appDetails: AppDetails): Platform[] => {
