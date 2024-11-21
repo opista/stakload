@@ -5,8 +5,6 @@ import { createConfStoreWrapper } from "./create-conf-store-wrapper";
 
 const conf = new Conf();
 
-const STORE_NAME = "interface_settings";
-
 interface InterfaceSettingsState {
   displayBattery: boolean;
   displayBatteryPercent: boolean;
@@ -40,8 +38,8 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       setTheme: (theme) => set({ theme }),
     }),
     {
-      name: STORE_NAME,
-      storage: createJSONStorage(() => createConfStoreWrapper(conf, STORE_NAME)),
+      name: "interface_settings",
+      storage: createJSONStorage(() => createConfStoreWrapper(conf)),
     },
   ),
 );
