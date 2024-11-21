@@ -59,8 +59,8 @@ function createWindow() {
       images: true,
       javascript: true,
       navigateOnDragDrop: false,
-      // TODO - should this really be true? Not sure we need this anymore
-      nodeIntegrationInWorker: true,
+      nodeIntegration: false,
+      nodeIntegrationInWorker: false,
       plugins: false,
       preload: join(__dirname, "../preload/index.mjs"),
       sandbox: false,

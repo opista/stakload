@@ -50,6 +50,12 @@ export const addGame = async (fields: Pick<GameStoreModel, "gameId" | "icon" | "
     createdAt: new Date(),
   });
 
+  /**
+   * TODO
+   * When we add a game we need to trigger something
+   * to go and perform a sync
+   */
+
   const snapshot = await ref.get();
 
   return snapshot.val();
