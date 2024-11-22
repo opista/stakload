@@ -11,8 +11,9 @@ const mapPlatform = (appDetails: AppDetails): Platform[] => {
 
 export const mapAppDetailsToGameStoreModel = (appDetails: AppDetails): Partial<GameStoreModel> => ({
   backgroundImage: appDetails.background_raw,
-  description: appDetails.detailed_description,
+  description: appDetails.detailed_description || appDetails.about_the_game || appDetails.short_description,
   listImage: appDetails.header_image,
+  metadataSyncedAt: new Date(),
   platform: mapPlatform(appDetails),
   type: appDetails.type,
 });

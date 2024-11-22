@@ -17,10 +17,9 @@ import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
-import { syncManager } from "./channels/sync-manager";
 import { Conf } from "electron-conf/main";
-import { db } from "./database";
 import { getFilteredGameLibrary } from "./channels/games";
+import { gameSyncManager } from "./channels/game-sync-manager";
 
 const conf = new Conf();
 
@@ -44,7 +43,7 @@ function createWindow() {
     movable: true,
     resizable: true,
     roundedCorners: true,
-    show: true,
+    show: false,
     title: "Trulaunch",
     width: 800,
     webPreferences: {
@@ -72,8 +71,19 @@ function createWindow() {
     },
   });
 
-  mainWindow.on("ready-to-show", () => {
+  const syncManager = gameSyncManager(mainWindow.webContents);
+
+  mainWindow.on("ready-to-show", async () => {
     mainWindow.show();
+
+    /**
+     * TODO - Trigger sync on startup. Later
+     * we should add configuration for the user
+     * to manually sync too/instead. SYNC_GAMES
+     * does this, but we should allow disabling
+     * of auto-sync
+     */
+    // await syncManager.syncGames();
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
@@ -89,45 +99,47 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  return mainWindow;
+  return { browserWindow: mainWindow, syncManager };
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app
-  .whenReady()
-  .then(() => db.ready())
-  .then(() => {
-    // Set app user model id for windows
-    electronApp.setAppUserModelId("com.opista.trulaunch");
+app.whenReady().then(async () => {
+  // Set app user model id for windows
+  electronApp.setAppUserModelId("com.opista.trulaunch");
 
-    // Default open or close DevTools by F12 in development
-    // and ignore CommandOrControl + R in production.
-    // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-    app.on("browser-window-created", (_, window) => {
-      optimizer.watchWindowShortcuts(window);
-    });
+  // getOwnedGames("47D232D3BB9240F67610B1609383FB82", "76561198021450658").then(({ games }) => {
+  //   const mapped = games.map((game) => mapOwnedGameDetailsToGameStoreModel(game, "steam"));
 
-    const browserWindow = createWindow();
-
-    ipcMain.handle(GET_LOCALE, getLocale);
-    ipcMain.handle(FETCH, nodeFetch);
-    ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
-    ipcMain.on(SYNC_GAMES, syncManager(browserWindow.webContents));
-    ipcMain.on(OPEN_WEBPAGE, openWebpage);
-    ipcMain.on(CLOSE_APP, closeApp);
-    ipcMain.on(RESTART_APP, restartApp);
-    ipcMain.on(RESTART_DEVICE, restartDevice);
-    ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
-    ipcMain.on(SLEEP_DEVICE, sleepDevice);
-
-    app.on("activate", function () {
-      // On macOS it's common to re-create a window in the app when the
-      // dock icon is clicked and there are no other windows open.
-      if (BrowserWindow.getAllWindows().length === 0) createWindow();
-    });
+  //   return bulkInsertGames(mapped);
+  // });
+  // Default open or close DevTools by F12 in development
+  // and ignore CommandOrControl + R in production.
+  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
+  app.on("browser-window-created", (_, window) => {
+    optimizer.watchWindowShortcuts(window);
   });
+
+  const { syncManager } = createWindow();
+
+  ipcMain.handle(GET_LOCALE, getLocale);
+  ipcMain.handle(FETCH, nodeFetch);
+  ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
+  ipcMain.on(SYNC_GAMES, () => syncManager.syncGames());
+  ipcMain.on(OPEN_WEBPAGE, openWebpage);
+  ipcMain.on(CLOSE_APP, closeApp);
+  ipcMain.on(RESTART_APP, restartApp);
+  ipcMain.on(RESTART_DEVICE, restartDevice);
+  ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
+  ipcMain.on(SLEEP_DEVICE, sleepDevice);
+
+  app.on("activate", function () {
+    // On macOS it's common to re-create a window in the app when the
+    // dock icon is clicked and there are no other windows open.
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

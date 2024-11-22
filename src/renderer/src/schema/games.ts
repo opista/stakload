@@ -7,13 +7,13 @@ export type Library = "steam";
 export type Platform = "linux" | "max" | "windows";
 
 export type GameStoreModel = {
+  _id: string;
   backgroundImage?: string;
   createdAt: Date;
   deletedAt?: Date;
   description?: string;
   listImage?: string;
   icon?: string;
-  id: string;
   gameId: string;
   library: Library;
   metadataSyncedAt?: Date;

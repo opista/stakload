@@ -15,7 +15,7 @@ An AIO games library manager.
 - Frontend - [React](https://react.dev/git)
   - State is managed using [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction), and is persisted using [electron-conf](https://github.com/alex8088/electron-conf)
 - Backend - [Electron](https://www.electronjs.org/)
-  - Local-first database with [Acebase](https://github.com/appy-one/acebase)
+  - Local-first database with an async fork of [nedb](https://github.com/louischatriot/nedb) - [nedb-promises](https://github.com/bajankristof/nedb-promises/)
 
 ## Project Setup
 

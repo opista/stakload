@@ -26,8 +26,8 @@ export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
-    games?.map(({ icon, id, name }, index) => ({
-      id,
+    games?.map(({ _id, icon, name }, index) => ({
+      id: _id,
       label: name,
       description: t("gameDetails.lastPlayed", {
         /**

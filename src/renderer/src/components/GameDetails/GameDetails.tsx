@@ -1,4 +1,4 @@
-import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Text } from "@mantine/core";
+import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Title } from "@mantine/core";
 import { IconArrowLeft, IconPencil, IconTrash } from "@tabler/icons-react";
 import classes from "./GameDetails.module.css";
 import { useEffect, useRef } from "react";
@@ -25,7 +25,7 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
 
   const scrollToTop = () => containerRef.current!.scrollTo({ top: 0 });
 
-  useEffect(() => scrollToTop(), [game.id]);
+  useEffect(() => scrollToTop(), [game._id]);
 
   return (
     <Flex className={classes.container}>
@@ -43,9 +43,9 @@ export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
         <BackToTop container={containerRef.current} />
         <BackgroundImage className={classes.hero} src={game.backgroundImage || ""}>
           <Flex className={classes.heroContent}>
-            <Text className={classes.heroText} lineClamp={3} title={game.name}>
+            <Title className={classes.heroText} lineClamp={3} order={1} title={game.name} textWrap="balance">
               {game.name}
-            </Text>
+            </Title>
             <Group>
               <LibraryIcon game={game} size="xl" />
             </Group>

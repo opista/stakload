@@ -44,7 +44,7 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
           color={selectedGame === index ? undefined : "gray"}
           fullWidth
           justify="flex-start"
-          key={game.id}
+          key={game._id}
           leftSection={<LeftSection icon={game.icon} />}
           title={game.name}
           variant={selectedGame === index ? "filled" : "subtle"}

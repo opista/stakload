@@ -54,7 +54,7 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
 
     return (
       <Box className={classes.cardContainer} style={style}>
-        <UnstyledButton className={classes.card} key={game.id} onClick={() => onClick(index)}>
+        <UnstyledButton className={classes.card} key={game._id} onClick={() => onClick(index)}>
           <Paper className={classes.cardInner} shadow="sm" withBorder>
             <Text truncate>{game.name}</Text>
           </Paper>
@@ -76,7 +76,7 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
     columnCount: number,
   ) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
-    return games[index]?.id || index;
+    return games[index]?._id || index;
   };
 
   /**
