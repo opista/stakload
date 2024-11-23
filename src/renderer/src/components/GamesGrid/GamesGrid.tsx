@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Text, UnstyledButton } from "@mantine/core";
+import { AspectRatio, Box, Button, Text, UnstyledButton } from "@mantine/core";
 import { FixedSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useRef } from "react";
@@ -10,7 +10,7 @@ import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "../../schema/games";
 
 const COVER_ART_RATIO = 3 / 4;
-const COVER_ART_HEIGHT = 200;
+const COVER_ART_HEIGHT = 250;
 const COVER_ART_WIDTH = COVER_ART_HEIGHT * COVER_ART_RATIO;
 
 interface GamesGridProps {
@@ -54,11 +54,17 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
 
     return (
       <Box className={classes.cardContainer} style={style}>
-        <UnstyledButton className={classes.card} key={game._id} onClick={() => onClick(index)}>
-          <Paper className={classes.cardInner} shadow="sm" withBorder>
-            <Text truncate>{game.name}</Text>
-          </Paper>
-        </UnstyledButton>
+        <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
+          <UnstyledButton className={classes.card} key={game._id} onClick={() => onClick(index)}>
+            <img
+              alt={`${game.name} cover art`}
+              className={classes.cover}
+              // TODO - pull this from the game
+              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
+              title={`${game.name} cover art`}
+            />
+          </UnstyledButton>
+        </AspectRatio>
       </Box>
     );
   };

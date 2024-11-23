@@ -11,21 +11,21 @@
 }
 
 .cardContainer {
-  display: flex;
-  justify-content: center;
   padding: var(--mantine-spacing-xs);
 }
 
 .card {
-  flex-grow: 0;
-  flex-shrink: 0;
+  height: 100%;
+  width: auto;
+}
+
+.aspectRatio {
   display: flex;
   justify-content: center;
   height: 100%;
-  width: 100%;
 }
 
-.cardInner {
-  width: 100%;
+.cover {
+  width: auto;
   height: 100%;
 }
