@@ -6,8 +6,9 @@ import classes from "./SettingsModal.module.css";
 import { Tab, VerticalTabs } from "@components/VerticalTabs/VerticalTabs";
 import { SettingsInterface } from "../SettingsInterface/SettingsInterface";
 import { SettingsLibrary } from "../SettingsLibrary/SettingsLibrary";
+import { ContextModalProps } from "@mantine/modals";
 
-export const SettingsModal = () => {
+export const SettingsModal = ({ id }: ContextModalProps) => {
   const tabs: Tab[] = [
     {
       Content: SettingsInterface,
@@ -16,7 +17,7 @@ export const SettingsModal = () => {
       label: "settingsNavigation.interface",
     },
     {
-      Content: SettingsLibrary,
+      Content: () => <SettingsLibrary id={id} />,
       Icon: IconLibrary,
       key: "library",
       label: "settingsNavigation.library",

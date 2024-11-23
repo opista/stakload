@@ -6,3 +6,20 @@
 .title {
   margin-bottom: var(--mantine-spacing-sm);
 }
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.label {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.date {
+  margin-left: 4px;
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+}

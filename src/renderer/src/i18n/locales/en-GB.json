@@ -31,7 +31,9 @@
   "librarySettings": {
     "general": "General",
     "syncOnStartup": "Sync on startup",
-    "syncOnStartupInfo": "Fetch game library data when you first open the app. Disabling this option means you will need to manually trigger a sync via the menu"
+    "syncOnStartupInfo": "Fetch game library data when you first open the app. Disabling this option means you will need to manually trigger a sync via the menu",
+    "resyncLibrary": "Re-sync game library",
+    "lastSynced": "Last synced: {{- val, datetime}}"
   },
   "shortcutLabel": {
     "openSettings": "Open settings",
