@@ -62,6 +62,7 @@ $ npm run build:linux
     - Too big and should be broken down
   - Ensure that all strings are stored in i18n and there is no static text
   - Is there anything we can do to optimise the build? The app needs to be as least resource-hungry as possible
+  - Run through accessibility section of every component in mantine
   - Build "fullscreen" mode, a-la Steam Big Picture
     - Intro movie (later)
     - Should be easily navigable with a controller

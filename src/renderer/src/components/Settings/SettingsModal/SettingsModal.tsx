@@ -5,6 +5,7 @@ import { ShortcutsView } from "../SettingsShortcuts/SettingsShortcuts";
 import classes from "./SettingsModal.module.css";
 import { Tab, VerticalTabs } from "@components/VerticalTabs/VerticalTabs";
 import { SettingsInterface } from "../SettingsInterface/SettingsInterface";
+import { SettingsLibrary } from "../SettingsLibrary/SettingsLibrary";
 
 export const SettingsModal = () => {
   const tabs: Tab[] = [
@@ -15,7 +16,7 @@ export const SettingsModal = () => {
       label: "settingsNavigation.interface",
     },
     {
-      Content: () => <></>,
+      Content: SettingsLibrary,
       Icon: IconLibrary,
       key: "library",
       label: "settingsNavigation.library",
