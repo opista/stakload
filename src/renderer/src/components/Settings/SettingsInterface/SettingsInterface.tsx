@@ -1,29 +1,9 @@
-import { Checkbox, CheckboxProps, Divider, Title } from "@mantine/core";
+import { Divider, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
 import { useInterfaceSettingsStore } from "@store/interface-settings-store";
-
-interface FormattedCheckboxProps {
-  checked: boolean;
-  label: string;
-  onCheckboxChange: (checked: boolean) => void;
-}
-
-const FormattedCheckbox = ({ checked, label, onCheckboxChange, ...props }: FormattedCheckboxProps & CheckboxProps) => (
-  <Checkbox
-    {...props}
-    checked={checked}
-    classNames={{
-      body: classes.checkboxBody,
-      labelWrapper: classes.checkboxLabelWrapper,
-      root: classes.checkbox,
-    }}
-    label={label}
-    labelPosition="left"
-    onChange={(event) => onCheckboxChange(event.currentTarget.checked)}
-  />
-);
+import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 
 const GeneralSettings = () => {
   const { theme, setTheme } = useInterfaceSettingsStore();
@@ -48,12 +28,12 @@ const TimeSettings = () => {
       <Title className={classes.title} order={2} size="h3">
         {t("interfaceSettings.time")}
       </Title>
-      <FormattedCheckbox
+      <SettingsCheckbox
         checked={displayTime}
         label={t("interfaceSettings.displayTime")}
         onCheckboxChange={setDisplayTime}
       />
-      <FormattedCheckbox
+      <SettingsCheckbox
         checked={displaySeconds}
         disabled={!displayTime}
         label={t("interfaceSettings.displaySeconds")}
@@ -73,12 +53,12 @@ const BatterySettings = () => {
       <Title className={classes.title} order={2} size="h3">
         {t("interfaceSettings.battery")}
       </Title>
-      <FormattedCheckbox
+      <SettingsCheckbox
         checked={displayBattery}
         label={t("interfaceSettings.displayBattery")}
         onCheckboxChange={setDisplayBattery}
       />
-      <FormattedCheckbox
+      <SettingsCheckbox
         checked={displayBatteryPercent}
         disabled={!displayBattery}
         label={t("interfaceSettings.displayBatteryPercentage")}
