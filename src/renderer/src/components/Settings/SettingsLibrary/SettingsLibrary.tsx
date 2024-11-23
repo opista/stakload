@@ -1,3 +1,9 @@
+import { Divider, Title } from "@mantine/core";
+import classes from "./SettingsLibrary.module.css";
+import { useTranslation } from "react-i18next";
+import { useLibrarySettingsStore } from "@store/library-settings-store";
+import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
+
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -10,5 +16,21 @@
  *
  */
 export const SettingsLibrary = () => {
-  return <div>hello</div>;
+  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore();
+  const { t } = useTranslation();
+
+  return (
+    <>
+      <Title className={classes.title} order={2} size="h3">
+        {t("librarySettings.general")}
+      </Title>
+      <SettingsCheckbox
+        checked={syncOnStartup}
+        label={t("librarySettings.syncOnStartup")}
+        labelInfo={t("librarySettings.syncOnStartupInfo")}
+        onCheckboxChange={setSyncOnStartup}
+      />
+      <Divider className={classes.divider} />
+    </>
+  );
 };
