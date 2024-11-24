@@ -8,7 +8,13 @@ import { SettingsInterface } from "../SettingsInterface/SettingsInterface";
 import { SettingsLibrary } from "../SettingsLibrary/SettingsLibrary";
 import { ContextModalProps } from "@mantine/modals";
 
-export const SettingsModal = ({ id }: ContextModalProps) => {
+type TabKey = "interface" | "library" | "shortcuts" | "about";
+
+export type SettingsModalProps = {
+  defaultTab?: TabKey;
+};
+
+export const SettingsModal = ({ id, innerProps }: ContextModalProps<SettingsModalProps>) => {
   const tabs: Tab[] = [
     {
       Content: SettingsInterface,
@@ -40,7 +46,7 @@ export const SettingsModal = ({ id }: ContextModalProps) => {
     <>
       <Divider></Divider>
       <div className={classes.container}>
-        <VerticalTabs tabs={tabs} defaultTab={tabs[0].key} />
+        <VerticalTabs tabs={tabs} defaultTab={innerProps?.defaultTab || "interface"} />
       </div>
     </>
   );

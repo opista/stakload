@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "../../schema/games";
+import { modals } from "@mantine/modals";
+import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 
 const COVER_ART_RATIO = 3 / 4;
 const COVER_ART_HEIGHT = 250;
@@ -25,9 +27,12 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
   const containerRef = useRef<Element>(null);
   const { t } = useTranslation();
 
-  // TODO
   const onImportClick = () => {
-    console.log("Open library settings");
+    modals.openContextModal({
+      modal: "settings",
+      title: t("settings"),
+      innerProps: { ...settingsModalInnerProps, defaultTab: "library" },
+    });
   };
 
   if (!games?.length) {
