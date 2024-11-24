@@ -1,7 +1,7 @@
 import { Button, Divider, Title } from "@mantine/core";
 import classes from "./SettingsLibrary.module.css";
 import { useTranslation } from "react-i18next";
-import { useLibrarySettingsStore } from "@store/library-settings-store";
+import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { modals } from "@mantine/modals";
 /**

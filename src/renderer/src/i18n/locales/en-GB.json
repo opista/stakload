@@ -10,7 +10,9 @@
   "shortcutWithValue": "Shortcut: {{value}}",
   "gameDetails": {
     "lastPlayed": "Last played {{date, datetime}}",
-    "neverPlayed": "Never played"
+    "neverPlayed": "Never played",
+    "compatibilityWarning": "Compatibility warning",
+    "gameNotNative": "This game isn't natively supported on your device"
   },
   "settingsNavigation": {
     "interface": "Interface",

@@ -13,6 +13,7 @@ import {
   METADATA_SYNC_COMPLETE,
   METADATA_SYNC_INSERTED,
   GET_FILTERED_GAMES,
+  GET_OS,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
@@ -29,6 +30,7 @@ const api = {
   onSyncComplete: (cb: (event) => void) => ipcRenderer.on(METADATA_SYNC_COMPLETE, cb),
   offSyncComplete: () => ipcRenderer.removeAllListeners(METADATA_SYNC_COMPLETE),
   getLocale: (): Promise<string> => ipcRenderer.invoke(GET_LOCALE),
+  getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
   fetch: <T>(...args: Parameters<typeof fetch>): Promise<T> => ipcRenderer.invoke(FETCH, ...args),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   closeApp: (): void => ipcRenderer.send(CLOSE_APP),

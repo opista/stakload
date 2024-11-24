@@ -6,6 +6,7 @@ import {
   FETCH,
   GET_FILTERED_GAMES,
   GET_LOCALE,
+  GET_OS,
   OPEN_WEBPAGE,
   RESTART_APP,
   RESTART_DEVICE,
@@ -20,6 +21,7 @@ import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from
 import { Conf } from "electron-conf/main";
 import { getFilteredGameLibrary } from "./channels/games";
 import { gameSyncManager } from "./channels/game-sync-manager";
+import { getOS } from "./channels/os";
 
 const conf = new Conf();
 
@@ -124,6 +126,7 @@ app.whenReady().then(async () => {
   const { syncManager } = createWindow();
 
   ipcMain.handle(GET_LOCALE, getLocale);
+  ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(FETCH, nodeFetch);
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.on(SYNC_GAMES, () => syncManager.syncGames());

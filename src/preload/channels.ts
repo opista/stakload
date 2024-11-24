@@ -1,4 +1,5 @@
 export const GET_LOCALE = "GET_LOCALE";
+export const GET_OS = "GET_OS";
 export const FETCH = "FETCH";
 export const OPEN_WEBPAGE = "OPEN_WEBPAGE";
 

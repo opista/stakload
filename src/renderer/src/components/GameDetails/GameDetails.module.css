@@ -1,9 +1,9 @@
 .container {
-  flex-direction: column;
   height: 100%;
 }
 
 .body {
+  flex: 1;
   min-height: 0;
 }
 
@@ -35,4 +35,9 @@
 
 .overlay {
   z-index: 1;
+}
+
+.compatibilityAlert {
+  margin-top: var(--mantine-spacing-sm);
+  margin-bottom: var(--mantine-spacing-sm);
 }

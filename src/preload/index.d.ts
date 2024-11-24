@@ -1,5 +1,6 @@
 import { GameStoreModel } from "@database/schema/games";
 import { ElectronAPI } from "@electron-toolkit/preload";
+import { Platform } from "src/renderer/src/schema/games";
 declare global {
   interface Window {
     electron: ElectronAPI;
@@ -13,6 +14,7 @@ declare global {
       onSyncComplete: (cb: (event) => void) => void;
       offSyncComplete: () => void;
       getLocale: () => Promise<string>;
+      getOS: () => Promise<Platform>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       openWebpage: (url: string) => void;
       closeApp: () => void;

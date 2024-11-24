@@ -6,7 +6,7 @@ import { BatteryIndicator } from "@components/BatteryIndicator/BatteryIndicator"
 import { Clock } from "@components/Clock/Clock";
 import { Logo } from "@components/Logo/Logo";
 import { SettingsControl } from "@components/Settings/SettingsControl/SettingsControl";
-import { useInterfaceSettingsStore } from "@store/interface-settings-store";
+import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 
 export const Header = () => {
   const { displayBattery, displayBatteryPercent, displayTime, displaySeconds } = useInterfaceSettingsStore();

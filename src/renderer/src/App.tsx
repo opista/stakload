@@ -2,13 +2,15 @@ import { Checkbox, ColorSchemeScript, MantineProvider, Modal, ScrollArea, create
 import { DesktopView } from "./views/DesktopView/DesktopView";
 import classes from "./App.module.css";
 import { Notifications } from "@mantine/notifications";
-import { useInterfaceSettingsStore } from "@store/interface-settings-store";
+import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useSystemStore } from "@store/system.store";
 
 export const App = () => {
   const { theme: primaryColor } = useInterfaceSettingsStore();
   const { i18n } = useTranslation();
+  const { setOperatingSystem } = useSystemStore();
 
   const theme = createTheme({
     defaultRadius: "md",
@@ -52,8 +54,13 @@ export const App = () => {
   //   });
   // }, []);
 
-  // TODO - abstract initial app load actions here
+  /**
+   * TODO - abstract initial app load actions here.
+   * We only need to trigger these actions once when the
+   * user loads the app for the first time.
+   */
   useEffect(() => {
+    window.api.getOS().then(setOperatingSystem);
     window.api.getLocale().then((locale) => i18n.changeLanguage(locale));
   }, []);
 

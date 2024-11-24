@@ -4,7 +4,7 @@
  */
 
 export type Library = "steam";
-export type Platform = "linux" | "max" | "windows";
+export type Platform = "linux" | "mac" | "windows";
 
 export type GameStoreModel = {
   _id: string;

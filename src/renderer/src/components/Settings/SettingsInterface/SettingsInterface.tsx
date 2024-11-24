@@ -2,7 +2,7 @@ import { Divider, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
-import { useInterfaceSettingsStore } from "@store/interface-settings-store";
+import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 
 const GeneralSettings = () => {
