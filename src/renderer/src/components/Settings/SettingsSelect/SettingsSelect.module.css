@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label {
+  font-weight: inherit;
+}
+
+.input {
+  --input-height: var(--input-height-xs);
+  width: 100px;
+  height: var(--input-height-xs);
+}

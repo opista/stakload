@@ -1,5 +1,5 @@
 import { Divider } from "@mantine/core";
-import { IconCommand, IconDeviceImac, IconLibrary, IconUser } from "@tabler/icons-react";
+import { IconBell, IconCommand, IconDeviceImac, IconLibrary, IconUser } from "@tabler/icons-react";
 import { SettingsAbout } from "../SettingsAbout/SettingsAbout";
 import { ShortcutsView } from "../SettingsShortcuts/SettingsShortcuts";
 import classes from "./SettingsModal.module.css";
@@ -7,6 +7,7 @@ import { Tab, VerticalTabs } from "@components/VerticalTabs/VerticalTabs";
 import { SettingsInterface } from "../SettingsInterface/SettingsInterface";
 import { SettingsLibrary } from "../SettingsLibrary/SettingsLibrary";
 import { ContextModalProps } from "@mantine/modals";
+import { SettingsNotification } from "../SettingsNotification/SettingsNotification";
 
 type TabKey = "interface" | "library" | "shortcuts" | "about";
 
@@ -27,6 +28,12 @@ export const SettingsModal = ({ id, innerProps }: ContextModalProps<SettingsModa
       Icon: IconLibrary,
       key: "library",
       label: "settingsNavigation.library",
+    },
+    {
+      Content: () => <SettingsNotification />,
+      Icon: IconBell,
+      key: "notifications",
+      label: "settingsNavigation.notifications",
     },
     {
       Content: ShortcutsView,
