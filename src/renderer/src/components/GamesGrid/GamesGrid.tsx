@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Button, Text } from "@mantine/core";
+import { AspectRatio, Box, Button, Image, Text } from "@mantine/core";
 import { FixedSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useEffect, useRef, useState } from "react";
@@ -67,9 +67,10 @@ export const GamesGrid = () => {
       <Box className={classes.cardContainer} style={style}>
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
           <Link className={classes.card} to={`/desktop/${game._id}`}>
-            <img
+            <Image
               alt={`${game.name} cover art`}
               className={classes.cover}
+              radius="lg"
               // TODO - pull this from the game
               src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
               title={`${game.name} cover art`}
@@ -108,7 +109,7 @@ export const GamesGrid = () => {
     <>
       <AutoSizer>
         {({ height, width }) => {
-          const columnCount = Math.floor(width / (COVER_ART_WIDTH + 8)) || 1;
+          const columnCount = Math.floor(width / COVER_ART_WIDTH) || 1;
           const columnWidth = width / columnCount;
           const rowCount = Math.ceil(games.length / columnCount);
 
