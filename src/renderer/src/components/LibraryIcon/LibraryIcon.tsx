@@ -1,32 +1,38 @@
 import { IconBrandSteam, IconHelpHexagon, IconProps } from "@tabler/icons-react";
-import { MantineSize, ThemeIcon, Tooltip } from "@mantine/core";
+import { MantineSize } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { GameStoreModel } from "../../schema/games";
+import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
 
 type LibraryIconProps = {
   game: GameStoreModel;
   size: MantineSize;
 };
 
+const configSelector = (library: string) => {
+  switch (library) {
+    case "steam":
+      return { icon: IconBrandSteam, library: "Steam" };
+    default:
+      return { icon: IconHelpHexagon, library: null };
+  }
+};
+
 export const LibraryIcon = ({ game, size, ...rest }: LibraryIconProps & IconProps) => {
   const { t } = useTranslation();
 
-  const configSelector = (library: string) => {
-    switch (library) {
-      case "steam":
-        return { Icon: IconBrandSteam, library: "Steam" };
-      default:
-        return { Icon: IconHelpHexagon, library: null };
-    }
-  };
-
-  const { Icon, library } = configSelector(game.library);
+  const { icon, library } = configSelector(game.library);
 
   return (
-    <Tooltip label={library ? t("thisIsALibraryGame", { library }) : t("libraryNotRecognised")} position="bottom-start">
-      <ThemeIcon size={size} variant="default">
-        <Icon {...rest} style={{ width: "80%", height: "80%" }} stroke={1.5} />
-      </ThemeIcon>
-    </Tooltip>
+    <TooltipIcon
+      icon={icon}
+      iconProps={rest}
+      themeIconProps={{
+        size,
+      }}
+      tooltipProps={{
+        label: library ? t("thisIsALibraryGame", { library }) : t("libraryNotRecognised"),
+      }}
+    />
   );
 };

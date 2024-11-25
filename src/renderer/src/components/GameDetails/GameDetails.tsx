@@ -1,17 +1,5 @@
-import {
-  Alert,
-  BackgroundImage,
-  Box,
-  Divider,
-  Flex,
-  Group,
-  Overlay,
-  ScrollArea,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
-import { IconArrowLeft, IconInfoCircle, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
+import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
 import classes from "./GameDetails.module.css";
 import { useEffect, useRef, useState } from "react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
@@ -22,42 +10,44 @@ import { useTranslation } from "react-i18next";
 import { useSystemStore } from "@store/system.store";
 import { useNavigate, useParams } from "react-router";
 import { GameStoreModel } from "../../schema/games";
+import { useShallow } from "zustand/react/shallow";
+import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 
 export const GameDetails = () => {
-  const [showCompatibilityAlert, setShowCompatibilityAlert] = useState(true);
-  const { operatingSystem } = useSystemStore();
+  const operatingSystem = useSystemStore(useShallow((state) => state.operatingSystem));
   const { t } = useTranslation();
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [game, setGame] = useState<GameStoreModel | null>(null);
+  const [isGameSupported, setIsGameSupported] = useState(false);
+  const [currentGame, setCurrentGame] = useState<GameStoreModel | null>(null);
   const params = useParams();
 
   const navigateToGamesList = () => navigate("..", { relative: "path" });
-
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
 
   useEffect(() => {
-    if (game) scrollToTop();
-  }, [game?._id]);
+    if (currentGame) scrollToTop();
+  }, [currentGame?._id]);
 
   if (!params.id) {
     navigateToGamesList();
   }
 
   useEffect(() => {
-    window.api.getGameById(params.id!).then(setGame);
+    window.api.getGameById(params.id!).then((game) => {
+      setCurrentGame(game);
+      setIsGameSupported(!!operatingSystem && !!game?.platform?.includes(operatingSystem));
+    });
   }, [params.id]);
 
-  if (!game) {
+  if (!currentGame) {
     return (
       <Stack align="center" h="100%" justify="center">
-        <IconPuzzleOff />
+        <IconPuzzleOff size={60} stroke={0.5} />
         <Text>{t("gameNotFound")}</Text>
       </Stack>
     );
   }
-
-  const isGameSupported = operatingSystem && game?.platform?.includes(operatingSystem);
 
   return (
     <Stack align="stretch" className={classes.container} justify="flex-start" gap={0}>
@@ -71,28 +61,16 @@ export const GameDetails = () => {
         </Group>
       </Flex>
       <Divider mt="md" />
-      {!isGameSupported && showCompatibilityAlert && (
-        <Alert
-          className={classes.compatibilityAlert}
-          color="orange"
-          icon={<IconInfoCircle />}
-          onClose={() => setShowCompatibilityAlert(false)}
-          title={t("gameDetails.compatibilityWarning")}
-          variant="light"
-          withCloseButton
-        >
-          {t("gameDetails.gameNotNative")}
-        </Alert>
-      )}
       <ScrollArea className={classes.body} viewportRef={containerRef}>
         <BackToTop container={containerRef.current} />
-        <BackgroundImage className={classes.hero} src={game.backgroundImage || ""}>
+        <BackgroundImage className={classes.hero} src={currentGame.backgroundImage || ""}>
           <Flex className={classes.heroContent}>
-            <Title className={classes.heroText} lineClamp={3} order={1} title={game.name} textWrap="balance">
-              {game.name}
+            <Title className={classes.heroText} lineClamp={3} order={1} title={currentGame.name} textWrap="balance">
+              {currentGame.name}
             </Title>
             <Group>
-              <LibraryIcon game={game} size="xl" />
+              {!isGameSupported && <IncompatibilityIcon color="orange" size="xl" />}
+              <LibraryIcon game={currentGame} size="xl" />
             </Group>
           </Flex>
 
@@ -103,7 +81,7 @@ export const GameDetails = () => {
           />
         </BackgroundImage>
         <Box>
-          <RawHtml html={game.description} />
+          <RawHtml html={currentGame.description} />
         </Box>
       </ScrollArea>
     </Stack>

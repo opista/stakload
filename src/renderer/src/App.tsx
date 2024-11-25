@@ -6,11 +6,14 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSystemStore } from "@store/system.store";
 import { Outlet } from "react-router";
+import { useShallow } from "zustand/react/shallow";
 
 export const App = () => {
   const { theme: primaryColor } = useInterfaceSettingsStore();
   const { i18n } = useTranslation();
-  const { setOperatingSystem } = useSystemStore();
+  const { setOperatingSystem } = useSystemStore(
+    useShallow((state) => ({ setOperatingSystem: state.setOperatingSystem })),
+  );
 
   const theme = createTheme({
     defaultRadius: "md",

@@ -6,7 +6,7 @@ import { Image } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import classes from "./GameNavigation.module.css";
 import { GameStoreModel } from "../../schema/games";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 interface GameNavigationProps {
   games?: GameStoreModel[];
@@ -27,12 +27,16 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [currentGameIndex, setCurrentGameIndex] = useState<number | null>();
+  const params = useParams();
 
   const onSelectedGame = () => {
     if (!listRef.current) return;
 
-    const [, , id] = location.pathname.split("/");
-    const index = games?.findIndex(({ _id }) => _id === id);
+    if (!params.id) {
+      return setCurrentGameIndex(null);
+    }
+
+    const index = games?.findIndex(({ _id }) => _id === params.id);
 
     if (index === -1 || index === undefined) {
       return setCurrentGameIndex(null);
