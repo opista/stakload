@@ -43,7 +43,12 @@ export const GameDetails = () => {
   const GameGrid = ({ game }: { game: GameStoreModel }) => (
     <ScrollArea className={classes.body} viewportRef={containerRef}>
       <BackToTop container={containerRef.current} />
-      <BackgroundImage className={classes.hero} src={game.backgroundImage || ""}>
+      <BackgroundImage className={classes.hero} radius="md" src={game.backgroundImage || ""}>
+        <Overlay
+          className={classes.overlay}
+          gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
+          opacity={0.85}
+        />
         <Flex className={classes.heroContent}>
           <Title className={classes.heroText} lineClamp={3} order={1} title={game.name} textWrap="balance">
             {game.name}
@@ -53,12 +58,6 @@ export const GameDetails = () => {
             <LibraryIcon game={game} size="xl" />
           </Group>
         </Flex>
-
-        <Overlay
-          className={classes.overlay}
-          gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
-          opacity={0.85}
-        />
       </BackgroundImage>
       <Box>
         <RawHtml html={game.description} />
