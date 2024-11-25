@@ -12,9 +12,10 @@ import { modals } from "@mantine/modals";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { Link } from "react-router";
 
+const CELL_GAP = 10;
 const COVER_ART_RATIO = 3 / 4;
 const COVER_ART_HEIGHT = 250;
-const COVER_ART_WIDTH = COVER_ART_HEIGHT * COVER_ART_RATIO;
+const COVER_ART_WIDTH = (COVER_ART_HEIGHT - CELL_GAP) * COVER_ART_RATIO;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
@@ -64,7 +65,7 @@ export const GamesGrid = () => {
     if (!game) return null;
 
     return (
-      <Box className={classes.cardContainer} style={style}>
+      <Box style={{ ...style, paddingLeft: CELL_GAP / 2, paddingRight: CELL_GAP / 2, paddingBottom: CELL_GAP }}>
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
           <Link className={classes.card} to={`/desktop/${game._id}`}>
             <Image
@@ -109,9 +110,19 @@ export const GamesGrid = () => {
     <>
       <AutoSizer>
         {({ height, width }) => {
-          const columnCount = Math.floor(width / COVER_ART_WIDTH) || 1;
+          const columnCount = Math.floor(width / (COVER_ART_WIDTH + CELL_GAP)) || 1;
           const columnWidth = width / columnCount;
           const rowCount = Math.ceil(games.length / columnCount);
+
+          console.log({
+            COVER_ART_HEIGHT,
+            COVER_ART_RATIO,
+            COVER_ART_WIDTH,
+            width,
+            columnCount,
+            columnWidth,
+            rowCount,
+          });
 
           return (
             <Grid

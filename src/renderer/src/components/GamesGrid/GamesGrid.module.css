@@ -10,10 +10,6 @@
   margin-top: var(--mantine-spacing-md);
 }
 
-.cardContainer {
-  padding: var(--mantine-spacing-xs);
-}
-
 .card {
   height: 100%;
   width: auto;
