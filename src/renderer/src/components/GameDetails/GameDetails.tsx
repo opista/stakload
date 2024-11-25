@@ -40,14 +40,38 @@ export const GameDetails = () => {
     });
   }, [params.id]);
 
-  if (!currentGame) {
-    return (
-      <Stack align="center" h="100%" justify="center">
-        <IconPuzzleOff size={60} stroke={0.5} />
-        <Text>{t("gameNotFound")}</Text>
-      </Stack>
-    );
-  }
+  const GameGrid = ({ game }: { game: GameStoreModel }) => (
+    <ScrollArea className={classes.body} viewportRef={containerRef}>
+      <BackToTop container={containerRef.current} />
+      <BackgroundImage className={classes.hero} src={game.backgroundImage || ""}>
+        <Flex className={classes.heroContent}>
+          <Title className={classes.heroText} lineClamp={3} order={1} title={game.name} textWrap="balance">
+            {game.name}
+          </Title>
+          <Group gap="xs">
+            {!isGameSupported && <IncompatibilityIcon color="orange" size="xl" />}
+            <LibraryIcon game={game} size="xl" />
+          </Group>
+        </Flex>
+
+        <Overlay
+          className={classes.overlay}
+          gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
+          opacity={0.85}
+        />
+      </BackgroundImage>
+      <Box>
+        <RawHtml html={game.description} />
+      </Box>
+    </ScrollArea>
+  );
+
+  const GameNotFound = () => (
+    <Stack align="center" h="100%" justify="center">
+      <IconPuzzleOff size={60} stroke={0.5} />
+      <Text>{t("gameNotFound")}</Text>
+    </Stack>
+  );
 
   return (
     <Stack align="stretch" className={classes.container} justify="flex-start" gap={0}>
@@ -55,35 +79,15 @@ export const GameDetails = () => {
         <Group>
           <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
         </Group>
-        <Group gap="xs">
-          <ActionIcon aria-label={t("edit")} icon={IconPencil} onClick={() => console.log("edit")} />
-          <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={() => console.log("delete")} />
-        </Group>
+        {currentGame && (
+          <Group gap="xs">
+            <ActionIcon aria-label={t("edit")} icon={IconPencil} onClick={() => console.log("edit")} />
+            <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={() => console.log("delete")} />
+          </Group>
+        )}
       </Flex>
       <Divider mt="md" />
-      <ScrollArea className={classes.body} viewportRef={containerRef}>
-        <BackToTop container={containerRef.current} />
-        <BackgroundImage className={classes.hero} src={currentGame.backgroundImage || ""}>
-          <Flex className={classes.heroContent}>
-            <Title className={classes.heroText} lineClamp={3} order={1} title={currentGame.name} textWrap="balance">
-              {currentGame.name}
-            </Title>
-            <Group gap="xs">
-              {!isGameSupported && <IncompatibilityIcon color="orange" size="xl" />}
-              <LibraryIcon game={currentGame} size="xl" />
-            </Group>
-          </Flex>
-
-          <Overlay
-            className={classes.overlay}
-            gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
-            opacity={0.85}
-          />
-        </BackgroundImage>
-        <Box>
-          <RawHtml html={currentGame.description} />
-        </Box>
-      </ScrollArea>
+      {currentGame ? <GameGrid game={currentGame} /> : <GameNotFound />}
     </Stack>
   );
 };
