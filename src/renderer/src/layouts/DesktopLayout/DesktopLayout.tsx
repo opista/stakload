@@ -1,21 +1,20 @@
 import { AppShell, Box, Divider } from "@mantine/core";
 import { Allotment } from "allotment";
 import { useEffect, useState } from "react";
-import { GamesGrid } from "../../components/GamesGrid/GamesGrid";
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../components/Spotlight/Spotlight";
-import classes from "./DesktopView.module.css";
-import { GameDetails } from "../../components/GameDetails/GameDetails";
+import classes from "./DesktopLayout.module.css";
 import { ModalsProvider } from "@mantine/modals";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
 import { GameStoreModel } from "../../schema/games";
+import { Outlet, useNavigate } from "react-router";
 
-export const DesktopView = () => {
-  const [selectedGame, setSelectedGame] = useState<number | null>(null);
+export const DesktopLayout = () => {
   const [games, setGames] = useState<GameStoreModel[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     /**
@@ -29,7 +28,7 @@ export const DesktopView = () => {
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>
       <AppShell header={{ height: 60 }} padding="md">
-        <Spotlight disabled={!games?.length} games={games} onClick={setSelectedGame} />
+        <Spotlight disabled={!games?.length} games={games} onClick={() => navigate} />
         <AppShell.Header>
           <Header />
         </AppShell.Header>
@@ -44,17 +43,13 @@ export const DesktopView = () => {
                 <Divider my="md" />
               </AppShell.Section>
               <AppShell.Section flex={1}>
-                <GameNavigation games={games} onChange={setSelectedGame} selectedGame={selectedGame} />
+                <GameNavigation games={games} />
               </AppShell.Section>
             </Box>
           </Allotment.Pane>
           <Allotment.Pane>
             <Box className={classes.main}>
-              {selectedGame !== null ? (
-                <GameDetails game={games?.[selectedGame]} onBack={() => setSelectedGame(null)} />
-              ) : (
-                <GamesGrid games={games} onClick={setSelectedGame} />
-              )}
+              <Outlet />
             </Box>
           </Allotment.Pane>
         </Allotment>

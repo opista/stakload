@@ -7,36 +7,47 @@ import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { RawHtml } from "@components/RawHtml/RawHtml";
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
-import { GameStoreModel } from "../../schema/games";
 import { useSystemStore } from "@store/system.store";
+import { useNavigate, useParams } from "react-router";
+import { GameStoreModel } from "../../schema/games";
 
-type GameDetailsProps = {
-  game?: GameStoreModel;
-  onBack: () => void;
-};
-
-export const GameDetails = ({ game, onBack }: GameDetailsProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { t } = useTranslation();
+export const GameDetails = () => {
   const [showCompatibilityAlert, setShowCompatibilityAlert] = useState(true);
   const { operatingSystem } = useSystemStore();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [game, setGame] = useState<GameStoreModel | null>(null);
+  const params = useParams();
+
+  const navigateToGamesList = () => navigate("/desktop");
+
+  const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
+
+  useEffect(() => {
+    if (game) scrollToTop();
+  }, [game?._id]);
+
+  if (!params.id) {
+    navigateToGamesList();
+  }
+
+  useEffect(() => {
+    window.api.getGameById(params.id!).then(setGame);
+  }, [params.id]);
 
   if (!game) {
-    onBack();
+    // TODO game not found
     return;
   }
 
   const isGameSupported = operatingSystem && game?.platform?.includes(operatingSystem);
 
-  const scrollToTop = () => containerRef.current!.scrollTo({ top: 0 });
-
-  useEffect(() => scrollToTop(), [game._id]);
-
   return (
     <Stack align="stretch" className={classes.container} justify="flex-start" gap={0}>
       <Flex justify="space-between">
         <Group>
-          <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={onBack} />
+          <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
         </Group>
         <Group gap="xs">
           <ActionIcon aria-label={t("edit")} icon={IconPencil} onClick={() => console.log("edit")} />

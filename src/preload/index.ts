@@ -14,6 +14,7 @@ import {
   METADATA_SYNC_INSERTED,
   GET_FILTERED_GAMES,
   GET_OS,
+  GET_GAME_BY_ID,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
@@ -22,6 +23,7 @@ import { AppDetails } from "../main/libraries/steam/types/app-details";
 const api = {
   syncGames: (games) => ipcRenderer.send(SYNC_GAMES, games),
   getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
+  getGameById: (id) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
   onSyncInserted: (cb: (event, count) => void) => ipcRenderer.on(METADATA_SYNC_INSERTED, cb),
   offSyncInserted: () => ipcRenderer.removeAllListeners(METADATA_SYNC_INSERTED),
   onSyncProcessed: (cb: (event, args: { id: string; appDetails: AppDetails }) => void) =>

@@ -1,11 +1,11 @@
 import { Checkbox, ColorSchemeScript, MantineProvider, Modal, ScrollArea, createTheme } from "@mantine/core";
-import { DesktopView } from "./views/DesktopView/DesktopView";
 import classes from "./App.module.css";
 import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSystemStore } from "@store/system.store";
+import { Outlet } from "react-router";
 
 export const App = () => {
   const { theme: primaryColor } = useInterfaceSettingsStore();
@@ -68,8 +68,8 @@ export const App = () => {
     <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <Outlet />
         <Notifications />
-        <DesktopView />
       </MantineProvider>
     </>
   );

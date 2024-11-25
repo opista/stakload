@@ -49,6 +49,10 @@ export const getFilteredGames = async () => {
   return await db.find<GameStoreModel>({}).sort({ name: 1 });
 };
 
+export const findGameById = async (id: string) => {
+  return await db.findOne<GameStoreModel>({ _id: id });
+};
+
 export const updateGameById = async (id: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) => {
   return await db.update<GameStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
 };

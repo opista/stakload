@@ -5,6 +5,7 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
+      getGameById: (id: string) => Promise<GameStoreModel>;
       getFilteredGames: () => Promise<GameStoreModel[]>;
       syncGames: (games: GameStoreModel[]) => void;
       onSyncInserted: (cb: (event, count: number) => void) => void;

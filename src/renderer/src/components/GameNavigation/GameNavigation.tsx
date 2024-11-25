@@ -1,16 +1,15 @@
 import { Button, Text } from "@mantine/core";
-import { FixedSizeList, FixedSizeList as List, ListChildComponentProps } from "react-window";
+import { FixedSizeList, ListChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { createRef, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Image } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import classes from "./GameNavigation.module.css";
 import { GameStoreModel } from "../../schema/games";
+import { useLocation, useNavigate } from "react-router";
 
 interface GameNavigationProps {
   games?: GameStoreModel[];
-  onChange: (index: number) => void;
-  selectedGame: number | null;
 }
 
 const DefaultIcon = <IconDeviceGamepad2 className={classes.iconDefault} stroke={1.5} />;
@@ -23,13 +22,36 @@ const LeftSection = ({ icon }: { icon?: string }) => {
   }
 };
 
-export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigationProps) => {
-  const listRef = createRef<FixedSizeList<unknown>>();
+export const GameNavigation = ({ games }: GameNavigationProps) => {
+  const listRef = useRef<FixedSizeList<unknown> | null>(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [currentGameIndex, setCurrentGameIndex] = useState<number | null>();
 
-  useEffect(() => {
-    if (selectedGame === null) return;
-    listRef?.current?.scrollToItem(selectedGame);
-  }, [selectedGame]);
+  const onSelectedGame = () => {
+    if (!listRef.current) return;
+
+    const [, , id] = location.pathname.split("/");
+    const index = games?.findIndex(({ _id }) => _id === id);
+
+    if (index === -1 || index === undefined) {
+      return setCurrentGameIndex(null);
+    }
+
+    setCurrentGameIndex(index);
+
+    listRef?.current?.scrollToItem(index);
+  };
+
+  const setListRef = useCallback(
+    (ref: FixedSizeList<unknown> | null) => {
+      listRef.current = ref;
+      return onSelectedGame();
+    },
+    [games, location.pathname],
+  );
+
+  useEffect(() => onSelectedGame(), [games, location.pathname]);
 
   if (!games?.length) {
     return null;
@@ -41,14 +63,14 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
       <div style={style}>
         <Button
           className={classes.button}
-          color={selectedGame === index ? undefined : "gray"}
+          color={currentGameIndex === index ? undefined : "gray"}
           fullWidth
           justify="flex-start"
           key={game._id}
           leftSection={<LeftSection icon={game.icon} />}
           title={game.name}
-          variant={selectedGame === index ? "filled" : "subtle"}
-          onClick={() => onChange(index)}
+          variant={currentGameIndex === index ? "filled" : "subtle"}
+          onClick={() => navigate(`/desktop/${game._id}`)}
         >
           <Text truncate="end">{game.name}</Text>
         </Button>
@@ -59,9 +81,9 @@ export const GameNavigation = ({ games, onChange, selectedGame }: GameNavigation
   return (
     <AutoSizer disableWidth>
       {({ height }) => (
-        <List height={height} itemCount={games.length} itemSize={36} ref={listRef} width="100%">
+        <FixedSizeList height={height} itemCount={games.length} itemSize={36} ref={setListRef} width="100%">
           {Row}
-        </List>
+        </FixedSizeList>
       )}
     </AutoSizer>
   );

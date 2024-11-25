@@ -1,7 +1,7 @@
-import { AspectRatio, Box, Button, Text, UnstyledButton } from "@mantine/core";
+import { AspectRatio, Box, Button, Text } from "@mantine/core";
 import { FixedSizeGrid as Grid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import classes from "./GamesGrid.module.css";
 import { useTranslation } from "react-i18next";
@@ -10,22 +10,28 @@ import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "../../schema/games";
 import { modals } from "@mantine/modals";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
+import { Link } from "react-router";
 
 const COVER_ART_RATIO = 3 / 4;
 const COVER_ART_HEIGHT = 250;
 const COVER_ART_WIDTH = COVER_ART_HEIGHT * COVER_ART_RATIO;
 
-interface GamesGridProps {
-  games?: GameStoreModel[];
-  onClick: (index: number) => void;
-}
-
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
-export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
+export const GamesGrid = () => {
   const containerRef = useRef<Element>(null);
+  const [games, setGames] = useState<GameStoreModel[]>([]);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    /**
+     *  TODO - this needs to be powered by filters
+     *  perhaps we only return game titles and icons
+     *  here to reduce data stored in memory
+     */
+    window.api.getFilteredGames().then((games) => setGames(games));
+  }, []);
 
   const onImportClick = () => {
     modals.openContextModal({
@@ -60,7 +66,7 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
     return (
       <Box className={classes.cardContainer} style={style}>
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
-          <UnstyledButton className={classes.card} key={game._id} onClick={() => onClick(index)}>
+          <Link className={classes.card} to={`/desktop/${game._id}`}>
             <img
               alt={`${game.name} cover art`}
               className={classes.cover}
@@ -68,7 +74,7 @@ export const GamesGrid = ({ games, onClick }: GamesGridProps) => {
               src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
               title={`${game.name} cover art`}
             />
-          </UnstyledButton>
+          </Link>
         </AspectRatio>
       </Box>
     );

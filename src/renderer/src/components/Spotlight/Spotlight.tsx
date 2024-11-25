@@ -9,7 +9,7 @@ import { GameStoreModel } from "../../schema/games";
 type SpotlightProps = {
   disabled?: boolean;
   games?: GameStoreModel[];
-  onClick: (index: number) => void;
+  onClick: (id: string) => void;
 };
 
 const DefaultIcon = <IconDeviceGamepad2 className={classes.defaultIcon} stroke={1.5} />;
@@ -26,7 +26,7 @@ export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
-    games?.map(({ _id, icon, name }, index) => ({
+    games?.map(({ _id, icon, name }) => ({
       id: _id,
       label: name,
       description: t("gameDetails.lastPlayed", {
@@ -49,7 +49,7 @@ export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
           },
         },
       }),
-      onClick: () => onClick(index),
+      onClick: () => onClick(_id),
       leftSection: <LeftSection icon={icon} />,
     })) || [];
 
