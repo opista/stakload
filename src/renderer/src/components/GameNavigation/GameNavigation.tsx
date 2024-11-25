@@ -70,7 +70,7 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
           leftSection={<LeftSection icon={game.icon} />}
           title={game.name}
           variant={currentGameIndex === index ? "filled" : "subtle"}
-          onClick={() => navigate(`/desktop/${game._id}`)}
+          onClick={() => navigate(game._id, { replace: true, relative: "path" })}
         >
           <Text truncate="end">{game.name}</Text>
         </Button>

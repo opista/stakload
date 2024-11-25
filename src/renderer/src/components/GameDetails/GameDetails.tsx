@@ -20,7 +20,7 @@ export const GameDetails = () => {
   const [game, setGame] = useState<GameStoreModel | null>(null);
   const params = useParams();
 
-  const navigateToGamesList = () => navigate("/desktop");
+  const navigateToGamesList = () => navigate("..", { relative: "path" });
 
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
 
