@@ -1,5 +1,17 @@
-import { Alert, BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack, Title } from "@mantine/core";
-import { IconArrowLeft, IconInfoCircle, IconPencil, IconTrash } from "@tabler/icons-react";
+import {
+  Alert,
+  BackgroundImage,
+  Box,
+  Divider,
+  Flex,
+  Group,
+  Overlay,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { IconArrowLeft, IconInfoCircle, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
 import classes from "./GameDetails.module.css";
 import { useEffect, useRef, useState } from "react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
@@ -37,8 +49,12 @@ export const GameDetails = () => {
   }, [params.id]);
 
   if (!game) {
-    // TODO game not found
-    return;
+    return (
+      <Stack align="center" h="100%" justify="center">
+        <IconPuzzleOff />
+        <Text>{t("gameNotFound")}</Text>
+      </Stack>
+    );
   }
 
   const isGameSupported = operatingSystem && game?.platform?.includes(operatingSystem);

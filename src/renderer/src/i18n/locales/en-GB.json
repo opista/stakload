@@ -67,5 +67,6 @@
     "shutdown": "Shut down",
     "restart": "Restart",
     "sleep": "Sleep"
-  }
+  },
+  "gameNotFound": "Game not found"
 }
