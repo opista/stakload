@@ -17,6 +17,7 @@
   "settingsNavigation": {
     "interface": "Interface",
     "library": "Library",
+    "notifications": "Notifications",
     "shortcuts": "Shortcuts",
     "about": "About"
   },
@@ -28,7 +29,9 @@
     "displaySeconds": "Display seconds",
     "battery": "Battery",
     "displayBattery": "Display battery",
-    "displayBatteryPercentage": "Display battery percentage"
+    "displayBatteryPercentage": "Display battery percentage",
+    "network": "Network",
+    "displayNetworkStatus": "Display network status"
   },
   "librarySettings": {
     "general": "General",
@@ -37,6 +40,11 @@
     "resyncLibrary": "Re-sync game library",
     "lastSynced": "Last synced: {{- val, datetime}}"
   },
+  "notificationSettings": {
+    "system": "System",
+    "notifyLowBattery": "Notify on low battery",
+    "notifyOnNetworkDisconnect": "Notify on network disconnect"
+  },
   "shortcutLabel": {
     "openSettings": "Open settings",
     "searchLibrary": "Search library",
@@ -44,6 +52,14 @@
   },
   "spotlight": {
     "noResultsFound": "No results found"
+  },
+  "network": {
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "notificationBattery": {
+    "title": "Battery level low",
+    "body": "Battery level is {{ val }}%, plug your device in to continue playing"
   },
   "backToTop": "Back to top",
   "goBack": "Go back",

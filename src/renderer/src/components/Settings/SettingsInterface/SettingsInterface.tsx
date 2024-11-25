@@ -33,6 +33,14 @@ const TimeSettings = () => {
   );
   const { t } = useTranslation();
 
+  const onSetDisplayTime = (checked: boolean) => {
+    setDisplayTime(checked);
+
+    if (!checked) {
+      setDisplaySeconds(checked);
+    }
+  };
+
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
@@ -41,7 +49,7 @@ const TimeSettings = () => {
       <SettingsCheckbox
         checked={displayTime}
         label={t("interfaceSettings.displayTime")}
-        onCheckboxChange={setDisplayTime}
+        onCheckboxChange={onSetDisplayTime}
       />
       <SettingsCheckbox
         checked={displaySeconds}
@@ -65,6 +73,14 @@ const BatterySettings = () => {
     );
   const { t } = useTranslation();
 
+  const onSetDisplayBattery = (checked: boolean) => {
+    setDisplayBattery(checked);
+
+    if (!checked) {
+      setDisplayBatteryPercent(checked);
+    }
+  };
+
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
@@ -73,13 +89,35 @@ const BatterySettings = () => {
       <SettingsCheckbox
         checked={displayBattery}
         label={t("interfaceSettings.displayBattery")}
-        onCheckboxChange={setDisplayBattery}
+        onCheckboxChange={onSetDisplayBattery}
       />
       <SettingsCheckbox
         checked={displayBatteryPercent}
         disabled={!displayBattery}
         label={t("interfaceSettings.displayBatteryPercentage")}
         onCheckboxChange={setDisplayBatteryPercent}
+      />
+    </>
+  );
+};
+
+const NetworkSettings = () => {
+  const { t } = useTranslation();
+  const { displayNetwork, setDisplayNetwork } = useInterfaceSettingsStore(
+    useShallow((state) => ({
+      displayNetwork: state.displayNetwork,
+      setDisplayNetwork: state.setDisplayNetwork,
+    })),
+  );
+  return (
+    <>
+      <Title className={classes.title} order={2} size="h3">
+        {t("interfaceSettings.network")}
+      </Title>
+      <SettingsCheckbox
+        checked={displayNetwork}
+        label={t("interfaceSettings.displayNetworkStatus")}
+        onCheckboxChange={setDisplayNetwork}
       />
     </>
   );
@@ -93,6 +131,8 @@ export const SettingsInterface = () => {
       <TimeSettings />
       <Divider className={classes.divider} />
       <BatterySettings />
+      <Divider className={classes.divider} />
+      <NetworkSettings />
     </>
   );
 };

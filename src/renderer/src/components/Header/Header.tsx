@@ -8,16 +8,19 @@ import { Logo } from "@components/Logo/Logo";
 import { SettingsControl } from "@components/Settings/SettingsControl/SettingsControl";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useShallow } from "zustand/react/shallow";
+import { NetworkIndicator } from "@components/NetworkIndicator/NetworkIndicator";
 
 export const Header = () => {
-  const { displayBattery, displayBatteryPercent, displayTime, displaySeconds } = useInterfaceSettingsStore(
-    useShallow((state) => ({
-      displayBattery: state.displayBattery,
-      displayBatteryPercent: state.displayBatteryPercent,
-      displayTime: state.displayTime,
-      displaySeconds: state.displaySeconds,
-    })),
-  );
+  const { displayBattery, displayBatteryPercent, displayNetwork, displayTime, displaySeconds } =
+    useInterfaceSettingsStore(
+      useShallow((state) => ({
+        displayBattery: state.displayBattery,
+        displayBatteryPercent: state.displayBatteryPercent,
+        displayNetwork: state.displayNetwork,
+        displayTime: state.displayTime,
+        displaySeconds: state.displaySeconds,
+      })),
+    );
 
   return (
     <Group h="100%" px="md">
@@ -35,6 +38,12 @@ export const Header = () => {
             <>
               <Divider orientation="vertical" size="xs" />
               <BatteryIndicator showPercentage={displayBatteryPercent} />
+            </>
+          )}
+          {displayNetwork && (
+            <>
+              <Divider orientation="vertical" size="xs" />
+              <NetworkIndicator />
             </>
           )}
           <Divider orientation="vertical" size="xs" />
