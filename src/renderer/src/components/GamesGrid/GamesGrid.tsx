@@ -1,5 +1,5 @@
 import { AspectRatio, Box, Button, Image, Text } from "@mantine/core";
-import { FixedSizeGrid as Grid, GridChildComponentProps } from "react-window";
+import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useEffect, useRef, useState } from "react";
 
@@ -114,18 +114,8 @@ export const GamesGrid = () => {
           const columnWidth = width / columnCount;
           const rowCount = Math.ceil(games.length / columnCount);
 
-          console.log({
-            COVER_ART_HEIGHT,
-            COVER_ART_RATIO,
-            COVER_ART_WIDTH,
-            width,
-            columnCount,
-            columnWidth,
-            rowCount,
-          });
-
           return (
-            <Grid
+            <FixedSizeGrid
               columnCount={columnCount}
               columnWidth={columnWidth}
               height={height}
@@ -137,7 +127,7 @@ export const GamesGrid = () => {
               width={width}
             >
               {(props) => <Cell columnCount={columnCount} {...props} />}
-            </Grid>
+            </FixedSizeGrid>
           );
         }}
       </AutoSizer>
