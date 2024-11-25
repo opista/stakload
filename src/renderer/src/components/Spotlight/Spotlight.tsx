@@ -26,29 +26,22 @@ export const Spotlight = ({ disabled, games, onClick }: SpotlightProps) => {
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
-    games?.map(({ _id, icon, name }) => ({
+    games?.map(({ _id, icon, lastPlayedAt, name }) => ({
       id: _id,
       label: name,
-      description: t("gameDetails.lastPlayed", {
-        /**
-         * TODO
-         * Pluck this from synced data. I think we'll
-         * need to be smart about this later if we
-         * want to track the user's playtime ourselves
-         * post-sync. Maybe we don't do that and we just
-         * fetch the latest game data?
-         */
-        date: new Date(),
-        defaultValue: "Never",
-        formatParams: {
-          date: {
-            weekday: "long",
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          },
-        },
-      }),
+      description: lastPlayedAt
+        ? t("gameDetails.lastPlayed", {
+            date: lastPlayedAt,
+            formatParams: {
+              date: {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              },
+            },
+          })
+        : t("gameDetails.neverPlayed"),
       onClick: () => onClick(_id),
       leftSection: <LeftSection icon={icon} />,
     })) || [];

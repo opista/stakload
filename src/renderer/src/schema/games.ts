@@ -12,6 +12,7 @@ export type GameStoreModel = {
   createdAt: Date;
   deletedAt?: Date;
   description?: string;
+  lastPlayedAt?: Date;
   listImage?: string;
   icon?: string;
   gameId: string;
