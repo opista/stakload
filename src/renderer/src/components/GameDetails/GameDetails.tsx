@@ -68,7 +68,7 @@ export const GameDetails = () => {
             <Title className={classes.heroText} lineClamp={3} order={1} title={currentGame.name} textWrap="balance">
               {currentGame.name}
             </Title>
-            <Group>
+            <Group gap="xs">
               {!isGameSupported && <IncompatibilityIcon color="orange" size="xl" />}
               <LibraryIcon game={currentGame} size="xl" />
             </Group>
