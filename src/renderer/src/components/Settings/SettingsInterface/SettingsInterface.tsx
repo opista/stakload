@@ -4,9 +4,12 @@ import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
+import { useShallow } from "zustand/react/shallow";
 
 const GeneralSettings = () => {
-  const { theme, setTheme } = useInterfaceSettingsStore();
+  const { theme, setTheme } = useInterfaceSettingsStore(
+    useShallow((state) => ({ theme: state.theme, setTheme: state.setTheme })),
+  );
   const { t } = useTranslation();
 
   return (
@@ -20,7 +23,14 @@ const GeneralSettings = () => {
 };
 
 const TimeSettings = () => {
-  const { displaySeconds, displayTime, setDisplaySeconds, setDisplayTime } = useInterfaceSettingsStore();
+  const { displaySeconds, displayTime, setDisplaySeconds, setDisplayTime } = useInterfaceSettingsStore(
+    useShallow((state) => ({
+      displaySeconds: state.displaySeconds,
+      displayTime: state.displayTime,
+      setDisplaySeconds: state.setDisplaySeconds,
+      setDisplayTime: state.setDisplayTime,
+    })),
+  );
   const { t } = useTranslation();
 
   return (
@@ -45,7 +55,14 @@ const TimeSettings = () => {
 
 const BatterySettings = () => {
   const { displayBattery, displayBatteryPercent, setDisplayBattery, setDisplayBatteryPercent } =
-    useInterfaceSettingsStore();
+    useInterfaceSettingsStore(
+      useShallow((state) => ({
+        displayBattery: state.displayBattery,
+        displayBatteryPercent: state.displayBatteryPercent,
+        setDisplayBattery: state.setDisplayBattery,
+        setDisplayBatteryPercent: state.setDisplayBatteryPercent,
+      })),
+    );
   const { t } = useTranslation();
 
   return (

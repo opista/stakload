@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { modals } from "@mantine/modals";
+import { useShallow } from "zustand/react/shallow";
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -16,7 +17,12 @@ import { modals } from "@mantine/modals";
  *
  */
 export const SettingsLibrary = ({ id }: { id: string }) => {
-  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore();
+  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(
+    useShallow((state) => ({
+      setSyncOnStartup: state.setSyncOnStartup,
+      syncOnStartup: state.syncOnStartup,
+    })),
+  );
   const { t } = useTranslation();
 
   /**

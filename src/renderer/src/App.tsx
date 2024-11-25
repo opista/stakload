@@ -9,11 +9,9 @@ import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 export const App = () => {
-  const { theme: primaryColor } = useInterfaceSettingsStore();
+  const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
   const { i18n } = useTranslation();
-  const { setOperatingSystem } = useSystemStore(
-    useShallow((state) => ({ setOperatingSystem: state.setOperatingSystem })),
-  );
+  const setOperatingSystem = useSystemStore(useShallow((state) => state.setOperatingSystem));
 
   const theme = createTheme({
     defaultRadius: "md",
