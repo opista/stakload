@@ -16,7 +16,7 @@ export const NetworkIndicator = () => {
   } else {
     return (
       <Tooltip label={t("network.offline")}>
-        <IconWifiOff color="red" stroke={1.5} />
+        <IconWifiOff color="var(--mantine-color-red-8)" stroke={1.5} />
       </Tooltip>
     );
   }

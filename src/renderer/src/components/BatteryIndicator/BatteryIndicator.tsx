@@ -45,7 +45,7 @@ export const BatteryIndicator = ({ showPercentage = true }: BatteryIndicatorProp
         condition={!showPercentage}
         wrapper={(children) => <Tooltip label={tooltipLabel}>{children}</Tooltip>}
       >
-        <Icon color={percentage <= 15 ? "red" : undefined} stroke={1.5} />
+        <Icon color={percentage <= 15 ? "var(--mantine-color-red-8)" : undefined} stroke={1.5} />
       </ConditionalWrapper>
     </Box>
   );
