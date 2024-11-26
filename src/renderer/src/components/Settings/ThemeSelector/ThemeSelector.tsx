@@ -15,7 +15,6 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
   const options = {
     yellow: colors.yellow["8"],
     orange: colors.orange["8"],
-    red: colors.red["8"],
     pink: colors.pink["8"],
     violet: colors.violet["8"],
     blue: colors.blue["8"],
