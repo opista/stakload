@@ -15,12 +15,16 @@ import {
   GET_FILTERED_GAMES,
   GET_OS,
   GET_GAME_BY_ID,
+  ENCRYPT,
+  DECRYPT,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
 
 // Custom APIs for renderer
 const api = {
+  decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
+  encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
   syncGames: (games) => ipcRenderer.send(SYNC_GAMES, games),
   getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
   getGameById: (id) => ipcRenderer.invoke(GET_GAME_BY_ID, id),

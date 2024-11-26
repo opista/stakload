@@ -3,6 +3,8 @@ import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import {
   CLOSE_APP,
+  DECRYPT,
+  ENCRYPT,
   FETCH,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
@@ -23,6 +25,7 @@ import { Conf } from "electron-conf/main";
 import { getFilteredGameLibrary, getGameById } from "./channels/games";
 import { gameSyncManager } from "./channels/game-sync-manager";
 import { getOS } from "./channels/os";
+import { decrypt, encrypt } from "./channels/safe-storage";
 
 const conf = new Conf();
 
@@ -126,6 +129,8 @@ app.whenReady().then(async () => {
 
   const { syncManager } = createWindow();
 
+  ipcMain.handle(DECRYPT, decrypt);
+  ipcMain.handle(ENCRYPT, encrypt);
   ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(FETCH, nodeFetch);

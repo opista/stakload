@@ -5,6 +5,8 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
+      decrypt: (str: string) => Promise<string>;
+      encrypt: (str: string) => Promise<string>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getFilteredGames: () => Promise<GameStoreModel[]>;
       syncGames: (games: GameStoreModel[]) => void;
