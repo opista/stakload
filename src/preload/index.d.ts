@@ -8,7 +8,9 @@ declare global {
       decrypt: (str: string) => Promise<string>;
       encrypt: (str: string) => Promise<string>;
       getGameById: (id: string) => Promise<GameStoreModel>;
+      testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
       getFilteredGames: () => Promise<GameStoreModel[]>;
+      getGamesLastSyncedAt: () => Promise<Date>;
       syncGames: (games: GameStoreModel[]) => void;
       onSyncInserted: (cb: (event, count: number) => void) => void;
       offSyncInserted: () => void;

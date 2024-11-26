@@ -15,8 +15,10 @@ import {
   GET_FILTERED_GAMES,
   GET_OS,
   GET_GAME_BY_ID,
+  TEST_STEAM_INTEGRATION,
   ENCRYPT,
   DECRYPT,
+  GET_GAMES_LAST_SYNCED_AT,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
@@ -26,8 +28,10 @@ const api = {
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
   syncGames: (games) => ipcRenderer.send(SYNC_GAMES, games),
+  testLibraryIntegration: (steamId, webApiKey) => ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
   getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
   getGameById: (id) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
+  getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),
   onSyncInserted: (cb: (event, count) => void) => ipcRenderer.on(METADATA_SYNC_INSERTED, cb),
   offSyncInserted: () => ipcRenderer.removeAllListeners(METADATA_SYNC_INSERTED),
   onSyncProcessed: (cb: (event, args: { id: string; appDetails: AppDetails }) => void) =>

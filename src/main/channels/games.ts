@@ -1,5 +1,5 @@
 import { IpcMainInvokeEvent } from "electron";
-import { findGameById, getFilteredGames } from "../database/games";
+import { findGameById, findLastSyncedAt, getFilteredGames } from "../database/games";
 
 export const getFilteredGameLibrary = () => {
   // TODO
@@ -8,3 +8,5 @@ export const getFilteredGameLibrary = () => {
 };
 
 export const getGameById = (_event: IpcMainInvokeEvent, id: string) => findGameById(id);
+
+export const getGamesLastSyncedAt = (_event: IpcMainInvokeEvent) => findLastSyncedAt();

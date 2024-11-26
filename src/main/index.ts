@@ -8,6 +8,7 @@ import {
   FETCH,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
+  GET_GAMES_LAST_SYNCED_AT,
   GET_LOCALE,
   GET_OS,
   OPEN_WEBPAGE,
@@ -16,16 +17,18 @@ import {
   SHUTDOWN_DEVICE,
   SLEEP_DEVICE,
   SYNC_GAMES,
+  TEST_STEAM_INTEGRATION,
 } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { openWebpage } from "./channels/open-webpage";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 import { Conf } from "electron-conf/main";
-import { getFilteredGameLibrary, getGameById } from "./channels/games";
+import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt } from "./channels/games";
 import { gameSyncManager } from "./channels/game-sync-manager";
 import { getOS } from "./channels/os";
 import { decrypt, encrypt } from "./channels/safe-storage";
+import { testSteamIntegration } from "./channels/integrations";
 
 const conf = new Conf();
 
@@ -134,8 +137,10 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_LOCALE, getLocale);
   ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(FETCH, nodeFetch);
+  ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
+  ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
   ipcMain.on(SYNC_GAMES, () => syncManager.syncGames());
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);

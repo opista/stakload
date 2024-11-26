@@ -54,6 +54,27 @@ export const findGameById = async (id: string) => {
   return await db.findOne<GameStoreModel>({ _id: id });
 };
 
+export const findLastSyncedAt = async () => {
+  /**
+   * TODO - Is this right? Might need to spend
+   * some more time looking at this. What if a user
+   * adds a game manually? Does that count as a sync?
+   */
+  const mostRecentlyCreated = await db.findOne<GameStoreModel>({}).sort({ createdAt: -1 });
+  const mostRecentlySynced = await db.findOne<GameStoreModel>({}).sort({ metadataSyncedAt: -1 });
+
+  const mostRecent = Math.max(
+    mostRecentlyCreated?.createdAt?.getTime() || 0,
+    mostRecentlySynced?.metadataSyncedAt?.getTime() || 0,
+  );
+
+  if (!mostRecent) {
+    return null;
+  }
+
+  return new Date(mostRecent);
+};
+
 export const updateGameById = async (id: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) => {
   return await db.update<GameStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
 };
