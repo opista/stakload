@@ -11,12 +11,14 @@ const shortcut = SHORTCUT_KEYS.SETTINGS.join("+");
 export const SettingsControl = () => {
   const { t } = useTranslation();
 
-  const openSettingsModal = () =>
+  const openSettingsModal = () => {
+    modals.closeAll();
     modals.openContextModal({
       modal: "settings",
       title: t("settings"),
       innerProps: settingsModalInnerProps,
     });
+  };
 
   useHotkeys([[shortcut, openSettingsModal]]);
 
