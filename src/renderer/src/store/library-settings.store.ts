@@ -6,10 +6,12 @@ import { createConfStoreWrapper } from "./create-conf-store-wrapper";
 const conf = new Conf();
 
 interface LibrarySettingsState {
+  steamIntegration?: string;
   syncOnStartup: boolean;
 }
 
 interface LibrarySettingsActions {
+  setSteamIntegration: (encryptedIntegration: string) => void;
   setSyncOnStartup: (syncOnStartup: LibrarySettingsState["syncOnStartup"]) => void;
 }
 
@@ -19,6 +21,7 @@ export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
   persist(
     (set) => ({
       syncOnStartup: true,
+      setSteamIntegration: (encryptedIntegration) => set({ steamIntegration: encryptedIntegration }),
       setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
     }),
     {

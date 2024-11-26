@@ -1,11 +1,11 @@
-import { AspectRatio, Box, Button, Image, Text } from "@mantine/core";
+import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { useEffect, useRef, useState } from "react";
 
 import classes from "./GamesGrid.module.css";
 import { useTranslation } from "react-i18next";
-import { IconSquareRoundedPlus } from "@tabler/icons-react";
+import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "../../schema/games";
 import { modals } from "@mantine/modals";
@@ -44,12 +44,13 @@ export const GamesGrid = () => {
 
   if (!games?.length) {
     return (
-      <Box className={classes.emptyContainer}>
+      <Stack className={classes.emptyContainer} align="center" gap="xs" justify="center">
+        <IconPacman size={60} stroke={0.5} />
         <Text c="dimmed">{t("noGamesFound")}</Text>
-        <Button className={classes.importButton} leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
+        <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
           {t("importLibrary")}
         </Button>
-      </Box>
+      </Stack>
     );
   }
 

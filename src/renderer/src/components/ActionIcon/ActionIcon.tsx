@@ -17,7 +17,7 @@ export const Component = ({ icon: Icon, size = "lg", variant = "default", ...pro
   return (
     <MantineActionIcon ref={ref} size={size} variant={variant} {...props}>
       <VisuallyHidden>{props["aria-label"]}</VisuallyHidden>
-      <Icon className={classes.icon} stroke={1.5} />
+      <Icon className={classes.icon} stroke={1} />
     </MantineActionIcon>
   );
 };
