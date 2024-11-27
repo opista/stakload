@@ -1,0 +1,44 @@
+import { useLibrarySettingsStore } from "@store/library-settings.store";
+import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+export type SteamIntegrationDetails = {
+  steamId: string;
+  webApiKey: string;
+};
+
+export const useSteamIntegration = () => {
+  const [decryptedSteamIntegration, setDecryptedSteamIntegration] = useState<SteamIntegrationDetails | null>(null);
+  const { storeSteamIntegration, setStoreSteamIntegration } = useLibrarySettingsStore(
+    useShallow((state) => ({
+      setStoreSteamIntegration: state.setSteamIntegration,
+      storeSteamIntegration: state.steamIntegration,
+    })),
+  );
+
+  useEffect(() => {
+    if (!storeSteamIntegration) return;
+
+    /**
+     * TODO - Should this happen in the backend?
+     * ie. fetch decrypted steam integration details?
+     */
+    window.api.decrypt(storeSteamIntegration.webApiKey).then((decrypted) => {
+      setDecryptedSteamIntegration({
+        steamId: storeSteamIntegration.steamId,
+        webApiKey: decrypted,
+      });
+    });
+  }, [storeSteamIntegration]);
+
+  const setSteamIntegration = (integration: SteamIntegrationDetails) => {
+    window.api.encrypt(integration.webApiKey).then((encrypted) => {
+      setStoreSteamIntegration({
+        steamId: integration.steamId,
+        webApiKey: encrypted,
+      });
+    });
+  };
+
+  return { steamIntegration: decryptedSteamIntegration, setSteamIntegration };
+};

@@ -5,13 +5,18 @@ import { createConfStorage } from "@util/create-conf-storage";
 
 const conf = new Conf();
 
+export type SteamIntegrationDetails = {
+  steamId: string;
+  webApiKey: string;
+};
+
 interface LibrarySettingsState {
-  steamIntegration?: string;
+  steamIntegration?: SteamIntegrationDetails;
   syncOnStartup: boolean;
 }
 
 interface LibrarySettingsActions {
-  setSteamIntegration: (encryptedIntegration: string) => void;
+  setSteamIntegration: (encryptedIntegration: SteamIntegrationDetails) => void;
   setSyncOnStartup: (syncOnStartup: LibrarySettingsState["syncOnStartup"]) => void;
 }
 
@@ -21,7 +26,7 @@ export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
   persist(
     (set) => ({
       syncOnStartup: true,
-      setSteamIntegration: (encryptedIntegration) => set({ steamIntegration: encryptedIntegration }),
+      setSteamIntegration: (steamIntegration) => set({ steamIntegration }),
       setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
     }),
     {
