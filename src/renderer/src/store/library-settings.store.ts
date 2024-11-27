@@ -1,7 +1,7 @@
-import { createJSONStorage, persist } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Conf } from "electron-conf/renderer";
-import { createConfStoreWrapper } from "./create-conf-store-wrapper";
+import { createConfStorage } from "@util/create-conf-storage";
 
 const conf = new Conf();
 
@@ -26,7 +26,7 @@ export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
     }),
     {
       name: "library_settings",
-      storage: createJSONStorage(() => createConfStoreWrapper(conf)),
+      storage: createConfStorage(conf),
     },
   ),
 );
