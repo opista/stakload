@@ -92,3 +92,7 @@ export const removeGame = async (id: string, permanent: boolean = false) => {
     return true;
   }
 };
+
+export const findGamesByGameIds = async (ids: string[], library: Library) => {
+  return await db.find({ gameId: { $in: ids }, library }, { gameId: 1, _id: 0 });
+};
