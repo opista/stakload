@@ -5,7 +5,10 @@ import { createConfStorage } from "@util/create-conf-storage";
 
 const conf = new Conf();
 
+export type UIMode = "desktop" | "gaming";
+
 interface InterfaceSettingsState {
+  defaultUI: UIMode;
   displayBattery: boolean;
   displayBatteryPercent: boolean;
   displayNetwork: boolean;
@@ -15,6 +18,7 @@ interface InterfaceSettingsState {
 }
 
 interface InterfaceSettingsActions {
+  setDefaultUI: (defaultUI: InterfaceSettingsState["defaultUI"]) => void;
   setDisplayBattery: (displayBattery: InterfaceSettingsState["displayBattery"]) => void;
   setDisplayBatteryPercent: (displayBatteryPercent: InterfaceSettingsState["displayBatteryPercent"]) => void;
   setDisplayNetwork: (displayNetwork: InterfaceSettingsState["displayNetwork"]) => void;
@@ -28,12 +32,14 @@ type InterfaceSettingsStore = InterfaceSettingsState & InterfaceSettingsActions;
 export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
   persist(
     (set) => ({
+      defaultUI: "desktop",
       displayBattery: true,
       displayBatteryPercent: true,
       displayNetwork: true,
       displaySeconds: true,
       displayTime: true,
       theme: "violet",
+      setDefaultUI: (defaultUI) => set({ defaultUI }),
       setDisplayBattery: (displayBattery) => set({ displayBattery }),
       setDisplayBatteryPercent: (displayBatteryPercent) => set({ displayBatteryPercent }),
       setDisplayNetwork: (displayNetwork) => set({ displayNetwork }),

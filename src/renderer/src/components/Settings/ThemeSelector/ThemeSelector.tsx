@@ -23,9 +23,9 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
   };
 
   return (
-    <Flex align="center" justify="space-between">
-      <Text>{t("interfaceSettings.theme")}</Text>
-      <Group gap={0}>
+    <Flex align="center" className={classes.container} justify="space-between">
+      <Text className={classes.text}>{t("interfaceSettings.theme")}</Text>
+      <Group gap="xs">
         {Object.entries(options).map(([color, hex]) => (
           <ColorSwatch
             className={clsx(classes.button, {
@@ -36,6 +36,7 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
             onClick={() => onChange(color)}
             color={hex}
             radius="sm"
+            size={20}
           />
         ))}
       </Group>

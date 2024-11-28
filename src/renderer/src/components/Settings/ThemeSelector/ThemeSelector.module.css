@@ -1,8 +1,15 @@
+.container {
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
 .button {
   background-color: transparent;
-  border: 2px solid transparent;
 
   &.active {
-    border-color: var(--mantine-primary-color-contrast);
+    outline: 2px solid var(--mantine-primary-color-contrast);
   }
+}
+
+.text {
+  font-size: var(--mantine-font-size-sm);
 }

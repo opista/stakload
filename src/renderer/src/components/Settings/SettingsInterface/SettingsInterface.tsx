@@ -2,22 +2,45 @@ import { Divider, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
-import { useInterfaceSettingsStore } from "@store/interface-settings.store";
+import { UIMode, useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { useShallow } from "zustand/react/shallow";
+import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
 
 const GeneralSettings = () => {
-  const { theme, setTheme } = useInterfaceSettingsStore(
-    useShallow((state) => ({ theme: state.theme, setTheme: state.setTheme })),
+  const { defaultUI, setDefaultUI, theme, setTheme } = useInterfaceSettingsStore(
+    useShallow((state) => ({
+      defaultUI: state.defaultUI,
+      setDefaultUI: state.setDefaultUI,
+      theme: state.theme,
+      setTheme: state.setTheme,
+    })),
   );
   const { t } = useTranslation();
+
+  const uiOptions: { label: string; value: UIMode }[] = [
+    {
+      label: t("interfaceSettings.desktopMode"),
+      value: "desktop",
+    },
+    {
+      label: t("interfaceSettings.gamingMode"),
+      value: "gaming",
+    },
+  ];
 
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
         {t("interfaceSettings.general")}
       </Title>
-      <ThemeSelector value={theme} onChange={setTheme} />
+      <ThemeSelector onChange={setTheme} value={theme} />
+      <SettingsSelect
+        data={uiOptions}
+        label={t("interfaceSettings.defaultUI")}
+        onChange={(value) => setDefaultUI(value)}
+        value={defaultUI}
+      />
     </>
   );
 };
