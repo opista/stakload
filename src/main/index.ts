@@ -131,7 +131,7 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  const { syncManager } = createWindow();
+  const { browserWindow, syncManager } = createWindow();
 
   ipcMain.handle(DECRYPT, decrypt);
   ipcMain.handle(ENCRYPT, encrypt);
@@ -142,7 +142,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
-  ipcMain.handle(REMOVE_GAME, removeGame);
+  ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
   ipcMain.on(SYNC_GAMES, syncManager.syncGames);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);

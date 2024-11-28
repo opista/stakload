@@ -5,27 +5,28 @@ export const useGameSync = () => {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    window.api.onSyncInserted((_event, count) => {
+    const listenerId = window.api.onSyncInserted((_event, count) => {
       setTotal((prev) => prev + count);
-
       if (!processing) {
         setProcessing(1);
       }
     });
-    return () => window.api.offSyncInserted();
+
+    return () => window.api.offSyncInserted(listenerId);
   }, []);
 
   useEffect(() => {
-    window.api.onSyncProcessed(async (_event) => setProcessing((prev) => prev + 1));
-    return () => window.api.offSyncProcessed();
+    const listenerId = window.api.onSyncProcessed(async (_event) => setProcessing((prev) => prev + 1));
+    return () => window.api.offSyncProcessed(listenerId);
   }, []);
 
   useEffect(() => {
-    window.api.onSyncComplete(() => {
+    const listenerId = window.api.onSyncComplete(() => {
       setProcessing(0);
       setTotal(0);
     });
-    return () => window.api.offSyncComplete();
+
+    return () => window.api.offSyncComplete(listenerId);
   }, []);
 
   return { processing, total };

@@ -9,9 +9,9 @@ import {
   RESTART_APP,
   SHUTDOWN_DEVICE,
   SYNC_GAMES,
-  METADATA_SYNC_PROCESSED,
-  METADATA_SYNC_COMPLETE,
-  METADATA_SYNC_INSERTED,
+  EVENT_METADATA_SYNC_PROCESSED,
+  EVENT_METADATA_SYNC_COMPLETE,
+  EVENT_METADATA_SYNC_INSERTED,
   GET_FILTERED_GAMES,
   GET_OS,
   GET_GAME_BY_ID,
@@ -20,36 +20,43 @@ import {
   DECRYPT,
   GET_GAMES_LAST_SYNCED_AT,
   REMOVE_GAME,
+  EVENT_GAMES_LIST_UPDATED,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
+import { ListenerHandler } from "../main/util/listener-handler";
+
+const listenerHandler = new ListenerHandler();
 
 // Custom APIs for renderer
 const api = {
+  closeApp: (): void => ipcRenderer.send(CLOSE_APP),
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
-  syncGames: () => ipcRenderer.send(SYNC_GAMES),
-  testLibraryIntegration: (steamId, webApiKey) => ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
+  fetch: <T>(...args: Parameters<typeof fetch>): Promise<T> => ipcRenderer.invoke(FETCH, ...args),
   getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
-  getGameById: (id) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
-  removeGame: (id, preventReadd) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
+  getGameById: (id: string) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
   getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),
-  onSyncInserted: (cb: (event, count) => void) => ipcRenderer.on(METADATA_SYNC_INSERTED, cb),
-  offSyncInserted: () => ipcRenderer.removeAllListeners(METADATA_SYNC_INSERTED),
-  onSyncProcessed: (cb: (event, args: { id: string; appDetails: AppDetails }) => void) =>
-    ipcRenderer.on(METADATA_SYNC_PROCESSED, cb),
-  offSyncProcessed: () => ipcRenderer.removeAllListeners(METADATA_SYNC_PROCESSED),
-  onSyncComplete: (cb: (event) => void) => ipcRenderer.on(METADATA_SYNC_COMPLETE, cb),
-  offSyncComplete: () => ipcRenderer.removeAllListeners(METADATA_SYNC_COMPLETE),
   getLocale: (): Promise<string> => ipcRenderer.invoke(GET_LOCALE),
   getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
-  fetch: <T>(...args: Parameters<typeof fetch>): Promise<T> => ipcRenderer.invoke(FETCH, ...args),
+  offGamesListUpdated: (listenerId: string) => listenerHandler.remove(EVENT_GAMES_LIST_UPDATED, listenerId),
+  offSyncComplete: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_COMPLETE, listenerId),
+  offSyncInserted: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_INSERTED, listenerId),
+  offSyncProcessed: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_PROCESSED, listenerId),
+  onGamesListUpdated: (listener: (event) => void) => listenerHandler.add(EVENT_GAMES_LIST_UPDATED, listener),
+  onSyncComplete: (listener: (event) => void) => listenerHandler.add(EVENT_METADATA_SYNC_COMPLETE, listener),
+  onSyncInserted: (listener: (event, count) => void) => listenerHandler.add(EVENT_METADATA_SYNC_INSERTED, listener),
+  onSyncProcessed: (listener: (event, args: { id: string; appDetails: AppDetails }) => void) =>
+    listenerHandler.add(EVENT_METADATA_SYNC_PROCESSED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
-  closeApp: (): void => ipcRenderer.send(CLOSE_APP),
+  removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
   restartDevice: (): void => ipcRenderer.send(RESTART_APP),
   shutdownDevice: (): void => ipcRenderer.send(SHUTDOWN_DEVICE),
   sleepDevice: (): void => ipcRenderer.send(SLEEP_DEVICE),
+  syncGames: () => ipcRenderer.send(SYNC_GAMES),
+  testLibraryIntegration: (steamId: string, webApiKey: string) =>
+    ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -1,5 +1,6 @@
-import { IpcMainInvokeEvent } from "electron";
+import { IpcMainInvokeEvent, WebContents } from "electron";
 import { findGameById, findLastSyncedAt, getFilteredGames, removeGameById } from "../database/games";
+import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
 
 export const getFilteredGameLibrary = () => {
   // TODO
@@ -11,5 +12,8 @@ export const getGameById = (_event: IpcMainInvokeEvent, id: string) => findGameB
 
 export const getGamesLastSyncedAt = (_event: IpcMainInvokeEvent) => findLastSyncedAt();
 
-export const removeGame = (_event: IpcMainInvokeEvent, id: string, preventReadd: boolean) =>
-  removeGameById(id, preventReadd);
+export const removeGame =
+  (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string, preventReadd: boolean) => {
+    await removeGameById(id, preventReadd);
+    contents.send(EVENT_GAMES_LIST_UPDATED);
+  };

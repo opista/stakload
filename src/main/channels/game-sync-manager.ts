@@ -1,6 +1,11 @@
 import fastq from "fastq";
 import { WebContents } from "electron";
-import { METADATA_SYNC_COMPLETE, METADATA_SYNC_INSERTED, METADATA_SYNC_PROCESSED } from "../../preload/channels";
+import {
+  EVENT_GAMES_LIST_UPDATED,
+  EVENT_METADATA_SYNC_COMPLETE,
+  EVENT_METADATA_SYNC_INSERTED,
+  EVENT_METADATA_SYNC_PROCESSED,
+} from "../../preload/channels";
 import { findUnsyncedGames } from "../database/games";
 import { Conf } from "electron-conf/main";
 import { decryptString } from "../util/safe-storage";
@@ -20,9 +25,9 @@ export const gameSyncManager = (contents: WebContents, conf: Conf) => {
     //   await updateGameByGameId(gameId, mapAppDetailsToGameStoreModel(appDetails));
     // }
     await sleep(1000);
-    contents.send(METADATA_SYNC_PROCESSED, { id: gameId });
+    contents.send(EVENT_METADATA_SYNC_PROCESSED, { id: gameId });
     if (!syncQueue.length()) {
-      contents.send(METADATA_SYNC_COMPLETE);
+      contents.send(EVENT_METADATA_SYNC_COMPLETE);
     }
   };
 
@@ -36,9 +41,10 @@ export const gameSyncManager = (contents: WebContents, conf: Conf) => {
     const decrypedApiKey = decryptString(config.webApiKey);
 
     await findAndInsertNewGames(config.steamId, decrypedApiKey);
+    contents.send(EVENT_GAMES_LIST_UPDATED);
     const games = await findUnsyncedGames();
     const gameIds = games.map(({ gameId }) => gameId);
-    contents.send(METADATA_SYNC_INSERTED, gameIds.length);
+    contents.send(EVENT_METADATA_SYNC_INSERTED, gameIds.length);
     await Promise.all(gameIds.map((gameId) => syncQueue.push(gameId)));
   };
 
