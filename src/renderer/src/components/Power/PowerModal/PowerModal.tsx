@@ -1,7 +1,8 @@
 import { Button, Divider, Modal, Stack } from "@mantine/core";
-import { IconPower, IconRefresh, IconRotateClockwise2, IconX, IconZzz } from "@tabler/icons-react";
+import { IconDeviceGamepad2, IconPower, IconRefresh, IconRotateRectangle, IconX, IconZzz } from "@tabler/icons-react";
 import classes from "./PowerModal.module.css";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 
 interface PowerModalProps {
   onClose: () => void;
@@ -9,6 +10,7 @@ interface PowerModalProps {
 }
 
 export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const appPowerControls = [
@@ -19,8 +21,13 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
     },
     {
       onClick: () => window.api.restartApp(),
-      Icon: IconRotateClockwise2,
+      Icon: IconRotateRectangle,
       label: t("power.restartApp"),
+    },
+    {
+      onClick: () => navigate("/gaming"),
+      Icon: IconDeviceGamepad2,
+      label: t("power.switchToGaming"),
     },
   ];
 

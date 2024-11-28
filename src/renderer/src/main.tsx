@@ -15,6 +15,8 @@ import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GameDetails } from "@components/GameDetails/GameDetails";
 import { BaseLayout } from "./layouts/BaseLayout/BaseLayout";
 import { App } from "./App";
+import { GamingLayout } from "./layouts/GamingLayout/GamingLayout";
+import { DummyComponent } from "@components/DummyComponent/DummyComponent";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -25,6 +27,9 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<DesktopLayout />} path="desktop">
             <Route index element={<GamesGrid />} />
             <Route element={<GameDetails />} path=":id"></Route>
+          </Route>
+          <Route element={<GamingLayout />} path="gaming">
+            <Route index element={<DummyComponent />} />
           </Route>
         </Route>
       </Routes>

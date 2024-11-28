@@ -81,6 +81,7 @@
   "power": {
     "closeApp": "Close Trulaunch",
     "restartApp": "Restart Trulaunch",
+    "switchToGaming": "Switch to Gaming Mode",
     "shutdown": "Shut down",
     "restart": "Restart",
     "sleep": "Sleep"
