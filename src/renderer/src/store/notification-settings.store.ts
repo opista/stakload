@@ -2,18 +2,14 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Conf } from "electron-conf/renderer";
 import { createConfStorage } from "@util/create-conf-storage";
+import { NotificationSettingsState } from "@contracts/store/notification-settings";
 
 const conf = new Conf();
 
-interface NotificationSettingsState {
-  lowBattery: number;
-  networkDisconnect: boolean;
-}
-
-interface NotificationSettingsActions {
+type NotificationSettingsActions = {
   setLowBattery: (lowBattery: NotificationSettingsState["lowBattery"]) => void;
   setNetworkDisconnect: (networkDisconnect: NotificationSettingsState["networkDisconnect"]) => void;
-}
+};
 
 type NotificationSettingsStore = NotificationSettingsState & NotificationSettingsActions;
 

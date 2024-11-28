@@ -2,12 +2,12 @@ import { Checkbox, CheckboxProps, Tooltip } from "@mantine/core";
 import classes from "./SettingsCheckbox.module.css";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
 
-interface SettingsCheckboxProps {
+type SettingsCheckboxProps = {
   checked: boolean;
   label: string;
   labelInfo?: string;
   onCheckboxChange: (checked: boolean) => void;
-}
+};
 
 export const SettingsCheckbox = ({
   checked,

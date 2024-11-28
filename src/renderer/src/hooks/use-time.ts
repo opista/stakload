@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
 
-interface UseTimeOptions {
+type UseTimeOptions = {
   showSeconds?: boolean;
-}
+};
 
 export const useTime = ({ showSeconds = true }: UseTimeOptions = {}) => {
   const [date, setDate] = useState<Date>(new Date());

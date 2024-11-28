@@ -5,12 +5,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Image } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import classes from "./GameNavigation.module.css";
-import { GameStoreModel } from "../../schema/games";
 import { useLocation, useNavigate, useParams } from "react-router";
+import { GameStoreModel } from "@contracts/database/games";
 
-interface GameNavigationProps {
+type GameNavigationProps = {
   games?: GameStoreModel[];
-}
+};
 
 const DefaultIcon = <IconDeviceGamepad2 className={classes.iconDefault} stroke={1.5} />;
 

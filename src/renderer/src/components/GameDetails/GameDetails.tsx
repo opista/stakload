@@ -9,11 +9,11 @@ import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
 import { useSystemStore } from "@store/system.store";
 import { useNavigate, useParams } from "react-router";
-import { GameStoreModel } from "../../schema/games";
 import { useShallow } from "zustand/react/shallow";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { useDisclosure } from "@mantine/hooks";
 import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
+import { GameStoreModel } from "@contracts/database/games";
 
 export const GameDetails = () => {
   const operatingSystem = useSystemStore(useShallow((state) => state.operatingSystem));

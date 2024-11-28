@@ -3,12 +3,12 @@ import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import classes from "./RemoveGameModal.module.css";
 
-interface RemoveGameModalProps {
+type RemoveGameModalProps = {
   gameTitle: string;
   onConfirm: (preventReadd: boolean) => void;
   onClose: () => void;
   opened: boolean;
-}
+};
 
 export const RemoveGameModal = ({ gameTitle, onConfirm, onClose, opened }: RemoveGameModalProps) => {
   const [preventReadd, setPreventReadd] = useState(false);

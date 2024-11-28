@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import classes from "./SearchControl.module.css";
 import { SHORTCUT_KEYS } from "@constants/shortcuts";
 
-interface SearchControlProps extends BoxProps, ElementProps<"button"> {}
+type SearchControlProps = BoxProps & ElementProps<"button">;
 
 export const SearchControl = ({ className, disabled, ...others }: SearchControlProps) => {
   const { t } = useTranslation();

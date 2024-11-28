@@ -2,22 +2,11 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Conf } from "electron-conf/renderer";
 import { createConfStorage } from "@util/create-conf-storage";
+import { InterfaceSettingsState } from "@contracts/store/interface-settings";
 
 const conf = new Conf();
 
-export type UIMode = "desktop" | "gaming";
-
-interface InterfaceSettingsState {
-  defaultUI: UIMode;
-  displayBattery: boolean;
-  displayBatteryPercent: boolean;
-  displayNetwork: boolean;
-  displaySeconds: boolean;
-  displayTime: boolean;
-  theme: string;
-}
-
-interface InterfaceSettingsActions {
+type InterfaceSettingsActions = {
   setDefaultUI: (defaultUI: InterfaceSettingsState["defaultUI"]) => void;
   setDisplayBattery: (displayBattery: InterfaceSettingsState["displayBattery"]) => void;
   setDisplayBatteryPercent: (displayBatteryPercent: InterfaceSettingsState["displayBatteryPercent"]) => void;
@@ -25,7 +14,7 @@ interface InterfaceSettingsActions {
   setDisplaySeconds: (displaySeconds: InterfaceSettingsState["displaySeconds"]) => void;
   setDisplayTime: (displayTime: InterfaceSettingsState["displayTime"]) => void;
   setTheme: (theme: InterfaceSettingsState["theme"]) => void;
-}
+};
 
 type InterfaceSettingsStore = InterfaceSettingsState & InterfaceSettingsActions;
 

@@ -1,18 +1,15 @@
 import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Conf } from "electron-conf/renderer";
-import { Platform } from "../schema/games";
 import { createConfStorage } from "@util/create-conf-storage";
+import { Platform } from "@contracts/database/games";
+import { SystemState } from "@contracts/store/system";
 
 const conf = new Conf();
 
-interface SystemState {
-  operatingSystem: Platform | null;
-}
-
-interface SystemActions {
+type SystemActions = {
   setOperatingSystem: (operatingSystem: Platform) => void;
-}
+};
 
 type SystemStore = SystemState & SystemActions;
 

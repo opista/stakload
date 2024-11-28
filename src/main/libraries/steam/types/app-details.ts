@@ -1,11 +1,11 @@
-export interface AppDetailsResponse {
+export type AppDetailsResponse = {
   [key: string]: {
     success: boolean;
     data: AppDetails;
   };
-}
+};
 
-export interface AppDetails {
+export type AppDetails = {
   type: AppType;
   name: string;
   steam_appid: number;
@@ -40,53 +40,53 @@ export interface AppDetails {
   background_raw: string;
   content_descriptors: ContentDescriptors;
   ratings: null;
-}
+};
 
 export enum AppType {
   App = "app",
   Game = "game",
 }
 
-export interface Achievements {
+export type Achievements = {
   total: number;
   highlighted: HighlightedAchievement[];
-}
+};
 
-export interface HighlightedAchievement {
+export type HighlightedAchievement = {
   name: string;
   path: string;
-}
+};
 
-export interface Category {
+export type Category = {
   id: number;
   description: string;
-}
+};
 
-export interface ContentDescriptors {
+export type ContentDescriptors = {
   ids: number[];
   notes: string | null;
-}
+};
 
-export interface Genre {
+export type Genre = {
   id: string;
   description: string;
-}
+};
 
-export interface Movie {
+export type Movie = {
   id: number;
   name: string;
   thumbnail: string;
   webm: Mp4;
   mp4: Mp4;
   highlight: boolean;
-}
+};
 
-export interface Mp4 {
+export type Mp4 = {
   "480": string;
   max: string;
-}
+};
 
-export interface PackageGroup {
+export type PackageGroup = {
   name: string;
   title: string;
   description: string;
@@ -95,9 +95,9 @@ export interface PackageGroup {
   display_type: number;
   is_recurring_subscription: string;
   subs: Sub[];
-}
+};
 
-export interface Sub {
+export type Sub = {
   packageid: number;
   percent_savings_text: string;
   percent_savings: number;
@@ -106,40 +106,40 @@ export interface Sub {
   can_get_free_license: string;
   is_free_license: boolean;
   price_in_cents_with_discount: number;
-}
+};
 
-export interface DeviceRequirements {
+export type DeviceRequirements = {
   minimum: string;
   recommended?: string;
-}
+};
 
-export interface Platforms {
+export type Platforms = {
   windows: boolean;
   mac: boolean;
   linux: boolean;
-}
+};
 
-export interface PriceOverview {
+export type PriceOverview = {
   currency: string;
   initial: number;
   final: number;
   discount_percent: number;
   initial_formatted: string;
   final_formatted: string;
-}
+};
 
-export interface ReleaseDate {
+export type ReleaseDate = {
   coming_soon: boolean;
   date: string;
-}
+};
 
-export interface Screenshot {
+export type Screenshot = {
   id: number;
   path_thumbnail: string;
   path_full: string;
-}
+};
 
-export interface SupportInfo {
+export type SupportInfo = {
   url: string;
   email: string;
-}
+};

@@ -2,23 +2,15 @@ import { persist } from "zustand/middleware";
 import { create } from "zustand";
 import { Conf } from "electron-conf/renderer";
 import { createConfStorage } from "@util/create-conf-storage";
+import { LibrarySettingsState } from "@contracts/store/library-settings";
+import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 
 const conf = new Conf();
 
-export type SteamIntegrationDetails = {
-  steamId: string;
-  webApiKey: string;
-};
-
-interface LibrarySettingsState {
-  steamIntegration?: SteamIntegrationDetails;
-  syncOnStartup: boolean;
-}
-
-interface LibrarySettingsActions {
+type LibrarySettingsActions = {
   setSteamIntegration: (encryptedIntegration: SteamIntegrationDetails) => void;
   setSyncOnStartup: (syncOnStartup: LibrarySettingsState["syncOnStartup"]) => void;
-}
+};
 
 type LibrarySettingsStore = LibrarySettingsState & LibrarySettingsActions;
 

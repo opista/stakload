@@ -3,7 +3,7 @@ import { useInterval } from "@mantine/hooks";
 
 const BATTERY_DETAILS_UPDATE_FREQUENCY = 60_000;
 
-interface BatteryType {
+type BatteryType = {
   charging: boolean;
   chargingTime: number;
   dischargingTime: number;
@@ -12,7 +12,7 @@ interface BatteryType {
   onchargingtimechange: number | null;
   ondischargingtimechange: number | null;
   onlevelchange: number | null;
-}
+};
 
 type BatteryDetails = {
   isCharging: boolean;

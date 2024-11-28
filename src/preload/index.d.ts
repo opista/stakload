@@ -1,7 +1,6 @@
-import { GameStoreModel } from "@database/schema/games";
 import { ElectronAPI } from "@electron-toolkit/preload";
 import { RemoveListenerFunction } from "./util/listener-handler";
-import { Platform } from "src/renderer/src/schema/games";
+import { GameStoreModel, Platform } from "@contracts/database/games";
 declare global {
   interface Window {
     electron: ElectronAPI;

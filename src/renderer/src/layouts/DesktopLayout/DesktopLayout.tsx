@@ -8,9 +8,9 @@ import { Spotlight } from "../../components/Spotlight/Spotlight";
 import classes from "./DesktopLayout.module.css";
 import { ModalsProvider } from "@mantine/modals";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
-import { GameStoreModel } from "../../schema/games";
 import { Outlet, useNavigate } from "react-router";
 import { useGamesQuery } from "@hooks/use-games-query";
+import { GameStoreModel } from "@contracts/database/games";
 
 export const DesktopLayout = () => {
   const navigate = useNavigate();

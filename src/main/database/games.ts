@@ -1,26 +1,7 @@
 import { app } from "electron";
 import Datastore from "nedb-promises";
 import path from "node:path";
-
-export type Library = "steam";
-export type Platform = "linux" | "mac" | "windows";
-
-export type GameStoreModel = {
-  backgroundImage?: string;
-  deletedAt?: Date;
-  description?: string;
-  listImage?: string;
-  icon?: string;
-  gameId: string;
-  lastPlayedAt?: Date;
-  library: Library;
-  metadataSyncedAt?: Date;
-  name: string;
-  platform?: Platform[];
-  type?: "app" | "game";
-};
-
-export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name">;
+import { GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
 
 const db = Datastore.create({
   autoload: true,
@@ -29,7 +10,7 @@ const db = Datastore.create({
 });
 
 export const bulkInsertGames = async (games: InitialGameStoreModel[]) => {
-  return await db.insertMany<GameStoreModel>(games);
+  return await db.insertMany<Omit<GameStoreModel, "_id">>(games);
 };
 
 export const addGame = async (game: InitialGameStoreModel) => {
@@ -38,7 +19,7 @@ export const addGame = async (game: InitialGameStoreModel) => {
    * When we add a game we need to trigger something
    * to go and perform a sync
    */
-  return await db.insert<GameStoreModel>(game);
+  return await db.insert<Omit<GameStoreModel, "_id">>(game);
 };
 
 export const findUnsyncedGames = async () => {

@@ -1,10 +1,10 @@
 import { Box, MantineSize, Text } from "@mantine/core";
 import classes from "./Logo.module.css";
 
-interface LogoProps {
+type LogoProps = {
   size?: MantineSize;
   useGradient?: boolean;
-}
+};
 
 export const Logo = ({ size = "xl", useGradient = true }: LogoProps = {}) => (
   <Box className={classes.container}>

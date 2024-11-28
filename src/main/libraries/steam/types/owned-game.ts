@@ -1,11 +1,11 @@
-export interface OwnedGamesResponse {
+export type OwnedGamesResponse = {
   response: {
     game_count: number;
     games: OwnedGameDetails[];
   };
-}
+};
 
-export interface OwnedGameDetails {
+export type OwnedGameDetails = {
   appid: number;
   content_descriptorids: number[];
   has_community_visible_stats: boolean;
@@ -18,4 +18,4 @@ export interface OwnedGameDetails {
   playtime_mac_forever: number;
   playtime_windows_forever: number;
   rtime_last_played: number;
-}
+};

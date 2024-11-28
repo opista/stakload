@@ -11,9 +11,9 @@ import classes from "./BatteryIndicator.module.css";
 import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
 import { useBatteryDetails } from "@hooks/use-battery-details";
 
-interface BatteryIndicatorProps {
+type BatteryIndicatorProps = {
   showPercentage?: boolean;
-}
+};
 
 const BatteryIcon = (isCharging: boolean, percentage: number) => {
   if (isCharging) {

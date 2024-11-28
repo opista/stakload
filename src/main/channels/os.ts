@@ -1,4 +1,4 @@
-import { Platform } from "../database/games";
+import { Platform } from "@contracts/database/games";
 import os from "os";
 
 export const getOS = (): Platform | null => {

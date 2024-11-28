@@ -1,11 +1,12 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/renderer/src/env.d.ts",
-    "src/renderer/src/**/*",
-    "src/renderer/src/**/*.tsx",
+    "src/contracts/**/*",
     "src/preload/*.d.ts",
     "src/renderer/main.tsx",
+    "src/renderer/src/**/*.tsx",
+    "src/renderer/src/**/*",
+    "src/renderer/src/env.d.ts",
     "src/renderer/src/vite-env.d.ts"
   ],
   "compilerOptions": {
@@ -18,6 +19,9 @@
       ],
       "@components/*": [
         "src/renderer/src/components/*"
+      ],
+      "@contracts/*": [
+        "src/contracts/*"
       ],
       "@constants/*": [
         "src/renderer/src/constants/*"

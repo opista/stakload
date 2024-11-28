@@ -7,11 +7,11 @@ import classes from "./GamesGrid.module.css";
 import { useTranslation } from "react-i18next";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { BackToTop } from "@components/BackToTop/BackToTop";
-import { GameStoreModel } from "../../schema/games";
 import { modals } from "@mantine/modals";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { Link } from "react-router";
 import { useGamesQuery } from "@hooks/use-games-query";
+import { GameStoreModel } from "@contracts/database/games";
 
 const CELL_GAP = 10;
 const COVER_ART_RATIO = 3 / 4;

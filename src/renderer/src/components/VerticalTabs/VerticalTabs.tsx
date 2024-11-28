@@ -5,17 +5,17 @@ import classes from "./VerticalTabs.module.css";
 import { useTranslation } from "react-i18next";
 import { ParseKeys } from "i18next";
 
-export interface Tab {
+export type Tab = {
   Content: () => JSX.Element;
   Icon: FC<IconProps>;
   key: string;
   label: ParseKeys;
-}
+};
 
-interface VerticalTabsProps {
+type VerticalTabsProps = {
   defaultTab: string;
   tabs: Tab[];
-}
+};
 
 export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
   const { t } = useTranslation();

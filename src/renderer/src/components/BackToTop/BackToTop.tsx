@@ -4,9 +4,9 @@ import { IconArrowBigUpFilled } from "@tabler/icons-react";
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
 
-interface BackToTopProps {
+type BackToTopProps = {
   container: Element | null;
-}
+};
 
 export const BackToTop = ({ container }: BackToTopProps) => {
   const containerScrollPosition = useScrollPosition(container);

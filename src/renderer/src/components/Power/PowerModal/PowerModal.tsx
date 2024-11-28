@@ -4,10 +4,10 @@ import classes from "./PowerModal.module.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 
-interface PowerModalProps {
+type PowerModalProps = {
   onClose: () => void;
   opened: boolean;
-}
+};
 
 export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
   const navigate = useNavigate();

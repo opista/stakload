@@ -2,10 +2,11 @@ import { Divider, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
-import { UIMode, useInterfaceSettingsStore } from "@store/interface-settings.store";
+import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { useShallow } from "zustand/react/shallow";
 import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
+import { UIMode } from "@contracts/store/interface-settings";
 
 const GeneralSettings = () => {
   const { defaultUI, setDefaultUI, theme, setTheme } = useInterfaceSettingsStore(

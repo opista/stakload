@@ -11,6 +11,7 @@ import { findUnsyncedGames } from "../database/games";
 import { Conf } from "electron-conf/main";
 import { decryptString } from "../util/safe-storage";
 import { findAndInsertNewGames } from "../libraries/steam/integration";
+import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export class GameSyncManager {
@@ -39,10 +40,7 @@ export class GameSyncManager {
   }
 
   async sync() {
-    /**
-     * TODO - Share state contract?
-     */
-    const config = this.conf.get("library_settings.state.steamIntegration") as { steamId: string; webApiKey: string };
+    const config = this.conf.get("library_settings.state.steamIntegration") as SteamIntegrationDetails;
     const decrypedApiKey = decryptString(config.webApiKey);
 
     await findAndInsertNewGames(config.steamId, decrypedApiKey);

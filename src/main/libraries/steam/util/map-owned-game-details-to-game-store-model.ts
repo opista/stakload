@@ -1,6 +1,6 @@
 import { OwnedGameDetails } from "../types/owned-game";
-import { InitialGameStoreModel, Library } from "../../../database/games";
 import { removeSpecialChars } from "../../../util/remove-special-chars";
+import { Library, InitialGameStoreModel } from "@contracts/database/games";
 
 export const mapOwnedGameDetailsToGameStoreModel = (
   ownedGameDetails: OwnedGameDetails,
