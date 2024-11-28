@@ -24,9 +24,7 @@ import {
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
-import { ListenerHandler } from "../main/util/listener-handler";
-
-const listenerHandler = new ListenerHandler();
+import { listenerHandler } from "./util/listener-handler";
 
 // Custom APIs for renderer
 const api = {
@@ -39,15 +37,11 @@ const api = {
   getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),
   getLocale: (): Promise<string> => ipcRenderer.invoke(GET_LOCALE),
   getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
-  offGamesListUpdated: (listenerId: string) => listenerHandler.remove(EVENT_GAMES_LIST_UPDATED, listenerId),
-  offSyncComplete: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_COMPLETE, listenerId),
-  offSyncInserted: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_INSERTED, listenerId),
-  offSyncProcessed: (listenerId: string) => listenerHandler.remove(EVENT_METADATA_SYNC_PROCESSED, listenerId),
-  onGamesListUpdated: (listener: (event) => void) => listenerHandler.add(EVENT_GAMES_LIST_UPDATED, listener),
-  onSyncComplete: (listener: (event) => void) => listenerHandler.add(EVENT_METADATA_SYNC_COMPLETE, listener),
-  onSyncInserted: (listener: (event, count) => void) => listenerHandler.add(EVENT_METADATA_SYNC_INSERTED, listener),
+  onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_GAMES_LIST_UPDATED, listener),
+  onSyncComplete: (listener: (event) => void) => listenerHandler(EVENT_METADATA_SYNC_COMPLETE, listener),
+  onSyncInserted: (listener: (event, count) => void) => listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
   onSyncProcessed: (listener: (event, args: { id: string; appDetails: AppDetails }) => void) =>
-    listenerHandler.add(EVENT_METADATA_SYNC_PROCESSED, listener),
+    listenerHandler(EVENT_METADATA_SYNC_PROCESSED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),

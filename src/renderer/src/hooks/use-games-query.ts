@@ -13,8 +13,8 @@ export const useGamesQuery = <T>(query: () => Promise<T>) => {
   }, []);
 
   useEffect(() => {
-    const listenerId = window.api.onGamesListUpdated(() => updateQuery());
-    return () => window.api.offGamesListUpdated(listenerId);
+    const removeListener = window.api.onGamesListUpdated(() => updateQuery());
+    return () => removeListener();
   }, [query]);
 
   return result;
