@@ -1,4 +1,4 @@
-import { Box, Text, Tooltip } from "@mantine/core";
+import { Box, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import {
   IconBatteryCharging,
   IconBatteryVertical1,
@@ -36,16 +36,22 @@ export const BatteryIndicator = ({ showPercentage = true }: BatteryIndicatorProp
   if (!percentage) return null;
 
   const Icon = BatteryIcon(isCharging, percentage);
-  const tooltipLabel = isCharging ? `${t("charging")} - ${percentage}%` : `${percentage}%`;
+  const tooltipLabel = isCharging ? t("charging", { level: percentage }) : t("batteryLevel", { level: percentage });
 
   return (
     <Box className={classes.container}>
       {showPercentage && <Text size="sm">{percentage}%</Text>}
       <ConditionalWrapper
         condition={!showPercentage}
-        wrapper={(children) => <Tooltip label={tooltipLabel}>{children}</Tooltip>}
+        wrapper={(children) => (
+          <Tooltip events={{ hover: true, focus: true, touch: false }} label={tooltipLabel} withArrow>
+            {children}
+          </Tooltip>
+        )}
       >
-        <Icon color={percentage <= 15 ? "var(--mantine-color-red-8)" : undefined} stroke={1.5} />
+        <UnstyledButton className={classes.button}>
+          <Icon color={percentage <= 15 ? "var(--mantine-color-red-8)" : undefined} stroke={1.5} />
+        </UnstyledButton>
       </ConditionalWrapper>
     </Box>
   );

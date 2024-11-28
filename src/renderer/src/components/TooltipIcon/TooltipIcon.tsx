@@ -13,7 +13,13 @@ export const TooltipIcon = ({ icon: Icon, iconProps, themeIconProps, tooltipProp
   const { position = "bottom-start", w = "200", ...restTooltipProps } = tooltipProps;
 
   return (
-    <Tooltip multiline position={position} w={w} {...restTooltipProps}>
+    <Tooltip
+      events={{ hover: true, focus: true, touch: false }}
+      multiline
+      position={position}
+      w={w}
+      {...restTooltipProps}
+    >
       <ThemeIcon variant={variant} {...restThemeIconProps}>
         <Icon {...iconProps} style={{ width: "80%", height: "80%" }} stroke={1.5} />
       </ThemeIcon>
