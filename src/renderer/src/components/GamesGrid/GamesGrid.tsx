@@ -60,6 +60,7 @@ export const GamesGrid = () => {
     rowIndex,
     style,
   }: GridChildComponentProps<unknown> & { columnCount: number }) => {
+    const { t } = useTranslation();
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
 
@@ -70,12 +71,12 @@ export const GamesGrid = () => {
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
           <Link className={classes.card} to={`/desktop/${game._id}`}>
             <Image
-              alt={`${game.name} cover art`}
+              alt={t("coverArt", { game: game.name })}
               className={classes.cover}
               radius="lg"
               // TODO - pull this from the game
               src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
-              title={`${game.name} cover art`}
+              title={t("coverArt", { game: game.name })}
             />
           </Link>
         </AspectRatio>
