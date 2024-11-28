@@ -34,7 +34,6 @@ const syncStatusReducer = (state: SyncState, { status, count }: SyncAction): Syn
         status,
       };
     case SyncStatus.Inserted:
-      console.log(state, count);
       return {
         processed: state.processed || 1,
         status: SyncStatus.Processed,
