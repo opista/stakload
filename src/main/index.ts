@@ -26,7 +26,7 @@ import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 import { Conf } from "electron-conf/main";
 import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt, removeGame } from "./channels/games";
-import { gameSyncManager } from "./channels/game-sync-manager";
+import { GameSyncManager } from "./channels/game-sync-manager";
 import { getOS } from "./channels/os";
 import { decrypt, encrypt } from "./channels/safe-storage";
 import { testSteamIntegration } from "./channels/integrations";
@@ -81,7 +81,7 @@ function createWindow() {
     },
   });
 
-  const syncManager = gameSyncManager(mainWindow.webContents, conf);
+  const syncManager = new GameSyncManager(mainWindow.webContents, conf);
 
   mainWindow.on("ready-to-show", async () => {
     mainWindow.show();
@@ -143,7 +143,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
-  ipcMain.on(SYNC_GAMES, syncManager.syncGames);
+  ipcMain.on(SYNC_GAMES, () => syncManager.sync());
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);
   ipcMain.on(RESTART_APP, restartApp);

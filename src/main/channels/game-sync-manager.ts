@@ -12,9 +12,15 @@ import { decryptString } from "../util/safe-storage";
 import { findAndInsertNewGames } from "../libraries/steam/integration";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+export class GameSyncManager {
+  private syncQueue = fastq.promise((gameId: string) => this.worker(gameId), 1);
 
-export const gameSyncManager = (contents: WebContents, conf: Conf) => {
-  const worker = async (gameId) => {
+  constructor(
+    private webContents: WebContents,
+    private conf: Conf,
+  ) {}
+
+  async worker(gameId) {
     /**
      * Disable for now until IGDB
      * API is set up
@@ -25,28 +31,28 @@ export const gameSyncManager = (contents: WebContents, conf: Conf) => {
     //   await updateGameByGameId(gameId, mapAppDetailsToGameStoreModel(appDetails));
     // }
     await sleep(1000);
-    contents.send(EVENT_METADATA_SYNC_PROCESSED, { id: gameId });
-    if (!syncQueue.length()) {
-      contents.send(EVENT_METADATA_SYNC_COMPLETE);
+    this.webContents.send(EVENT_METADATA_SYNC_PROCESSED, { id: gameId });
+    if (!this.syncQueue.length()) {
+      this.webContents.send(EVENT_METADATA_SYNC_COMPLETE);
     }
-  };
+  }
 
-  const syncQueue = fastq.promise(worker, 1);
-
-  const syncGames = async () => {
+  async sync() {
     /**
-     * TODO - Share state type?
+     * TODO - Share state contract?
      */
-    const config = conf.get("library_settings.state.steamIntegration") as { steamId: string; webApiKey: string };
+    const config = this.conf.get("library_settings.state.steamIntegration") as { steamId: string; webApiKey: string };
     const decrypedApiKey = decryptString(config.webApiKey);
 
     await findAndInsertNewGames(config.steamId, decrypedApiKey);
-    contents.send(EVENT_GAMES_LIST_UPDATED);
+    this.webContents.send(EVENT_GAMES_LIST_UPDATED);
     const games = await findUnsyncedGames();
     const gameIds = games.map(({ gameId }) => gameId);
-    contents.send(EVENT_METADATA_SYNC_INSERTED, gameIds.length);
-    await Promise.all(gameIds.map((gameId) => syncQueue.push(gameId)));
-  };
+    this.webContents.send(EVENT_METADATA_SYNC_INSERTED, gameIds.length);
+    await Promise.all(gameIds.map((gameId) => this.syncQueue.push(gameId)));
+  }
 
-  return { syncGames };
-};
+  clear() {
+    return this.syncQueue.kill();
+  }
+}
