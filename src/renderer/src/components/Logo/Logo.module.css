@@ -3,6 +3,7 @@
   border-radius: var(--mantine-radius-md);
   padding-left: var(--mantine-spacing-sm);
   padding-right: var(--mantine-spacing-sm);
+  user-select: none;
 }
 
 .logo {
