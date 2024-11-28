@@ -1,8 +1,0 @@
-.container {
-  display: flex;
-  align-items: center;
-}
-
-.loader {
-  margin-right: var(--mantine-spacing-sm);
-}

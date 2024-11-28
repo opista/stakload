@@ -5,6 +5,7 @@ import {
   EVENT_METADATA_SYNC_COMPLETE,
   EVENT_METADATA_SYNC_INSERTED,
   EVENT_METADATA_SYNC_PROCESSED,
+  EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
 import { findUnsyncedGames } from "../database/games";
 import { Conf } from "electron-conf/main";
@@ -53,6 +54,7 @@ export class GameSyncManager {
   }
 
   clear() {
-    return this.syncQueue.kill();
+    this.syncQueue.kill();
+    this.webContents.send(EVENT_SYNC_QUEUE_CLEARED);
   }
 }

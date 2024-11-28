@@ -21,6 +21,8 @@ import {
   GET_GAMES_LAST_SYNCED_AT,
   REMOVE_GAME,
   EVENT_GAMES_LIST_UPDATED,
+  EVENT_SYNC_QUEUE_CLEARED,
+  CLEAR_SYNC_QUEUE,
 } from "./channels";
 import { exposeConf } from "electron-conf/preload";
 import { AppDetails } from "../main/libraries/steam/types/app-details";
@@ -28,6 +30,7 @@ import { listenerHandler } from "./util/listener-handler";
 
 // Custom APIs for renderer
 const api = {
+  clearSyncQueue: () => ipcRenderer.send(CLEAR_SYNC_QUEUE),
   closeApp: (): void => ipcRenderer.send(CLOSE_APP),
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
@@ -42,6 +45,7 @@ const api = {
   onSyncInserted: (listener: (event, count) => void) => listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
   onSyncProcessed: (listener: (event, args: { id: string; appDetails: AppDetails }) => void) =>
     listenerHandler(EVENT_METADATA_SYNC_PROCESSED, listener),
+  onSyncQueueCleared: (listener: (event) => void) => listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),

@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import {
+  CLEAR_SYNC_QUEUE,
   CLOSE_APP,
   DECRYPT,
   ENCRYPT,
@@ -135,21 +136,22 @@ app.whenReady().then(async () => {
 
   ipcMain.handle(DECRYPT, decrypt);
   ipcMain.handle(ENCRYPT, encrypt);
-  ipcMain.handle(GET_LOCALE, getLocale);
-  ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(FETCH, nodeFetch);
-  ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
+  ipcMain.handle(GET_LOCALE, getLocale);
+  ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
-  ipcMain.on(SYNC_GAMES, () => syncManager.sync());
-  ipcMain.on(OPEN_WEBPAGE, openWebpage);
+  ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
+  ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
   ipcMain.on(CLOSE_APP, closeApp);
+  ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
   ipcMain.on(SLEEP_DEVICE, sleepDevice);
+  ipcMain.on(SYNC_GAMES, () => syncManager.sync());
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

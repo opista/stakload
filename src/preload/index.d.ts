@@ -6,6 +6,7 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     api: {
+      clearSyncQueue: () => void;
       closeApp: () => void;
       decrypt: (str: string) => Promise<string>;
       encrypt: (str: string) => Promise<string>;
@@ -19,6 +20,7 @@ declare global {
       onSyncComplete: (listener: (event) => void) => RemoveListenerFunction;
       onSyncInserted: (listener: (event, count: number) => void) => RemoveListenerFunction;
       onSyncProcessed: (listener: (event, { id: string, appDetails: AppDetails }) => void) => RemoveListenerFunction;
+      onSyncQueueCleared: (listener: (event) => void) => RemoveListenerFunction;
       openWebpage: (url: string) => void;
       removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;
