@@ -1,23 +1,40 @@
-import { Tooltip } from "@mantine/core";
+import { Tooltip, UnstyledButton } from "@mantine/core";
 import { useNetwork } from "@mantine/hooks";
-import { IconWifi, IconWifiOff } from "@tabler/icons-react";
+import { Icon, IconWifi, IconWifiOff } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import classes from "./NetworkIndicator.module.css";
+import { ParseKeys } from "i18next";
+
+type IndicatorConfig = {
+  label: ParseKeys;
+  Icon: Icon;
+  iconColor?: string;
+};
+
+const onlineConfig: IndicatorConfig = {
+  label: "network.online",
+  Icon: IconWifi,
+  iconColor: undefined,
+};
+
+const offlineConfig: IndicatorConfig = {
+  label: "network.offline",
+  Icon: IconWifiOff,
+  iconColor: "var(--mantine-color-red-8)",
+};
 
 export const NetworkIndicator = () => {
   const { t } = useTranslation();
   const { online } = useNetwork();
 
-  if (online) {
-    return (
-      <Tooltip label={t("network.online")}>
-        <IconWifi stroke={1.5} />
-      </Tooltip>
-    );
-  } else {
-    return (
-      <Tooltip label={t("network.offline")}>
-        <IconWifiOff color="var(--mantine-color-red-8)" stroke={1.5} />
-      </Tooltip>
-    );
-  }
+  const config = online ? onlineConfig : offlineConfig;
+  const { label, Icon, iconColor } = config;
+
+  return (
+    <Tooltip events={{ hover: true, focus: true, touch: false }} label={t(label)} withArrow>
+      <UnstyledButton className={classes.button}>
+        <Icon color={iconColor} stroke={1.5} />
+      </UnstyledButton>
+    </Tooltip>
+  );
 };
