@@ -28,7 +28,12 @@ export const Header = () => {
         <Logo />
         <Group gap="md">
           <GameSync />
-          {displayTime && <Clock showSeconds={displaySeconds} />}
+          {displayTime && (
+            <>
+              <Divider orientation="vertical" size="xs" />
+              <Clock showSeconds={displaySeconds} />
+            </>
+          )}
           {displayBattery && (
             <>
               <Divider orientation="vertical" size="xs" />

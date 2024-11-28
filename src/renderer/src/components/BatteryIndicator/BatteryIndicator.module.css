@@ -1,5 +1,6 @@
 .container,
 .button {
+  cursor: default;
   display: flex;
   align-items: center;
 }
