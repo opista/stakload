@@ -27,7 +27,6 @@ export const findUnsyncedGames = async () => {
   return await db.find<GameStoreModel>({ metadataSyncedAt: { $exists: false } }).sort({ name: 1 });
 };
 
-// TODO
 export const getFilteredGames = async () => {
   return await db
     .find<GameStoreModel>({ $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] })
@@ -43,18 +42,23 @@ export const findLastSyncedAt = async () => {
    * TODO - Is this right? Might need to spend
    * some more time looking at this. What if a user
    * adds a game manually? Does that count as a sync?
+   * createdAt means document added, metadataSyncedAt
+   * means document enriched
    */
-  const mostRecentlyCreated = await db.findOne<GameStoreModel>({}).sort({ createdAt: -1 });
-  const mostRecentlySynced = await db.findOne<GameStoreModel>({}).sort({ metadataSyncedAt: -1 });
+  const mostRecentDoc = await db
+    .findOne<GameStoreModel>({
+      $or: [{ createdAt: { $exists: true } }, { metadataSyncedAt: { $exists: true } }],
+    })
+    .sort({
+      createdAt: -1,
+      metadataSyncedAt: -1,
+    });
 
-  const mostRecent = Math.max(
-    mostRecentlyCreated?.createdAt?.getTime() || 0,
-    mostRecentlySynced?.metadataSyncedAt?.getTime() || 0,
-  );
-
-  if (!mostRecent) {
+  if (!mostRecentDoc) {
     return null;
   }
+
+  const mostRecent = Math.max(mostRecentDoc.createdAt?.getTime() || 0, mostRecentDoc.metadataSyncedAt?.getTime() || 0);
 
   return new Date(mostRecent);
 };
