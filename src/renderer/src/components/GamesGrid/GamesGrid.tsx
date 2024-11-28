@@ -45,7 +45,7 @@ export const GamesGrid = () => {
   if (!games?.length) {
     return (
       <Stack className={classes.emptyContainer} align="center" gap="xs" justify="center">
-        <IconPacman size={60} stroke={0.5} />
+        <IconPacman color="yellow" size={60} stroke={0.5} />
         <Text c="dimmed">{t("noGamesFound")}</Text>
         <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
           {t("importLibrary")}
