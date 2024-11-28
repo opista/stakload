@@ -1,7 +1,7 @@
 import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import AutoSizer from "react-virtualized-auto-sizer";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 import classes from "./GamesGrid.module.css";
 import { useTranslation } from "react-i18next";
@@ -11,6 +11,7 @@ import { GameStoreModel } from "../../schema/games";
 import { modals } from "@mantine/modals";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { Link } from "react-router";
+import { useGamesQuery } from "@hooks/use-games-query";
 
 const CELL_GAP = 10;
 const COVER_ART_RATIO = 3 / 4;
@@ -22,17 +23,14 @@ const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number
 
 export const GamesGrid = () => {
   const containerRef = useRef<Element>(null);
-  const [games, setGames] = useState<GameStoreModel[]>([]);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    /**
-     *  TODO - this needs to be powered by filters
-     *  perhaps we only return game titles and icons
-     *  here to reduce data stored in memory
-     */
-    window.api.getFilteredGames().then((games) => setGames(games));
-  }, []);
+  /**
+   *  TODO - this needs to be powered by filters
+   *  perhaps we only return game titles and icons
+   *  here to reduce data stored in memory
+   */
+  const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
 
   const onImportClick = () => {
     modals.openContextModal({

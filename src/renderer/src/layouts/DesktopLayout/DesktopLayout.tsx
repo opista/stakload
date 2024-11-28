@@ -1,6 +1,5 @@
 import { AppShell, Box, Divider } from "@mantine/core";
 import { Allotment } from "allotment";
-import { useEffect, useState } from "react";
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 import { Header } from "../../components/Header/Header";
@@ -11,19 +10,17 @@ import { ModalsProvider } from "@mantine/modals";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
 import { GameStoreModel } from "../../schema/games";
 import { Outlet, useNavigate } from "react-router";
+import { useGamesQuery } from "@hooks/use-games-query";
 
 export const DesktopLayout = () => {
-  const [games, setGames] = useState<GameStoreModel[]>([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    /**
-     *  TODO - this needs to be powered by filters
-     *  perhaps we only return game titles and icons
-     *  here to reduce data stored in memory
-     */
-    window.api.getFilteredGames().then((games) => setGames(games));
-  }, []);
+  /**
+   *  TODO - this needs to be powered by filters
+   *  perhaps we only return game titles and icons
+   *  here to reduce data stored in memory
+   */
+  const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
 
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>
