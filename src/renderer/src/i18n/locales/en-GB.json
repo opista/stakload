@@ -96,5 +96,12 @@
     "detailsSaved": "Integration details saved",
     "test": "Test integration",
     "save": "Save details"
+  },
+  "removeGameModal": {
+    "areYouSure": "Are you sure you want to remove <strong>{{gameTitle}}</strong> from your library?",
+    "installedInfo": "If installed, this game will remain on your system.",
+    "preventReadd": "Prevent game from being automaticaly re-added in future",
+    "removeGame": "Remove game",
+    "cancel": "Cancel"
   }
 }

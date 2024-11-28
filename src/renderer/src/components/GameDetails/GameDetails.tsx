@@ -12,6 +12,8 @@ import { useNavigate, useParams } from "react-router";
 import { GameStoreModel } from "../../schema/games";
 import { useShallow } from "zustand/react/shallow";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
+import { useDisclosure } from "@mantine/hooks";
+import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 
 export const GameDetails = () => {
   const operatingSystem = useSystemStore(useShallow((state) => state.operatingSystem));
@@ -19,15 +21,16 @@ export const GameDetails = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isGameSupported, setIsGameSupported] = useState(false);
-  const [currentGame, setCurrentGame] = useState<GameStoreModel | null>(null);
+  const [game, setGame] = useState<GameStoreModel | null>(null);
+  const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const params = useParams();
 
   const navigateToGamesList = () => navigate("..", { relative: "path" });
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
 
   useEffect(() => {
-    if (currentGame) scrollToTop();
-  }, [currentGame?._id]);
+    if (game) scrollToTop();
+  }, [game?._id]);
 
   if (!params.id) {
     navigateToGamesList();
@@ -35,12 +38,19 @@ export const GameDetails = () => {
 
   useEffect(() => {
     window.api.getGameById(params.id!).then((game) => {
-      setCurrentGame(game);
+      setGame(game);
       setIsGameSupported(!!operatingSystem && !!game?.platform?.includes(operatingSystem));
     });
   }, [params.id]);
 
-  const GameGrid = ({ game }: { game: GameStoreModel }) => (
+  const onRemoveConfirm = async (preventReadd: boolean) => {
+    if (!game) return;
+    await window.api.removeGame(game._id, preventReadd);
+    navigate("..");
+    closeDelete();
+  };
+
+  const Game = ({ game }: { game: GameStoreModel }) => (
     <ScrollArea className={classes.body} viewportRef={containerRef}>
       <BackToTop container={containerRef.current} />
       <BackgroundImage className={classes.hero} radius="md" src={game.backgroundImage || ""}>
@@ -67,7 +77,7 @@ export const GameDetails = () => {
 
   const GameNotFound = () => (
     <Stack align="center" h="100%" justify="center">
-      <IconPuzzleOff size={60} stroke={0.5} />
+      <IconPuzzleOff color="orange" size={60} stroke={0.5} />
       <Text>{t("gameNotFound")}</Text>
     </Stack>
   );
@@ -78,15 +88,24 @@ export const GameDetails = () => {
         <Group>
           <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
         </Group>
-        {currentGame && (
-          <Group gap="xs">
-            <ActionIcon aria-label={t("edit")} icon={IconPencil} onClick={() => console.log("edit")} />
-            <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={() => console.log("delete")} />
-          </Group>
+        {game && (
+          <>
+            <RemoveGameModal
+              gameTitle={game.name}
+              onConfirm={onRemoveConfirm}
+              onClose={closeDelete}
+              opened={openedDelete}
+            />
+            <Group gap="xs">
+              {/* TODO - Do we even want to implement this yet? */}
+              <ActionIcon aria-label={t("edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
+              <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={openDelete} />
+            </Group>
+          </>
         )}
       </Flex>
       <Divider mt="md" />
-      {currentGame ? <GameGrid game={currentGame} /> : <GameNotFound />}
+      {game ? <Game game={game} /> : <GameNotFound />}
     </Stack>
   );
 };

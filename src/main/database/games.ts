@@ -47,7 +47,9 @@ export const findUnsyncedGames = async () => {
 
 // TODO
 export const getFilteredGames = async () => {
-  return await db.find<GameStoreModel>({}).sort({ name: 1 });
+  return await db
+    .find<GameStoreModel>({ $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] })
+    .sort({ name: 1 });
 };
 
 export const findGameById = async (id: string) => {
@@ -83,13 +85,18 @@ export const updateGameByGameId = async (gameId: string, updates: Partial<Omit<G
   return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true });
 };
 
-export const removeGame = async (id: string, permanent: boolean = false) => {
-  if (permanent) {
-    await updateGameById(id, { deletedAt: new Date() });
-    return true;
-  } else {
-    await db.deleteOne({ _id: id }, { multi: false });
-    return true;
+export const removeGameById = async (id: string, preventReadd: boolean = false) => {
+  try {
+    if (preventReadd) {
+      await updateGameById(id, { deletedAt: new Date() });
+      return true;
+    } else {
+      await db.deleteOne({ _id: id }, { multi: false });
+      return true;
+    }
+  } catch (err) {
+    // TODO error logging
+    return false;
   }
 };
 

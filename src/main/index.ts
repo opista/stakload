@@ -12,6 +12,7 @@ import {
   GET_LOCALE,
   GET_OS,
   OPEN_WEBPAGE,
+  REMOVE_GAME,
   RESTART_APP,
   RESTART_DEVICE,
   SHUTDOWN_DEVICE,
@@ -24,7 +25,7 @@ import { openWebpage } from "./channels/open-webpage";
 import { getLocale } from "./channels/get-locale";
 import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
 import { Conf } from "electron-conf/main";
-import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt } from "./channels/games";
+import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt, removeGame } from "./channels/games";
 import { gameSyncManager } from "./channels/game-sync-manager";
 import { getOS } from "./channels/os";
 import { decrypt, encrypt } from "./channels/safe-storage";
@@ -141,6 +142,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
+  ipcMain.handle(REMOVE_GAME, removeGame);
   ipcMain.on(SYNC_GAMES, syncManager.syncGames);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);
