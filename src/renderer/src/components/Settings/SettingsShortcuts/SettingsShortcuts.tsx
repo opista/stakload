@@ -1,6 +1,7 @@
 import { Kbd, Table } from "@mantine/core";
 import { Fragment } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
+
 import classes from "./SettingsShortcuts.module.css";
 
 const elements = [

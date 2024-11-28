@@ -1,12 +1,13 @@
+import { UIMode } from "@contracts/store/interface-settings";
 import { Divider, Title } from "@mantine/core";
+import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+
+import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
+import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
 import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
 import classes from "./SettingsInterface.module.css";
-import { useInterfaceSettingsStore } from "@store/interface-settings.store";
-import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
-import { useShallow } from "zustand/react/shallow";
-import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
-import { UIMode } from "@contracts/store/interface-settings";
 
 const GeneralSettings = () => {
   const { defaultUI, setDefaultUI, theme, setTheme } = useInterfaceSettingsStore(

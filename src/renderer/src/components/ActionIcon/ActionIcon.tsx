@@ -6,6 +6,7 @@ import {
 } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
 import { FC, forwardRef } from "react";
+
 import classes from "./ActionIcon.module.css";
 
 type ActionIconProps = {

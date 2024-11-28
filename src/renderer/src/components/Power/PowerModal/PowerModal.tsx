@@ -1,8 +1,9 @@
 import { Button, Divider, Modal, Stack } from "@mantine/core";
 import { IconDeviceGamepad2, IconPower, IconRefresh, IconRotateRectangle, IconX, IconZzz } from "@tabler/icons-react";
-import classes from "./PowerModal.module.css";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+
+import classes from "./PowerModal.module.css";
 
 type PowerModalProps = {
   onClose: () => void;

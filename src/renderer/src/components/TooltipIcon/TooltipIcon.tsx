@@ -1,5 +1,5 @@
-import { Icon, IconProps } from "@tabler/icons-react";
 import { ThemeIcon, ThemeIconProps, Tooltip, TooltipProps } from "@mantine/core";
+import { Icon, IconProps } from "@tabler/icons-react";
 
 type TooltipIconProps = {
   icon: Icon;

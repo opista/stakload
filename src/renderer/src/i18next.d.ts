@@ -1,4 +1,5 @@
 import "react-i18next";
+
 import enGB from "./i18n/locales/en-GB.json";
 
 declare module "i18next" {

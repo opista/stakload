@@ -1,4 +1,5 @@
 import { Select, SelectProps } from "@mantine/core";
+
 import classes from "./SettingsSelect.module.css";
 
 type SettingsSelectProps = SelectProps & {

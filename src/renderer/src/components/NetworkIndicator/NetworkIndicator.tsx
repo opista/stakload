@@ -1,9 +1,10 @@
 import { Tooltip, UnstyledButton } from "@mantine/core";
 import { useNetwork } from "@mantine/hooks";
 import { Icon, IconWifi, IconWifiOff } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
-import classes from "./NetworkIndicator.module.css";
 import { ParseKeys } from "i18next";
+import { useTranslation } from "react-i18next";
+
+import classes from "./NetworkIndicator.module.css";
 
 type IndicatorConfig = {
   label: ParseKeys;

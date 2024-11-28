@@ -1,4 +1,5 @@
 import { Box, MantineSize, Text } from "@mantine/core";
+
 import classes from "./Logo.module.css";
 
 type LogoProps = {

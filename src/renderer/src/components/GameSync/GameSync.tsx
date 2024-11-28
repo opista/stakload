@@ -1,6 +1,6 @@
-import { Loader, Text, Group } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 import { useGameSync } from "@hooks/use-game-sync";
+import { Group, Loader, Text } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 
 export const GameSync = () => {
   const { processed, total } = useGameSync();

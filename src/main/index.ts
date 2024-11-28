@@ -1,6 +1,8 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { electronApp, is, optimizer } from "@electron-toolkit/utils";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { Conf } from "electron-conf/main";
 import { join } from "path";
-import { electronApp, optimizer, is } from "@electron-toolkit/utils";
+
 import {
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
@@ -22,15 +24,14 @@ import {
   TEST_STEAM_INTEGRATION,
 } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
-import { openWebpage } from "./channels/open-webpage";
-import { getLocale } from "./channels/get-locale";
-import { closeApp, sleepDevice, restartApp, restartDevice, shutdownDevice } from "./channels/power";
-import { Conf } from "electron-conf/main";
-import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt, removeGame } from "./channels/games";
 import { GameSyncManager } from "./channels/game-sync-manager";
-import { getOS } from "./channels/os";
-import { decrypt, encrypt } from "./channels/safe-storage";
+import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt, removeGame } from "./channels/games";
+import { getLocale } from "./channels/get-locale";
 import { testSteamIntegration } from "./channels/integrations";
+import { openWebpage } from "./channels/open-webpage";
+import { getOS } from "./channels/os";
+import { closeApp, restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
+import { decrypt, encrypt } from "./channels/safe-storage";
 
 const conf = new Conf();
 

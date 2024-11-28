@@ -1,4 +1,5 @@
 import { app } from "electron";
+
 import { execAsync } from "../util/exec-async";
 
 export const closeApp = () => {

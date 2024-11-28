@@ -22,7 +22,7 @@ module.exports = {
     sourceType: "module",
     ecmaVersion: 2021,
   },
-  plugins: ["@typescript-eslint", "unused-imports", "react-refresh"],
+  plugins: ["@typescript-eslint", "unused-imports", "react-refresh", "simple-import-sort"],
   rules: {
     "@typescript-eslint/ban-ts-comment": ["error", { "ts-ignore": "allow-with-description" }],
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -44,6 +44,8 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
   },
   settings: {
     react: {

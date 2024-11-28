@@ -1,6 +1,7 @@
 import { Button, Checkbox, Flex, Modal, Text } from "@mantine/core";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
+
 import classes from "./RemoveGameModal.module.css";
 
 type RemoveGameModalProps = {

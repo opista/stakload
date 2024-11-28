@@ -1,5 +1,8 @@
-import fastq from "fastq";
+import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { WebContents } from "electron";
+import { Conf } from "electron-conf/main";
+import fastq from "fastq";
+
 import {
   EVENT_GAMES_LIST_UPDATED,
   EVENT_METADATA_SYNC_COMPLETE,
@@ -8,10 +11,8 @@ import {
   EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
 import { findUnsyncedGames } from "../database/games";
-import { Conf } from "electron-conf/main";
-import { decryptString } from "../util/safe-storage";
 import { findAndInsertNewGames } from "../libraries/steam/integration";
-import { SteamIntegrationDetails } from "@contracts/integrations/steam";
+import { decryptString } from "../util/safe-storage";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export class GameSyncManager {

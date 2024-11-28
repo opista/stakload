@@ -1,8 +1,9 @@
-import { getOwnedGames } from "./api";
-import { isEmpty } from "lodash-es";
-import { mapOwnedGameDetailsToGameStoreModel } from "./util/map-owned-game-details-to-game-store-model";
 import { Library } from "@contracts/database/games";
-import { findGamesByGameIds, bulkInsertGames } from "../../database/games";
+import { isEmpty } from "lodash-es";
+
+import { bulkInsertGames, findGamesByGameIds } from "../../database/games";
+import { getOwnedGames } from "./api";
+import { mapOwnedGameDetailsToGameStoreModel } from "./util/map-owned-game-details-to-game-store-model";
 
 const LIBRARY: Library = "steam";
 

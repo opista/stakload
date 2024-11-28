@@ -1,31 +1,32 @@
-import { contextBridge, ipcRenderer } from "electron";
 import { electronAPI } from "@electron-toolkit/preload";
+import { contextBridge, ipcRenderer } from "electron";
+import { exposeConf } from "electron-conf/preload";
+
+import { AppDetails } from "../main/libraries/steam/types/app-details";
 import {
+  CLEAR_SYNC_QUEUE,
   CLOSE_APP,
-  FETCH,
-  GET_LOCALE,
-  SLEEP_DEVICE,
-  OPEN_WEBPAGE,
-  RESTART_APP,
-  SHUTDOWN_DEVICE,
-  SYNC_GAMES,
-  EVENT_METADATA_SYNC_PROCESSED,
+  DECRYPT,
+  ENCRYPT,
+  EVENT_GAMES_LIST_UPDATED,
   EVENT_METADATA_SYNC_COMPLETE,
   EVENT_METADATA_SYNC_INSERTED,
-  GET_FILTERED_GAMES,
-  GET_OS,
-  GET_GAME_BY_ID,
-  TEST_STEAM_INTEGRATION,
-  ENCRYPT,
-  DECRYPT,
-  GET_GAMES_LAST_SYNCED_AT,
-  REMOVE_GAME,
-  EVENT_GAMES_LIST_UPDATED,
+  EVENT_METADATA_SYNC_PROCESSED,
   EVENT_SYNC_QUEUE_CLEARED,
-  CLEAR_SYNC_QUEUE,
+  FETCH,
+  GET_FILTERED_GAMES,
+  GET_GAME_BY_ID,
+  GET_GAMES_LAST_SYNCED_AT,
+  GET_LOCALE,
+  GET_OS,
+  OPEN_WEBPAGE,
+  REMOVE_GAME,
+  RESTART_APP,
+  SHUTDOWN_DEVICE,
+  SLEEP_DEVICE,
+  SYNC_GAMES,
+  TEST_STEAM_INTEGRATION,
 } from "./channels";
-import { exposeConf } from "electron-conf/preload";
-import { AppDetails } from "../main/libraries/steam/types/app-details";
 import { listenerHandler } from "./util/listener-handler";
 
 // Custom APIs for renderer

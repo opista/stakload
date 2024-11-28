@@ -1,7 +1,8 @@
 import { Text, Title } from "@mantine/core";
 import clsx from "clsx";
-import classes from "./SettingsTitle.module.css";
 import { ReactNode } from "react";
+
+import classes from "./SettingsTitle.module.css";
 
 type SettingsTitleProps = {
   title: string;

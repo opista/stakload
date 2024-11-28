@@ -1,16 +1,17 @@
+import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
+import { GameStoreModel } from "@contracts/database/games";
+import { useGamesQuery } from "@hooks/use-games-query";
 import { AppShell, Box, Divider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
 import { Allotment } from "allotment";
+import { Outlet, useNavigate } from "react-router";
+
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
 import { Header } from "../../components/Header/Header";
 import { SearchControl } from "../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../components/Spotlight/Spotlight";
 import classes from "./DesktopLayout.module.css";
-import { ModalsProvider } from "@mantine/modals";
-import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
-import { Outlet, useNavigate } from "react-router";
-import { useGamesQuery } from "@hooks/use-games-query";
-import { GameStoreModel } from "@contracts/database/games";
 
 export const DesktopLayout = () => {
   const navigate = useNavigate();

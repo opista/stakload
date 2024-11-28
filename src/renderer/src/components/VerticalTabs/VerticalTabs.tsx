@@ -1,9 +1,10 @@
-import { FloatingIndicator, Tabs, rem } from "@mantine/core";
-import { FC, useState } from "react";
+import { FloatingIndicator, rem, Tabs } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
-import classes from "./VerticalTabs.module.css";
-import { useTranslation } from "react-i18next";
 import { ParseKeys } from "i18next";
+import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import classes from "./VerticalTabs.module.css";
 
 export type Tab = {
   Content: () => JSX.Element;

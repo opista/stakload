@@ -1,4 +1,5 @@
 import { GameStoreModel, Platform } from "@contracts/database/games";
+
 import { AppDetails } from "../types/app-details";
 
 const mapPlatform = (appDetails: AppDetails): Platform[] => {

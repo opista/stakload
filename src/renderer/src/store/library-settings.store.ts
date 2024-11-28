@@ -1,9 +1,9 @@
-import { persist } from "zustand/middleware";
-import { create } from "zustand";
-import { Conf } from "electron-conf/renderer";
-import { createConfStorage } from "@util/create-conf-storage";
-import { LibrarySettingsState } from "@contracts/store/library-settings";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
+import { LibrarySettingsState } from "@contracts/store/library-settings";
+import { createConfStorage } from "@util/create-conf-storage";
+import { Conf } from "electron-conf/renderer";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 const conf = new Conf();
 

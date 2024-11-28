@@ -1,15 +1,16 @@
-import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
-import classes from "./SettingsLibrary.module.css";
-import { Trans, useTranslation } from "react-i18next";
-import { useLibrarySettingsStore } from "@store/library-settings.store";
-import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
-import { modals } from "@mantine/modals";
-import { useShallow } from "zustand/react/shallow";
-import { SettingsTitle } from "../SettingsTitle/SettingsTitle";
-import { MouseEvent, useEffect, useState } from "react";
 import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
+import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
+import { MouseEvent, useEffect, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+
+import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { SettingsStatusIndicator } from "../SettingsStatusIndicator/SettingsStatusIndicator";
+import { SettingsTitle } from "../SettingsTitle/SettingsTitle";
+import classes from "./SettingsLibrary.module.css";
 
 const GeneralSettings = ({ id }: { id: string }) => {
   const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(

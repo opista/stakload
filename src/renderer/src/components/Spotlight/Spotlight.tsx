@@ -1,10 +1,11 @@
-import { IconDeviceGamepad2, IconSearch } from "@tabler/icons-react";
-import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
-import { rem } from "@mantine/core";
-import { useTranslation } from "react-i18next";
-import { Image } from "@mantine/core";
-import classes from "./Spotlight.module.css";
 import { GameStoreModel } from "@contracts/database/games";
+import { rem } from "@mantine/core";
+import { Image } from "@mantine/core";
+import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
+import { IconDeviceGamepad2, IconSearch } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+
+import classes from "./Spotlight.module.css";
 
 type SpotlightProps = {
   disabled?: boolean;

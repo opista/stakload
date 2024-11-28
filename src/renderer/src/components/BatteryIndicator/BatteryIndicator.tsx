@@ -1,3 +1,5 @@
+import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
+import { useBatteryDetails } from "@hooks/use-battery-details";
 import { Box, Text, Tooltip, UnstyledButton } from "@mantine/core";
 import {
   IconBatteryCharging,
@@ -7,9 +9,8 @@ import {
   IconBatteryVertical4,
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+
 import classes from "./BatteryIndicator.module.css";
-import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
-import { useBatteryDetails } from "@hooks/use-battery-details";
 
 type BatteryIndicatorProps = {
   showPercentage?: boolean;

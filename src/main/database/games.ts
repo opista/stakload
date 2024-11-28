@@ -1,7 +1,8 @@
+import path from "node:path";
+
+import { GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
 import { app } from "electron";
 import Datastore from "nedb-promises";
-import path from "node:path";
-import { GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
 
 const db = Datastore.create({
   autoload: true,

@@ -1,6 +1,7 @@
 import { Checkbox, CheckboxProps, Tooltip } from "@mantine/core";
-import classes from "./SettingsCheckbox.module.css";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
+
+import classes from "./SettingsCheckbox.module.css";
 
 type SettingsCheckboxProps = {
   checked: boolean;

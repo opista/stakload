@@ -1,17 +1,17 @@
+import { BackToTop } from "@components/BackToTop/BackToTop";
+import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
+import { GameStoreModel } from "@contracts/database/games";
+import { useGamesQuery } from "@hooks/use-games-query";
 import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
-import { FixedSizeGrid, GridChildComponentProps } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
+import { modals } from "@mantine/modals";
+import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 
 import classes from "./GamesGrid.module.css";
-import { useTranslation } from "react-i18next";
-import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
-import { BackToTop } from "@components/BackToTop/BackToTop";
-import { modals } from "@mantine/modals";
-import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
-import { Link } from "react-router";
-import { useGamesQuery } from "@hooks/use-games-query";
-import { GameStoreModel } from "@contracts/database/games";
 
 const CELL_GAP = 10;
 const COVER_ART_RATIO = 3 / 4;

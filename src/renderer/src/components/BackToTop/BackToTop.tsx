@@ -1,7 +1,7 @@
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import useScrollPosition from "@hooks/use-scroll-position";
 import { Affix, Transition } from "@mantine/core";
 import { IconArrowBigUpFilled } from "@tabler/icons-react";
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
 
 type BackToTopProps = {

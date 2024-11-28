@@ -1,12 +1,13 @@
-import { Checkbox, ColorSchemeScript, MantineProvider, Modal, ScrollArea, createTheme } from "@mantine/core";
-import classes from "./App.module.css";
+import { Checkbox, ColorSchemeScript, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
+import { useSystemStore } from "@store/system.store";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useSystemStore } from "@store/system.store";
 import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+
+import classes from "./App.module.css";
 
 export const App = () => {
   const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));

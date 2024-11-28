@@ -1,13 +1,14 @@
-import { Divider } from "@mantine/core";
-import { IconBell, IconCommand, IconDeviceImac, IconLibrary, IconUser } from "@tabler/icons-react";
-import { SettingsAbout } from "../SettingsAbout/SettingsAbout";
-import { ShortcutsView } from "../SettingsShortcuts/SettingsShortcuts";
-import classes from "./SettingsModal.module.css";
 import { Tab, VerticalTabs } from "@components/VerticalTabs/VerticalTabs";
+import { Divider } from "@mantine/core";
+import { ContextModalProps } from "@mantine/modals";
+import { IconBell, IconCommand, IconDeviceImac, IconLibrary, IconUser } from "@tabler/icons-react";
+
+import { SettingsAbout } from "../SettingsAbout/SettingsAbout";
 import { SettingsInterface } from "../SettingsInterface/SettingsInterface";
 import { SettingsLibrary } from "../SettingsLibrary/SettingsLibrary";
-import { ContextModalProps } from "@mantine/modals";
 import { SettingsNotification } from "../SettingsNotification/SettingsNotification";
+import { ShortcutsView } from "../SettingsShortcuts/SettingsShortcuts";
+import classes from "./SettingsModal.module.css";
 
 type TabKey = "interface" | "library" | "shortcuts" | "about";
 

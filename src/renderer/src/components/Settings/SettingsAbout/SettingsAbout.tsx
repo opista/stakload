@@ -1,9 +1,10 @@
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { Logo } from "@components/Logo/Logo";
 import { Code, Flex } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { homepage, version } from "../../../../../../package.json";
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
+
+import { homepage, version } from "../../../../../../package.json";
 
 export const SettingsAbout = () => {
   const { t } = useTranslation();

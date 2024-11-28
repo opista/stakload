@@ -1,6 +1,7 @@
 import { IpcMainInvokeEvent, WebContents } from "electron";
-import { findGameById, findLastSyncedAt, getFilteredGames, removeGameById } from "../database/games";
+
 import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
+import { findGameById, findLastSyncedAt, getFilteredGames, removeGameById } from "../database/games";
 
 export const getFilteredGameLibrary = () => {
   // TODO

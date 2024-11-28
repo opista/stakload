@@ -1,10 +1,11 @@
 import { Divider, Title } from "@mantine/core";
-import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
-import { useTranslation } from "react-i18next";
-import classes from "./SettingsNotification.module.css";
 import { useNotificationSettingsStore } from "@store/notification-settings.store";
+import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
+import classes from "./SettingsNotification.module.css";
 
 const batteryOptions = [
   { label: "Never", value: "0" },

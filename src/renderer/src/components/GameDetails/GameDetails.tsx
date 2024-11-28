@@ -1,19 +1,20 @@
-import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack, Text, Title } from "@mantine/core";
-import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
-import classes from "./GameDetails.module.css";
-import { useEffect, useRef, useState } from "react";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { BackToTop } from "@components/BackToTop/BackToTop";
+import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { RawHtml } from "@components/RawHtml/RawHtml";
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
-import { useTranslation } from "react-i18next";
-import { useSystemStore } from "@store/system.store";
-import { useNavigate, useParams } from "react-router";
-import { useShallow } from "zustand/react/shallow";
-import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
-import { useDisclosure } from "@mantine/hooks";
 import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
+import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useSystemStore } from "@store/system.store";
+import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
+import classes from "./GameDetails.module.css";
 
 export const GameDetails = () => {
   const operatingSystem = useSystemStore(useShallow((state) => state.operatingSystem));

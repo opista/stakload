@@ -1,10 +1,11 @@
-import { BoxProps, ElementProps, Group, Text, UnstyledButton, rem } from "@mantine/core";
+import { SHORTCUT_KEYS } from "@constants/shortcuts";
+import { BoxProps, ElementProps, Group, rem, Text, UnstyledButton } from "@mantine/core";
+import { spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import { clsx } from "clsx";
-import { spotlight } from "@mantine/spotlight";
 import { useTranslation } from "react-i18next";
+
 import classes from "./SearchControl.module.css";
-import { SHORTCUT_KEYS } from "@constants/shortcuts";
 
 type SearchControlProps = BoxProps & ElementProps<"button">;
 

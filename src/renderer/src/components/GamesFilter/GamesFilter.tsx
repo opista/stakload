@@ -1,9 +1,10 @@
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { Popover, Text } from "@mantine/core";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
-import classes from "./GamesFilter.module.css";
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { useTranslation } from "react-i18next";
+
+import classes from "./GamesFilter.module.css";
 
 type GamesFilterProps = {
   disabled?: boolean;

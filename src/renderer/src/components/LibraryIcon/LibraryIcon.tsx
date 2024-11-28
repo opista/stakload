@@ -1,8 +1,8 @@
-import { IconBrandSteam, IconHelpHexagon, IconProps } from "@tabler/icons-react";
-import { MantineSize } from "@mantine/core";
-import { useTranslation } from "react-i18next";
 import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
 import { GameStoreModel } from "@contracts/database/games";
+import { MantineSize } from "@mantine/core";
+import { IconBrandSteam, IconHelpHexagon, IconProps } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 type LibraryIconProps = {
   game: GameStoreModel;

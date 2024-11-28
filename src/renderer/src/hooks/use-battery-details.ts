@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { useInterval } from "@mantine/hooks";
+import { useEffect, useState } from "react";
 
 const BATTERY_DETAILS_UPDATE_FREQUENCY = 60_000;
 

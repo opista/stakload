@@ -1,10 +1,11 @@
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { SHORTCUT_KEYS } from "@constants/shortcuts";
 import { useHotkeys } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { IconSettings } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
-import { SHORTCUT_KEYS } from "@constants/shortcuts";
-import { modals } from "@mantine/modals";
+
 import { settingsModalInnerProps } from "../SettingsModal/SettingsModalInnerProps";
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 
 const shortcut = SHORTCUT_KEYS.SETTINGS.join("+");
 

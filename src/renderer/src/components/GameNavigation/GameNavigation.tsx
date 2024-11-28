@@ -1,12 +1,13 @@
+import { GameStoreModel } from "@contracts/database/games";
 import { Button, Text } from "@mantine/core";
-import { FixedSizeList, ListChildComponentProps } from "react-window";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Image } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
-import classes from "./GameNavigation.module.css";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { GameStoreModel } from "@contracts/database/games";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList, ListChildComponentProps } from "react-window";
+
+import classes from "./GameNavigation.module.css";
 
 type GameNavigationProps = {
   games?: GameStoreModel[];

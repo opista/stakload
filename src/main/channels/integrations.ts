@@ -1,4 +1,5 @@
 import { IpcMainInvokeEvent } from "electron";
+
 import { findAndInsertNewGames, isCredentialsValid } from "../libraries/steam/integration";
 
 export const testSteamIntegration = (_event: IpcMainInvokeEvent, steamId: string, webApiKey: string) =>

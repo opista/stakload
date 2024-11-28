@@ -1,14 +1,14 @@
-import { Divider, Group } from "@mantine/core";
-
-import { GameSync } from "../GameSync/GameSync";
-import { PowerControl } from "@components/Power/PowerControl/PowerControl";
 import { BatteryIndicator } from "@components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "@components/Clock/Clock";
 import { Logo } from "@components/Logo/Logo";
+import { NetworkIndicator } from "@components/NetworkIndicator/NetworkIndicator";
+import { PowerControl } from "@components/Power/PowerControl/PowerControl";
 import { SettingsControl } from "@components/Settings/SettingsControl/SettingsControl";
+import { Divider, Group } from "@mantine/core";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useShallow } from "zustand/react/shallow";
-import { NetworkIndicator } from "@components/NetworkIndicator/NetworkIndicator";
+
+import { GameSync } from "../GameSync/GameSync";
 
 export const Header = () => {
   const { displayBattery, displayBatteryPercent, displayNetwork, displayTime, displaySeconds } =
