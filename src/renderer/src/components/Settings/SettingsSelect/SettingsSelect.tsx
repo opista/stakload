@@ -1,9 +1,11 @@
 import { Select, SelectProps } from "@mantine/core";
 import classes from "./SettingsSelect.module.css";
 
-type SettingsSelectProps = SelectProps & {};
+type SettingsSelectProps = SelectProps & {
+  onChange: (value: string) => void;
+};
 
-export const SettingsSelect = (props: SettingsSelectProps) => {
+export const SettingsSelect = ({ onChange, ...props }: SettingsSelectProps) => {
   return (
     <Select
       allowDeselect={false}
@@ -12,6 +14,7 @@ export const SettingsSelect = (props: SettingsSelectProps) => {
         root: classes.root,
         input: classes.input,
       }}
+      onChange={(value) => onChange?.(value as string)}
       {...props}
       inputSize="xs"
       withCheckIcon={false}

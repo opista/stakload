@@ -10,6 +10,5 @@
 
 .input {
   --input-height: var(--input-height-xs);
-  width: 100px;
   height: var(--input-height-xs);
 }
