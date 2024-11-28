@@ -13,7 +13,6 @@ export const GameSync = () => {
 
   return (
     <>
-      <Divider orientation="vertical" size="xs" />
       <Box className={classes.container}>
         <Loader className={classes.loader} size={24} type="bars" />
         <div>
@@ -26,6 +25,7 @@ export const GameSync = () => {
           </Text>
         </div>
       </Box>
+      <Divider orientation="vertical" size="xs" />
     </>
   );
 };

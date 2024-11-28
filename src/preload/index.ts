@@ -27,7 +27,7 @@ import { AppDetails } from "../main/libraries/steam/types/app-details";
 const api = {
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
-  syncGames: (games) => ipcRenderer.send(SYNC_GAMES, games),
+  syncGames: () => ipcRenderer.send(SYNC_GAMES),
   testLibraryIntegration: (steamId, webApiKey) => ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
   getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
   getGameById: (id) => ipcRenderer.invoke(GET_GAME_BY_ID, id),

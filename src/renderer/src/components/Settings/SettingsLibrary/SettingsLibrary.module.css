@@ -23,3 +23,30 @@
   color: var(--mantine-color-dimmed);
   font-size: var(--mantine-font-size-xs);
 }
+
+.inputRoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.input {
+  width: 300px;
+}
+
+.inputLabel {
+  flex: 1;
+}
+
+.statusIndicator {
+  flex: 1;
+}
+
+.check {
+  color: var(--mantine-color-green-8);
+}
+
+.cross {
+  color: var(--mantine-color-red-8);
+}

@@ -84,5 +84,17 @@
     "restart": "Restart",
     "sleep": "Sleep"
   },
-  "gameNotFound": "Game not found"
+  "gameNotFound": "Game not found",
+  "steam": {
+    "id": "Steam ID",
+    "webApiKey": "Steam Web API Key",
+    "integrationGuide": "You can find your Steam ID on your <SteamAccountLink>Steam Account</SteamAccountLink> page. You'll also need to register or find your <SteamApiKeyLink>Steam Web API Key</SteamApiKeyLink>."
+  },
+  "integration": {
+    "success": "Integration successful",
+    "failure": "Integration failure",
+    "detailsSaved": "Integration details saved",
+    "test": "Test integration",
+    "save": "Save details"
+  }
 }

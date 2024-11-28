@@ -80,7 +80,7 @@ function createWindow() {
     },
   });
 
-  const syncManager = gameSyncManager(mainWindow.webContents);
+  const syncManager = gameSyncManager(mainWindow.webContents, conf);
 
   mainWindow.on("ready-to-show", async () => {
     mainWindow.show();
@@ -141,7 +141,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
-  ipcMain.on(SYNC_GAMES, () => syncManager.syncGames());
+  ipcMain.on(SYNC_GAMES, syncManager.syncGames);
   ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(CLOSE_APP, closeApp);
   ipcMain.on(RESTART_APP, restartApp);

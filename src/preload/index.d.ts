@@ -11,7 +11,7 @@ declare global {
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
       getFilteredGames: () => Promise<GameStoreModel[]>;
       getGamesLastSyncedAt: () => Promise<Date>;
-      syncGames: (games: GameStoreModel[]) => void;
+      syncGames: () => void;
       onSyncInserted: (cb: (event, count: number) => void) => void;
       offSyncInserted: () => void;
       onSyncProcessed: (cb: (event, { id: string, appDetails: AppDetails }) => void) => void;

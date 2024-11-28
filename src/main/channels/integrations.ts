@@ -1,19 +1,8 @@
 import { IpcMainInvokeEvent } from "electron";
-import { getOwnedGames } from "../libraries/steam";
-import { isEmpty } from "lodash-es";
+import { findAndInsertNewGames, isCredentialsValid } from "../libraries/steam/integration";
 
-export const testSteamIntegration = async (_event: IpcMainInvokeEvent, steamId: string, webApiKey: string) => {
-  console.log(_event.sender.id);
+export const testSteamIntegration = (_event: IpcMainInvokeEvent, steamId: string, webApiKey: string) =>
+  isCredentialsValid(steamId, webApiKey);
 
-  try {
-    const response = await getOwnedGames(webApiKey, steamId);
-
-    if (isEmpty(response)) return false;
-
-    return true;
-  } catch (err) {
-    // TODO - error logging
-    console.log(err);
-    return false;
-  }
-};
+export const insertNewGames = (_event: IpcMainInvokeEvent, steamId: string, webApiKey: string) =>
+  findAndInsertNewGames(steamId, webApiKey);

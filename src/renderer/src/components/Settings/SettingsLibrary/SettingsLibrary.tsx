@@ -1,10 +1,206 @@
-import { Button, Divider, Title } from "@mantine/core";
+import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
 import classes from "./SettingsLibrary.module.css";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
 import { modals } from "@mantine/modals";
 import { useShallow } from "zustand/react/shallow";
+import { SettingsTitle } from "../SettingsTitle/SettingsTitle";
+import { MouseEvent, useEffect, useState } from "react";
+import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
+import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
+import { SettingsStatusIndicator } from "../SettingsStatusIndicator/SettingsStatusIndicator";
+
+const GeneralSettings = ({ id }: { id: string }) => {
+  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(
+    useShallow((state) => ({
+      setSyncOnStartup: state.setSyncOnStartup,
+      syncOnStartup: state.syncOnStartup,
+    })),
+  );
+  const { t } = useTranslation();
+  const [lastSync, setLastSync] = useState<Date | null>(null);
+
+  useEffect(() => {
+    window.api.getGamesLastSyncedAt().then(setLastSync);
+  }, []);
+
+  /**
+   * TODO - this should trigger libraries to
+   * re-fetch games and add any new ones to
+   * the DB. After this, we should then trigger
+   * a sync (enrich with data from igdb)
+   */
+  const onSyncClick = async () => {
+    await window.api.syncGames();
+    modals.close(id);
+  };
+
+  return (
+    <>
+      <Title className={classes.title} order={2} size="h3">
+        {t("librarySettings.general")}
+      </Title>
+      <div className={classes.buttonContainer}>
+        <div>
+          <label className={classes.label}>{t("librarySettings.syncLibrary")} </label>
+          <span className={classes.date}>
+            {t("librarySettings.lastSync", {
+              val: lastSync,
+              formatParams: {
+                val: { dateStyle: "short", timeStyle: "short" },
+              },
+            })}
+          </span>
+        </div>
+        <Button color="red" onClick={onSyncClick} size="xs">
+          {t("librarySettings.syncLibrary")}
+        </Button>
+      </div>
+      <SettingsCheckbox
+        checked={syncOnStartup}
+        label={t("librarySettings.syncOnStartup")}
+        labelInfo={t("librarySettings.syncOnStartupInfo")}
+        onCheckboxChange={setSyncOnStartup}
+      />
+    </>
+  );
+};
+
+/**
+ * TODO - To be honest this is a total mess.
+ * I wonder if this can be cleaned up and re-used
+ * for each integration with a few props
+ */
+const SteamSettings = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [steamId, setSteamId] = useState<string>("");
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
+  const [webApiKey, setWebApiKey] = useState<string>("");
+  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
+  const { steamIntegration, setSteamIntegration } = useSteamIntegration();
+  const { t } = useTranslation();
+
+  const onSave = async () => {
+    setIsLoading(true);
+    setSteamIntegration({ steamId, webApiKey });
+    setIsIntegrationValid(null);
+    setIsUpdated(true);
+    setIsLoading(false);
+  };
+
+  const onClickTestIntegration = async () => {
+    setIsUpdated(false);
+    setIsLoading(true);
+    setIsIntegrationValid(null);
+    const isValid = await window.api.testLibraryIntegration(steamId, webApiKey);
+    setIsIntegrationValid(isValid);
+    setIsLoading(false);
+  };
+
+  const onSteamIdChange = (value: string) => {
+    setIsIntegrationValid(null);
+    setSteamId(value);
+  };
+
+  const onWebApiKeyChange = (value: string) => {
+    setIsIntegrationValid(null);
+    setWebApiKey(value);
+  };
+
+  useEffect(() => {
+    if (steamIntegration) {
+      setSteamId(steamIntegration.steamId);
+      setWebApiKey(steamIntegration.webApiKey);
+    }
+  }, [steamIntegration]);
+
+  const openLink = (url: string) => {
+    return (event: MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault();
+      window.api.openWebpage(url);
+    };
+  };
+
+  const Subtitle = (
+    <Trans
+      components={{
+        SteamAccountLink: <a href="#" onClick={openLink("https://store.steampowered.com/account/")} />,
+        SteamApiKeyLink: <a href="#" onClick={openLink("https://steamcommunity.com/dev/apikey")} />,
+      }}
+      i18nKey="steam.integrationGuide"
+      t={t}
+    ></Trans>
+  );
+
+  /**
+   * Use some kind of form lib to handle dirty
+   * changes/disable save if form updates
+   */
+  return (
+    <>
+      <SettingsTitle title="Steam" subtitle={Subtitle} />
+
+      <TextInput
+        classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
+        disabled={isLoading}
+        label={t("steam.id")}
+        onChange={(event) => onSteamIdChange(event.target.value)}
+        placeholder={t("steam.id")}
+        size="xs"
+        value={steamId}
+      />
+      <PasswordInput
+        classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
+        disabled={isLoading}
+        label={t("steam.webApiKey")}
+        onChange={(event) => onWebApiKeyChange(event.target.value)}
+        placeholder={t("steam.webApiKey")}
+        size="xs"
+        value={webApiKey}
+      />
+
+      <Flex justify="flex-end">
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedCheckFilled}
+          iconProps={{ className: classes.check }}
+          mounted={isUpdated}
+          text={t("integration.detailsSaved")}
+        />
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedCheckFilled}
+          iconProps={{ className: classes.check }}
+          mounted={isIntegrationValid === true}
+          text={t("integration.success")}
+        />
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedXFilled}
+          iconProps={{ className: classes.cross }}
+          mounted={isIntegrationValid === false}
+          text={t("integration.failure")}
+        />
+        <Flex gap="xs">
+          <Button
+            disabled={!steamId || !webApiKey}
+            loading={isLoading}
+            onClick={onClickTestIntegration}
+            size="xs"
+            variant="light"
+          >
+            {t("integration.test")}
+          </Button>
+          <Button disabled={isLoading || !isIntegrationValid} onClick={onSave} size="xs">
+            {t("integration.save")}
+          </Button>
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -17,47 +213,11 @@ import { useShallow } from "zustand/react/shallow";
  *
  */
 export const SettingsLibrary = ({ id }: { id: string }) => {
-  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(
-    useShallow((state) => ({
-      setSyncOnStartup: state.setSyncOnStartup,
-      syncOnStartup: state.syncOnStartup,
-    })),
-  );
-  const { t } = useTranslation();
-
-  /**
-   * TODO - this should trigger libraries to
-   * re-fetch games and add any new ones to
-   * the DB. After this, we should then trigger
-   * a sync (enrich with data from igdb)
-   */
-  const onResyncClick = () => {
-    console.log("resync!");
-
-    modals.close(id);
-  };
-
   return (
     <>
-      <Title className={classes.title} order={2} size="h3">
-        {t("librarySettings.general")}
-      </Title>
-      <div className={classes.buttonContainer}>
-        <div>
-          <label className={classes.label}>{t("librarySettings.resyncLibrary")} </label>
-          {/* TODO - This should be the most recent metadataSyncedAt / createdAt in the game library, whichever is highest */}
-          <span className={classes.date}>{t("librarySettings.lastSynced", { val: new Date() })}</span>
-        </div>
-        <Button color="red" onClick={onResyncClick} size="xs">
-          {t("librarySettings.resyncLibrary")}
-        </Button>
-      </div>
-      <SettingsCheckbox
-        checked={syncOnStartup}
-        label={t("librarySettings.syncOnStartup")}
-        labelInfo={t("librarySettings.syncOnStartupInfo")}
-        onCheckboxChange={setSyncOnStartup}
-      />
+      <GeneralSettings id={id} />
+      <Divider className={classes.divider} />
+      <SteamSettings />
       <Divider className={classes.divider} />
     </>
   );
