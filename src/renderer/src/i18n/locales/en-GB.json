@@ -65,6 +65,7 @@
     "title": "Battery level low",
     "body": "Battery level is {{ val }}%, plug your device in to continue playing"
   },
+  "toggleLeftPane": "Toggle left pane",
   "backToTop": "Back to top",
   "goBack": "Go back",
   "edit": "Edit",

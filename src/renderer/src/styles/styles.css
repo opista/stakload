@@ -1,5 +1,5 @@
 :root {
-  --focus-border: var(--mantine-primary-color-filled);
+  --focus-border: transparent;
   --separator-border: var(--app-shell-border-color);
 }
 
