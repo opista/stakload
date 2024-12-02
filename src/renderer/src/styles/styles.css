@@ -1,6 +1,19 @@
 :root {
   --focus-border: transparent;
   --separator-border: var(--app-shell-border-color);
+  --scrollbar-width: 6px;
+}
+
+.scrollbar {
+
+  ::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: var(--mantine-radius-xs);
+    background: var(--mantine-color-gray-0);
+  }
 }
 
 /* TODO: Disable pointer events to prevent highlighting of page */

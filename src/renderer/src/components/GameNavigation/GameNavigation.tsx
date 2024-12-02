@@ -1,3 +1,4 @@
+import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "@contracts/database/games";
 import { Button, Text } from "@mantine/core";
 import { Image } from "@mantine/core";
@@ -24,11 +25,14 @@ const LeftSection = ({ icon }: { icon?: string }) => {
 };
 
 export const GameNavigation = ({ games }: GameNavigationProps) => {
+  const [containerEl, setContainerEl] = useState<Element | null>(null);
   const listRef = useRef<FixedSizeList<unknown> | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
   const [currentGameIndex, setCurrentGameIndex] = useState<number | null>();
   const params = useParams();
+
+  const containerRef = useCallback((node) => setContainerEl(node), []);
 
   const onSelectedGame = () => {
     if (!listRef.current) return;
@@ -84,12 +88,22 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
   };
 
   return (
-    <AutoSizer disableWidth>
-      {({ height }) => (
-        <FixedSizeList height={height} itemCount={games.length} itemSize={36} ref={setListRef} width="100%">
-          {Row}
-        </FixedSizeList>
-      )}
-    </AutoSizer>
+    <>
+      <AutoSizer disableWidth className="scrollbar">
+        {({ height }) => (
+          <FixedSizeList
+            height={height}
+            itemCount={games.length}
+            itemSize={36}
+            outerRef={containerRef}
+            ref={setListRef}
+            width="100%"
+          >
+            {Row}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+      <BackToTop container={containerEl} />
+    </>
   );
 };

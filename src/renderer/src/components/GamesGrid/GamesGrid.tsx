@@ -5,7 +5,7 @@ import { useGamesQuery } from "@hooks/use-games-query";
 import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
-import { useRef } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -13,15 +13,18 @@ import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 
 import classes from "./GamesGrid.module.css";
 
-const CELL_GAP = 10;
+const CELL_GAP = 15;
 const COVER_ART_RATIO = 3 / 4;
+const SCROLLBAR_WIDTH = 6;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
 export const GamesGrid = () => {
-  const containerRef = useRef<Element>(null);
+  const [containerEl, setContainerEl] = useState<Element | null>(null);
   const { t } = useTranslation();
+
+  const containerRef = useCallback((node) => setContainerEl(node), []);
 
   /**
    *  TODO - this needs to be powered by filters
@@ -31,7 +34,7 @@ export const GamesGrid = () => {
   const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
 
   const calcCellSize = (width: number, columnCount: number) => {
-    const columnWidth = width / columnCount;
+    const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
 
     if (columnWidth > 200) {
       return calcCellSize(width, columnCount + 1);
@@ -82,12 +85,11 @@ export const GamesGrid = () => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
-          <Link className={classes.card} to={`/desktop/${game._id}`}>
+        <AspectRatio ratio={COVER_ART_RATIO}>
+          <Link to={`/desktop/${game._id}`}>
             <Image
               alt={t("coverArt", { game: game.name })}
-              className={classes.cover}
-              radius="lg"
+              radius="md"
               // TODO - pull this from the game
               src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
               title={t("coverArt", { game: game.name })}
@@ -124,10 +126,9 @@ export const GamesGrid = () => {
 
   return (
     <>
-      <AutoSizer>
+      <AutoSizer className="scrollbar">
         {({ height, width }) => {
           const { columnCount, columnWidth, rowCount, rowHeight } = calcCellSize(width, 1);
-
           return (
             <FixedSizeGrid
               columnCount={columnCount}
@@ -145,7 +146,7 @@ export const GamesGrid = () => {
           );
         }}
       </AutoSizer>
-      <BackToTop container={containerRef.current} />
+      <BackToTop container={containerEl} />
     </>
   );
 };
