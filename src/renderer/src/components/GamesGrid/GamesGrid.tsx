@@ -15,8 +15,6 @@ import classes from "./GamesGrid.module.css";
 
 const CELL_GAP = 10;
 const COVER_ART_RATIO = 3 / 4;
-const COVER_ART_HEIGHT = 250;
-const COVER_ART_WIDTH = (COVER_ART_HEIGHT - CELL_GAP) * COVER_ART_RATIO;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
@@ -31,6 +29,24 @@ export const GamesGrid = () => {
    *  here to reduce data stored in memory
    */
   const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
+
+  const calcCellSize = (width: number, columnCount: number) => {
+    const columnWidth = width / columnCount;
+
+    if (columnWidth > 200) {
+      return calcCellSize(width, columnCount + 1);
+    }
+
+    const rowHeight = ((columnWidth - CELL_GAP * 2) / 3) * 4 + CELL_GAP * 2;
+    const rowCount = Math.ceil(games!.length / columnCount);
+
+    return {
+      columnCount,
+      columnWidth,
+      rowCount,
+      rowHeight,
+    };
+  };
 
   const onImportClick = () => {
     modals.openContextModal({
@@ -65,7 +81,7 @@ export const GamesGrid = () => {
     if (!game) return null;
 
     return (
-      <Box style={{ ...style, paddingLeft: CELL_GAP / 2, paddingRight: CELL_GAP / 2, paddingBottom: CELL_GAP }}>
+      <Box style={{ ...style, padding: CELL_GAP }}>
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
           <Link className={classes.card} to={`/desktop/${game._id}`}>
             <Image
@@ -110,9 +126,7 @@ export const GamesGrid = () => {
     <>
       <AutoSizer>
         {({ height, width }) => {
-          const columnCount = Math.floor(width / (COVER_ART_WIDTH + CELL_GAP)) || 1;
-          const columnWidth = width / columnCount;
-          const rowCount = Math.ceil(games.length / columnCount);
+          const { columnCount, columnWidth, rowCount, rowHeight } = calcCellSize(width, 1);
 
           return (
             <FixedSizeGrid
@@ -123,7 +137,7 @@ export const GamesGrid = () => {
               itemKey={(args) => itemKey(args, columnCount)}
               outerRef={containerRef}
               rowCount={rowCount}
-              rowHeight={COVER_ART_HEIGHT}
+              rowHeight={rowHeight}
               width={width}
             >
               {(props) => <Cell columnCount={columnCount} {...props} />}
