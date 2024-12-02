@@ -40,7 +40,7 @@ export const GameDetails = () => {
   useEffect(() => {
     window.api.getGameById(params.id!).then((game) => {
       setGame(game);
-      setIsGameSupported(!!operatingSystem && !!game?.platform?.includes(operatingSystem));
+      setIsGameSupported(!game.metadataSyncedAt || (!!operatingSystem && !!game?.platform?.includes(operatingSystem)));
     });
   }, [params.id]);
 
