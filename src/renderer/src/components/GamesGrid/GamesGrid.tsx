@@ -13,6 +13,7 @@ import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 
 import classes from "./GamesGrid.module.css";
 
+const MAX_CELL_SIZE = 250;
 const CELL_GAP = 15;
 const COVER_ART_RATIO = 3 / 4;
 const SCROLLBAR_WIDTH = 6;
@@ -33,11 +34,11 @@ export const GamesGrid = () => {
    */
   const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
 
-  const calcCellSize = (width: number, columnCount: number) => {
+  const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
 
-    if (columnWidth > 200) {
-      return calcCellSize(width, columnCount + 1);
+    if (columnWidth > MAX_CELL_SIZE) {
+      return calculateCellSize(width, columnCount + 1);
     }
 
     const rowHeight = ((columnWidth - CELL_GAP * 2) / 3) * 4 + CELL_GAP * 2;
@@ -128,7 +129,7 @@ export const GamesGrid = () => {
     <>
       <AutoSizer className="scrollbar">
         {({ height, width }) => {
-          const { columnCount, columnWidth, rowCount, rowHeight } = calcCellSize(width, 1);
+          const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
           return (
             <FixedSizeGrid
               columnCount={columnCount}
