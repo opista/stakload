@@ -8,7 +8,6 @@
 .navbar {
   padding: var(--mantine-spacing-md);
   height: 100%;
-  border-inline-end: 1px solid var(--app-shell-border-color);
 }
 
 .main {

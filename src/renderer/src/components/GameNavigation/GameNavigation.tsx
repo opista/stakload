@@ -89,7 +89,7 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
 
   return (
     <>
-      <AutoSizer disableWidth className="scrollbar">
+      <AutoSizer disableWidth>
         {({ height }) => (
           <FixedSizeList
             height={height}

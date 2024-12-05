@@ -127,7 +127,7 @@ export const GamesGrid = () => {
 
   return (
     <>
-      <AutoSizer className="scrollbar">
+      <AutoSizer>
         {({ height, width }) => {
           const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
           return (
