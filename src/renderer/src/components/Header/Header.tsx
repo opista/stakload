@@ -9,6 +9,7 @@ import { Divider, Group } from "@mantine/core";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import { GameSync } from "../GameSync/GameSync";
@@ -36,7 +37,9 @@ export const Header = ({ leftPaneWidth, onToggleLeftPane, showLeftPane }: Header
   return (
     <Group className={classes.container} justify="space-between" wrap="nowrap">
       <Group className={classes.leftContainer} justify="space-between" maw={leftPaneWidth}>
-        <Logo />
+        <Link to="/desktop">
+          <Logo />
+        </Link>
         <ActionIcon
           aria-label={t("toggleLeftPane")}
           icon={showLeftPane ? IconLayoutSidebarLeftCollapse : IconLayoutSidebarLeftExpand}
