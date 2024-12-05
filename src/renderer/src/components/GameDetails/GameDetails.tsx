@@ -54,7 +54,7 @@ export const GameDetails = () => {
   const Game = ({ game }: { game: GameStoreModel }) => (
     <ScrollArea className={classes.body} viewportRef={containerRef}>
       <BackToTop container={containerRef.current} />
-      <BackgroundImage className={classes.hero} radius="md" src={game.backgroundImage || ""}>
+      <BackgroundImage className={classes.hero} radius="md" src={game.artworks?.[0] || ""}>
         <Overlay
           className={classes.overlay}
           gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
@@ -71,7 +71,19 @@ export const GameDetails = () => {
         </Flex>
       </BackgroundImage>
       <Box>
+        <Text>{game.summary}</Text>
+        <Text>{game.storyline}</Text>
+        <div>Released: {game.firstReleaseDate}</div>
+        <div>Age rating: {game.ageRating}</div>
+        <div>developers: {game.developers?.map(({ name }) => name).join(", ")}</div>
+        <div>publishers: {game.publishers?.map(({ name }) => name).join(", ")}</div>
+        <div>game modes: {game.gameModes?.map(({ name }) => name).join(", ")}</div>
+        <div>genres: {game.genres?.map(({ name }) => name).join(", ")}</div>
+        <div>platforms: {game.platforms?.map(({ name }) => name).join(", ")}</div>
+        <div>perspectives: {game.playerPerspectives?.map(({ name }) => name).join(", ")}</div>
         <RawHtml html={game.description} />
+        {game.gameId}
+        {game.igdbId}
       </Box>
     </ScrollArea>
   );

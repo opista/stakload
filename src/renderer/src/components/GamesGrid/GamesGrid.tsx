@@ -88,11 +88,11 @@ export const GamesGrid = () => {
       <Box style={{ ...style, padding: CELL_GAP }}>
         <AspectRatio ratio={COVER_ART_RATIO}>
           <Link to={`/desktop/${game._id}`}>
+            {/* TODO - If no cover is found we should insert a placeholder */}
             <Image
               alt={t("coverArt", { game: game.name })}
               radius="md"
-              // TODO - pull this from the game
-              src="https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"
+              src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
               title={t("coverArt", { game: game.name })}
             />
           </Link>

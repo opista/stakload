@@ -10,11 +10,9 @@ import {
   EVENT_METADATA_SYNC_PROCESSED,
   EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
-import { findUnsyncedGames } from "../database/games";
+import { findUnsyncedGames, updateGameByGameId } from "../database/games";
 import { findAndInsertNewGames } from "../libraries/steam/integration";
 import { decryptString } from "../util/safe-storage";
-
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 export class GameSyncManager {
   private syncQueue = fastq.promise((gameId: string) => this.worker(gameId), 1);
 
@@ -25,15 +23,21 @@ export class GameSyncManager {
 
   async worker(gameId) {
     /**
-     * Disable for now until IGDB
-     * API is set up
+     * TODO - clear queue when window closes
+     * Set API URL from env var
      */
-    // const appDetails = await getAppDetails(gameId);
-    // if (appDetails) {
-    //   // TODO - proper handling
-    //   await updateGameByGameId(gameId, mapAppDetailsToGameStoreModel(appDetails));
-    // }
-    await sleep(1000);
+    const response = await fetch(`http://localhost:3000/games/${gameId}`);
+
+    if (response.status === 200) {
+      const parsed = await response.json();
+      /**
+       * TOSO - revisit this. The API contract
+       * should be shared. Move trulaunch-api into
+       * this repo and convert to monorepo
+       */
+      await updateGameByGameId(gameId, { ...parsed, metadataSyncedAt: new Date() });
+    }
+
     this.webContents.send(EVENT_METADATA_SYNC_PROCESSED, { id: gameId });
     if (!this.syncQueue.length()) {
       this.webContents.send(EVENT_METADATA_SYNC_COMPLETE);
