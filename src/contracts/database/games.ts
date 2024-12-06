@@ -1,6 +1,11 @@
 export type Library = "steam";
 export type Platform = "linux" | "mac" | "windows";
 
+/**
+ * TODO these are duplicates, we should consolidate
+ * once we have moved the API into this repo
+ */
+
 enum AgeRatingText {
   Three = "THREE",
   Seven = "SEVEN",
@@ -10,6 +15,12 @@ enum AgeRatingText {
 }
 
 type LikeAgeRatingText = `${AgeRatingText}`;
+
+export type Media = {
+  height: number;
+  url: string;
+  width: number;
+};
 
 type IdAndName = {
   id: string;
@@ -66,7 +77,7 @@ type LikeWebsiteCategoryText = `${WebsiteCategoryText}`;
 export type GameStoreModel = {
   _id: string;
   ageRating?: LikeAgeRatingText;
-  artworks?: string[];
+  artworks?: Media[];
   backgroundImage?: string;
   cover?: string;
   deletedAt?: Date;

@@ -9,6 +9,7 @@ import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack,
 import { useDisclosure } from "@mantine/hooks";
 import { useSystemStore } from "@store/system.store";
 import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
+import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
@@ -28,6 +29,8 @@ export const GameDetails = () => {
 
   const navigateToGamesList = () => navigate("..", { relative: "path" });
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
+
+  const media = getHighestRatioMedia(game?.artworks);
 
   useEffect(() => {
     if (game) scrollToTop();
@@ -54,11 +57,10 @@ export const GameDetails = () => {
   const Game = ({ game }: { game: GameStoreModel }) => (
     <ScrollArea className={classes.body} viewportRef={containerRef}>
       <BackToTop container={containerRef.current} />
-      <BackgroundImage className={classes.hero} radius="md" src={game.artworks?.[0] || ""}>
+      <BackgroundImage className={classes.hero} radius="md" src={media?.url || ""}>
         <Overlay
           className={classes.overlay}
           gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
-          opacity={0.85}
         />
         <Flex className={classes.heroContent}>
           <Title className={classes.heroText} lineClamp={3} order={1} title={game.name} textWrap="balance">

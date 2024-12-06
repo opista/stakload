@@ -34,6 +34,7 @@
   font-size: 50px;
   width: 100%;
   max-width: 900px;
+  text-shadow: #000 0px 0px 0.2rem;
 }
 
 .overlay {
