@@ -4,7 +4,7 @@ import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
+import { IconDeviceGamepad2, IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
@@ -86,15 +86,23 @@ export const GamesGrid = () => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <AspectRatio ratio={COVER_ART_RATIO}>
-          <Link to={`/desktop/${game._id}`}>
-            {/* TODO - If no cover is found we should insert a placeholder */}
-            <Image
-              alt={t("coverArt", { game: game.name })}
-              radius="md"
-              src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
-              title={t("coverArt", { game: game.name })}
-            />
+        <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
+          <Link className={classes.cellLink} to={`/desktop/${game._id}`}>
+            {game.cover ? (
+              <Image
+                alt={t("coverArt", { game: game.name })}
+                radius="md"
+                src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
+                title={t("coverArt", { game: game.name })}
+              />
+            ) : (
+              <Stack className={classes.emptyCell} align="center" justify="flex-end">
+                <IconDeviceGamepad2 className={classes.emptyCellIcon} size="90%" stroke={1} />
+                <Text className={classes.emptyCellText} lineClamp={2}>
+                  {game.name}
+                </Text>
+              </Stack>
+            )}
           </Link>
         </AspectRatio>
       </Box>
