@@ -10,6 +10,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useSystemStore } from "@store/system.store";
 import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
 import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
+import Vibrant from "node-vibrant";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
@@ -33,6 +34,19 @@ export const GameDetails = () => {
   const media = getHighestRatioMedia(game?.artworks);
 
   useEffect(() => {
+    if (!media) return;
+
+    const v = new Vibrant(media.url);
+    v.getPalette().then((r) => {
+      document.body.style.setProperty("--gradient-color", r.DarkMuted?.hex as string);
+    });
+
+    return () => {
+      document.body.style.setProperty("--gradient-color", "transparent");
+    };
+  }, [media?.url]);
+
+  useEffect(() => {
     if (game) scrollToTop();
   }, [game?._id]);
 
@@ -42,6 +56,7 @@ export const GameDetails = () => {
 
   useEffect(() => {
     window.api.getGameById(params.id!).then((game) => {
+      console.log({ game });
       setGame(game);
       setIsGameSupported(!game.metadataSyncedAt || (!!operatingSystem && !!game?.platform?.includes(operatingSystem)));
     });

@@ -36,7 +36,7 @@ export const DesktopLayout = () => {
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>
       <AppShell header={{ height: 60 }} padding="md">
-        <AppShell.Header className={classes.header}>
+        <AppShell.Header>
           <Header leftPaneWidth={leftPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
         </AppShell.Header>
         <Spotlight disabled={!games?.length} games={games} onClick={(id) => navigate(id, { relative: "path" })} />

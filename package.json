@@ -52,6 +52,7 @@
     "igdb-api-node": "^5.0.2",
     "lodash-es": "^4.17.21",
     "nedb-promises": "^6.2.3",
+    "node-vibrant": "^3.1.6",
     "react-i18next": "^15.1.0",
     "react-router": "^7.0.1",
     "react-virtualized-auto-sizer": "^1.0.24",
