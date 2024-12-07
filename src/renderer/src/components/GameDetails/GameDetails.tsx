@@ -32,19 +32,22 @@ export const GameDetails = () => {
   const scrollToTop = () => containerRef.current?.scrollTo({ top: 0 });
 
   const media = getHighestRatioMedia(game?.artworks);
+  const headerImage = media?.url || game?.screenshots?.[0];
 
   useEffect(() => {
-    if (!media) return;
+    if (!headerImage) return;
 
-    const v = new Vibrant(media.url);
-    v.getPalette().then((r) => {
-      document.body.style.setProperty("--gradient-color", r.DarkMuted?.hex as string);
-    });
+    const v = new Vibrant(headerImage);
+    v.getPalette()
+      .then((r) => {
+        document.body.style.setProperty("--gradient-color", r.DarkMuted?.hex as string);
+      })
+      .catch(() => {});
 
     return () => {
       document.body.style.setProperty("--gradient-color", "transparent");
     };
-  }, [media?.url]);
+  }, [headerImage]);
 
   useEffect(() => {
     if (game) scrollToTop();
@@ -72,7 +75,7 @@ export const GameDetails = () => {
   const Game = ({ game }: { game: GameStoreModel }) => (
     <ScrollArea className={classes.body} viewportRef={containerRef}>
       <BackToTop container={containerRef.current} />
-      <BackgroundImage className={classes.hero} radius="md" src={media?.url || ""}>
+      <BackgroundImage className={classes.hero} radius="md" src={headerImage || ""}>
         <Overlay
           className={classes.overlay}
           gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
