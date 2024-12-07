@@ -102,7 +102,7 @@ export const GameDetails = () => {
         <div>platforms: {game.platforms?.map(({ name }) => name).join(", ")}</div>
         <div>perspectives: {game.playerPerspectives?.map(({ name }) => name).join(", ")}</div>
         <RawHtml html={game.description} />
-        {game.gameId}
+        {game.gameId}&nbsp;
         {game.igdbId}
       </Box>
     </ScrollArea>

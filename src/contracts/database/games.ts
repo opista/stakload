@@ -100,6 +100,7 @@ export type GameStoreModel = {
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
   screenshots?: string[];
+  sortableName?: string;
   storyline?: string;
   summary?: string;
   type?: "app" | "game";
@@ -107,4 +108,4 @@ export type GameStoreModel = {
   websites?: Website[];
 };
 
-export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name">;
+export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name" | "sortableName">;

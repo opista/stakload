@@ -7,6 +7,9 @@ import Datastore from "nedb-promises";
 const db = Datastore.create({
   autoload: true,
   filename: path.join(app.getPath("userData"), "databases", "games.db"),
+  compareStrings: (a, b) => {
+    return a.toLowerCase().localeCompare(b.toLowerCase());
+  },
   timestampData: true,
 });
 
@@ -30,7 +33,7 @@ export const findUnsyncedGames = async () => {
 export const getFilteredGames = async () => {
   return await db
     .find<GameStoreModel>({ $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] })
-    .sort({ name: 1 });
+    .sort({ sortableName: 1 });
 };
 
 export const findGameById = async (id: string) => {
