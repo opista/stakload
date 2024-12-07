@@ -76,3 +76,4 @@ $ npm run build:linux
   - Identify running processes
     - [tasklist](https://github.com/sindresorhus/tasklist/tree/main)?
     - [pid-cwd](https://github.com/zikaari/pid-cwd/blob/master/lib/win.js) to identify app dir (do we need this?)
+  - Add endpoint to manually add external games

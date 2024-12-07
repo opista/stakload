@@ -13,6 +13,11 @@
   }
 }
 
+.coverImage {
+  width: 100%;
+  height: 100%;
+}
+
 .cellLink {
   text-decoration: none;
 }

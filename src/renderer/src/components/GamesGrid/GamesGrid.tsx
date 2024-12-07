@@ -2,7 +2,7 @@ import { BackToTop } from "@components/BackToTop/BackToTop";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { AspectRatio, Box, Button, Image, Stack, Text } from "@mantine/core";
+import { AspectRatio, BackgroundImage, Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconDeviceGamepad2, IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
@@ -89,8 +89,8 @@ export const GamesGrid = () => {
         <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
           <Link className={classes.cellLink} to={`/desktop/${game._id}`}>
             {game.cover ? (
-              <Image
-                alt={t("coverArt", { game: game.name })}
+              <BackgroundImage
+                className={classes.coverImage}
                 radius="md"
                 src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
                 title={t("coverArt", { game: game.name })}
