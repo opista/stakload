@@ -12,6 +12,7 @@ declare global {
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       getFilteredGames: () => Promise<GameStoreModel[]>;
+      getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGamesLastSyncedAt: () => Promise<Date>;
       getLocale: () => Promise<string>;

@@ -11,6 +11,7 @@ import {
   FETCH,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
+  GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
   GET_LOCALE,
   GET_OS,
@@ -25,7 +26,13 @@ import {
 } from "../preload/channels";
 import { nodeFetch } from "./channels/fetch";
 import { GameSyncManager } from "./channels/game-sync-manager";
-import { getFilteredGameLibrary, getGameById, getGamesLastSyncedAt, removeGame } from "./channels/games";
+import {
+  getFilteredGameLibrary,
+  getGameById,
+  getGameFilters,
+  getGamesLastSyncedAt,
+  removeGame,
+} from "./channels/games";
 import { getLocale } from "./channels/get-locale";
 import { testSteamIntegration } from "./channels/integrations";
 import { openWebpage } from "./channels/open-webpage";
@@ -139,6 +146,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(ENCRYPT, encrypt);
   ipcMain.handle(FETCH, nodeFetch);
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
+  ipcMain.handle(GET_GAME_FILTERS, getGameFilters);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
   ipcMain.handle(GET_LOCALE, getLocale);

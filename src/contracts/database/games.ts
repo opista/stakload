@@ -76,6 +76,7 @@ type LikeWebsiteCategoryText = `${WebsiteCategoryText}`;
 
 export type GameStoreModel = {
   _id: string;
+  // TODO this should be an id and name for filtering
   ageRating?: LikeAgeRatingText;
   artworks?: Media[];
   backgroundImage?: string;
@@ -90,11 +91,13 @@ export type GameStoreModel = {
   icon?: string;
   igdbId?: number;
   lastPlayedAt?: Date;
+  // TODO this should be an id and name for filtering
   library: Library;
   listImage?: string;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
   name: string;
+  // TODO Hmmm, what should we do here?
   platform?: Platform[];
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
@@ -103,6 +106,7 @@ export type GameStoreModel = {
   sortableName?: string;
   storyline?: string;
   summary?: string;
+  // TODO - bin this?
   type?: "app" | "game";
   videos?: string[];
   websites?: Website[];

@@ -92,3 +92,39 @@ export const removeGameById = async (id: string, preventReadd: boolean = false) 
 export const findGamesByGameIds = async (ids: string[], library: Library) => {
   return await db.find({ gameId: { $in: ids }, library }, { gameId: 1, _id: 0 });
 };
+
+export const findGameFilters = async () => {
+  const filterableFields: (keyof GameStoreModel)[] = ["developers", "gameModes", "genres", "publishers"];
+  const games = await db.find({});
+
+  const uniqueValuesMap: { [key: string]: Map<string, string> } = filterableFields.reduce((acc, field) => {
+    acc[field] = new Map();
+    return acc;
+  }, {});
+
+  for (const document of games) {
+    for (const field of filterableFields) {
+      const items = document[field];
+      if (Array.isArray(items)) {
+        for (const item of items) {
+          if (item.id && item.name) {
+            // Use ID as the key for uniqueness
+            uniqueValuesMap[field].set(item.id, item.name);
+          }
+        }
+      }
+    }
+  }
+
+  const results = filterableFields.reduce((acc, field) => {
+    acc[field] = Array.from(uniqueValuesMap[field].entries())
+      .map(([id, name]) => ({
+        label: name,
+        value: id,
+      }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+    return acc;
+  }, {});
+
+  return results;
+};
