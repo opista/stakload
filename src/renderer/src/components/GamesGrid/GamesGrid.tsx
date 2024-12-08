@@ -1,13 +1,13 @@
 import { BackToTop } from "@components/BackToTop/BackToTop";
+import { GameCover } from "@components/GameCover/GameCover";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { AspectRatio, BackgroundImage, Box, Button, Stack, Text } from "@mantine/core";
+import { Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { IconDeviceGamepad2, IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
+import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 
@@ -15,7 +15,6 @@ import classes from "./GamesGrid.module.css";
 
 const MAX_CELL_SIZE = 250;
 const CELL_GAP = 15;
-const COVER_ART_RATIO = 3 / 4;
 const SCROLLBAR_WIDTH = 6;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
@@ -78,7 +77,6 @@ export const GamesGrid = () => {
     rowIndex,
     style,
   }: GridChildComponentProps<unknown> & { columnCount: number }) => {
-    const { t } = useTranslation();
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     const game = games[index];
 
@@ -86,25 +84,7 @@ export const GamesGrid = () => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <AspectRatio className={classes.aspectRatio} ratio={COVER_ART_RATIO}>
-          <Link className={classes.cellLink} to={`/desktop/${game._id}`}>
-            {game.cover ? (
-              <BackgroundImage
-                className={classes.coverImage}
-                radius="md"
-                src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
-                title={t("coverArt", { game: game.name })}
-              />
-            ) : (
-              <Stack className={classes.emptyCell} align="center" justify="flex-end">
-                <IconDeviceGamepad2 className={classes.emptyCellIcon} size="90%" stroke={1} />
-                <Text className={classes.emptyCellText} lineClamp={2}>
-                  {game.name}
-                </Text>
-              </Stack>
-            )}
-          </Link>
-        </AspectRatio>
+        <GameCover game={game} />
       </Box>
     );
   };
