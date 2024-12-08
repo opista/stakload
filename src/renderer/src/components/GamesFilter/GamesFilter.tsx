@@ -3,7 +3,7 @@ import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { MultiSelect, Popover, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
+import { IconAdjustmentsAlt, IconAdjustmentsSpark } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
@@ -17,8 +17,9 @@ type GamesFilterProps = {
 export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
-  const { selectedFilters, setSelectedFilter } = useGameStore(
+  const { hasFilterSet, selectedFilters, setSelectedFilter } = useGameStore(
     useShallow((state) => ({
+      hasFilterSet: Object.values(state.selectedFilters).some((values) => values.length),
       selectedFilters: state.selectedFilters,
       setSelectedFilter: state.setSelectedFilter,
     })),
@@ -27,7 +28,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
     setSelectedFilter(key, value);
 
-  const Icon = opened ? IconFilterFilled : IconFilter;
+  const Icon = hasFilterSet ? IconAdjustmentsSpark : IconAdjustmentsAlt;
 
   const filters = useGamesQuery(window.api.getGameFilters);
 
