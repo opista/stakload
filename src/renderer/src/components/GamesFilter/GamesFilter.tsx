@@ -1,5 +1,6 @@
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
-import { Popover, Text } from "@mantine/core";
+import { useGamesQuery } from "@hooks/use-games-query";
+import { MultiSelect, Popover, Text } from "@mantine/core";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,6 +16,10 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const { t } = useTranslation();
 
   const Icon = opened ? IconFilterFilled : IconFilter;
+
+  const filters = useGamesQuery(window.api.getGameFilters);
+
+  console.log(filters);
 
   return (
     <Popover
@@ -39,6 +44,11 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       </Popover.Target>
       <Popover.Dropdown>
         <Text size="xs">TODO - Filters here</Text>
+        <MultiSelect label="Developers" clearable data={filters?.["developers"]} />
+        <MultiSelect label="Game modes" clearable data={filters?.["gameModes"]} />
+        <MultiSelect label="Genres" clearable data={filters?.["genres"]} />
+        <MultiSelect label="Player perspectives" clearable data={filters?.["playerPerspectives"]} />
+        <MultiSelect label="Publishers" clearable data={filters?.["publishers"]} />
       </Popover.Dropdown>
     </Popover>
   );

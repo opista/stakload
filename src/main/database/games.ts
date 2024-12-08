@@ -94,7 +94,13 @@ export const findGamesByGameIds = async (ids: string[], library: Library) => {
 };
 
 export const findGameFilters = async () => {
-  const filterableFields: (keyof GameStoreModel)[] = ["developers", "gameModes", "genres", "publishers"];
+  const filterableFields: (keyof GameStoreModel)[] = [
+    "developers",
+    "gameModes",
+    "genres",
+    "playerPerspectives",
+    "publishers",
+  ];
   const games = await db.find({});
 
   const uniqueValuesMap: { [key: string]: Map<string, string> } = filterableFields.reduce((acc, field) => {
