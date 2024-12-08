@@ -1,3 +1,4 @@
+import { GameFilters } from "@contracts/database/games";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { exposeConf } from "electron-conf/preload";
@@ -37,7 +38,7 @@ const api = {
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
   fetch: <T>(...args: Parameters<typeof fetch>): Promise<T> => ipcRenderer.invoke(FETCH, ...args),
-  getFilteredGames: () => ipcRenderer.invoke(GET_FILTERED_GAMES),
+  getFilteredGames: (filters?: GameFilters) => ipcRenderer.invoke(GET_FILTERED_GAMES, filters),
   getGameFilters: () => ipcRenderer.invoke(GET_GAME_FILTERS),
   getGameById: (id: string) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
   getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),

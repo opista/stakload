@@ -113,3 +113,7 @@ export type GameStoreModel = {
 };
 
 export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name" | "sortableName">;
+
+export type GameFilters = {
+  gameModes?: string[];
+};

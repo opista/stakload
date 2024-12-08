@@ -5,11 +5,13 @@ import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
+import { useGameStore } from "@store/game.store";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesGrid.module.css";
 
@@ -22,6 +24,11 @@ const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number
 
 export const GamesGrid = () => {
   const [containerEl, setContainerEl] = useState<Element | null>(null);
+  const { selectedFilters } = useGameStore(
+    useShallow((state) => ({
+      selectedFilters: state.selectedFilters,
+    })),
+  );
   const { t } = useTranslation();
 
   const containerRef = useCallback((node) => setContainerEl(node), []);
@@ -31,7 +38,10 @@ export const GamesGrid = () => {
    *  perhaps we only return game titles and icons
    *  here to reduce data stored in memory
    */
-  const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
+  const games = useGamesQuery<GameStoreModel[]>(
+    () => window.api.getFilteredGames({ gameModes: selectedFilters.gameModes }),
+    [selectedFilters.gameModes],
+  );
 
   const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;

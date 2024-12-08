@@ -1,8 +1,10 @@
 import path from "node:path";
 
-import { GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
+import { GameFilters, GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
 import { app } from "electron";
 import Datastore from "nedb-promises";
+
+import { idMatcher } from "../libraries/steam/util/database-id-matcher";
 
 const db = Datastore.create({
   autoload: true,
@@ -30,9 +32,12 @@ export const findUnsyncedGames = async () => {
   return await db.find<GameStoreModel>({ metadataSyncedAt: { $exists: false } }).sort({ name: 1 });
 };
 
-export const getFilteredGames = async () => {
+export const getFilteredGames = async ({ gameModes }: GameFilters = {}) => {
   return await db
-    .find<GameStoreModel>({ $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] })
+    .find<GameStoreModel>({
+      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+      ...idMatcher("gameModes", gameModes),
+    })
     .sort({ sortableName: 1 });
 };
 

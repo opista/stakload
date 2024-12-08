@@ -1,4 +1,4 @@
-import { GameStoreModel, Platform } from "@contracts/database/games";
+import { GameFilters, GameStoreModel, Platform } from "@contracts/database/games";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
 import { RemoveListenerFunction } from "./util/listener-handler";
@@ -11,7 +11,7 @@ declare global {
       decrypt: (str: string) => Promise<string>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
-      getFilteredGames: () => Promise<GameStoreModel[]>;
+      getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGamesLastSyncedAt: () => Promise<Date>;
