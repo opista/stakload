@@ -1,9 +1,12 @@
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { MultiSelect, Popover, Text } from "@mantine/core";
+import { useGameStore } from "@store/game.store";
 import { IconFilter, IconFilterFilled } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesFilter.module.css";
 
@@ -14,12 +17,19 @@ type GamesFilterProps = {
 export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
+  const { selectedFilters, setSelectedFilter } = useGameStore(
+    useShallow((state) => ({
+      selectedFilters: state.selectedFilters,
+      setSelectedFilter: state.setSelectedFilter,
+    })),
+  );
+
+  const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
+    setSelectedFilter(key, value);
 
   const Icon = opened ? IconFilterFilled : IconFilter;
 
   const filters = useGamesQuery(window.api.getGameFilters);
-
-  console.log(filters);
 
   return (
     <Popover
@@ -29,7 +39,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       opened={opened}
       position="right-start"
       shadow="sm"
-      width={200}
+      width={500}
       withArrow
     >
       <Popover.Target>
@@ -44,11 +54,51 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       </Popover.Target>
       <Popover.Dropdown>
         <Text size="xs">TODO - Filters here</Text>
-        <MultiSelect label="Developers" clearable data={filters?.["developers"]} />
-        <MultiSelect label="Game modes" clearable data={filters?.["gameModes"]} />
-        <MultiSelect label="Genres" clearable data={filters?.["genres"]} />
-        <MultiSelect label="Player perspectives" clearable data={filters?.["playerPerspectives"]} />
-        <MultiSelect label="Publishers" clearable data={filters?.["publishers"]} />
+        <MultiSelect
+          label="Developers"
+          comboboxProps={{ withinPortal: false }}
+          clearable
+          data={filters?.["developers"]}
+          onChange={onFilterChange("developers")}
+          searchable
+          value={selectedFilters.developers}
+        />
+        <MultiSelect
+          label="Game modes"
+          comboboxProps={{ withinPortal: false }}
+          clearable
+          data={filters?.["gameModes"]}
+          onChange={onFilterChange("gameModes")}
+          searchable
+          value={selectedFilters.gameModes}
+        />
+        <MultiSelect
+          label="Genres"
+          comboboxProps={{ withinPortal: false }}
+          clearable
+          data={filters?.["genres"]}
+          onChange={onFilterChange("genres")}
+          searchable
+          value={selectedFilters.genres}
+        />
+        <MultiSelect
+          label="Player perspectives"
+          comboboxProps={{ withinPortal: false }}
+          clearable
+          data={filters?.["playerPerspectives"]}
+          onChange={onFilterChange("playerPerspectives")}
+          searchable
+          value={selectedFilters.playerPerspectives}
+        />
+        <MultiSelect
+          label="Publishers"
+          comboboxProps={{ withinPortal: false }}
+          clearable
+          data={filters?.["publishers"]}
+          onChange={onFilterChange("publishers")}
+          searchable
+          value={selectedFilters.publishers}
+        />
       </Popover.Dropdown>
     </Popover>
   );
