@@ -38,10 +38,7 @@ export const GamesGrid = () => {
    *  perhaps we only return game titles and icons
    *  here to reduce data stored in memory
    */
-  const games = useGamesQuery<GameStoreModel[]>(
-    () => window.api.getFilteredGames({ gameModes: selectedFilters.gameModes }),
-    [selectedFilters.gameModes],
-  );
+  const games = useGamesQuery<GameStoreModel[]>(() => window.api.getFilteredGames(selectedFilters), [selectedFilters]);
 
   const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;

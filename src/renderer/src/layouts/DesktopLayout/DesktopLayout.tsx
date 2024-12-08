@@ -4,9 +4,11 @@ import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { AppShell, Box, Divider, Flex, Stack } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
+import { useGameStore } from "@store/game.store";
 import { Allotment } from "allotment";
 import { useState } from "react";
 import { Outlet, useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
 
 import { GameNavigation } from "../../components/GameNavigation/GameNavigation";
 import { GamesFilter } from "../../components/GamesFilter/GamesFilter";
@@ -18,6 +20,11 @@ export const DesktopLayout = () => {
   const navigate = useNavigate();
   const [showLeftPane, setShowLeftPane] = useState(true);
   const [leftPaneWidth, setLeftPaneWidth] = useState(300);
+  const { selectedFilters } = useGameStore(
+    useShallow((state) => ({
+      selectedFilters: state.selectedFilters,
+    })),
+  );
 
   const onChange = (vals: number[]) => {
     if (vals.length !== 2) return;
@@ -31,7 +38,7 @@ export const DesktopLayout = () => {
    *  perhaps we only return game titles and icons
    *  here to reduce data stored in memory
    */
-  const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
+  const games = useGamesQuery<GameStoreModel[]>(() => window.api.getFilteredGames(selectedFilters), [selectedFilters]);
 
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>
@@ -39,15 +46,15 @@ export const DesktopLayout = () => {
         <AppShell.Header>
           <Header leftPaneWidth={leftPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
         </AppShell.Header>
-        <Spotlight disabled={!games?.length} games={games} onClick={(id) => navigate(id, { relative: "path" })} />
+        <Spotlight onClick={(id) => navigate(id, { relative: "path" })} />
         <Allotment className={classes.allotment} onChange={onChange} proportionalLayout={false}>
           {showLeftPane && (
             <Allotment.Pane minSize={250} maxSize={500} preferredSize={leftPaneWidth}>
               <Stack className={classes.navbar} gap={0}>
                 <AppShell.Section>
                   <Flex align="center" justify="center">
-                    <SearchControl disabled={!games?.length} />
-                    <GamesFilter disabled={!games?.length} />
+                    <SearchControl />
+                    <GamesFilter />
                   </Flex>
                   <Divider my="md" />
                 </AppShell.Section>

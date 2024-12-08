@@ -115,5 +115,9 @@ export type GameStoreModel = {
 export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name" | "sortableName">;
 
 export type GameFilters = {
+  developers?: string[];
   gameModes?: string[];
+  genres?: string[];
+  playerPerspectives?: string[];
+  publishers?: string[];
 };

@@ -32,11 +32,28 @@ export const findUnsyncedGames = async () => {
   return await db.find<GameStoreModel>({ metadataSyncedAt: { $exists: false } }).sort({ name: 1 });
 };
 
-export const getFilteredGames = async ({ gameModes }: GameFilters = {}) => {
+export const getFilteredGames = async ({
+  developers,
+  gameModes,
+  genres,
+  playerPerspectives,
+  publishers,
+}: GameFilters = {}) => {
+  console.log({
+    developers,
+    gameModes,
+    genres,
+    playerPerspectives,
+    publishers,
+  });
   return await db
     .find<GameStoreModel>({
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+      ...idMatcher("developers", developers),
       ...idMatcher("gameModes", gameModes),
+      ...idMatcher("genres", genres),
+      ...idMatcher("playerPerspectives", playerPerspectives),
+      ...idMatcher("publishers", publishers),
     })
     .sort({ sortableName: 1 });
 };
