@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const useGamesQuery = <T>(query: () => Promise<T>) => {
+export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[] = []) => {
   const [result, setResult] = useState<T | undefined>(undefined);
 
   const updateQuery = async () => {
@@ -10,7 +10,7 @@ export const useGamesQuery = <T>(query: () => Promise<T>) => {
 
   useEffect(() => {
     updateQuery();
-  }, []);
+  }, [...dependencies]);
 
   useEffect(() => {
     const removeListener = window.api.onGamesListUpdated(() => updateQuery());
