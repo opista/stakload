@@ -121,7 +121,7 @@ export const GamesGrid = () => {
    */
 
   return (
-    <>
+    <Box className={classes.container}>
       <AutoSizer>
         {({ height, width }) => {
           const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
@@ -143,6 +143,6 @@ export const GamesGrid = () => {
         }}
       </AutoSizer>
       <BackToTop container={containerEl} />
-    </>
+    </Box>
   );
 };
