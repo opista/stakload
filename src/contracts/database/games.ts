@@ -45,14 +45,14 @@ type MultiplayerMode = {
   splitscreenOnline: boolean;
 };
 
-type Website = {
+export type Website = {
   id: string;
   igdbId: number;
   url: string;
   website: LikeWebsiteCategoryText;
 };
 
-enum WebsiteCategoryText {
+export enum WebsiteCategoryText {
   Android = "ANDROID",
   Discord = "DISCORD",
   EpicGames = "EPIC_GAMES",
@@ -72,7 +72,7 @@ enum WebsiteCategoryText {
   Youtube = "YOUTUBE",
 }
 
-type LikeWebsiteCategoryText = `${WebsiteCategoryText}`;
+export type LikeWebsiteCategoryText = `${WebsiteCategoryText}`;
 
 export type GameStoreModel = {
   _id: string;

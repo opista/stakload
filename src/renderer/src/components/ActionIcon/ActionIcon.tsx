@@ -11,13 +11,17 @@ import classes from "./ActionIcon.module.css";
 
 type ActionIconProps = {
   icon: FC<IconProps>;
+  iconStroke?: number;
   "aria-label": string;
 } & PolymorphicComponentProps<"button", MantineActionIconProps>;
 
-export const Component = ({ icon: Icon, size = "lg", variant = "default", ...props }: ActionIconProps, ref) => (
+export const Component = (
+  { icon: Icon, iconStroke = 1, size = "lg", variant = "default", ...props }: ActionIconProps,
+  ref,
+) => (
   <MantineActionIcon ref={ref} size={size} variant={variant} {...props}>
     <VisuallyHidden>{props["aria-label"]}</VisuallyHidden>
-    <Icon className={classes.icon} stroke={1} />
+    <Icon className={classes.icon} stroke={iconStroke} />
   </MantineActionIcon>
 );
 
