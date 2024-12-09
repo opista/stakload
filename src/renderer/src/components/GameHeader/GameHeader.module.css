@@ -1,0 +1,4 @@
+.header {
+  padding: var(--mantine-spacing-md) 0;
+  z-index: 2;
+}
