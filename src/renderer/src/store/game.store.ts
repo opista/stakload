@@ -6,7 +6,16 @@ import { persist } from "zustand/middleware";
 
 const conf = new Conf();
 
+const DEFAULT_FILTERS = {
+  developers: undefined,
+  gameModes: undefined,
+  genres: undefined,
+  playerPerspectives: undefined,
+  publishers: undefined,
+};
+
 type GameActions = {
+  resetFilters: () => void;
   setSelectedGame: (selectedGame: GameState["selectedGame"]) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
 };
@@ -17,13 +26,8 @@ export const useGameStore = create<GameStore>()(
   persist(
     (set) => ({
       selectedGame: null,
-      selectedFilters: {
-        developers: undefined,
-        gameModes: undefined,
-        genres: undefined,
-        playerPerspectives: undefined,
-        publishers: undefined,
-      },
+      selectedFilters: DEFAULT_FILTERS,
+      resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
       setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
       setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
         set((state) => ({

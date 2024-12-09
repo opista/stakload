@@ -1,7 +1,7 @@
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Indicator, MultiSelect, Popover, Text } from "@mantine/core";
+import { Button, Indicator, MultiSelect, Popover, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt, IconAdjustmentsSpark } from "@tabler/icons-react";
 import { useState } from "react";
@@ -17,14 +17,17 @@ type GamesFilterProps = {
 export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
-  const { hasFilterSet, selectedFilterCount, selectedFilters, setSelectedFilter } = useGameStore(
+  const { hasFilterSet, resetFilters, selectedFilterCount, selectedFilters, setSelectedFilter } = useGameStore(
     useShallow((state) => ({
       hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
+      resetFilters: state.resetFilters,
       selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
       selectedFilters: state.selectedFilters,
       setSelectedFilter: state.setSelectedFilter,
     })),
   );
+
+  const onClearFilters = () => resetFilters();
 
   const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
     setSelectedFilter(key, value);
@@ -110,6 +113,9 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           searchable
           value={selectedFilters.publishers}
         />
+        <Button color="red" onClick={onClearFilters}>
+          Clear filters
+        </Button>
       </Popover.Dropdown>
     </Popover>
   );
