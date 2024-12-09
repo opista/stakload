@@ -48,8 +48,6 @@ $ npm run build:linux
 
 - Frontend
 
-  - Look at migrating over to Next.js? Routing will be easier, can offload tasks to backend
-  - [BUG] Clock freezes on mac (not really relevant as this is a windows only app)
   - Should settings be on their own page rather than crushed into a modal?
   - Build out game filters
     - User should be able to save a collection of filters as a collection (like Steam)
@@ -71,8 +69,6 @@ $ npm run build:linux
 
 - Backend
   - Set up a logger
-  - Create temporary "fake" API to fetch data from Steam and [igdb](https://api-docs.igdb.com/#game)
-    - Move igdb to external service with caching later
   - Identify running processes
     - [tasklist](https://github.com/sindresorhus/tasklist/tree/main)?
     - [pid-cwd](https://github.com/zikaari/pid-cwd/blob/master/lib/win.js) to identify app dir (do we need this?)
