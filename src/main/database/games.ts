@@ -39,13 +39,6 @@ export const getFilteredGames = async ({
   playerPerspectives,
   publishers,
 }: GameFilters = {}) => {
-  console.log({
-    developers,
-    gameModes,
-    genres,
-    playerPerspectives,
-    publishers,
-  });
   return await db
     .find<GameStoreModel>({
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
