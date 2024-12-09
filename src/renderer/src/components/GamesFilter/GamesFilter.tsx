@@ -19,8 +19,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const { t } = useTranslation();
   const { hasFilterSet, selectedFilterCount, selectedFilters, setSelectedFilter } = useGameStore(
     useShallow((state) => ({
-      hasFilterSet: Object.values(state.selectedFilters).some((values) => values.length),
-      selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values.length).length,
+      hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
+      selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
       selectedFilters: state.selectedFilters,
       setSelectedFilter: state.setSelectedFilter,
     })),
