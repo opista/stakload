@@ -2,10 +2,21 @@ import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
-import { RawHtml } from "@components/RawHtml/RawHtml";
 import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
-import { BackgroundImage, Box, Divider, Flex, Group, Overlay, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import {
+  BackgroundImage,
+  Divider,
+  Flex,
+  Group,
+  Overlay,
+  ScrollArea,
+  Space,
+  Spoiler,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useSystemStore } from "@store/system.store";
 import { IconArrowLeft, IconPencil, IconPuzzleOff, IconTrash } from "@tabler/icons-react";
@@ -90,21 +101,78 @@ export const GameDetails = () => {
           </Group>
         </Flex>
       </BackgroundImage>
-      <Box>
-        <Text>{game.summary}</Text>
-        <Text>{game.storyline}</Text>
-        <div>Released: {game.firstReleaseDate}</div>
-        <div>Age rating: {game.ageRating}</div>
-        <div>developers: {game.developers?.map(({ name }) => name).join(", ")}</div>
-        <div>publishers: {game.publishers?.map(({ name }) => name).join(", ")}</div>
-        <div>game modes: {game.gameModes?.map(({ name }) => name).join(", ")}</div>
-        <div>genres: {game.genres?.map(({ name }) => name).join(", ")}</div>
-        <div>platforms: {game.platforms?.map(({ name }) => name).join(", ")}</div>
-        <div>perspectives: {game.playerPerspectives?.map(({ name }) => name).join(", ")}</div>
-        <RawHtml html={game.description} />
-        {game.gameId}&nbsp;
-        {game.igdbId}
-      </Box>
+      <Space h="sm" />
+      <div className={classes.body}>
+        <div className={classes.bodyInner}>
+          <div>
+            <Spoiler hideLabel="hide" maxHeight={300} showLabel="show more">
+              <Text>{game.summary}</Text>
+            </Spoiler>
+          </div>
+          <div className={classes.infoContainer}>
+            <Flex justify="space-between">
+              <Text>Release date</Text>
+              {!!game.firstReleaseDate && (
+                <Text className={classes.field}>
+                  {new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(game.firstReleaseDate))}
+                </Text>
+              )}
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Age rating</Text>
+              <Text className={classes.field}>{game.ageRating}</Text>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Developers</Text>
+              <div className={classes.field}>
+                {game.developers?.map((developer) => <Text key={developer.id}>{developer.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Publishers</Text>
+              <div className={classes.field}>
+                {game.publishers?.map((publisher) => <Text key={publisher.id}>{publisher.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Game modes</Text>
+              <div className={classes.field}>
+                {game.gameModes?.map((mode) => <Text key={mode.id}>{mode.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Genres</Text>
+              <div className={classes.field}>
+                {game.genres?.map((genre) => <Text key={genre.id}>{genre.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Platforms</Text>
+              <div className={classes.field}>
+                {game.platforms?.map((platform) => <Text key={platform.id}>{platform.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>Perspectives</Text>
+              <div className={classes.field}>
+                {game.playerPerspectives?.map((perspectives) => <Text key={perspectives.id}>{perspectives.name}</Text>)}
+              </div>
+            </Flex>
+            <Divider my={4} />
+            <Flex justify="space-between">
+              <Text>IGDB ID</Text>
+              <Text className={classes.field}>{game.igdbId}</Text>
+            </Flex>
+          </div>
+        </div>
+      </div>
     </ScrollArea>
   );
 

@@ -46,3 +46,34 @@
   margin-top: var(--mantine-spacing-sm);
   margin-bottom: var(--mantine-spacing-sm);
 }
+
+.infoContainer {
+  flex-grow: 1;
+  max-width: 300px;
+  min-width: 300px;
+}
+
+.field {
+  text-align: right;
+}
+
+.body {
+  container-type: inline-size;
+}
+
+.bodyInner {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mantine-spacing-xl);
+}
+
+@container (max-width: 700px) {
+  .infoContainer {
+    flex: 0 0 100%;
+    max-width: none;
+  }
+
+  .bodyInner {
+    flex-wrap: wrap;
+  }
+}
