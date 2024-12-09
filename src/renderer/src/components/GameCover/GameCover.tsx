@@ -1,7 +1,6 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { AspectRatio, BackgroundImage, Stack, Text } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 
 import classes from "./GameCover.module.css";
@@ -12,18 +11,9 @@ type GameCoverProps = {
   game: GameStoreModel;
 };
 
-const GameCoverArt = ({ game }: GameCoverProps) => {
-  const { t } = useTranslation();
-
-  return (
-    <BackgroundImage
-      className={classes.backgroundImage}
-      radius="md"
-      src={game.cover || "https://images.igdb.com/igdb/image/upload/t_cover_big/co22ak.webp"}
-      title={t("coverArt", { game: game.name })}
-    />
-  );
-};
+const GameCoverArt = ({ game }: GameCoverProps) => (
+  <BackgroundImage className={classes.backgroundImage} radius="md" src={game.cover!} title={game.name} />
+);
 
 const GameCoverEmpty = ({ game }: GameCoverProps) => (
   <Stack className={classes.emptyContainer} align="center" justify="flex-end">
