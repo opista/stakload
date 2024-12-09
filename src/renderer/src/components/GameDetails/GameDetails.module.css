@@ -4,6 +4,11 @@
   container-type: inline-size;
 }
 
+.dividerLabel {
+  color: var(--mantine-color-text);
+  font-size: var(--mantine-font-size-sm);
+}
+
 .infoContainer {
   flex-grow: 1;
   max-width: 300px;
@@ -21,6 +26,7 @@
 .bodyInner {
   display: flex;
   justify-content: space-between;
+  margin-top: var(--mantine-spacing-lg);
   gap: var(--mantine-spacing-xl);
 }
 

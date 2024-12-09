@@ -1,6 +1,7 @@
 import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameHeader } from "@components/GameHeader/GameHeader";
 import { GameHero } from "@components/GameHero/GameHero";
+import { GameLinks } from "@components/GameLinks/GameLinks";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Divider, Flex, ScrollArea, Space, Spoiler, Stack, Text } from "@mantine/core";
 import { IconPuzzleOff } from "@tabler/icons-react";
@@ -44,11 +45,17 @@ export const GameDetails = () => {
       <Container size="responsive">
         <div className={classes.bodyInner}>
           <div>
-            <Spoiler hideLabel="hide" maxHeight={300} showLabel="show more">
+            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Summary" mb="lg"></Divider>
+            <Spoiler hideLabel="hide" maxHeight={200} showLabel="show more">
               <Text>{game.summary}</Text>
             </Spoiler>
+            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Media" py="lg"></Divider>
           </div>
           <div className={classes.infoContainer}>
+            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Links" mb="lg"></Divider>
+            <GameLinks websites={game.websites} />
+
+            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Details" my="lg"></Divider>
             <Flex justify="space-between">
               <Text>Release date</Text>
               {!!game.firstReleaseDate && (
@@ -111,7 +118,7 @@ export const GameDetails = () => {
             </Flex>
             <Divider color="white" my={4} />
             <Flex justify="space-between">
-              <Text>Game ID</Text>
+              <Text>App ID</Text>
               <Text className={classes.field}>{game.gameId}</Text>
             </Flex>
           </div>
