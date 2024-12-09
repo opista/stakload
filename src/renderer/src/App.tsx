@@ -1,7 +1,8 @@
-import { Checkbox, ColorSchemeScript, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
+import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useSystemStore } from "@store/system.store";
+import clsx from "clsx";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router";
@@ -21,6 +22,11 @@ export const App = () => {
         defaultProps: {
           radius: "sm",
         },
+      }),
+      Container: Container.extend({
+        classNames: (_, { size }) => ({
+          root: clsx({ [classes.responsiveContainer]: size === "responsive" }),
+        }),
       }),
       Modal: Modal.extend({
         defaultProps: {

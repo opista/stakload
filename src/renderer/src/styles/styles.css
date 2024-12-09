@@ -28,10 +28,12 @@ body {
 }
 
 body {
-  transition: --gradient-color 1s ease-in-out;
-  background-image: radial-gradient(at 100% 0%, var(--gradient-color) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, var(--gradient-color) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, var(--gradient-color) 0px, transparent 50%);
+  transition: --gradient-color 0.5s ease-in-out;
+  background-image: radial-gradient(circle at 100% 0%, var(--gradient-color) 0px, transparent 50%),
+    radial-gradient(circle at 0% 100%, var(--gradient-color) 0px, transparent 50%),
+    radial-gradient(circle at 100% 100%, var(--gradient-color) 0px, transparent 50%);
+  will-change: background;
+  backdrop-filter: blur(20px);
 }
 
 /* TODO: Disable pointer events to prevent highlighting of page */
