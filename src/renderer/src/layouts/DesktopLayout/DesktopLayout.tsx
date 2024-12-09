@@ -2,7 +2,7 @@ import { Header } from "@components/Header/Header";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { AppShell, Box, Divider, Flex, Stack } from "@mantine/core";
+import { AppShell, Divider, Flex, Stack } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { Allotment } from "allotment";
@@ -65,9 +65,7 @@ export const DesktopLayout = () => {
             </Allotment.Pane>
           )}
           <Allotment.Pane>
-            <Box className={classes.main}>
-              <Outlet />
-            </Box>
+            <Outlet />
           </Allotment.Pane>
         </Allotment>
       </AppShell>
