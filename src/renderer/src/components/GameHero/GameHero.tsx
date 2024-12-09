@@ -38,10 +38,7 @@ export const GameHero = ({ game }: GameHeroProps) => {
 
   return (
     <BackgroundImage className={classes.hero} src={headerImage || ""}>
-      <Overlay
-        className={classes.overlay}
-        gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)"
-      />
+      <Overlay gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)" zIndex={0} />
       <Container size="responsive">
         <Flex className={classes.content}>
           <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
