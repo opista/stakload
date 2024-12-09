@@ -1,7 +1,7 @@
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { MultiSelect, Popover, Text } from "@mantine/core";
+import { Indicator, MultiSelect, Popover, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt, IconAdjustmentsSpark } from "@tabler/icons-react";
 import { useState } from "react";
@@ -17,9 +17,10 @@ type GamesFilterProps = {
 export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
-  const { hasFilterSet, selectedFilters, setSelectedFilter } = useGameStore(
+  const { hasFilterSet, selectedFilterCount, selectedFilters, setSelectedFilter } = useGameStore(
     useShallow((state) => ({
       hasFilterSet: Object.values(state.selectedFilters).some((values) => values.length),
+      selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values.length).length,
       selectedFilters: state.selectedFilters,
       setSelectedFilter: state.setSelectedFilter,
     })),
@@ -44,14 +45,23 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       withArrow
     >
       <Popover.Target>
-        <ActionIcon
-          aria-label={t("filters")}
-          className={classes.icon}
-          disabled={disabled}
-          icon={Icon}
-          onClick={() => setOpened((o) => !o)}
-          size="lg"
-        />
+        <Indicator
+          disabled={!selectedFilterCount}
+          label={selectedFilterCount}
+          offset={3}
+          position="bottom-end"
+          size={16}
+          withBorder
+        >
+          <ActionIcon
+            aria-label={t("filters")}
+            className={classes.icon}
+            disabled={disabled}
+            icon={Icon}
+            onClick={() => setOpened((o) => !o)}
+            size="lg"
+          />
+        </Indicator>
       </Popover.Target>
       <Popover.Dropdown>
         <Text size="xs">TODO - Filters here</Text>
