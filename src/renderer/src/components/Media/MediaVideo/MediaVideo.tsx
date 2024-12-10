@@ -1,7 +1,6 @@
 import { AspectRatio, BackgroundImage, UnstyledButton } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import getVideoId from "get-video-id";
 import { useTranslation } from "react-i18next";
 
 import classes from "./MediaVideo.module.css";
@@ -11,13 +10,11 @@ const getThumbnailUrl = (watchId: string) => `https://img.youtube.com/vi/${watch
 const getEmbedUrl = (watchId: string) => `https://www.youtube.com/embed/${watchId}?autoplay=1`;
 
 type MediaVideoProps = {
-  src: string;
+  id: string;
 };
 
-export const MediaVideo = ({ src }: MediaVideoProps) => {
+export const MediaVideo = ({ id }: MediaVideoProps) => {
   const { t } = useTranslation();
-
-  const { id } = getVideoId(src);
 
   if (!id) return;
 

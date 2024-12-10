@@ -39,6 +39,9 @@ export class GameSyncManager {
        */
       await updateGameByGameId(gameId, { ...parsed, metadataSyncedAt: new Date() });
       this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
+    } else if (response.status === 404) {
+      await updateGameByGameId(gameId, { metadataSyncedAt: new Date() });
+      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
     } else {
       this.sendMessage(EVENT_METADATA_SYNC_SKIPPED);
     }
@@ -59,8 +62,11 @@ export class GameSyncManager {
     const games = await findUnsyncedGames();
     const gameIds = games.map(({ gameId }) => gameId);
     this.total += gameIds.length;
-    this.sendMessage(EVENT_METADATA_SYNC_INSERTED);
-    await Promise.all(gameIds.map((gameId) => this.syncQueue.push(gameId)));
+
+    if (gameIds?.length) {
+      this.sendMessage(EVENT_METADATA_SYNC_INSERTED);
+      await Promise.all(gameIds.map((gameId) => this.syncQueue.push(gameId)));
+    }
   }
 
   sendMessage(channel: string) {

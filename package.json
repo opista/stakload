@@ -50,7 +50,6 @@
     "electron-updater": "^6.1.7",
     "embla-carousel-react": "^7.1.0",
     "fastq": "^1.17.1",
-    "get-video-id": "^4.1.7",
     "i18next": "^23.16.4",
     "igdb-api-node": "^5.0.2",
     "lodash-es": "^4.17.21",

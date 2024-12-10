@@ -20,7 +20,7 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
 
   const videoSlides = videos?.map((video) => (
     <Carousel.Slide key={video}>
-      <MediaVideo src={video} />
+      <MediaVideo id={video} />
     </Carousel.Slide>
   ));
 
