@@ -1,7 +1,9 @@
 import { GameFilters, GameStoreModel, Platform } from "@contracts/database/games";
+import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
 import { RemoveListenerFunction } from "./util/listener-handler";
+
 declare global {
   interface Window {
     electron: ElectronAPI;
@@ -18,10 +20,10 @@ declare global {
       getLocale: () => Promise<string>;
       getOS: () => Promise<Platform>;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
-      onSyncComplete: (listener: (event) => void) => RemoveListenerFunction;
-      onSyncInserted: (listener: (event, count: number) => void) => RemoveListenerFunction;
-      onSyncProcessed: (listener: (event, { id: string, appDetails: AppDetails }) => void) => RemoveListenerFunction;
-      onSyncQueueCleared: (listener: (event) => void) => RemoveListenerFunction;
+      onSyncComplete: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      onSyncInserted: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       openWebpage: (url: string) => void;
       removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;

@@ -1,9 +1,9 @@
 import { GameFilters } from "@contracts/database/games";
+import { GameSyncMessage } from "@contracts/store/game";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { exposeConf } from "electron-conf/preload";
 
-import { AppDetails } from "../main/libraries/steam/types/app-details";
 import {
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
@@ -45,11 +45,14 @@ const api = {
   getLocale: (): Promise<string> => ipcRenderer.invoke(GET_LOCALE),
   getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
   onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_GAMES_LIST_UPDATED, listener),
-  onSyncComplete: (listener: (event) => void) => listenerHandler(EVENT_METADATA_SYNC_COMPLETE, listener),
-  onSyncInserted: (listener: (event, count) => void) => listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
-  onSyncProcessed: (listener: (event, args: { id: string; appDetails: AppDetails }) => void) =>
+  onSyncComplete: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_METADATA_SYNC_COMPLETE, listener),
+  onSyncInserted: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
+  onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_METADATA_SYNC_PROCESSED, listener),
-  onSyncQueueCleared: (listener: (event) => void) => listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
+  onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),

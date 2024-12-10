@@ -1,4 +1,5 @@
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
+import { GameSyncMessage } from "@contracts/store/game";
 import { WebContents } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
@@ -15,6 +16,8 @@ import { findAndInsertNewGames } from "../libraries/steam/integration";
 import { decryptString } from "../util/safe-storage";
 export class GameSyncManager {
   private syncQueue = fastq.promise((gameId: string) => this.worker(gameId), 1);
+  private processing: number = 0;
+  private total: number = 0;
 
   constructor(
     private webContents: WebContents,
@@ -22,6 +25,7 @@ export class GameSyncManager {
   ) {}
 
   async worker(gameId) {
+    this.processing += 1;
     /**
      * TODO - clear queue when window closes
      * Set API URL from env var
@@ -38,9 +42,11 @@ export class GameSyncManager {
       await updateGameByGameId(gameId, { ...parsed, metadataSyncedAt: new Date() });
     }
 
-    this.webContents.send(EVENT_METADATA_SYNC_PROCESSED, { id: gameId });
+    this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
     if (!this.syncQueue.length()) {
-      this.webContents.send(EVENT_METADATA_SYNC_COMPLETE);
+      this.sendMessage(EVENT_METADATA_SYNC_COMPLETE);
+      this.processing = 0;
+      this.total = 0;
     }
   }
 
@@ -49,15 +55,23 @@ export class GameSyncManager {
     const decrypedApiKey = decryptString(config.webApiKey);
 
     await findAndInsertNewGames(config.steamId, decrypedApiKey);
-    this.webContents.send(EVENT_GAMES_LIST_UPDATED);
+    this.sendMessage(EVENT_GAMES_LIST_UPDATED);
     const games = await findUnsyncedGames();
     const gameIds = games.map(({ gameId }) => gameId);
-    this.webContents.send(EVENT_METADATA_SYNC_INSERTED, gameIds.length);
+    this.total += gameIds.length;
+    this.sendMessage(EVENT_METADATA_SYNC_INSERTED);
     await Promise.all(gameIds.map((gameId) => this.syncQueue.push(gameId)));
+  }
+
+  sendMessage(channel: string) {
+    const data: GameSyncMessage = { processing: this.processing, total: this.total };
+    this.webContents.send(channel, data);
   }
 
   clear() {
     this.syncQueue.kill();
-    this.webContents.send(EVENT_SYNC_QUEUE_CLEARED);
+    this.sendMessage(EVENT_SYNC_QUEUE_CLEARED);
+    this.processing = 0;
+    this.total = 0;
   }
 }

@@ -1,88 +1,57 @@
-import { useEffect, useReducer } from "react";
+import { GameSyncMessage } from "@contracts/store/game";
+import { useEffect, useState } from "react";
 
-export enum SyncStatus {
+enum SyncStatus {
   Cancelled = "cancelled",
   Complete = "complete",
   Inserted = "inserted",
-  Processed = "processed",
+  Processing = "processing",
   Waiting = "waiting",
 }
 
+type LikeSyncStatus = `${SyncStatus}`;
+
 type SyncState = {
-  processed: number;
-  status: SyncStatus;
+  processing: number;
+  status: LikeSyncStatus;
   total: number;
 };
 
-type SyncAction = {
-  status: SyncStatus;
-  count?: number;
-};
-
 const DEFAULT_STATE: SyncState = {
-  processed: 0,
+  processing: 0,
   status: SyncStatus.Waiting,
   total: 0,
 };
 
-const syncStatusReducer = (state: SyncState, { status, count }: SyncAction): SyncState => {
-  switch (status) {
-    case SyncStatus.Cancelled:
-    case SyncStatus.Complete:
-      return {
-        ...state,
-        status,
-      };
-    case SyncStatus.Inserted:
-      return {
-        processed: state.processed || 1,
-        status: SyncStatus.Processed,
-        total: state.total + (count || 0),
-      };
-    case SyncStatus.Processed:
-      if (state.status === SyncStatus.Cancelled) {
-        return {
-          processed: state.processed + 1,
-          status: SyncStatus.Cancelled,
-          total: state.total,
-        };
-      }
-      return {
-        processed: state.processed + 1,
-        status,
-        total: state.total,
-      };
-    case SyncStatus.Waiting:
-    default:
-      return DEFAULT_STATE;
-  }
-};
-
 export const useGameSync = () => {
-  const [state, dispatch] = useReducer(syncStatusReducer, DEFAULT_STATE);
+  const [state, setState] = useState<SyncState>(DEFAULT_STATE);
 
-  const onSyncCancelled = () => dispatch({ status: SyncStatus.Cancelled });
-  const onSyncComplete = () => dispatch({ status: SyncStatus.Complete });
-  const onSyncInserted = (count: number) => dispatch({ status: SyncStatus.Inserted, count });
-  const onSyncProcessed = () => dispatch({ status: SyncStatus.Processed });
+  const processMessage =
+    (status: SyncStatus) =>
+    (_event: unknown, { processing, total }: GameSyncMessage) =>
+      setState({
+        processing,
+        status,
+        total,
+      });
 
   useEffect(() => {
-    const removeListener = window.api.onSyncInserted((_event, count) => onSyncInserted(count));
+    const removeListener = window.api.onSyncInserted(processMessage(SyncStatus.Inserted));
     return () => removeListener();
   }, []);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncProcessed(onSyncProcessed);
+    const removeListener = window.api.onSyncProcessed(processMessage(SyncStatus.Processing));
     return () => removeListener();
   }, []);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncComplete(onSyncComplete);
+    const removeListener = window.api.onSyncComplete(processMessage(SyncStatus.Complete));
     return () => removeListener();
   }, []);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncQueueCleared(onSyncCancelled);
+    const removeListener = window.api.onSyncQueueCleared(processMessage(SyncStatus.Cancelled));
     return () => removeListener();
   });
 

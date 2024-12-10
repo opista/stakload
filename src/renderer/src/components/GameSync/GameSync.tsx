@@ -3,10 +3,10 @@ import { Group, Loader, Text } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
 export const GameSync = () => {
-  const { processed, total } = useGameSync();
+  const { processing, status, total } = useGameSync();
   const { t } = useTranslation();
 
-  if (!total) {
+  if (!["inserted", "processing"].includes(status)) {
     return null;
   }
 
@@ -17,7 +17,7 @@ export const GameSync = () => {
         <Text size="sm">{t("sync.syncingLibrary")}</Text>
         <Text size="xs">
           {t("sync.updating", {
-            processed,
+            processing,
             total,
           })}
         </Text>

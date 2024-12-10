@@ -75,7 +75,7 @@
   "importLibrary": "Import library",
   "sync": {
     "syncingLibrary": "Syncing game library",
-    "updating": "Updating {{processed}}/{{total}}"
+    "updating": "Updating {{processing}}/{{total}}"
   },
   "noGamesFound": "No games found",
   "hideNotification": "Hide notification",

@@ -10,3 +10,8 @@ export type GameState = {
   selectedGame: string | null;
   selectedFilters: Filters;
 };
+
+export type GameSyncMessage = {
+  processing: number;
+  total: number;
+};
