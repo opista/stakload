@@ -22,6 +22,7 @@ import {
 import { FC } from "react";
 
 import { IconEpicGames } from "../../icons/IconEpicGames";
+import { IconGog } from "../../icons/IconGog";
 
 const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
   "OFFICIAL",
@@ -86,7 +87,7 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
   },
   // TODO we will need to find an icon for this
   GOG: {
-    icon: IconQuestionMark,
+    icon: IconGog,
     label: "GOG",
   },
   INSTAGRAM: {
