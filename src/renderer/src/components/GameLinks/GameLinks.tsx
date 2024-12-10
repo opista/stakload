@@ -14,11 +14,14 @@ import {
   IconBrandWikipedia,
   IconBrandX,
   IconBrandYoutube,
+  IconDeviceTablet,
   IconProps,
   IconQuestionMark,
   IconWorldWww,
 } from "@tabler/icons-react";
 import { FC } from "react";
+
+import { IconEpicGames } from "../../icons/IconEpicGames";
 
 const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
   "OFFICIAL",
@@ -74,7 +77,7 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
   },
   // TODO we will need to find an icon for this
   EPIC_GAMES: {
-    icon: IconQuestionMark,
+    icon: IconEpicGames,
     label: "Epic Games",
   },
   FACEBOOK: {
@@ -91,7 +94,7 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
     label: "Instagram",
   },
   IPAD: {
-    icon: IconBrandApple,
+    icon: IconDeviceTablet,
     label: "iPad",
   },
   IPHONE: {
