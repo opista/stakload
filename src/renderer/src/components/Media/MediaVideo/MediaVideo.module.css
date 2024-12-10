@@ -27,3 +27,9 @@
   left: 50%;
   transform: translate(-47%, -50%);
 }
+
+.iframe {
+  border: 0;
+  height: 100%;
+  width: 100%;
+}

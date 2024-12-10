@@ -2,6 +2,7 @@ import { AspectRatio, BackgroundImage, UnstyledButton } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import getVideoId from "get-video-id";
+import { useTranslation } from "react-i18next";
 
 import classes from "./MediaVideo.module.css";
 
@@ -14,6 +15,8 @@ type MediaVideoProps = {
 };
 
 export const MediaVideo = ({ src }: MediaVideoProps) => {
+  const { t } = useTranslation();
+
   const { id } = getVideoId(src);
 
   if (!id) return;
@@ -30,16 +33,15 @@ export const MediaVideo = ({ src }: MediaVideoProps) => {
           children: (
             <AspectRatio ratio={16 / 9}>
               <iframe
-                src={embedSrc}
-                style={{ border: 0, width: "100%", height: "100%" }}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
+                className={classes.iframe}
+                src={embedSrc}
               />
             </AspectRatio>
           ),
           size: "xl",
-          // TODO
-          title: "Media",
+          title: t("media"),
         })
       }
     >

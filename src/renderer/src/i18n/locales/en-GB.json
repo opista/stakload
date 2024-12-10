@@ -106,5 +106,6 @@
     "preventReadd": "Prevent game from being automaticaly re-added in future",
     "removeGame": "Remove game",
     "cancel": "Cancel"
-  }
+  },
+  "media": "Media"
 }
