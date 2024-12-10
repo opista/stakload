@@ -13,6 +13,7 @@ import {
   EVENT_METADATA_SYNC_COMPLETE,
   EVENT_METADATA_SYNC_INSERTED,
   EVENT_METADATA_SYNC_PROCESSED,
+  EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
   FETCH,
   GET_FILTERED_GAMES,
@@ -51,6 +52,8 @@ const api = {
     listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
   onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_METADATA_SYNC_PROCESSED, listener),
+  onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_METADATA_SYNC_SKIPPED, listener),
   onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),

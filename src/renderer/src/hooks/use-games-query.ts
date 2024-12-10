@@ -13,6 +13,11 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
   }, [...dependencies]);
 
   useEffect(() => {
+    const removeListener = window.api.onSyncProcessed(() => updateQuery());
+    return () => removeListener();
+  }, [query]);
+
+  useEffect(() => {
     const removeListener = window.api.onGamesListUpdated(() => updateQuery());
     return () => removeListener();
   }, [query]);

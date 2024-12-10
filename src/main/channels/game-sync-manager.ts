@@ -9,6 +9,7 @@ import {
   EVENT_METADATA_SYNC_COMPLETE,
   EVENT_METADATA_SYNC_INSERTED,
   EVENT_METADATA_SYNC_PROCESSED,
+  EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
 import { findUnsyncedGames, updateGameByGameId } from "../database/games";
@@ -40,9 +41,11 @@ export class GameSyncManager {
        * this repo and convert to monorepo
        */
       await updateGameByGameId(gameId, { ...parsed, metadataSyncedAt: new Date() });
+      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
+    } else {
+      this.sendMessage(EVENT_METADATA_SYNC_SKIPPED);
     }
 
-    this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
     if (!this.syncQueue.length()) {
       this.sendMessage(EVENT_METADATA_SYNC_COMPLETE);
       this.processing = 0;

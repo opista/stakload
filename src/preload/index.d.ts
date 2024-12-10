@@ -22,6 +22,7 @@ declare global {
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onSyncComplete: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncInserted: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       openWebpage: (url: string) => void;

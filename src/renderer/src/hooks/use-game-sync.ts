@@ -46,6 +46,11 @@ export const useGameSync = () => {
   }, []);
 
   useEffect(() => {
+    const removeListener = window.api.onSyncSkipped(processMessage(SyncStatus.Processing));
+    return () => removeListener();
+  }, []);
+
+  useEffect(() => {
     const removeListener = window.api.onSyncComplete(processMessage(SyncStatus.Complete));
     return () => removeListener();
   }, []);
