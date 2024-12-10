@@ -34,6 +34,7 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "@mantine/carousel": "^7.15.0",
     "@mantine/core": "^7.13.4",
     "@mantine/dates": "^7.13.4",
     "@mantine/form": "^7.13.4",
@@ -47,7 +48,9 @@
     "clsx": "^2.1.1",
     "electron-conf": "^1.2.1",
     "electron-updater": "^6.1.7",
+    "embla-carousel-react": "^7.1.0",
     "fastq": "^1.17.1",
+    "get-video-id": "^4.1.7",
     "i18next": "^23.16.4",
     "igdb-api-node": "^5.0.2",
     "lodash-es": "^4.17.21",

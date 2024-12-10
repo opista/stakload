@@ -1,0 +1,52 @@
+import { AspectRatio, BackgroundImage, UnstyledButton } from "@mantine/core";
+import { modals } from "@mantine/modals";
+import { IconPlayerPlayFilled } from "@tabler/icons-react";
+import getVideoId from "get-video-id";
+
+import classes from "./MediaVideo.module.css";
+
+const getThumbnailUrl = (watchId: string) => `https://img.youtube.com/vi/${watchId}/hqdefault.jpg`;
+
+const getEmbedUrl = (watchId: string) => `https://www.youtube.com/embed/${watchId}?autoplay=1`;
+
+type MediaVideoProps = {
+  src: string;
+};
+
+export const MediaVideo = ({ src }: MediaVideoProps) => {
+  const { id } = getVideoId(src);
+
+  if (!id) return;
+
+  const thumbnailSrc = getThumbnailUrl(id);
+  const embedSrc = getEmbedUrl(id);
+
+  return (
+    <UnstyledButton
+      className={classes.button}
+      onClick={() =>
+        modals.open({
+          centered: true,
+          children: (
+            <AspectRatio ratio={16 / 9}>
+              <iframe
+                src={embedSrc}
+                style={{ border: 0, width: "100%", height: "100%" }}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </AspectRatio>
+          ),
+          size: "xl",
+          // TODO
+          title: "Media",
+        })
+      }
+    >
+      <div className={classes.playButton}>
+        <IconPlayerPlayFilled className={classes.playIcon} color="white" width="50%" height="50%" />
+      </div>
+      <BackgroundImage className={classes.backgroundImage} src={thumbnailSrc} />
+    </UnstyledButton>
+  );
+};

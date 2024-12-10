@@ -2,6 +2,7 @@ import { BackToTop } from "@components/BackToTop/BackToTop";
 import { GameHeader } from "@components/GameHeader/GameHeader";
 import { GameHero } from "@components/GameHero/GameHero";
 import { GameLinks } from "@components/GameLinks/GameLinks";
+import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Divider, Flex, ScrollArea, Space, Spoiler, Stack, Text } from "@mantine/core";
 import { IconPuzzleOff } from "@tabler/icons-react";
@@ -49,11 +50,13 @@ export const GameDetails = () => {
             <Spoiler hideLabel="hide" maxHeight={200} showLabel="show more">
               <Text>{game.summary}</Text>
             </Spoiler>
-            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Media" py="lg"></Divider>
           </div>
           <div className={classes.infoContainer}>
             <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Links" mb="lg"></Divider>
             <GameLinks websites={game.websites} />
+
+            <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Media" py="lg"></Divider>
+            <MediaCarousel height={200} images={game.screenshots} videos={game.videos} />
 
             <Divider classNames={{ label: classes.dividerLabel }} color="white" label="Details" my="lg"></Divider>
             <Flex justify="space-between">
@@ -64,6 +67,7 @@ export const GameDetails = () => {
                 </Text>
               )}
             </Flex>
+
             <Divider color="white" my={4} />
             <Flex justify="space-between">
               <Text>Age rating</Text>
