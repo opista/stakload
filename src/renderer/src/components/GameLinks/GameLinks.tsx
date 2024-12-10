@@ -22,6 +22,7 @@ import {
 import { FC } from "react";
 
 import { IconEpicGames } from "../../icons/IconEpicGames";
+import { IconFandom } from "../../icons/IconFandom";
 import { IconGog } from "../../icons/IconGog";
 
 const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
@@ -67,6 +68,11 @@ type IconPropsMap = {
   formatter?: (url: string) => string;
 };
 
+const defaultIcon = {
+  icon: IconQuestionMark,
+  label: "Unknown",
+};
+
 const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
   ANDROID: {
     icon: IconBrandAndroid,
@@ -76,7 +82,6 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
     icon: IconBrandDiscord,
     label: "Discord",
   },
-  // TODO we will need to find an icon for this
   EPIC_GAMES: {
     icon: IconEpicGames,
     label: "Epic Games",
@@ -85,7 +90,6 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
     icon: IconBrandFacebook,
     label: "Facebook",
   },
-  // TODO we will need to find an icon for this
   GOG: {
     icon: IconGog,
     label: "GOG",
@@ -127,9 +131,8 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
     icon: IconBrandX,
     label: "Twitter",
   },
-  // TODO we will need to find an icon for this
   WIKIA: {
-    icon: IconQuestionMark,
+    icon: IconFandom,
     label: "Fandom",
   },
   WIKIPEDIA: {
@@ -148,12 +151,10 @@ type GameLinksProps = {
 
 export const GameLinks = ({ websites }: GameLinksProps) => {
   const buttons = websites
-    ?.filter(({ website }) => websiteIconPropsMap[website]) // Ensure valid categories
+    ?.filter(({ website }) => websiteIconPropsMap[website] || defaultIcon)
     .sort((a, b) => {
       const indexA = WEBSITE_ORDER.indexOf(a.website);
       const indexB = WEBSITE_ORDER.indexOf(b.website);
-
-      // Categories not in the order array are sorted to the end
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
     .map(({ url, website }) => {
