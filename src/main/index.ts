@@ -95,14 +95,11 @@ function createWindow() {
   mainWindow.on("ready-to-show", async () => {
     mainWindow.show();
 
-    /**
-     * TODO - Trigger sync on startup. Later
-     * we should add configuration for the user
-     * to manually sync too/instead. SYNC_GAMES
-     * does this, but we should allow disabling
-     * of auto-sync
-     */
-    // await syncManager.syncGames();
+    const shouldAutoSync = conf.get("library_settings.state.syncOnStartup");
+
+    if (shouldAutoSync) {
+      syncManager.sync();
+    }
   });
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
