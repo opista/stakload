@@ -57,7 +57,13 @@ const WebsiteIcon = ({ icon, label, url }: WebsiteIconProps) => (
   />
 );
 
-const websiteIconPropsMap: Record<WebsiteCategoryText, Omit<WebsiteIconProps, "url">> = {
+type IconPropsMap = {
+  icon: FC<IconProps>;
+  label: string;
+  formatter?: (url: string) => string;
+};
+
+const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
   ANDROID: {
     icon: IconBrandAndroid,
     label: "Android",
@@ -107,6 +113,7 @@ const websiteIconPropsMap: Record<WebsiteCategoryText, Omit<WebsiteIconProps, "u
   STEAM: {
     icon: IconBrandSteam,
     label: "Steam",
+    formatter: (url: string) => `steam://openurl/${url}`,
   },
   TWITCH: {
     icon: IconBrandTwitch,
@@ -146,8 +153,9 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
     .map(({ url, website }) => {
-      const props = websiteIconPropsMap[website];
-      return <WebsiteIcon {...props} key={website} url={url} />;
+      const { icon, label, formatter } = websiteIconPropsMap[website];
+      const formattedUrl = formatter?.(url) || url;
+      return <WebsiteIcon key={website} icon={icon} label={label} url={formattedUrl} />;
     });
 
   return (
