@@ -29,9 +29,8 @@ export class GameSyncManager {
     this.processing += 1;
     /**
      * TODO - clear queue when window closes
-     * Set API URL from env var
      */
-    const response = await fetch(`http://localhost:3000/games/${gameId}`);
+    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}`);
 
     if (response.status === 200) {
       const parsed = await response.json();
