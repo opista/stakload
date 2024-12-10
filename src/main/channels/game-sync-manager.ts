@@ -27,9 +27,7 @@ export class GameSyncManager {
 
   async worker(gameId) {
     this.processing += 1;
-    /**
-     * TODO - clear queue when window closes
-     */
+
     const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}`);
 
     if (response.status === 200) {

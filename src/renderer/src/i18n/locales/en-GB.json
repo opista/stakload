@@ -107,5 +107,9 @@
     "removeGame": "Remove game",
     "cancel": "Cancel"
   },
-  "media": "Media"
+  "media": "Media",
+  "links": {
+    "unknown": "Unknown",
+    "officialWebsite": "Official website"
+  }
 }

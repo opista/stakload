@@ -20,6 +20,7 @@ import {
   IconWorldWww,
 } from "@tabler/icons-react";
 import { FC } from "react";
+import { useTranslation } from "react-i18next";
 
 import { IconEpicGames } from "../../icons/IconEpicGames";
 import { IconFandom } from "../../icons/IconFandom";
@@ -68,88 +69,90 @@ type IconPropsMap = {
   formatter?: (url: string) => string;
 };
 
-const defaultIcon = {
-  icon: IconQuestionMark,
-  label: "Unknown",
-};
-
-const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
-  ANDROID: {
-    icon: IconBrandAndroid,
-    label: "Android",
-  },
-  DISCORD: {
-    icon: IconBrandDiscord,
-    label: "Discord",
-  },
-  EPIC_GAMES: {
-    icon: IconEpicGames,
-    label: "Epic Games",
-  },
-  FACEBOOK: {
-    icon: IconBrandFacebook,
-    label: "Facebook",
-  },
-  GOG: {
-    icon: IconGog,
-    label: "GOG",
-  },
-  INSTAGRAM: {
-    icon: IconBrandInstagram,
-    label: "Instagram",
-  },
-  IPAD: {
-    icon: IconDeviceTablet,
-    label: "iPad",
-  },
-  IPHONE: {
-    icon: IconBrandApple,
-    label: "iPhone",
-  },
-  ITCH: {
-    icon: IconBrandItch,
-    label: "Itch",
-  },
-  OFFICIAL: {
-    icon: IconWorldWww,
-    label: "Offical website",
-  },
-  REDDIT: {
-    icon: IconBrandReddit,
-    label: "Reddit",
-  },
-  STEAM: {
-    icon: IconBrandSteam,
-    label: "Steam",
-    formatter: (url: string) => `steam://openurl/${url}`,
-  },
-  TWITCH: {
-    icon: IconBrandTwitch,
-    label: "Twitch",
-  },
-  TWITTER: {
-    icon: IconBrandX,
-    label: "Twitter",
-  },
-  WIKIA: {
-    icon: IconFandom,
-    label: "Fandom",
-  },
-  WIKIPEDIA: {
-    icon: IconBrandWikipedia,
-    label: "Wikipedia",
-  },
-  YOUTUBE: {
-    icon: IconBrandYoutube,
-    label: "YouTube",
-  },
-};
-
 type GameLinksProps = {
   websites?: Website[];
 };
 
 export const GameLinks = ({ websites }: GameLinksProps) => {
+  const { t } = useTranslation();
+
+  const defaultIcon = {
+    icon: IconQuestionMark,
+    label: t("links.unknown"),
+  };
+
+  const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
+    ANDROID: {
+      icon: IconBrandAndroid,
+      label: "Android",
+    },
+    DISCORD: {
+      icon: IconBrandDiscord,
+      label: "Discord",
+    },
+    EPIC_GAMES: {
+      icon: IconEpicGames,
+      label: "Epic Games",
+    },
+    FACEBOOK: {
+      icon: IconBrandFacebook,
+      label: "Facebook",
+    },
+    GOG: {
+      icon: IconGog,
+      label: "GOG",
+    },
+    INSTAGRAM: {
+      icon: IconBrandInstagram,
+      label: "Instagram",
+    },
+    IPAD: {
+      icon: IconDeviceTablet,
+      label: "iPad",
+    },
+    IPHONE: {
+      icon: IconBrandApple,
+      label: "iPhone",
+    },
+    ITCH: {
+      icon: IconBrandItch,
+      label: "Itch",
+    },
+    OFFICIAL: {
+      icon: IconWorldWww,
+      label: t("links.officialWebsite"),
+    },
+    REDDIT: {
+      icon: IconBrandReddit,
+      label: "Reddit",
+    },
+    STEAM: {
+      icon: IconBrandSteam,
+      label: "Steam",
+      formatter: (url: string) => `steam://openurl/${url}`,
+    },
+    TWITCH: {
+      icon: IconBrandTwitch,
+      label: "Twitch",
+    },
+    TWITTER: {
+      icon: IconBrandX,
+      label: "Twitter",
+    },
+    WIKIA: {
+      icon: IconFandom,
+      label: "Fandom",
+    },
+    WIKIPEDIA: {
+      icon: IconBrandWikipedia,
+      label: "Wikipedia",
+    },
+    YOUTUBE: {
+      icon: IconBrandYoutube,
+      label: "YouTube",
+    },
+  };
+
   const buttons = websites
     ?.filter(({ website }) => websiteIconPropsMap[website] || defaultIcon)
     .sort((a, b) => {
