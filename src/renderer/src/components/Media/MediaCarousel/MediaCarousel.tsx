@@ -26,7 +26,13 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
 
   return (
     <Carousel
-      classNames={{ control: classes.control, controls: classes.controls, indicator: classes.indicator }}
+      classNames={{
+        control: classes.control,
+        controls: classes.controls,
+        indicator: classes.indicator,
+        indicators: classes.indicators,
+        root: classes.root,
+      }}
       controlsOffset={0}
       draggable
       height={height}

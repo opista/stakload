@@ -17,3 +17,13 @@
     width: 30px;
   }
 }
+
+.indicators {
+  flex-wrap: wrap;
+  padding: 0 var(--mantine-spacing-xl);
+}
+
+.root {
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
+}
