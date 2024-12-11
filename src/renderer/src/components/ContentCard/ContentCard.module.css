@@ -1,0 +1,12 @@
+.container {
+  padding: var(--mantine-spacing-md) var(--mantine-spacing-lg) var(--mantine-spacing-lg);
+  background-color: var(--mantine-color-dark-light-hover);
+
+  + .container {
+    margin-top: var(--mantine-spacing-lg);
+  }
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-sm);
+}
