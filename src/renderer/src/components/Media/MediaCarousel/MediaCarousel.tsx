@@ -26,14 +26,15 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
 
   return (
     <Carousel
-      classNames={{ indicator: classes.indicator }}
+      classNames={{ control: classes.control, controls: classes.controls, indicator: classes.indicator }}
+      controlsOffset={0}
       draggable
       height={height}
       includeGapInSize
       loop
       nextControlIcon={<IconCaretRightFilled />}
       previousControlIcon={<IconCaretLeftFilled />}
-      slideGap="lg"
+      slideGap={0}
       slideSize="100%"
       withControls
       withIndicators
