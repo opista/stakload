@@ -70,10 +70,11 @@ type IconPropsMap = {
 };
 
 type GameLinksProps = {
+  columns?: number;
   websites?: Website[];
 };
 
-export const GameLinks = ({ websites }: GameLinksProps) => {
+export const GameLinks = ({ columns = 6, websites }: GameLinksProps) => {
   const { t } = useTranslation();
 
   const defaultIcon = {
@@ -167,7 +168,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
     });
 
   return (
-    <SimpleGrid cols={7} spacing="xs" verticalSpacing="xs">
+    <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
       {buttons}
     </SimpleGrid>
   );
