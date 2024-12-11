@@ -1,6 +1,7 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { Conf } from "electron-conf/main";
+import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import { join } from "path";
 
 import {
@@ -125,11 +126,12 @@ app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.opista.trulaunch");
 
-  // getOwnedGames("47D232D3BB9240F67610B1609383FB82", "76561198021450658").then(({ games }) => {
-  //   const mapped = games.map((game) => mapOwnedGameDetailsToGameStoreModel(game, "steam"));
+  if (import.meta.env.DEV) {
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then((name) => console.log(`Added Extension:  ${name}`))
+      .catch((err) => console.log("An error occurred: ", err));
+  }
 
-  //   return bulkInsertGames(mapped);
-  // });
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
