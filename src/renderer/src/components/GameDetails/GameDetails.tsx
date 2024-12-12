@@ -4,9 +4,12 @@ import { GameDetailsTable } from "@components/GameDetailsTable/GameDetailsTable"
 import { GameHeader } from "@components/GameHeader/GameHeader";
 import { GameHero } from "@components/GameHero/GameHero";
 import { GameLinks } from "@components/GameLinks/GameLinks";
+import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
+import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
+import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
-import { Container, ScrollArea, Space, Spoiler, Stack, Text } from "@mantine/core";
+import { Container, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
 import { IconPuzzleOff } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -42,33 +45,43 @@ export const GameDetails = () => {
   const Game = ({ game }: { game: GameStoreModel }) => {
     const { t } = useTranslation();
     return (
-      <ScrollArea className={classes.body} viewportRef={containerRef}>
+      <ScrollArea className={classes.scrollArea} viewportRef={containerRef}>
         <GameHeader game={game} />
         <BackToTop container={containerRef.current} />
         <GameHero game={game} />
-        <Space h="sm" />
-        <Container size="responsive">
-          <div className={classes.bodyInner}>
-            <div>
-              <ContentCard
-                title={t("gameDetails.summary")}
-                content={
-                  <Spoiler hideLabel="hide" maxHeight={200} showLabel="show more">
-                    <Text>{game.summary}</Text>
-                  </Spoiler>
-                }
-              />
-              <ContentCard title={t("gameDetails.details")} content={<GameDetailsTable game={game} />} />
+        <div className={classes.contentContainer}>
+          <Container size="responsive">
+            <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
+              {game.name}
+            </Title>
+            <Group className={classes.iconGroup} gap="xs">
+              {/* TODO - Only show this icon if game isn't supported on system */}
+              <IncompatibilityIcon color="orange" size="xl" />
+              <LibraryIcon game={game} size="xl" />
+            </Group>
+
+            <div className={classes.bodyInner}>
+              <main className={classes.main}>
+                <ContentCard
+                  title={t("gameDetails.summary")}
+                  content={
+                    <Spoiler maxHeight={200}>
+                      <Text>{game.summary}</Text>
+                    </Spoiler>
+                  }
+                />
+                <ContentCard title={t("gameDetails.details")} content={<GameDetailsTable game={game} />} />
+              </main>
+              <div className={classes.sidebar}>
+                <ContentCard title={t("gameDetails.links")} content={<GameLinks websites={game.websites} />} />
+                <ContentCard
+                  title={t("gameDetails.media")}
+                  content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
+                />
+              </div>
             </div>
-            <div className={classes.infoContainer}>
-              <ContentCard title={t("gameDetails.links")} content={<GameLinks websites={game.websites} />} />
-              <ContentCard
-                title={t("gameDetails.media")}
-                content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
-              />
-            </div>
-          </div>
-        </Container>
+          </Container>
+        </div>
       </ScrollArea>
     );
   };

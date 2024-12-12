@@ -1,7 +1,5 @@
-import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
-import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { GameStoreModel } from "@contracts/database/games";
-import { BackgroundImage, Container, Flex, Group, Overlay, Title } from "@mantine/core";
+import { BackgroundImage } from "@mantine/core";
 import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
 import { rgbToHsl } from "@util/rgb-to-hsl";
 import Vibrant from "node-vibrant";
@@ -36,21 +34,5 @@ export const GameHero = ({ game }: GameHeroProps) => {
     };
   }, [headerImage]);
 
-  return (
-    <BackgroundImage className={classes.hero} src={headerImage || ""}>
-      <Overlay gradient="linear-gradient(0deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0) 50%)" zIndex={0} />
-      <Container size="responsive">
-        <Flex className={classes.content}>
-          <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
-            {game.name}
-          </Title>
-          <Group gap="xs">
-            {/* TODO - Only show this icon if game isn't supported on system */}
-            <IncompatibilityIcon color="orange" size="xl" />
-            <LibraryIcon game={game} size="xl" />
-          </Group>
-        </Flex>
-      </Container>
-    </BackgroundImage>
-  );
+  return <BackgroundImage className={classes.hero} src={headerImage || ""} />;
 };

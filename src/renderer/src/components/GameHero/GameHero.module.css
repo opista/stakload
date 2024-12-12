@@ -1,28 +1,20 @@
 .hero {
-  position: relative;
   height: 500px;
-  display: flex;
-  justify-content: flex-end;
-  flex-direction: column;
-  overflow: hidden;
   background-color: var(--mantine-primary-color-light);
-}
-
-.content {
-  position: relative;
-  z-index: 2;
-  flex-direction: column;
-  align-items: start;
-  margin-bottom: var(--mantine-spacing-xl);
-}
-
-.title {
-  margin-bottom: var(--mantine-spacing-md);
-  line-height: var(--mantine-line-height-xs);
-  color: var(--mantine-primary-color-contrast);
-  font-weight: 900;
-  font-size: 50px;
-  width: 100%;
-  max-width: 900px;
-  text-shadow: #000 0px 0px 0.2rem;
+  mask-image: linear-gradient(
+    to bottom,
+    black 0%,
+    rgba(0, 0, 0, 0.738) 19%,
+    rgba(0, 0, 0, 0.541) 34%,
+    rgba(0, 0, 0, 0.382) 47%,
+    rgba(0, 0, 0, 0.278) 56.5%,
+    rgba(0, 0, 0, 0.194) 65%,
+    rgba(0, 0, 0, 0.126) 73%,
+    rgba(0, 0, 0, 0.075) 80.2%,
+    rgba(0, 0, 0, 0.042) 86.1%,
+    rgba(0, 0, 0, 0.021) 91%,
+    rgba(0, 0, 0, 0.008) 95.2%,
+    rgba(0, 0, 0, 0.002) 98.2%,
+    transparent 100%
+  );
 }

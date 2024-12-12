@@ -123,5 +123,7 @@
   "links": {
     "unknown": "Unknown",
     "officialWebsite": "Official website"
-  }
+  },
+  "showMore": "Show more",
+  "hide": "Hide"
 }
