@@ -13,7 +13,19 @@
     "lastPlayed": "Last played {{date, datetime}}",
     "neverPlayed": "Never played",
     "compatibilityWarning": "Compatibility warning",
-    "gameNotNative": "This game isn't natively supported on your device"
+    "gameNotNative": "This game isn't natively supported on your device",
+    "summary": "Summary",
+    "links": "Links",
+    "details": "Details",
+    "media": "Media",
+    "releaseDate": "Release date",
+    "ageRating": "Age rating",
+    "developers": "Developers",
+    "publishers": "Publishers",
+    "gameModes": "Game modes",
+    "genres": "Genres",
+    "platforms": "Platforms",
+    "perspectives": "Perspectives"
   },
   "settingsNavigation": {
     "interface": "Interface",
