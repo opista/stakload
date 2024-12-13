@@ -16,6 +16,7 @@ import {
   GET_GAMES_LAST_SYNCED_AT,
   GET_LOCALE,
   GET_OS,
+  GET_PROTONDB_TIER,
   OPEN_WEBPAGE,
   REMOVE_GAME,
   RESTART_APP,
@@ -32,6 +33,7 @@ import {
   getGameById,
   getGameFilters,
   getGamesLastSyncedAt,
+  getProtondbTier,
   removeGame,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
@@ -149,6 +151,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
   ipcMain.handle(GET_LOCALE, getLocale);
+  ipcMain.handle(GET_PROTONDB_TIER, getProtondbTier);
   ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
   ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);

@@ -22,7 +22,7 @@ export type Media = {
   width: number;
 };
 
-type IdAndName = {
+export type IdAndName = {
   id: string;
   igdbId: number;
   name: string;

@@ -17,6 +17,7 @@ declare global {
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGamesLastSyncedAt: () => Promise<Date>;
+      getProtondbTier: (gameId: string) => Promise<string | null>;
       getLocale: () => Promise<string>;
       getOS: () => Promise<Platform>;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;

@@ -6,6 +6,9 @@ import enGB from "./locales/en-GB.json";
 void use(initReactI18next).init({
   debug: true,
   fallbackLng: "en-GB",
+  interpolation: {
+    skipOnVariables: false,
+  },
   resources: {
     "en-GB": { translation: enGB },
   },

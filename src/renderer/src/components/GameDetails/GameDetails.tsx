@@ -7,6 +7,7 @@ import { GameLinks } from "@components/GameLinks/GameLinks";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
+import { ProtonIcon } from "@components/ProtonIcon/ProtonIcon";
 import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
@@ -19,6 +20,7 @@ import classes from "./GameDetails.module.css";
 
 export const GameDetails = () => {
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(true);
   const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,8 +39,10 @@ export const GameDetails = () => {
   }
 
   useEffect(() => {
+    setIsLoading(true);
     window.api.getGameById(params.id!).then((game) => {
       setGame(game);
+      setIsLoading(false);
       console.log(game.name, game);
     });
   }, [params.id]);
@@ -49,7 +53,10 @@ export const GameDetails = () => {
 
   const Game = ({ game }: { game: GameStoreModel }) => {
     const { t } = useTranslation();
-    return (
+    // TODO
+    return isLoading ? (
+      "loading"
+    ) : (
       <>
         <GameHeader game={game} />
         <ScrollArea
@@ -71,6 +78,7 @@ export const GameDetails = () => {
                 {/* TODO - Only show this icon if game isn't supported on system */}
                 <IncompatibilityIcon color="orange" size="xl" />
                 <LibraryIcon game={game} size="xl" />
+                <ProtonIcon gameId={game.gameId} platforms={game.platforms} size="xl" />
               </Group>
 
               <div className={classes.bodyInner}>

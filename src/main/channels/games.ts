@@ -17,3 +17,14 @@ export const removeGame =
     await removeGameById(id, preventReadd);
     contents.send(EVENT_GAMES_LIST_UPDATED);
   };
+
+export const getProtondbTier = async (_event: IpcMainInvokeEvent, gameId: string) => {
+  try {
+    const response = await fetch(`https://www.protondb.com/api/v1/reports/summaries/${gameId}.json`);
+    const parsed = await response.json();
+    return parsed.tier;
+  } catch (err) {
+    // TODO - Logging
+    return null;
+  }
+};
