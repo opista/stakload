@@ -1,3 +1,7 @@
 .icon {
   margin-left: var(--mantine-spacing-xs);
 }
+
+.buttonContainer {
+  margin-top: var(--mantine-spacing-md);
+}

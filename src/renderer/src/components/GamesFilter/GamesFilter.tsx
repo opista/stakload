@@ -1,7 +1,7 @@
 import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Indicator, MultiSelect, Popover, Text } from "@mantine/core";
+import { Button, Grid, Group, Indicator, MultiSelect, Popover, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt, IconAdjustmentsSpark } from "@tabler/icons-react";
 import { useState } from "react";
@@ -28,6 +28,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   );
 
   const onClearFilters = () => resetFilters();
+
+  const onSaveFilters = () => {};
 
   const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
     setSelectedFilter(key, value);
@@ -68,54 +70,67 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       </Popover.Target>
       <Popover.Dropdown>
         <Text size="xs">TODO - Filters here</Text>
-        <MultiSelect
-          label="Developers"
-          comboboxProps={{ withinPortal: false }}
-          clearable
-          data={filters?.["developers"]}
-          onChange={onFilterChange("developers")}
-          searchable
-          value={selectedFilters.developers}
-        />
-        <MultiSelect
-          label="Game modes"
-          comboboxProps={{ withinPortal: false }}
-          clearable
-          data={filters?.["gameModes"]}
-          onChange={onFilterChange("gameModes")}
-          searchable
-          value={selectedFilters.gameModes}
-        />
-        <MultiSelect
-          label="Genres"
-          comboboxProps={{ withinPortal: false }}
-          clearable
-          data={filters?.["genres"]}
-          onChange={onFilterChange("genres")}
-          searchable
-          value={selectedFilters.genres}
-        />
-        <MultiSelect
-          label="Player perspectives"
-          comboboxProps={{ withinPortal: false }}
-          clearable
-          data={filters?.["playerPerspectives"]}
-          onChange={onFilterChange("playerPerspectives")}
-          searchable
-          value={selectedFilters.playerPerspectives}
-        />
-        <MultiSelect
-          label="Publishers"
-          comboboxProps={{ withinPortal: false }}
-          clearable
-          data={filters?.["publishers"]}
-          onChange={onFilterChange("publishers")}
-          searchable
-          value={selectedFilters.publishers}
-        />
-        <Button color="red" onClick={onClearFilters}>
-          Clear filters
-        </Button>
+        <Grid>
+          <Grid.Col span={6}>
+            <MultiSelect
+              label="Developers"
+              mb="xs"
+              comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+              clearable
+              data={filters?.["developers"]}
+              onChange={onFilterChange("developers")}
+              searchable
+              value={selectedFilters.developers}
+            />
+            <MultiSelect
+              label="Game modes"
+              mb="xs"
+              comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+              clearable
+              data={filters?.["gameModes"]}
+              onChange={onFilterChange("gameModes")}
+              searchable
+              value={selectedFilters.gameModes}
+            />
+            <MultiSelect
+              label="Genres"
+              mb="xs"
+              comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+              clearable
+              data={filters?.["genres"]}
+              onChange={onFilterChange("genres")}
+              searchable
+              value={selectedFilters.genres}
+            />
+            <MultiSelect
+              label="Player perspectives"
+              mb="xs"
+              comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+              clearable
+              data={filters?.["playerPerspectives"]}
+              onChange={onFilterChange("playerPerspectives")}
+              searchable
+              value={selectedFilters.playerPerspectives}
+            />
+            <MultiSelect
+              label="Publishers"
+              mb="xs"
+              comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+              clearable
+              data={filters?.["publishers"]}
+              onChange={onFilterChange("publishers")}
+              searchable
+              value={selectedFilters.publishers}
+            />
+          </Grid.Col>
+          <Grid.Col span={6}>2</Grid.Col>
+        </Grid>
+        <Group classNames={{ root: classes.buttonContainer }} justify="flex-end">
+          <Button color="red" onClick={onClearFilters}>
+            Clear filters
+          </Button>
+          <Button onClick={onSaveFilters}>Create collection</Button>
+        </Group>
       </Popover.Dropdown>
     </Popover>
   );
