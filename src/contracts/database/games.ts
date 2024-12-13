@@ -6,7 +6,7 @@ export type Platform = "linux" | "mac" | "windows";
  * once we have moved the API into this repo
  */
 
-enum AgeRatingText {
+export enum AgeRatingText {
   Three = "THREE",
   Seven = "SEVEN",
   Twelve = "TWELVE",
@@ -14,7 +14,7 @@ enum AgeRatingText {
   Eighteen = "EIGHTEEN",
 }
 
-type LikeAgeRatingText = `${AgeRatingText}`;
+export type LikeAgeRatingText = `${AgeRatingText}`;
 
 export type Media = {
   height: number;
@@ -115,9 +115,11 @@ export type GameStoreModel = {
 export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name" | "sortableName">;
 
 export type GameFilters = {
+  ageRatings?: string[];
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
+  platforms?: string[];
   playerPerspectives?: string[];
   publishers?: string[];
 };

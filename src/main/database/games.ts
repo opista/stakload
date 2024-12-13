@@ -4,7 +4,7 @@ import { GameFilters, GameStoreModel, InitialGameStoreModel, Library } from "@co
 import { app } from "electron";
 import Datastore from "nedb-promises";
 
-import { idMatcher } from "../libraries/steam/util/database-id-matcher";
+import { idMatcher } from "./util/database-id-matcher";
 
 const db = Datastore.create({
   autoload: true,
@@ -33,18 +33,22 @@ export const findUnsyncedGames = async () => {
 };
 
 export const getFilteredGames = async ({
+  ageRatings,
   developers,
   gameModes,
   genres,
+  platforms,
   playerPerspectives,
   publishers,
 }: GameFilters = {}) => {
   return await db
     .find<GameStoreModel>({
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+      ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
       ...idMatcher("developers", developers),
       ...idMatcher("gameModes", gameModes),
       ...idMatcher("genres", genres),
+      ...idMatcher("platforms", platforms),
       ...idMatcher("playerPerspectives", playerPerspectives),
       ...idMatcher("publishers", publishers),
     })

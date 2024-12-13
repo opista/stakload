@@ -1,4 +1,5 @@
 type Filters = {
+  ageRatings?: string[];
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
