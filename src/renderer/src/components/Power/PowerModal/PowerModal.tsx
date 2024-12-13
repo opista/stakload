@@ -25,6 +25,10 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
       Icon: IconRotateRectangle,
       label: t("power.restartApp"),
     },
+    /**
+     * TODO - Imogen thinks this is in the wrong
+     * place and I agree! Where should it go instead?
+     */
     {
       onClick: () => navigate("/gaming"),
       Icon: IconDeviceGamepad2,
