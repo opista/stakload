@@ -18,3 +18,7 @@
   height: 100%;
   min-height: 100%;
 }
+
+.collectionSelect {
+  width: 100%;
+}

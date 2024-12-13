@@ -1,3 +1,4 @@
+import { CollectionSelect } from "@components/CollectionSelect/CollectionSelect";
 import { Header } from "@components/Header/Header";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
 import { GameStoreModel } from "@contracts/database/games";
@@ -81,7 +82,10 @@ export const DesktopLayout = () => {
                     <SearchControl />
                     <GamesFilter />
                   </Flex>
-                  <Divider my="md" />
+                  <Flex mt="xs">
+                    <CollectionSelect className={classes.collectionSelect} />
+                  </Flex>
+                  <Divider my="sm" />
                 </AppShell.Section>
                 <AppShell.Section flex={1}>
                   <GameNavigation games={games} />
