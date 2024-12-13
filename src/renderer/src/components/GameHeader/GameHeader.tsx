@@ -20,30 +20,31 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const navigateToGamesList = () => navigate("..", { relative: "path" });
 
   const onRemoveConfirm = async (preventReadd: boolean) => {
-    if (!game) return;
     await window.api.removeGame(game._id, preventReadd);
     navigate("..");
     closeDelete();
   };
 
   return (
-    <Container size="responsive">
-      <Flex className={classes.header} justify="space-between">
-        <Group>
-          <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
-        </Group>
-        <RemoveGameModal
-          gameTitle={game.name}
-          onConfirm={onRemoveConfirm}
-          onClose={closeDelete}
-          opened={openedDelete}
-        />
-        <Group gap="xs">
-          {/* TODO - Do we even want to implement this yet? */}
-          <ActionIcon aria-label={t("edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
-          <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={openDelete} />
-        </Group>
-      </Flex>
-    </Container>
+    <div className={classes.container}>
+      <Container size="responsive">
+        <Flex className={classes.header} justify="space-between">
+          <Group>
+            <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
+          </Group>
+          <RemoveGameModal
+            gameTitle={game.name}
+            onConfirm={onRemoveConfirm}
+            onClose={closeDelete}
+            opened={openedDelete}
+          />
+          <Group gap="xs">
+            {/* TODO - Do we even want to implement this yet? */}
+            <ActionIcon aria-label={t("edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
+            <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={openDelete} />
+          </Group>
+        </Flex>
+      </Container>
+    </div>
   );
 };
