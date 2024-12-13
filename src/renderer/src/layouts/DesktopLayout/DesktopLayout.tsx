@@ -49,7 +49,10 @@ export const DesktopLayout = () => {
    *  perhaps we only return game titles and icons
    *  here to reduce data stored in memory
    */
-  const games = useGamesQuery<GameStoreModel[]>(() => window.api.getFilteredGames(selectedFilters), [selectedFilters]);
+  const { data: games } = useGamesQuery<GameStoreModel[]>(
+    () => window.api.getFilteredGames(selectedFilters),
+    [selectedFilters],
+  );
 
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>

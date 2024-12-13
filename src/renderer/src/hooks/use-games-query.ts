@@ -1,11 +1,25 @@
 import { useEffect, useState } from "react";
 
 export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[] = []) => {
-  const [result, setResult] = useState<T | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState<string | undefined>(undefined);
+  const [data, setData] = useState<T | undefined>(undefined);
 
   const updateQuery = async () => {
-    const response = await query();
-    setResult(response);
+    setHasError(undefined);
+    setIsLoading(true);
+    try {
+      const response = await query();
+      setData(response);
+    } catch (err) {
+      /**
+       * TODO - Make sure this is consistent from
+       * API response
+       */
+      setHasError(`${err}`);
+    }
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -22,5 +36,5 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
     return () => removeListener();
   }, [query]);
 
-  return result;
+  return { data, isLoading, hasError };
 };

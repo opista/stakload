@@ -23,7 +23,7 @@ const LeftSection = ({ icon }: { icon?: string }) => {
 };
 
 export const Spotlight = ({ onClick }: SpotlightProps) => {
-  const games = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
+  const { data: games } = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =

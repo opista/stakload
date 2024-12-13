@@ -34,7 +34,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
 
   const Icon = hasFilterSet ? IconAdjustmentsSpark : IconAdjustmentsAlt;
 
-  const filters = useGamesQuery(window.api.getGameFilters);
+  const { data: filters } = useGamesQuery(window.api.getGameFilters);
 
   return (
     <Popover
