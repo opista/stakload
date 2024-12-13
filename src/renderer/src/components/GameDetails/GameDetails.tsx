@@ -19,6 +19,7 @@ import classes from "./GameDetails.module.css";
 
 export const GameDetails = () => {
   const { t } = useTranslation();
+  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [game, setGame] = useState<GameStoreModel | null>(null);
@@ -42,47 +43,60 @@ export const GameDetails = () => {
     });
   }, [params.id]);
 
+  const onPaletteChange = (hsl: string | null) => {
+    setBackgroundColor(hsl);
+  };
+
   const Game = ({ game }: { game: GameStoreModel }) => {
     const { t } = useTranslation();
     return (
-      <ScrollArea className={classes.scrollArea} viewportRef={containerRef}>
+      <>
         <GameHeader game={game} />
-        <BackToTop container={containerRef.current} />
-        <GameHero game={game} />
-        <div className={classes.contentContainer}>
-          <Container size="responsive">
-            <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
-              {game.name}
-            </Title>
-            <Group className={classes.iconGroup} gap="xs">
-              {/* TODO - Only show this icon if game isn't supported on system */}
-              <IncompatibilityIcon color="orange" size="xl" />
-              <LibraryIcon game={game} size="xl" />
-            </Group>
+        <ScrollArea
+          className={classes.scrollArea}
+          style={{ "--gradient-color": backgroundColor }}
+          viewportRef={containerRef}
+        >
+          <BackToTop container={containerRef.current} />
+          <GameHero game={game} onPaletteChange={onPaletteChange} />
+          {/* TODO - identify if a game has no content, and if so, show
+          a message and potentially add an option to search for metadata. 
+          We'll need to build this into the API too */}
+          <div className={classes.contentContainer}>
+            <Container size="responsive">
+              <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
+                {game.name}
+              </Title>
+              <Group className={classes.iconGroup} gap="xs">
+                {/* TODO - Only show this icon if game isn't supported on system */}
+                <IncompatibilityIcon color="orange" size="xl" />
+                <LibraryIcon game={game} size="xl" />
+              </Group>
 
-            <div className={classes.bodyInner}>
-              <main className={classes.main}>
-                <ContentCard
-                  title={t("gameDetails.summary")}
-                  content={
-                    <Spoiler maxHeight={200}>
-                      <Text>{game.summary}</Text>
-                    </Spoiler>
-                  }
-                />
-                <ContentCard title={t("gameDetails.details")} content={<GameDetailsTable game={game} />} />
-              </main>
-              <div className={classes.sidebar}>
-                <ContentCard title={t("gameDetails.links")} content={<GameLinks websites={game.websites} />} />
-                <ContentCard
-                  title={t("gameDetails.media")}
-                  content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
-                />
+              <div className={classes.bodyInner}>
+                <main className={classes.main}>
+                  <ContentCard
+                    title={t("gameDetails.summary")}
+                    content={
+                      <Spoiler maxHeight={200}>
+                        <Text>{game.summary}</Text>
+                      </Spoiler>
+                    }
+                  />
+                  <ContentCard title={t("gameDetails.details")} content={<GameDetailsTable game={game} />} />
+                </main>
+                <div className={classes.sidebar}>
+                  <ContentCard title={t("gameDetails.links")} content={<GameLinks websites={game.websites} />} />
+                  <ContentCard
+                    title={t("gameDetails.media")}
+                    content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
+                  />
+                </div>
               </div>
-            </div>
-          </Container>
-        </div>
-      </ScrollArea>
+            </Container>
+          </div>
+        </ScrollArea>
+      </>
     );
   };
 

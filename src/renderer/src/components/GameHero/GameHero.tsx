@@ -9,29 +9,39 @@ import classes from "./GameHero.module.css";
 
 type GameHeroProps = {
   game: GameStoreModel;
+  onPaletteChange?: (hsl: string | null) => void;
 };
 
-export const GameHero = ({ game }: GameHeroProps) => {
+export const GameHero = ({ game, onPaletteChange }: GameHeroProps) => {
   const media = getHighestRatioMedia(game?.artworks);
   const headerImage = media?.url || game?.screenshots?.[0];
 
   useEffect(() => {
-    if (!headerImage) return;
+    if (!headerImage) {
+      onPaletteChange?.(null);
+      return;
+    }
 
     const v = new Vibrant(headerImage);
     v.getPalette()
       .then((r) => {
         const rgb = r.DarkMuted?.getRgb();
-        if (!rgb) return;
+        if (!rgb) {
+          throw new Error("No colour found");
+        }
         const color = rgbToHsl(...rgb);
         const formatted = `hsl(${color})`;
-        document.body.style.setProperty("--gradient-color", formatted);
-      })
-      .catch(() => {});
 
-    return () => {
-      document.body.style.setProperty("--gradient-color", "transparent");
-    };
+        /**
+         * TODO - store color on game so that
+         * we can skip this process second time
+         * around?
+         */
+        onPaletteChange?.(formatted);
+      })
+      .catch(() => {
+        onPaletteChange?.(null);
+      });
   }, [headerImage]);
 
   return <BackgroundImage className={classes.hero} src={headerImage || ""} />;
