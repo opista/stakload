@@ -5,8 +5,8 @@ import { useGamesQuery } from "@hooks/use-games-query";
 import { AppShell, Divider, Flex, Stack } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
-import { Allotment } from "allotment";
-import { useState } from "react";
+import { Allotment, AllotmentHandle } from "allotment";
+import { useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
@@ -16,8 +16,13 @@ import { SearchControl } from "../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../components/Spotlight/Spotlight";
 import classes from "./DesktopLayout.module.css";
 
+const DEFAULT_NAV_WITH = 300;
+const MIN_NAV_WIDTH = 250;
+const MAX_NAV_WIDTH = 500;
+
 export const DesktopLayout = () => {
   const navigate = useNavigate();
+  const allotmentRef = useRef<AllotmentHandle | null>(null);
   const [showLeftPane, setShowLeftPane] = useState(true);
   const [leftPaneWidth, setLeftPaneWidth] = useState(300);
   const { selectedFilters } = useGameStore(
@@ -31,7 +36,13 @@ export const DesktopLayout = () => {
     setLeftPaneWidth(vals[0]);
   };
 
-  const onToggleLeftPane = () => setShowLeftPane((prev) => !prev);
+  const onReset = () => {
+    allotmentRef.current?.resize?.([DEFAULT_NAV_WITH]);
+  };
+
+  const onToggleLeftPane = () => {
+    setShowLeftPane((prev) => !prev);
+  };
 
   /**
    *  TODO - this needs to be powered by filters
@@ -47,9 +58,20 @@ export const DesktopLayout = () => {
           <Header leftPaneWidth={leftPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
         </AppShell.Header>
         <Spotlight onClick={(id) => navigate(id, { relative: "path" })} />
-        <Allotment className={classes.allotment} onChange={onChange} proportionalLayout={false}>
+        <Allotment
+          className={classes.allotment}
+          onChange={onChange}
+          onReset={onReset}
+          proportionalLayout={false}
+          ref={allotmentRef}
+        >
           {showLeftPane && (
-            <Allotment.Pane minSize={250} maxSize={500} preferredSize={leftPaneWidth}>
+            <Allotment.Pane
+              minSize={MIN_NAV_WIDTH}
+              maxSize={MAX_NAV_WIDTH}
+              preferredSize={leftPaneWidth}
+              visible={showLeftPane}
+            >
               <Stack className={classes.navbar} gap={0}>
                 <AppShell.Section>
                   <Flex align="center" justify="center">
