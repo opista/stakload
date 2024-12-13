@@ -24,6 +24,8 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
     </Carousel.Slide>
   ));
 
+  const slides = [...imageSlides, ...videoSlides];
+
   return (
     <Carousel
       classNames={{
@@ -42,11 +44,11 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
       previousControlIcon={<IconCaretLeftFilled />}
       slideGap={0}
       slideSize="100%"
-      withControls
+      withControls={!!slides.length}
       withIndicators
       withKeyboardEvents
     >
-      {[...imageSlides, ...videoSlides]}
+      {slides}
     </Carousel>
   );
 };
