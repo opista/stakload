@@ -125,5 +125,12 @@
     "officialWebsite": "Official website"
   },
   "showMore": "Show more",
-  "hide": "Hide"
+  "hide": "Hide",
+  "ageRating": {
+    "THREE": "PEGI 3",
+    "SEVEN": "PEGI 7",
+    "TWELVE": "PEGI 12",
+    "SIXTEEN": "PEGI 16",
+    "EIGHTEEN": "PEGI 18"
+  }
 }

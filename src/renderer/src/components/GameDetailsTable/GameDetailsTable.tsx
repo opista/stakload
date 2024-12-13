@@ -1,6 +1,6 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { Divider, Flex } from "@mantine/core";
-import { ParseKeys } from "i18next";
+import { ParseKeys, TFunction } from "i18next";
 import { Fragment, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -9,7 +9,7 @@ import { GameDetailsTableRow } from "./GameDetailsTableRow/GameDetailsTableRow";
 
 type Column = {
   label: ParseKeys;
-  formatter: (game: GameStoreModel) => ReactNode | string | undefined;
+  formatter: (game: GameStoreModel, t: TFunction) => ReactNode | string | undefined;
 };
 
 type GameDetailsTableProps = {
@@ -25,7 +25,10 @@ const firstColumn: Column[] = [
   },
   {
     label: "gameDetails.ageRating",
-    formatter: ({ ageRating }: GameStoreModel) => ageRating,
+    formatter: ({ ageRating }: GameStoreModel, t: TFunction) => {
+      if (!ageRating) return;
+      return t(`ageRating.${ageRating}`);
+    },
   },
   {
     label: "gameDetails.developers",
@@ -112,7 +115,7 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
       <div className={classes.column}>
         {firstColumn.map(({ label, formatter }) => (
           <Fragment key={label}>
-            <GameDetailsTableRow label={t(label)} value={formatter(game)} />
+            <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
             <Divider classNames={{ root: classes.divider }} />
           </Fragment>
         ))}
@@ -120,7 +123,7 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
       <div className={classes.column}>
         {secondColumn.map(({ label, formatter }) => (
           <Fragment key={label}>
-            <GameDetailsTableRow label={t(label)} value={formatter(game)} />
+            <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
             <Divider classNames={{ root: classes.divider }} />
           </Fragment>
         ))}
