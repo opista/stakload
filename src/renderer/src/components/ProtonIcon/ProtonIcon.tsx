@@ -100,6 +100,7 @@ export const ProtonIcon = ({ gameId, platforms, size }: ProtonIndicatorProps) =>
     <UnstyledButton onClick={onClick}>
       <TooltipIcon
         icon={IconProtonDB}
+        iconProps={{ style: { color: metadata.color } }}
         loading={isLoading}
         themeIconProps={{ size, style: { color: metadata.color, background: metadata.background } }}
         tooltipProps={{ label: t("protondb.tier", { tier: `$t(${metadata.label})` }) }}

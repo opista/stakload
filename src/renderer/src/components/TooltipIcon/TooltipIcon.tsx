@@ -9,9 +9,16 @@ type TooltipIconProps = {
   tooltipProps: Omit<TooltipProps, "children">;
 };
 
-export const TooltipIcon = ({ icon: Icon, iconProps, loading, themeIconProps, tooltipProps }: TooltipIconProps) => {
+export const TooltipIcon = ({
+  icon: Icon,
+  iconProps = {},
+  loading,
+  themeIconProps,
+  tooltipProps,
+}: TooltipIconProps) => {
+  const { style, ...restIconProps } = iconProps;
   const { variant = "default", ...restThemeIconProps } = themeIconProps;
-  const { color, maw = "200", position = "bottom-start", ...restTooltipProps } = tooltipProps;
+  const { maw = "200", position = "bottom-start", ...restTooltipProps } = tooltipProps;
 
   return (
     <Tooltip
@@ -23,9 +30,9 @@ export const TooltipIcon = ({ icon: Icon, iconProps, loading, themeIconProps, to
     >
       <ThemeIcon variant={variant} {...restThemeIconProps}>
         {loading ? (
-          <Loader color={color} size="sm" />
+          <Loader color={style?.color} size="sm" />
         ) : (
-          <Icon {...iconProps} color={color} style={{ width: "80%", height: "80%" }} stroke={1.5} />
+          <Icon {...restIconProps} style={{ height: "80%", width: "80%", ...style }} stroke={1.5} />
         )}
       </ThemeIcon>
     </Tooltip>

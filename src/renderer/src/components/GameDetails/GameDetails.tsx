@@ -78,7 +78,7 @@ export const GameDetails = () => {
                 {/* TODO - Only show this icon if game isn't supported on system */}
                 <IncompatibilityIcon color="orange" size="xl" />
                 <LibraryIcon game={game} size="xl" />
-                <ProtonIcon gameId={game.gameId} platforms={game.platforms} size="xl" />
+                {game.library === "steam" && <ProtonIcon gameId={game.gameId} platforms={game.platforms} size="xl" />}
               </Group>
 
               <div className={classes.bodyInner}>
