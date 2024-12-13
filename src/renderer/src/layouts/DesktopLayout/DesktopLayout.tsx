@@ -77,7 +77,7 @@ export const DesktopLayout = () => {
               visible={showLeftPane}
             >
               <Stack className={classes.navbar} gap={0}>
-                <AppShell.Section>
+                <AppShell.Section className={classes.navSection}>
                   <Flex align="center" justify="center">
                     <SearchControl />
                     <GamesFilter />
@@ -85,9 +85,9 @@ export const DesktopLayout = () => {
                   <Flex mt="xs">
                     <CollectionSelect className={classes.collectionSelect} />
                   </Flex>
-                  <Divider my="sm" />
                 </AppShell.Section>
-                <AppShell.Section flex={1}>
+                <Divider />
+                <AppShell.Section className={classes.navSection} flex={1}>
                   <GameNavigation games={games} />
                 </AppShell.Section>
               </Stack>

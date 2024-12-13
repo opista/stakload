@@ -6,9 +6,12 @@
 }
 
 .navbar {
-  padding: var(--mantine-spacing-md);
   height: 100%;
   background-color: var(--mantine-color-body);
+}
+
+.navSection {
+  padding: var(--mantine-spacing-md);
 }
 
 .main {
