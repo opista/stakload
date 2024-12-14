@@ -2,14 +2,14 @@ import { CollectionStoreModel } from "@contracts/database/collections";
 import { useCollectionsQuery } from "@hooks/use-collections-query";
 import { Select } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
+import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 type CollectionSelectProps = {
   className?: string;
-  value?: string | null;
 };
 
-export const CollectionSelect = ({ className, value }: CollectionSelectProps) => {
+export const CollectionSelect = ({ className }: CollectionSelectProps) => {
   const { data: collections = [] } = useCollectionsQuery<CollectionStoreModel[]>(() => window.api.getCollections());
   const { resetFilters, setMultipleFilters } = useGameStore(
     useShallow((state) => ({
@@ -17,6 +17,7 @@ export const CollectionSelect = ({ className, value }: CollectionSelectProps) =>
       setMultipleFilters: state.setMultipleFilters,
     })),
   );
+  const [value, setValue] = useState("");
 
   const defaultCollection = {
     label: "All games",
@@ -36,13 +37,17 @@ export const CollectionSelect = ({ className, value }: CollectionSelectProps) =>
     [defaultCollection],
   );
 
-  const onChange = (value: string | null) => {
-    if (!value) {
+  const onChange = (val: string | null) => {
+    if (val === null) return;
+
+    setValue(val);
+
+    if (!val) {
       resetFilters();
       return;
     }
 
-    const collection = collections.find(({ _id }) => value === _id);
+    const collection = collections.find(({ _id }) => val === _id);
     if (!collection) {
       resetFilters();
       return;

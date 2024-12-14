@@ -1,3 +1,4 @@
+import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { electronAPI } from "@electron-toolkit/preload";
@@ -7,6 +8,7 @@ import { exposeConf } from "electron-conf/preload";
 import {
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
+  CREATE_COLLECTION,
   DECRYPT,
   ENCRYPT,
   EVENT_COLLECTIONS_LIST_UPDATED,
@@ -16,6 +18,7 @@ import {
   EVENT_METADATA_SYNC_PROCESSED,
   EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
+  GET_COLLECTIONS,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
@@ -39,6 +42,9 @@ const api = {
   closeApp: (): void => ipcRenderer.send(CLOSE_APP),
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
+  createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) =>
+    ipcRenderer.invoke(CREATE_COLLECTION, collection),
+  getCollections: () => ipcRenderer.invoke(GET_COLLECTIONS),
   getFilteredGames: (filters?: GameFilters) => ipcRenderer.invoke(GET_FILTERED_GAMES, filters),
   getGameFilters: () => ipcRenderer.invoke(GET_GAME_FILTERS),
   getGameById: (id: string) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
