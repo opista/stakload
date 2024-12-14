@@ -61,6 +61,7 @@ export const CollectionSelect = ({ className }: CollectionSelectProps) => {
     <Select
       allowDeselect={false}
       className={className}
+      comboboxProps={{ position: "bottom-start", width: "auto" }}
       data={allCollections}
       defaultValue={null}
       onChange={onChange}
