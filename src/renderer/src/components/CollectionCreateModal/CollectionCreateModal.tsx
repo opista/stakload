@@ -15,7 +15,7 @@ export const CollectionCreateModal = ({ onConfirm, onClose, opened }: RemoveGame
   return (
     <Modal centered onClose={onClose} opened={opened} size="sm" title={`Save collection`}>
       <TextInput label="Collection name" value={value} onChange={(event) => setValue(event.currentTarget.value)} />
-      <Flex gap="xs" justify="flex-end">
+      <Flex gap="xs" mt="sm" justify="flex-end">
         <Button disabled={!value} onClick={onClickConfirm}>
           Create collection
         </Button>

@@ -45,16 +45,18 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const [openedCreate, { close: closeCreate, open: openCreate }] = useDisclosure(false);
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
-  const { hasFilterSet, resetFilters, selectedFilterCount, selectedFilters, setSelectedFilter } = useGameStore(
-    useShallow((state) => ({
-      hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
-      resetFilters: state.resetFilters,
-      selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
-      selectedFilters: state.selectedFilters,
-      setSelectedFilter: state.setSelectedFilter,
-      setMultipleFilters: state.setMultipleFilters,
-    })),
-  );
+  const { hasFilterSet, resetFilters, selectedFilterCount, selectedFilters, setSelectedCollection, setSelectedFilter } =
+    useGameStore(
+      useShallow((state) => ({
+        hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
+        resetFilters: state.resetFilters,
+        setSelectedCollection: state.setSelectedCollection,
+        selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
+        selectedFilters: state.selectedFilters,
+        setSelectedFilter: state.setSelectedFilter,
+        setMultipleFilters: state.setMultipleFilters,
+      })),
+    );
 
   const onClearFilters = () => resetFilters();
 
@@ -71,7 +73,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   };
 
   const onCreate = async (name: string) => {
-    await window.api.createCollection({ name, filters: selectedFilters });
+    const collection = await window.api.createCollection({ name, filters: selectedFilters });
+    setSelectedCollection(collection._id);
     closeCreate();
   };
 

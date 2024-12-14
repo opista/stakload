@@ -17,6 +17,7 @@ const DEFAULT_FILTERS = {
 type GameActions = {
   resetFilters: () => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
+  setSelectedCollection: (selectedCollection: string) => void;
   setSelectedGame: (selectedGame: GameState["selectedGame"]) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
 };
@@ -26,6 +27,7 @@ type GameStore = GameState & GameActions;
 export const useGameStore = create<GameStore>()(
   persist(
     (set) => ({
+      selectedCollection: "",
       selectedGame: null,
       selectedFilters: DEFAULT_FILTERS,
       resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
@@ -36,6 +38,7 @@ export const useGameStore = create<GameStore>()(
             ...filters,
           },
         })),
+      setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
       setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
       setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
         set((state) => ({
