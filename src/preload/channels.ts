@@ -1,6 +1,5 @@
 export const GET_LOCALE = "GET_LOCALE";
 export const GET_OS = "GET_OS";
-export const FETCH = "FETCH";
 export const OPEN_WEBPAGE = "OPEN_WEBPAGE";
 
 export const CLOSE_APP = "CLOSE_APP";
@@ -8,6 +7,11 @@ export const RESTART_APP = "RESTART_APP";
 export const SLEEP_DEVICE = "SLEEP_DEVICE";
 export const RESTART_DEVICE = "RESTART_DEVICE";
 export const SHUTDOWN_DEVICE = "SHUTDOWN_DEVICE";
+
+export const CREATE_COLLECTION = "CREATE_COLLECTION";
+export const GET_COLLECTIONS = "GET_COLLECTIONS";
+export const UPDATE_COLLECTION = "UPDATE_COLLECTION";
+export const DELETE_COLLECTION = "DELETE_COLLECTION";
 
 export const CLEAR_SYNC_QUEUE = "CLEAR_SYNC_QUEUE";
 export const SYNC_GAMES = "SYNC_GAMES";

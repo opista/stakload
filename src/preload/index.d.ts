@@ -1,3 +1,4 @@
+import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters, GameStoreModel, Platform } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
@@ -13,6 +14,13 @@ declare global {
       decrypt: (str: string) => Promise<string>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
+      createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
+      getCollections: () => Promise<CollectionStoreModel[]>;
+      updateCollection: (
+        id: string,
+        updates: Pick<CollectionStoreModel, "name" | "filters">,
+      ) => Promise<CollectionStoreModel>;
+      deleteCollection: (id: string) => Promise<boolean>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGameById: (id: string) => Promise<GameStoreModel>;

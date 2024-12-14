@@ -1,15 +1,8 @@
-type Filters = {
-  ageRatings?: string[];
-  developers?: string[];
-  gameModes?: string[];
-  genres?: string[];
-  playerPerspectives?: string[];
-  publishers?: string[];
-};
+import { GameFilters } from "@contracts/database/games";
 
 export type GameState = {
   selectedGame: string | null;
-  selectedFilters: Filters;
+  selectedFilters: GameFilters;
 };
 
 export type GameSyncMessage = {

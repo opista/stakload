@@ -7,9 +7,11 @@ import { join } from "path";
 import {
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
+  CREATE_COLLECTION,
   DECRYPT,
+  DELETE_COLLECTION,
   ENCRYPT,
-  FETCH,
+  GET_COLLECTIONS,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
@@ -25,8 +27,9 @@ import {
   SLEEP_DEVICE,
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
+  UPDATE_COLLECTION,
 } from "../preload/channels";
-import { nodeFetch } from "./channels/fetch";
+import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
 import { GameSyncManager } from "./channels/game-sync-manager";
 import {
   getFilteredGameLibrary,
@@ -145,7 +148,10 @@ app.whenReady().then(async () => {
 
   ipcMain.handle(DECRYPT, decrypt);
   ipcMain.handle(ENCRYPT, encrypt);
-  ipcMain.handle(FETCH, nodeFetch);
+  ipcMain.handle(CREATE_COLLECTION, createCollection);
+  ipcMain.handle(GET_COLLECTIONS, getCollections);
+  ipcMain.handle(UPDATE_COLLECTION, updateCollection);
+  ipcMain.handle(DELETE_COLLECTION, deleteCollection);
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_FILTERS, getGameFilters);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);

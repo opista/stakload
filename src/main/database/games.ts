@@ -1,19 +1,9 @@
-import path from "node:path";
-
 import { GameFilters, GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
-import { app } from "electron";
-import Datastore from "nedb-promises";
 
+import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
 
-const db = Datastore.create({
-  autoload: true,
-  filename: path.join(app.getPath("userData"), "databases", "games.db"),
-  compareStrings: (a, b) => {
-    return a.toLowerCase().localeCompare(b.toLowerCase());
-  },
-  timestampData: true,
-});
+const db = createDb("games");
 
 export const bulkInsertGames = async (games: InitialGameStoreModel[]) => {
   return await db.insertMany<Omit<GameStoreModel, "_id">>(games);
