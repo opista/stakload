@@ -9,7 +9,7 @@ export const addCollection = async (collection: Pick<CollectionStoreModel, "name
 };
 
 export const getAllCollections = async () => {
-  return await db.find({});
+  return await db.find<CollectionStoreModel>({}).sort({ name: 1 });
 };
 
 export const updateCollectionById = async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters">) => {

@@ -148,10 +148,10 @@ app.whenReady().then(async () => {
 
   ipcMain.handle(DECRYPT, decrypt);
   ipcMain.handle(ENCRYPT, encrypt);
-  ipcMain.handle(CREATE_COLLECTION, createCollection);
+  ipcMain.handle(CREATE_COLLECTION, createCollection(browserWindow.webContents));
   ipcMain.handle(GET_COLLECTIONS, getCollections);
-  ipcMain.handle(UPDATE_COLLECTION, updateCollection);
-  ipcMain.handle(DELETE_COLLECTION, deleteCollection);
+  ipcMain.handle(UPDATE_COLLECTION, updateCollection(browserWindow.webContents));
+  ipcMain.handle(DELETE_COLLECTION, deleteCollection(browserWindow.webContents));
   ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_FILTERS, getGameFilters);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
