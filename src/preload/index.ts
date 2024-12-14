@@ -9,6 +9,7 @@ import {
   CLOSE_APP,
   DECRYPT,
   ENCRYPT,
+  EVENT_COLLECTIONS_LIST_UPDATED,
   EVENT_GAMES_LIST_UPDATED,
   EVENT_METADATA_SYNC_COMPLETE,
   EVENT_METADATA_SYNC_INSERTED,
@@ -56,6 +57,7 @@ const api = {
     listenerHandler(EVENT_METADATA_SYNC_SKIPPED, listener),
   onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
+  onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_COLLECTIONS_LIST_UPDATED, listener),
   openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
