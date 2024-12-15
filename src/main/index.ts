@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
 import { Conf } from "electron-conf/main";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import { join } from "path";
@@ -123,6 +123,8 @@ function createWindow() {
 
   return { browserWindow: mainWindow, syncManager };
 }
+
+Menu.setApplicationMenu(null);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
