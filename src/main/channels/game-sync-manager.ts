@@ -28,7 +28,7 @@ export class GameSyncManager {
   async worker(gameId) {
     this.processing += 1;
 
-    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}`);
+    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}?library=steam`);
 
     if (response.status === 200) {
       const parsed = await response.json();
