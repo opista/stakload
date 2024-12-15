@@ -61,6 +61,7 @@ export const GameDetails = () => {
         <GameHeader game={game} />
         <ScrollArea
           className={classes.scrollArea}
+          classNames={{ root: classes.scrollArea, viewport: classes.scrollAreaViewport }}
           style={{ "--gradient-color": backgroundColor }}
           viewportRef={containerRef}
         >
