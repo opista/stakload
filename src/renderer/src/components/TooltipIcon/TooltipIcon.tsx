@@ -1,6 +1,8 @@
 import { Loader, ThemeIcon, ThemeIconProps, Tooltip, TooltipProps } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
 
+import classes from "./TooltipIcon.module.css";
+
 type TooltipIconProps = {
   icon: Icon;
   iconProps?: IconProps;
@@ -32,7 +34,7 @@ export const TooltipIcon = ({
         {loading ? (
           <Loader color={style?.color} size="sm" />
         ) : (
-          <Icon {...restIconProps} stroke={1.5} style={{ height: "80%", width: "80%", ...style }} />
+          <Icon className={classes.icon} {...restIconProps} stroke={1.5} style={{ ...style }} />
         )}
       </ThemeIcon>
     </Tooltip>

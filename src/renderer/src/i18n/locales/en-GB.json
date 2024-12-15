@@ -92,6 +92,7 @@
   "noGamesFound": "No games found",
   "hideNotification": "Hide notification",
   "power": {
+    "title": "Power",
     "closeApp": "Close Trulaunch",
     "restartApp": "Restart Trulaunch",
     "switchToGaming": "Switch to Gaming Mode",

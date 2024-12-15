@@ -25,3 +25,7 @@
 .collectionSelect {
   width: 100%;
 }
+
+.filterContainer {
+  margin-bottom: var(--mantine-spacing-xs);
+}

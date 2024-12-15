@@ -13,15 +13,14 @@ type IndicatorConfig = {
 };
 
 const onlineConfig: IndicatorConfig = {
-  label: "network.online",
   Icon: IconWifi,
-  iconColor: undefined,
+  label: "network.online",
 };
 
 const offlineConfig: IndicatorConfig = {
-  label: "network.offline",
   Icon: IconWifiOff,
   iconColor: "var(--mantine-color-red-8)",
+  label: "network.offline",
 };
 
 export const NetworkIndicator = () => {

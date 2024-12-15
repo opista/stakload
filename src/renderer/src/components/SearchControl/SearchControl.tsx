@@ -1,5 +1,5 @@
 import { SHORTCUT_KEYS } from "@constants/shortcuts";
-import { BoxProps, ElementProps, Group, rem, Text, UnstyledButton } from "@mantine/core";
+import { BoxProps, ElementProps, Group, Text, UnstyledButton } from "@mantine/core";
 import { spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import { clsx } from "clsx";
@@ -20,7 +20,7 @@ export const SearchControl = ({ className, disabled, ...others }: SearchControlP
       onClick={spotlight.open}
     >
       <Group gap="xs">
-        <IconSearch stroke={1.5} style={{ width: rem(15), height: rem(15) }} />
+        <IconSearch className={classes.icon} stroke={1.5} />
         <Text className={classes.text}>{t("search")}</Text>
         <Text className={clsx(classes.shortcut, { [classes.disabled]: disabled })}>
           {SHORTCUT_KEYS.SEARCH.join(" + ")}

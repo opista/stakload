@@ -57,7 +57,7 @@ export const DesktopLayout = () => {
 
   return (
     <ModalsProvider modals={{ settings: SettingsModal }}>
-      <AppShell header={{ height: 60 }} padding="md">
+      <AppShell header={{ height: 60 }}>
         <AppShell.Header>
           <Header leftPaneWidth={leftPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
         </AppShell.Header>
@@ -78,11 +78,11 @@ export const DesktopLayout = () => {
             >
               <Stack className={classes.navbar} gap={0}>
                 <AppShell.Section className={classes.navSection}>
-                  <Flex align="center" justify="center">
+                  <Flex align="center" className={classes.filterContainer} justify="center">
                     <SearchControl />
                     <GamesFilter />
                   </Flex>
-                  <Flex mt="xs">
+                  <Flex>
                     <CollectionSelect className={classes.collectionSelect} />
                   </Flex>
                 </AppShell.Section>

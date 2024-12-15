@@ -6,3 +6,8 @@
   margin-top: var(--mantine-spacing-md);
   margin-bottom: var(--mantine-spacing-md);
 }
+
+.icon {
+  height: 70%;
+  width: 70%;
+}

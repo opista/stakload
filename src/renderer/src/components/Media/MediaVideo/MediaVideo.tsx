@@ -43,7 +43,7 @@ export const MediaVideo = ({ id }: MediaVideoProps) => {
       }
     >
       <div className={classes.playButton}>
-        <IconPlayerPlayFilled className={classes.playIcon} color="white" height="50%" width="50%" />
+        <IconPlayerPlayFilled className={classes.playIcon} color="white" />
       </div>
       <BackgroundImage className={classes.backgroundImage} src={thumbnailSrc} />
     </UnstyledButton>
