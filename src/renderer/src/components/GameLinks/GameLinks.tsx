@@ -1,6 +1,6 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { LikeWebsiteCategoryText, Website, WebsiteCategoryText } from "@contracts/database/games";
-import { SimpleGrid } from "@mantine/core";
+import { SimpleGrid, UnstyledButton } from "@mantine/core";
 import {
   IconBrandAndroid,
   IconBrandApple,
@@ -53,14 +53,9 @@ type WebsiteIconProps = {
 };
 
 const WebsiteIcon = ({ icon, label, url }: WebsiteIconProps) => (
-  <ActionIcon
-    aria-label={label}
-    icon={icon}
-    onClick={() => window.api.openWebpage(url)}
-    size="lg"
-    title={label}
-    variant="filled"
-  />
+  <UnstyledButton component="a" href={url} rel="noreferrer" target="_blank">
+    <ActionIcon aria-label={label} icon={icon} size="lg" title={label} variant="filled" />
+  </UnstyledButton>
 );
 
 type IconPropsMap = {

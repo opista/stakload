@@ -1,9 +1,9 @@
 import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
-import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
+import { Button, Divider, Flex, PasswordInput, TextInput, Title, UnstyledButton } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
@@ -116,18 +116,20 @@ const SteamSettings = () => {
     }
   }, [steamIntegration]);
 
-  const openLink = (url: string) => {
-    return (event: MouseEvent<HTMLAnchorElement>) => {
-      event.preventDefault();
-      window.api.openWebpage(url);
-    };
-  };
-
   const Subtitle = (
     <Trans
       components={{
-        SteamAccountLink: <a href="#" onClick={openLink("https://store.steampowered.com/account/")} />,
-        SteamApiKeyLink: <a href="#" onClick={openLink("https://steamcommunity.com/dev/apikey")} />,
+        SteamAccountLink: (
+          <UnstyledButton
+            component="a"
+            href="https://store.steampowered.com/account/"
+            rel="noreferrer"
+            target="_blank"
+          />
+        ),
+        SteamApiKeyLink: (
+          <UnstyledButton component="a" href="https://steamcommunity.com/dev/apikey" rel="noreferrer" target="_blank" />
+        ),
       }}
       i18nKey="steam.integrationGuide"
       t={t}

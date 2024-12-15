@@ -26,7 +26,6 @@ import {
   GET_LOCALE,
   GET_OS,
   GET_PROTONDB_TIER,
-  OPEN_WEBPAGE,
   REMOVE_GAME,
   RESTART_APP,
   SHUTDOWN_DEVICE,
@@ -64,7 +63,6 @@ const api = {
   onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_COLLECTIONS_LIST_UPDATED, listener),
-  openWebpage: (url: string): void => ipcRenderer.send(OPEN_WEBPAGE, url),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
   restartDevice: (): void => ipcRenderer.send(RESTART_APP),

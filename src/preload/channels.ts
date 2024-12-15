@@ -1,6 +1,5 @@
 export const GET_LOCALE = "GET_LOCALE";
 export const GET_OS = "GET_OS";
-export const OPEN_WEBPAGE = "OPEN_WEBPAGE";
 
 export const CLOSE_APP = "CLOSE_APP";
 export const RESTART_APP = "RESTART_APP";

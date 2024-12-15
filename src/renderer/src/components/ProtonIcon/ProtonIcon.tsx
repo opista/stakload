@@ -2,7 +2,7 @@ import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
 import { IdAndName } from "@contracts/database/games";
 import { MantineSize, UnstyledButton } from "@mantine/core";
 import { ParseKeys } from "i18next";
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconProtonDB } from "../../icons/IconProtonDB";
@@ -35,8 +35,6 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [metadata, setMetadata] = useState<TierMetadata>(TIER_MAP.unknown);
 
-  const onClick = useCallback(() => window.api.openWebpage(`https://www.protondb.com/app/${gameId}`), [gameId]);
-
   useEffect(() => {
     if (!gameId) return;
 
@@ -58,7 +56,7 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
   }, [gameId, platforms]);
 
   return (
-    <UnstyledButton onClick={onClick}>
+    <UnstyledButton component="a" href={`https://www.protondb.com/app/${gameId}`} rel="noreferrer" target="_blank">
       <TooltipIcon
         icon={IconProtonDB}
         iconProps={{ style: { color: metadata.color } }}

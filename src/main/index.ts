@@ -1,5 +1,5 @@
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, Menu, shell } from "electron";
+import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { Conf } from "electron-conf/main";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 import { join } from "path";
@@ -19,7 +19,6 @@ import {
   GET_LOCALE,
   GET_OS,
   GET_PROTONDB_TIER,
-  OPEN_WEBPAGE,
   REMOVE_GAME,
   RESTART_APP,
   RESTART_DEVICE,
@@ -41,7 +40,6 @@ import {
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
 import { testSteamIntegration } from "./channels/integrations";
-import { openWebpage } from "./channels/open-webpage";
 import { getOS } from "./channels/os";
 import { closeApp, restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
@@ -124,7 +122,7 @@ function createWindow() {
   return { browserWindow: mainWindow, syncManager };
 }
 
-Menu.setApplicationMenu(null);
+// Menu.setApplicationMenu(null);
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -165,7 +163,6 @@ app.whenReady().then(async () => {
   ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
   ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
   ipcMain.on(CLOSE_APP, closeApp);
-  ipcMain.on(OPEN_WEBPAGE, openWebpage);
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);

@@ -30,7 +30,6 @@ declare global {
       onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      openWebpage: (url: string) => void;
       removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;
       restartDevice: () => void;
