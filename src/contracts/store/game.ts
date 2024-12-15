@@ -2,8 +2,8 @@ import { GameFilters } from "@contracts/database/games";
 
 export type GameState = {
   selectedCollection: string;
-  selectedGame: string | null;
   selectedFilters: GameFilters;
+  selectedGame: string | null;
 };
 
 export type GameSyncMessage = {

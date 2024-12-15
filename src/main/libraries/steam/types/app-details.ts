@@ -1,45 +1,45 @@
 export type AppDetailsResponse = {
   [key: string]: {
-    success: boolean;
     data: AppDetails;
+    success: boolean;
   };
 };
 
 export type AppDetails = {
-  type: AppType;
-  name: string;
-  steam_appid: number;
-  required_age: number;
-  is_free: boolean;
-  controller_support?: string;
-  detailed_description: string;
   about_the_game: string;
-  short_description: string;
-  supported_languages: string;
-  header_image: string;
-  capsule_image: string;
-  capsule_imagev5: string;
-  website: string;
-  pc_requirements: DeviceRequirements | [];
-  mac_requirements: DeviceRequirements | [];
-  linux_requirements: DeviceRequirements | [];
-  developers: string[];
-  publishers: string[];
-  price_overview: PriceOverview;
-  packages: number[];
-  package_groups: PackageGroup[];
-  platforms: Platforms;
-  categories: Category[];
-  genres: Genre[];
-  screenshots: Screenshot[];
-  movies: Movie[];
   achievements: Achievements;
-  release_date: ReleaseDate;
-  support_info: SupportInfo;
   background: string;
   background_raw: string;
+  capsule_image: string;
+  capsule_imagev5: string;
+  categories: Category[];
   content_descriptors: ContentDescriptors;
+  controller_support?: string;
+  detailed_description: string;
+  developers: string[];
+  genres: Genre[];
+  header_image: string;
+  is_free: boolean;
+  linux_requirements: DeviceRequirements | [];
+  mac_requirements: DeviceRequirements | [];
+  movies: Movie[];
+  name: string;
+  package_groups: PackageGroup[];
+  packages: number[];
+  pc_requirements: DeviceRequirements | [];
+  platforms: Platforms;
+  price_overview: PriceOverview;
+  publishers: string[];
   ratings: null;
+  release_date: ReleaseDate;
+  required_age: number;
+  screenshots: Screenshot[];
+  short_description: string;
+  steam_appid: number;
+  support_info: SupportInfo;
+  supported_languages: string;
+  type: AppType;
+  website: string;
 };
 
 export enum AppType {
@@ -48,8 +48,8 @@ export enum AppType {
 }
 
 export type Achievements = {
-  total: number;
   highlighted: HighlightedAchievement[];
+  total: number;
 };
 
 export type HighlightedAchievement = {
@@ -58,8 +58,8 @@ export type HighlightedAchievement = {
 };
 
 export type Category = {
-  id: number;
   description: string;
+  id: number;
 };
 
 export type ContentDescriptors = {
@@ -68,17 +68,17 @@ export type ContentDescriptors = {
 };
 
 export type Genre = {
-  id: string;
   description: string;
+  id: string;
 };
 
 export type Movie = {
+  highlight: boolean;
   id: number;
+  mp4: Mp4;
   name: string;
   thumbnail: string;
   webm: Mp4;
-  mp4: Mp4;
-  highlight: boolean;
 };
 
 export type Mp4 = {
@@ -87,24 +87,24 @@ export type Mp4 = {
 };
 
 export type PackageGroup = {
-  name: string;
-  title: string;
   description: string;
-  selection_text: string;
-  save_text: string;
   display_type: number;
   is_recurring_subscription: string;
+  name: string;
+  save_text: string;
+  selection_text: string;
   subs: Sub[];
+  title: string;
 };
 
 export type Sub = {
-  packageid: number;
-  percent_savings_text: string;
-  percent_savings: number;
-  option_text: string;
-  option_description: string;
   can_get_free_license: string;
   is_free_license: boolean;
+  option_description: string;
+  option_text: string;
+  packageid: number;
+  percent_savings: number;
+  percent_savings_text: string;
   price_in_cents_with_discount: number;
 };
 
@@ -114,18 +114,18 @@ export type DeviceRequirements = {
 };
 
 export type Platforms = {
-  windows: boolean;
-  mac: boolean;
   linux: boolean;
+  mac: boolean;
+  windows: boolean;
 };
 
 export type PriceOverview = {
   currency: string;
-  initial: number;
-  final: number;
   discount_percent: number;
-  initial_formatted: string;
+  final: number;
   final_formatted: string;
+  initial: number;
+  initial_formatted: string;
 };
 
 export type ReleaseDate = {
@@ -135,11 +135,11 @@ export type ReleaseDate = {
 
 export type Screenshot = {
   id: number;
-  path_thumbnail: string;
   path_full: string;
+  path_thumbnail: string;
 };
 
 export type SupportInfo = {
-  url: string;
   email: string;
+  url: string;
 };

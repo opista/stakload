@@ -7,9 +7,9 @@ import { useTranslation } from "react-i18next";
 import classes from "./NetworkIndicator.module.css";
 
 type IndicatorConfig = {
-  label: ParseKeys;
   Icon: Icon;
   iconColor?: string;
+  label: ParseKeys;
 };
 
 const onlineConfig: IndicatorConfig = {

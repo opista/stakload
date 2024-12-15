@@ -5,8 +5,8 @@ import { ReactNode } from "react";
 import classes from "./SettingsTitle.module.css";
 
 type SettingsTitleProps = {
-  title: string;
   subtitle?: ReactNode;
+  title: string;
 };
 
 export const SettingsTitle = ({ title, subtitle }: SettingsTitleProps) => {

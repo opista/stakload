@@ -53,7 +53,7 @@ export const Spotlight = ({ onClick }: SpotlightProps) => {
       limit={7}
       nothingFound={t("spotlight.noResultsFound")}
       searchProps={{
-        leftSection: <IconSearch style={{ width: rem(20), height: rem(20) }} stroke={1.5} />,
+        leftSection: <IconSearch stroke={1.5} style={{ width: rem(20), height: rem(20) }} />,
         placeholder: t("search"),
       }}
     />

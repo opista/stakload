@@ -64,9 +64,9 @@ const WebsiteIcon = ({ icon, label, url }: WebsiteIconProps) => (
 );
 
 type IconPropsMap = {
+  formatter?: (url: string) => string;
   icon: FC<IconProps>;
   label: string;
-  formatter?: (url: string) => string;
 };
 
 type GameLinksProps = {
@@ -164,11 +164,11 @@ export const GameLinks = ({ columns = 6, websites }: GameLinksProps) => {
     .map(({ url, website }) => {
       const { icon, label, formatter } = websiteIconPropsMap[website];
       const formattedUrl = formatter?.(url) || url;
-      return <WebsiteIcon key={website} icon={icon} label={label} url={formattedUrl} />;
+      return <WebsiteIcon icon={icon} key={website} label={label} url={formattedUrl} />;
     });
 
   return (
-    <SimpleGrid cols={columns} spacing="xs" verticalSpacing="xs">
+    <SimpleGrid cols={columns} spacing="xs">
       {buttons}
     </SimpleGrid>
   );

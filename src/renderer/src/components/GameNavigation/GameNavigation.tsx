@@ -77,9 +77,9 @@ export const GameNavigation = ({ games }: GameNavigationProps) => {
           justify="flex-start"
           key={game._id}
           leftSection={<LeftSection icon={game.icon} />}
+          onClick={() => navigate(game._id, { replace: true, relative: "path" })}
           title={game.name}
           variant={currentGameIndex === index ? "filled" : "subtle"}
-          onClick={() => navigate(game._id, { replace: true, relative: "path" })}
         >
           <Text truncate="end">{game.name}</Text>
         </Button>

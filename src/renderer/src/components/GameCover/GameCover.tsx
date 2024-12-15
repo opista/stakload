@@ -12,12 +12,12 @@ type GameCoverProps = {
 };
 
 const GameCoverArt = ({ game }: GameCoverProps) => (
-  <BackgroundImage className={classes.backgroundImage} radius="md" src={game.cover!} title={game.name} />
+  <BackgroundImage className={classes.backgroundImage} src={game.cover!} title={game.name} />
 );
 
 const GameCoverEmpty = ({ game }: GameCoverProps) => (
-  <Stack className={classes.emptyContainer} align="center" justify="flex-end">
-    <IconDeviceGamepad2 className={classes.emptyIcon} size="90%" stroke={1} />
+  <Stack align="center" className={classes.emptyContainer} justify="flex-end">
+    <IconDeviceGamepad2 className={classes.emptyIcon} stroke={1} />
     <Text className={classes.emptyText} lineClamp={2}>
       {game.name}
     </Text>

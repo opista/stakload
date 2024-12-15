@@ -55,7 +55,7 @@ export const SettingsModal = ({ id, innerProps }: ContextModalProps<SettingsModa
       <Divider></Divider>
       <div className={classes.container}>
         {/* TODO - Make vertical tabs sticky on scroll */}
-        <VerticalTabs tabs={tabs} defaultTab={innerProps?.defaultTab || "interface"} />
+        <VerticalTabs defaultTab={innerProps?.defaultTab || "interface"} tabs={tabs} />
       </div>
     </>
   );

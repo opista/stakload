@@ -32,7 +32,7 @@ export const TooltipIcon = ({
         {loading ? (
           <Loader color={style?.color} size="sm" />
         ) : (
-          <Icon {...restIconProps} style={{ height: "80%", width: "80%", ...style }} stroke={1.5} />
+          <Icon {...restIconProps} stroke={1.5} style={{ height: "80%", width: "80%", ...style }} />
         )}
       </ThemeIcon>
     </Tooltip>

@@ -32,10 +32,10 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
             className={clsx(classes.button, {
               [classes.active]: value === color,
             })}
+            color={hex}
             component="button"
             key={color}
             onClick={() => onChange(color)}
-            color={hex}
             radius="sm"
             size={20}
           />

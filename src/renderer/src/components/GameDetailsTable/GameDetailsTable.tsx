@@ -8,8 +8,8 @@ import classes from "./GameDetailsTable.module.css";
 import { GameDetailsTableRow } from "./GameDetailsTableRow/GameDetailsTableRow";
 
 type Column = {
-  label: ParseKeys;
   formatter: (game: GameStoreModel, t: TFunction) => ReactNode | string | undefined;
+  label: ParseKeys;
 };
 
 type GameDetailsTableProps = {

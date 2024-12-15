@@ -55,7 +55,7 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
   ];
 
   return (
-    <Modal opened={opened} onClose={onClose} size="auto" title="Power">
+    <Modal onClose={onClose} opened={opened} size="auto" title="Power">
       <Stack gap="xs">
         {appPowerControls.map(({ Icon, label, onClick }) => (
           <Button
@@ -64,7 +64,7 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
             }}
             justify="space-between"
             key={label}
-            leftSection={<Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />}
+            leftSection={<Icon stroke={1.5} style={{ width: "70%", height: "70%" }} />}
             onClick={onClick}
             variant="default"
           >
@@ -79,7 +79,7 @@ export const PowerModal = ({ onClose, opened }: PowerModalProps) => {
             }}
             justify="space-between"
             key={label}
-            leftSection={<Icon style={{ width: "70%", height: "70%" }} stroke={1.5} />}
+            leftSection={<Icon stroke={1.5} style={{ width: "70%", height: "70%" }} />}
             onClick={onClick}
             variant="default"
           >

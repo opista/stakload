@@ -7,34 +7,29 @@ import { RemoveListenerFunction } from "./util/listener-handler";
 
 declare global {
   interface Window {
-    electron: ElectronAPI;
     api: {
       clearSyncQueue: () => void;
       closeApp: () => void;
+      createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
       decrypt: (str: string) => Promise<string>;
+      deleteCollection: (id: string) => Promise<boolean>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
-      createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
       getCollections: () => Promise<CollectionStoreModel[]>;
-      updateCollection: (
-        id: string,
-        updates: Pick<CollectionStoreModel, "name" | "filters">,
-      ) => Promise<CollectionStoreModel>;
-      deleteCollection: (id: string) => Promise<boolean>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
-      getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGameById: (id: string) => Promise<GameStoreModel>;
+      getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGamesLastSyncedAt: () => Promise<Date>;
-      getProtondbTier: (gameId: string) => Promise<string | null>;
       getLocale: () => Promise<string>;
       getOS: () => Promise<Platform>;
+      getProtondbTier: (gameId: string) => Promise<string | null>;
+      onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onSyncComplete: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncInserted: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
+      onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       openWebpage: (url: string) => void;
       removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;
@@ -43,6 +38,11 @@ declare global {
       sleepDevice: () => void;
       syncGames: () => void;
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
+      updateCollection: (
+        id: string,
+        updates: Pick<CollectionStoreModel, "name" | "filters">,
+      ) => Promise<CollectionStoreModel>;
     };
+    electron: ElectronAPI;
   }
 }

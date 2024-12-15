@@ -2,8 +2,8 @@ import { Button, Flex, Modal, TextInput } from "@mantine/core";
 import { useState } from "react";
 
 type RemoveGameModalProps = {
-  onConfirm: (value: string) => void;
   onClose: () => void;
+  onConfirm: (value: string) => void;
   opened: boolean;
 };
 
@@ -14,8 +14,8 @@ export const CollectionCreateModal = ({ onConfirm, onClose, opened }: RemoveGame
 
   return (
     <Modal centered onClose={onClose} opened={opened} size="sm" title={`Save collection`}>
-      <TextInput label="Collection name" value={value} onChange={(event) => setValue(event.currentTarget.value)} />
-      <Flex gap="xs" mt="sm" justify="flex-end">
+      <TextInput label="Collection name" onChange={(event) => setValue(event.currentTarget.value)} value={value} />
+      <Flex gap="xs" justify="flex-end" mt="sm">
         <Button disabled={!value} onClick={onClickConfirm}>
           Create collection
         </Button>

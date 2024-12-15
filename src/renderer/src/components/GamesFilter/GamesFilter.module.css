@@ -1,7 +1,15 @@
+.title {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
 .icon {
   margin-left: var(--mantine-spacing-xs);
 }
 
 .buttonContainer {
   margin-top: var(--mantine-spacing-md);
+}
+
+.select {
+  margin-bottom: var(--mantine-spacing-xs);
 }

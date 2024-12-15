@@ -8,8 +8,8 @@ export const IconGog: FC<IconProps> = ({ size, stroke, style, ...rest }) => {
       stroke={`${stroke}`}
       style={{ width: rem(size), height: rem(size), ...style }}
       viewBox="0 0 64 64"
-      xmlns="http://www.w3.org/2000/svg"
       xmlSpace="preserve"
+      xmlns="http://www.w3.org/2000/svg"
       {...rest}
     >
       <path

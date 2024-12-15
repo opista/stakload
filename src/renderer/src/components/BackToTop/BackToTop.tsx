@@ -15,7 +15,7 @@ export const BackToTop = ({ container }: BackToTopProps) => {
   const { t } = useTranslation();
 
   return (
-    <Transition transition="slide-left" mounted={containerScrollPosition > 0}>
+    <Transition mounted={containerScrollPosition > 0} transition="slide-left">
       {(transitionStyles) => (
         <ActionIcon
           aria-label={t("backToTop")}

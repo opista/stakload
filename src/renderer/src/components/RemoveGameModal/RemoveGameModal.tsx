@@ -6,8 +6,8 @@ import classes from "./RemoveGameModal.module.css";
 
 type RemoveGameModalProps = {
   gameTitle: string;
-  onConfirm: (preventReadd: boolean) => void;
   onClose: () => void;
+  onConfirm: (preventReadd: boolean) => void;
   opened: boolean;
 };
 

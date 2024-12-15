@@ -10,9 +10,9 @@ import { FC, forwardRef } from "react";
 import classes from "./ActionIcon.module.css";
 
 type ActionIconProps = {
+  "aria-label": string;
   icon: FC<IconProps>;
   iconStroke?: number;
-  "aria-label": string;
 } & PolymorphicComponentProps<"button", MantineActionIconProps>;
 
 export const Component = (

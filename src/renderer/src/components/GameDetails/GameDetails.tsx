@@ -71,7 +71,7 @@ export const GameDetails = () => {
           We'll need to build this into the API too */}
           <div className={classes.contentContainer}>
             <Container size="responsive">
-              <Title className={classes.title} lineClamp={3} order={1} title={game.name} textWrap="balance">
+              <Title className={classes.title} lineClamp={3} order={1} textWrap="balance" title={game.name}>
                 {game.name}
               </Title>
               <Group className={classes.iconGroup} gap="xs">
@@ -84,20 +84,20 @@ export const GameDetails = () => {
               <div className={classes.bodyInner}>
                 <main className={classes.main}>
                   <ContentCard
-                    title={t("gameDetails.summary")}
                     content={
                       <Spoiler maxHeight={200}>
                         <Text>{game.summary}</Text>
                       </Spoiler>
                     }
+                    title={t("gameDetails.summary")}
                   />
-                  <ContentCard title={t("gameDetails.details")} content={<GameDetailsTable game={game} />} />
+                  <ContentCard content={<GameDetailsTable game={game} />} title={t("gameDetails.details")} />
                 </main>
                 <div className={classes.sidebar}>
-                  <ContentCard title={t("gameDetails.links")} content={<GameLinks websites={game.websites} />} />
+                  <ContentCard content={<GameLinks websites={game.websites} />} title={t("gameDetails.links")} />
                   <ContentCard
-                    title={t("gameDetails.media")}
                     content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
+                    title={t("gameDetails.media")}
                   />
                 </div>
               </div>
@@ -116,7 +116,7 @@ export const GameDetails = () => {
   );
 
   return (
-    <Stack align="stretch" className={classes.container} justify="flex-start" gap={0}>
+    <Stack align="stretch" className={classes.container} gap={0} justify="flex-start">
       {game ? <Game game={game} /> : <GameNotFound />}
     </Stack>
   );

@@ -18,8 +18,8 @@ type GameActions = {
   resetFilters: () => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
   setSelectedCollection: (selectedCollection: string) => void;
-  setSelectedGame: (selectedGame: GameState["selectedGame"]) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
+  setSelectedGame: (selectedGame: GameState["selectedGame"]) => void;
 };
 
 type GameStore = GameState & GameActions;

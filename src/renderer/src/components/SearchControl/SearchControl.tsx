@@ -20,7 +20,7 @@ export const SearchControl = ({ className, disabled, ...others }: SearchControlP
       onClick={spotlight.open}
     >
       <Group gap="xs">
-        <IconSearch style={{ width: rem(15), height: rem(15) }} stroke={1.5} />
+        <IconSearch stroke={1.5} style={{ width: rem(15), height: rem(15) }} />
         <Text className={classes.text}>{t("search")}</Text>
         <Text className={clsx(classes.shortcut, { [classes.disabled]: disabled })}>
           {SHORTCUT_KEYS.SEARCH.join(" + ")}

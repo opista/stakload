@@ -140,7 +140,7 @@ const SteamSettings = () => {
    */
   return (
     <>
-      <SettingsTitle title="Steam" subtitle={Subtitle} />
+      <SettingsTitle subtitle={Subtitle} title="Steam" />
 
       <TextInput
         classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}

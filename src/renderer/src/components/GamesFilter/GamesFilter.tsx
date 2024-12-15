@@ -3,7 +3,7 @@ import { CollectionCreateModal } from "@components/CollectionCreateModal/Collect
 import { LikeAgeRatingText } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Grid, Group, Indicator, MultiSelect, Popover, Text } from "@mantine/core";
+import { Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt, IconAdjustmentsSpark, IconPlaylistAdd } from "@tabler/icons-react";
@@ -107,9 +107,9 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           <Indicator
             disabled={!selectedFilterCount}
             label={selectedFilterCount}
-            offset={3}
+            offset={5}
             position="bottom-end"
-            size={16}
+            size={18}
             withBorder
           >
             <ActionIcon
@@ -123,35 +123,38 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Indicator>
         </Popover.Target>
         <Popover.Dropdown>
-          <Text size="xs">TODO - Filters here</Text>
+          {/* TODO - Add more filters */}
+          <Title className={classes.title} size="h3">
+            {t("filters")}
+          </Title>
           <Grid>
             <Grid.Col span={6}>
               <MultiSelect
-                label="Developers"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["developers"]}
+                label="Developers"
                 onChange={onFilterChange("developers")}
                 searchable
                 value={selectedFilters.developers}
               />
               <MultiSelect
-                label="Publishers"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["publishers"]}
+                label="Publishers"
                 onChange={onFilterChange("publishers")}
                 searchable
                 value={selectedFilters.publishers}
               />
               <MultiSelect
-                label="Player perspectives"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["playerPerspectives"]}
+                label="Player perspectives"
                 onChange={onFilterChange("playerPerspectives")}
                 searchable
                 value={selectedFilters.playerPerspectives}
@@ -159,31 +162,31 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
             </Grid.Col>
             <Grid.Col span={6}>
               <MultiSelect
-                label="Age ratings"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={ageRatingFilters.map(({ label, value }) => ({ label: t(label), value }))}
+                label="Age ratings"
                 onChange={onFilterChange("ageRatings")}
                 searchable
                 value={selectedFilters.ageRatings}
               />
               <MultiSelect
-                label="Game modes"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["gameModes"]}
+                label="Game modes"
                 onChange={onFilterChange("gameModes")}
                 searchable
                 value={selectedFilters.gameModes}
               />
               <MultiSelect
-                label="Genres"
-                mb="xs"
-                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                className={classes.select}
                 clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["genres"]}
+                label="Genres"
                 onChange={onFilterChange("genres")}
                 searchable
                 value={selectedFilters.genres}
@@ -200,7 +203,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Group>
         </Popover.Dropdown>
       </Popover>
-      <CollectionCreateModal onConfirm={onCreate} onClose={() => {}} opened={openedCreate} />
+      <CollectionCreateModal onClose={() => {}} onConfirm={onCreate} opened={openedCreate} />
     </>
   );
 };

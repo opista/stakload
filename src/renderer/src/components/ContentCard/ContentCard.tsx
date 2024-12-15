@@ -4,8 +4,8 @@ import { ReactNode } from "react";
 import classes from "./ContentCard.module.css";
 
 type ContentCardProps = {
-  content: ReactNode | string;
-  title: ReactNode | string;
+  content: ReactNode;
+  title: ReactNode;
 };
 
 export const ContentCard = ({ content, title }: ContentCardProps) => (

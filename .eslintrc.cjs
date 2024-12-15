@@ -4,6 +4,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "@electron-toolkit/eslint-config-prettier",
+    "plugin:typescript-sort-keys/recommended",
   ],
   env: {
     browser: true,
@@ -31,10 +32,6 @@ module.exports = {
     "@typescript-eslint/no-empty-interface": ["error", { allowSingleExtends: true }],
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-var-requires": "off",
-    "no-unused-vars": "off",
-    "unused-imports/no-unused-imports": "error",
-    "react-refresh/only-export-components": "warn",
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
@@ -44,8 +41,13 @@ module.exports = {
         argsIgnorePattern: "^_",
       },
     ],
-    "simple-import-sort/imports": "error",
+    "@typescript-eslint/no-var-requires": "off",
+    "no-unused-vars": "off",
+    "react-refresh/only-export-components": "warn",
+    "react/jsx-sort-props": "error",
     "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": "error",
+    "unused-imports/no-unused-imports": "error",
   },
   settings: {
     react: {

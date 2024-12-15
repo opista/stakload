@@ -26,11 +26,11 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<App />}>
           <Route element={<BaseLayout />} path="/" />
           <Route element={<DesktopLayout />} path="desktop">
-            <Route index element={<GamesGrid />} />
+            <Route element={<GamesGrid />} index />
             <Route element={<GameDetails />} path=":id"></Route>
           </Route>
           <Route element={<GamingLayout />} path="gaming">
-            <Route index element={<DummyComponent />} />
+            <Route element={<DummyComponent />} index />
           </Route>
         </Route>
       </Routes>

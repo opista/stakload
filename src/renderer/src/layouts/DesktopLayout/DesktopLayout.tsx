@@ -71,8 +71,8 @@ export const DesktopLayout = () => {
         >
           {showLeftPane && (
             <Allotment.Pane
-              minSize={MIN_NAV_WIDTH}
               maxSize={MAX_NAV_WIDTH}
+              minSize={MIN_NAV_WIDTH}
               preferredSize={leftPaneWidth}
               visible={showLeftPane}
             >

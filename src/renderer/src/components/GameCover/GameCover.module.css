@@ -3,6 +3,8 @@
   height: 100%;
   transition: transform 0.3s ease;
   width: 100%;
+  border-radius: var(--mantine-radius-md);
+  overflow: hidden;
 
   &:hover {
     transform: scale(1.04);
@@ -32,6 +34,8 @@
   position: absolute;
   top: 0;
   transform: translateX(-50%);
+  width: 90%;
+  height: 90%;
 }
 
 .emptyText {

@@ -34,8 +34,8 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
           </Group>
           <RemoveGameModal
             gameTitle={game.name}
-            onConfirm={onRemoveConfirm}
             onClose={closeDelete}
+            onConfirm={onRemoveConfirm}
             opened={openedDelete}
           />
           <Group gap="xs">

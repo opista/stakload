@@ -7,11 +7,11 @@ export type Platform = "linux" | "mac" | "windows";
  */
 
 export enum AgeRatingText {
-  Three = "THREE",
-  Seven = "SEVEN",
-  Twelve = "TWELVE",
-  Sixteen = "SIXTEEN",
   Eighteen = "EIGHTEEN",
+  Seven = "SEVEN",
+  Sixteen = "SIXTEEN",
+  Three = "THREE",
+  Twelve = "TWELVE",
 }
 
 export type LikeAgeRatingText = `${AgeRatingText}`;

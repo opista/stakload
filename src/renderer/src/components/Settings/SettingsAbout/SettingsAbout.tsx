@@ -21,7 +21,7 @@ export const SettingsAbout = () => {
         size="xl"
         variant="white"
       />
-      <Flex gap="md" justify="center" align="center" direction="row" wrap="wrap">
+      <Flex align="center" direction="row" gap="md" justify="center" wrap="wrap">
         <Logo />
         <Code>v{version}</Code>
       </Flex>

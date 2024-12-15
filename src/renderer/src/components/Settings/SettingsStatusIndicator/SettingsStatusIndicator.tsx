@@ -16,7 +16,7 @@ export const SettingsStatusIndicator = ({
   mounted,
   text,
 }: SettingsStatusIndicatorProps) => (
-  <Transition mounted={mounted} transition="fade-left" duration={400} exitDuration={0} timingFunction="ease">
+  <Transition duration={400} exitDuration={0} mounted={mounted} timingFunction="ease" transition="fade-left">
     {(styles) => (
       <Flex align="center" className={className} gap={4} style={styles}>
         <Icon {...iconProps} size={24} />
