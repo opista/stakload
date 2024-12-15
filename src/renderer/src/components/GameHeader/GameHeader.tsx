@@ -1,4 +1,4 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";

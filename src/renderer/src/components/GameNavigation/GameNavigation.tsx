@@ -1,4 +1,4 @@
-import { BackToTop } from "@components/BackToTop/BackToTop";
+import BackToTop from "@components/BackToTop/BackToTop";
 import { GameStoreModel } from "@contracts/database/games";
 import { Button, Text } from "@mantine/core";
 import { Image } from "@mantine/core";

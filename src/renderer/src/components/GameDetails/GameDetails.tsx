@@ -1,4 +1,4 @@
-import { BackToTop } from "@components/BackToTop/BackToTop";
+import BackToTop from "@components/BackToTop/BackToTop";
 import { ContentCard } from "@components/ContentCard/ContentCard";
 import { GameDetailsTable } from "@components/GameDetailsTable/GameDetailsTable";
 import { GameHeader } from "@components/GameHeader/GameHeader";
@@ -7,7 +7,7 @@ import { GameLinks } from "@components/GameLinks/GameLinks";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
-import { ProtonIcon } from "@components/ProtonIcon/ProtonIcon";
+import ProtonIcon from "@components/ProtonIcon/ProtonIcon";
 import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";

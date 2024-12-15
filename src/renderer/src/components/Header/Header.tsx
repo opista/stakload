@@ -1,8 +1,8 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { BatteryIndicator } from "@components/BatteryIndicator/BatteryIndicator";
 import { Clock } from "@components/Clock/Clock";
-import { Logo } from "@components/Logo/Logo";
-import { NetworkIndicator } from "@components/NetworkIndicator/NetworkIndicator";
+import Logo from "@components/Logo/Logo";
+import NetworkIndicator from "@components/NetworkIndicator/NetworkIndicator";
 import { PowerControl } from "@components/Power/PowerControl/PowerControl";
 import { SettingsControl } from "@components/Settings/SettingsControl/SettingsControl";
 import { Divider, Group } from "@mantine/core";

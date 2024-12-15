@@ -2,32 +2,34 @@ import { Tooltip, UnstyledButton } from "@mantine/core";
 import { useNetwork } from "@mantine/hooks";
 import { Icon, IconWifi, IconWifiOff } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import classes from "./NetworkIndicator.module.css";
 
-type IndicatorConfig = {
+type NetworkConfig = {
   Icon: Icon;
   iconColor?: string;
   label: ParseKeys;
 };
 
-const onlineConfig: IndicatorConfig = {
-  Icon: IconWifi,
-  label: "network.online",
-};
+const NETWORK_CONFIG_MAP: { [key: string]: NetworkConfig } = {
+  online: {
+    Icon: IconWifi,
+    label: "network.online",
+  },
+  offline: {
+    Icon: IconWifiOff,
+    iconColor: "var(--mantine-color-red-8)",
+    label: "network.offline",
+  },
+} as const;
 
-const offlineConfig: IndicatorConfig = {
-  Icon: IconWifiOff,
-  iconColor: "var(--mantine-color-red-8)",
-  label: "network.offline",
-};
-
-export const NetworkIndicator = () => {
+const NetworkIndicator = memo(() => {
   const { t } = useTranslation();
   const { online } = useNetwork();
 
-  const config = online ? onlineConfig : offlineConfig;
+  const config = online ? NETWORK_CONFIG_MAP.online : NETWORK_CONFIG_MAP.offline;
   const { label, Icon, iconColor } = config;
 
   return (
@@ -37,4 +39,8 @@ export const NetworkIndicator = () => {
       </UnstyledButton>
     </Tooltip>
   );
-};
+});
+
+NetworkIndicator.displayName = "NetworkIndicator";
+
+export default NetworkIndicator;

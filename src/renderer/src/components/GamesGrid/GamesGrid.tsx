@@ -1,4 +1,4 @@
-import { BackToTop } from "@components/BackToTop/BackToTop";
+import BackToTop from "@components/BackToTop/BackToTop";
 import { GameCover } from "@components/GameCover/GameCover";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameStoreModel } from "@contracts/database/games";

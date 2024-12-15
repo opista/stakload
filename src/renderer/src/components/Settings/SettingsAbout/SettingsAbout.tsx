@@ -1,5 +1,5 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
-import { Logo } from "@components/Logo/Logo";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
+import Logo from "@components/Logo/Logo";
 import { Code, Flex } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { LikeWebsiteCategoryText, Website, WebsiteCategoryText } from "@contracts/database/games";
 import { SimpleGrid } from "@mantine/core";
 import {

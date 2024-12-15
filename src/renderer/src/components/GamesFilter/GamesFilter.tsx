@@ -1,4 +1,4 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
 import { LikeAgeRatingText } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";

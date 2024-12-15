@@ -1,4 +1,4 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { SHORTCUT_KEYS } from "@constants/shortcuts";
 import { useHotkeys } from "@mantine/hooks";
 import { modals } from "@mantine/modals";
