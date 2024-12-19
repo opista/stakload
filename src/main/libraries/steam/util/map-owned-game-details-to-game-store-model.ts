@@ -1,11 +1,11 @@
-import { InitialGameStoreModel, Library } from "@contracts/database/games";
+import { InitialGameStoreModel, LikeLibrary } from "@contracts/database/games";
 
 import { removeSpecialChars } from "../../../util/remove-special-chars";
 import { OwnedGameDetails } from "../types/owned-game";
 
 export const mapOwnedGameDetailsToGameStoreModel = (
   ownedGameDetails: OwnedGameDetails,
-  library: Library,
+  library: LikeLibrary,
 ): InitialGameStoreModel => {
   const name = removeSpecialChars(ownedGameDetails.name);
   return {

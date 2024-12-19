@@ -1,5 +1,5 @@
 import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
-import { Button, Divider, Flex, PasswordInput, TextInput, Title, UnstyledButton } from "@mantine/core";
+import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
@@ -119,17 +119,8 @@ const SteamSettings = () => {
   const Subtitle = (
     <Trans
       components={{
-        SteamAccountLink: (
-          <UnstyledButton
-            component="a"
-            href="https://store.steampowered.com/account/"
-            rel="noreferrer"
-            target="_blank"
-          />
-        ),
-        SteamApiKeyLink: (
-          <UnstyledButton component="a" href="https://steamcommunity.com/dev/apikey" rel="noreferrer" target="_blank" />
-        ),
+        SteamAccountLink: <a href="https://store.steampowered.com/account/" rel="noreferrer" target="_blank" />,
+        SteamApiKeyLink: <a href="https://steamcommunity.com/dev/apikey" rel="noreferrer" target="_blank" />,
       }}
       i18nKey="steam.integrationGuide"
       t={t}
@@ -204,6 +195,54 @@ const SteamSettings = () => {
   );
 };
 
+const EpicGamesSettings = () => {
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const removeListener = window.api.onEpicGamesAuthentication((_event, { success }) => {
+      setIsLoading(false);
+      setIsIntegrationValid(success);
+      console.log("result", success);
+    });
+    return () => removeListener();
+  }, []);
+
+  const onAuthenticate = () => {
+    setIsIntegrationValid(null);
+    window.api.authenticateIntegration("epic-game-store");
+  };
+
+  return (
+    <>
+      <SettingsTitle subtitle={t("librarySettings.authSecurity", { library: "Epic Games" })} title="Epic Games" />
+
+      <Flex justify="flex-end">
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedCheckFilled}
+          iconProps={{ className: classes.check }}
+          mounted={isIntegrationValid === true}
+          text={t("integration.success")}
+        />
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedXFilled}
+          iconProps={{ className: classes.cross }}
+          mounted={isIntegrationValid === false}
+          text={t("integration.failure")}
+        />
+        <Flex gap="xs">
+          <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
+            {t("integration.authenticate")}
+          </Button>
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -221,6 +260,8 @@ export const SettingsLibrary = ({ id }: { id: string }) => {
       <GeneralSettings id={id} />
       <Divider className={classes.divider} />
       <SteamSettings />
+      <Divider className={classes.divider} />
+      <EpicGamesSettings />
       <Divider className={classes.divider} />
     </>
   );

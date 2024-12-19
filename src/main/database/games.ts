@@ -1,4 +1,4 @@
-import { GameFilters, GameStoreModel, InitialGameStoreModel, Library } from "@contracts/database/games";
+import { GameFilters, GameStoreModel, InitialGameStoreModel, LikeLibrary } from "@contracts/database/games";
 
 import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
@@ -98,7 +98,7 @@ export const removeGameById = async (id: string, preventReadd: boolean = false) 
   }
 };
 
-export const findGamesByGameIds = async (ids: string[], library: Library) => {
+export const findGamesByGameIds = async (ids: string[], library: LikeLibrary) => {
   return await db.find({ gameId: { $in: ids }, library }, { gameId: 1, _id: 0 });
 };
 

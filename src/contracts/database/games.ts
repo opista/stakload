@@ -1,4 +1,14 @@
-export type Library = "steam";
+export enum Library {
+  EpicGameStore = "epic-game-store",
+  Gog = "gog",
+  Microsoft = "microsoft",
+  Steam = "steam",
+  XboxGamePassUltimateCloud = "xbox-game-pass-ultimate-cloud",
+  XboxMarketplate = "xbox-marketplace",
+}
+
+export type LikeLibrary = `${Library}`;
+
 export type Platform = "linux" | "mac" | "windows";
 
 /**
@@ -92,7 +102,7 @@ export type GameStoreModel = {
   igdbId?: number;
   lastPlayedAt?: Date;
   // TODO this should be an id and name for filtering
-  library: Library;
+  library: LikeLibrary;
   listImage?: string;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];

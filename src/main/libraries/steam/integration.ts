@@ -1,11 +1,11 @@
-import { Library } from "@contracts/database/games";
+import { LikeLibrary } from "@contracts/database/games";
 import { isEmpty } from "lodash-es";
 
 import { bulkInsertGames, findGamesByGameIds } from "../../database/games";
 import { getOwnedGames } from "./api";
 import { mapOwnedGameDetailsToGameStoreModel } from "./util/map-owned-game-details-to-game-store-model";
 
-const LIBRARY: Library = "steam";
+const LIBRARY: LikeLibrary = "steam";
 
 export const isCredentialsValid = async (steamId: string, webApiKey: string) => {
   try {
