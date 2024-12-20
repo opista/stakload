@@ -5,12 +5,15 @@ import { useShallow } from "zustand/react/shallow";
 
 export const useSteamIntegration = () => {
   const [decryptedSteamIntegration, setDecryptedSteamIntegration] = useState<SteamIntegrationDetails | null>(null);
-  const { storeSteamIntegration, setStoreSteamIntegration } = useLibrarySettingsStore(
-    useShallow((state) => ({
-      setStoreSteamIntegration: state.setSteamIntegration,
-      storeSteamIntegration: state.steamIntegration,
-    })),
-  );
+  const { steamIntegrationEnabled, storeSteamIntegration, setStoreSteamIntegration, toggleSteamIntegration } =
+    useLibrarySettingsStore(
+      useShallow((state) => ({
+        setStoreSteamIntegration: state.setSteamIntegration,
+        storeSteamIntegration: state.steamIntegration,
+        steamIntegrationEnabled: state.steamIntegrationEnabled,
+        toggleSteamIntegration: state.toggleSteamIntegration,
+      })),
+    );
 
   useEffect(() => {
     if (!storeSteamIntegration) return;
@@ -36,5 +39,10 @@ export const useSteamIntegration = () => {
     });
   };
 
-  return { steamIntegration: decryptedSteamIntegration, setSteamIntegration };
+  return {
+    steamIntegration: decryptedSteamIntegration,
+    steamIntegrationEnabled,
+    setSteamIntegration,
+    toggleSteamIntegration,
+  };
 };

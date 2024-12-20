@@ -146,5 +146,6 @@
     "platinum": "Platinum",
     "native": "Native",
     "unknown": "Unknown"
-  }
+  },
+  "enabled": "Enabled"
 }

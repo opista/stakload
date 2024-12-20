@@ -79,7 +79,8 @@ const SteamSettings = () => {
   const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [webApiKey, setWebApiKey] = useState<string>("");
   const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
-  const { steamIntegration, setSteamIntegration } = useSteamIntegration();
+  const { steamIntegration, setSteamIntegration, toggleSteamIntegration, steamIntegrationEnabled } =
+    useSteamIntegration();
   const { t } = useTranslation();
 
   const onSave = async () => {
@@ -135,6 +136,12 @@ const SteamSettings = () => {
     <>
       <SettingsTitle subtitle={Subtitle} title="Steam" />
 
+      <SettingsCheckbox
+        checked={steamIntegrationEnabled}
+        disabled={isLoading || !steamIntegration?.steamId || !steamIntegration.webApiKey}
+        label={t("enabled")}
+        onCheckboxChange={toggleSteamIntegration}
+      />
       <TextInput
         classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
         disabled={isLoading}
