@@ -1,5 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters, GameStoreModel, Platform } from "@contracts/database/games";
+import { GameFilters, GameStoreModel, LikeLibrary, Platform } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
@@ -8,6 +8,7 @@ import { RemoveListenerFunction } from "./util/listener-handler";
 declare global {
   interface Window {
     api: {
+      authenticateIntegration: (library: LikeLibrary) => void;
       clearSyncQueue: () => void;
       closeApp: () => void;
       createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
@@ -24,6 +25,7 @@ declare global {
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
+      onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onSyncComplete: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       onSyncInserted: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;

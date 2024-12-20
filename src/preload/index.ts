@@ -1,16 +1,18 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters } from "@contracts/database/games";
+import { GameFilters, LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { exposeConf } from "electron-conf/preload";
 
 import {
+  AUTHENTICATE_INTEGRATION,
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
   CREATE_COLLECTION,
   DECRYPT,
   ENCRYPT,
+  EPIC_GAMES_INTEGRATION_RESULT,
   EVENT_COLLECTIONS_LIST_UPDATED,
   EVENT_GAMES_LIST_UPDATED,
   EVENT_METADATA_SYNC_COMPLETE,
@@ -37,6 +39,7 @@ import { listenerHandler } from "./util/listener-handler";
 
 // Custom APIs for renderer
 const api = {
+  authenticateIntegration: (library: LikeLibrary) => ipcRenderer.invoke(AUTHENTICATE_INTEGRATION, library),
   clearSyncQueue: () => ipcRenderer.send(CLEAR_SYNC_QUEUE),
   closeApp: (): void => ipcRenderer.send(CLOSE_APP),
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
@@ -63,6 +66,8 @@ const api = {
   onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_COLLECTIONS_LIST_UPDATED, listener),
+  onEpicGamesAuthentication: (listener: (event, data: unknown) => void) =>
+    listenerHandler(EPIC_GAMES_INTEGRATION_RESULT, listener),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
   restartDevice: (): void => ipcRenderer.send(RESTART_APP),

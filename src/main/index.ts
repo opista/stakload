@@ -5,6 +5,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-insta
 import { join } from "path";
 
 import {
+  AUTHENTICATE_INTEGRATION,
   CLEAR_SYNC_QUEUE,
   CLOSE_APP,
   CREATE_COLLECTION,
@@ -39,7 +40,7 @@ import {
   removeGame,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
-import { testSteamIntegration } from "./channels/integrations";
+import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
 import { getOS } from "./channels/os";
 import { closeApp, restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
@@ -50,7 +51,7 @@ conf.registerRendererListener();
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  const browserWindow = new BrowserWindow({
     autoHideMenuBar: true,
     center: true,
     closable: true,
@@ -94,11 +95,10 @@ function createWindow() {
     },
   });
 
-  const syncManager = new GameSyncManager(mainWindow.webContents, conf);
+  const syncManager = new GameSyncManager(browserWindow.webContents, conf);
 
-  mainWindow.on("ready-to-show", async () => {
-    mainWindow.show();
-
+  browserWindow.on("ready-to-show", async () => {
+    browserWindow.show();
     const shouldAutoSync = conf.get("library_settings.state.syncOnStartup");
 
     if (shouldAutoSync) {
@@ -106,7 +106,7 @@ function createWindow() {
     }
   });
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  browserWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: "deny" };
   });
@@ -114,12 +114,12 @@ function createWindow() {
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
   if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    mainWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
+    browserWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
   } else {
-    mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
+    browserWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  return { browserWindow: mainWindow, syncManager };
+  return { browserWindow, syncManager };
 }
 
 // Menu.setApplicationMenu(null);
@@ -146,6 +146,7 @@ app.whenReady().then(async () => {
 
   const { browserWindow, syncManager } = createWindow();
 
+  ipcMain.handle(AUTHENTICATE_INTEGRATION, authenticateIntegration(browserWindow));
   ipcMain.handle(DECRYPT, decrypt);
   ipcMain.handle(ENCRYPT, encrypt);
   ipcMain.handle(CREATE_COLLECTION, createCollection(browserWindow.webContents));
