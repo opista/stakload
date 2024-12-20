@@ -6,6 +6,7 @@ import { useGamesQuery } from "@hooks/use-games-query";
 import { AppShell, Divider, Flex, Stack } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
+import { DEFAULT_NAV_PANE_WIDTH, useSystemStore } from "@store/system.store";
 import { Allotment, AllotmentHandle } from "allotment";
 import { useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
@@ -17,15 +18,19 @@ import { SearchControl } from "../../components/SearchControl/SearchControl";
 import { Spotlight } from "../../components/Spotlight/Spotlight";
 import classes from "./DesktopLayout.module.css";
 
-const DEFAULT_NAV_WITH = 300;
 const MIN_NAV_WIDTH = 250;
 const MAX_NAV_WIDTH = 500;
 
 export const DesktopLayout = () => {
   const navigate = useNavigate();
+  const { navigationPaneWidth, setNavigationPaneWidth } = useSystemStore(
+    useShallow((state) => ({
+      navigationPaneWidth: state.navigationPaneWidth,
+      setNavigationPaneWidth: state.setNavigationPaneWidth,
+    })),
+  );
   const allotmentRef = useRef<AllotmentHandle | null>(null);
   const [showLeftPane, setShowLeftPane] = useState(true);
-  const [leftPaneWidth, setLeftPaneWidth] = useState(300);
   const { selectedFilters } = useGameStore(
     useShallow((state) => ({
       selectedFilters: state.selectedFilters,
@@ -34,11 +39,12 @@ export const DesktopLayout = () => {
 
   const onChange = (vals: number[]) => {
     if (vals.length !== 2) return;
-    setLeftPaneWidth(vals[0]);
+    setNavigationPaneWidth(vals[0]);
   };
 
   const onReset = () => {
-    allotmentRef.current?.resize?.([DEFAULT_NAV_WITH]);
+    allotmentRef.current?.resize?.([DEFAULT_NAV_PANE_WIDTH]);
+    setNavigationPaneWidth(DEFAULT_NAV_PANE_WIDTH);
   };
 
   const onToggleLeftPane = () => {
@@ -59,7 +65,7 @@ export const DesktopLayout = () => {
     <ModalsProvider modals={{ settings: SettingsModal }}>
       <AppShell header={{ height: 60 }}>
         <AppShell.Header>
-          <Header leftPaneWidth={leftPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
+          <Header leftPaneWidth={navigationPaneWidth} onToggleLeftPane={onToggleLeftPane} showLeftPane={showLeftPane} />
         </AppShell.Header>
         <Spotlight onClick={(id) => navigate(id, { relative: "path" })} />
         <Allotment
@@ -73,7 +79,7 @@ export const DesktopLayout = () => {
             <Allotment.Pane
               maxSize={MAX_NAV_WIDTH}
               minSize={MIN_NAV_WIDTH}
-              preferredSize={leftPaneWidth}
+              preferredSize={navigationPaneWidth}
               visible={showLeftPane}
             >
               <Stack className={classes.navbar} gap={0}>
