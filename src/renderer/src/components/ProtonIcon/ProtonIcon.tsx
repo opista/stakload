@@ -48,11 +48,17 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
       return;
     }
 
-    window.api.getProtondbTier(gameId).then((tier) => {
-      const tierMetadata = (tier && TIER_MAP[tier]) || TIER_MAP.unknown;
-      setMetadata(tierMetadata);
-      setIsLoading(false);
-    });
+    window.api
+      .getProtondbTier(gameId)
+      .then((tier) => {
+        const tierMetadata = (tier && TIER_MAP[tier]) || TIER_MAP.unknown;
+        setMetadata(tierMetadata);
+      })
+      .catch((err) => {
+        // TODO - log error
+        console.error(err);
+      })
+      .finally(() => setIsLoading(false));
   }, [gameId, platforms]);
 
   return (
