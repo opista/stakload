@@ -82,26 +82,28 @@ export const GameDetails = () => {
                 {game.library === "steam" && <ProtonIcon gameId={game.gameId} platforms={game.platforms} size="xl" />}
               </Group>
 
-              <div className={classes.bodyInner}>
-                <main className={classes.main}>
-                  <ContentCard
-                    content={
-                      <Spoiler maxHeight={200}>
-                        <Text>{game.summary}</Text>
-                      </Spoiler>
-                    }
-                    title={t("gameDetails.summary")}
-                  />
-                  <ContentCard content={<GameDetailsTable game={game} />} title={t("gameDetails.details")} />
-                </main>
-                <div className={classes.sidebar}>
-                  <ContentCard content={<GameLinks websites={game.websites} />} title={t("gameDetails.links")} />
-                  <ContentCard
-                    content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
-                    title={t("gameDetails.media")}
-                  />
+              {game.summary && (
+                <div className={classes.bodyInner}>
+                  <main className={classes.main}>
+                    <ContentCard
+                      content={
+                        <Spoiler maxHeight={200}>
+                          <Text>{game.summary}</Text>
+                        </Spoiler>
+                      }
+                      title={t("gameDetails.summary")}
+                    />
+                    <ContentCard content={<GameDetailsTable game={game} />} title={t("gameDetails.details")} />
+                  </main>
+                  <div className={classes.sidebar}>
+                    <ContentCard content={<GameLinks websites={game.websites} />} title={t("gameDetails.links")} />
+                    <ContentCard
+                      content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
+                      title={t("gameDetails.media")}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
             </Container>
           </div>
         </ScrollArea>
