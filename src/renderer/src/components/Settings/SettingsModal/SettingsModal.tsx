@@ -19,32 +19,32 @@ export type SettingsModalProps = {
 export const SettingsModal = ({ id, innerProps }: ContextModalProps<SettingsModalProps>) => {
   const tabs: Tab[] = [
     {
-      Content: SettingsInterface,
-      Icon: IconDeviceImac,
+      content: SettingsInterface,
+      icon: IconDeviceImac,
       key: "interface",
       label: "settingsNavigation.interface",
     },
     {
-      Content: () => <SettingsLibrary id={id} />,
-      Icon: IconLibrary,
+      content: () => <SettingsLibrary id={id} />,
+      icon: IconLibrary,
       key: "library",
       label: "settingsNavigation.library",
     },
     {
-      Content: () => <SettingsNotification />,
-      Icon: IconBell,
+      content: () => <SettingsNotification />,
+      icon: IconBell,
       key: "notifications",
       label: "settingsNavigation.notifications",
     },
     {
-      Content: ShortcutsView,
-      Icon: IconCommand,
+      content: ShortcutsView,
+      icon: IconCommand,
       key: "shortcuts",
       label: "settingsNavigation.shortcuts",
     },
     {
-      Content: SettingsAbout,
-      Icon: IconUser,
+      content: SettingsAbout,
+      icon: IconUser,
       key: "about",
       label: "settingsNavigation.about",
     },

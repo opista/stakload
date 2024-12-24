@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import classes from "./VerticalTabs.module.css";
 
 export type Tab = {
-  Content: () => JSX.Element;
-  Icon: FC<IconProps>;
+  content: () => JSX.Element;
+  icon: FC<IconProps>;
   key: string;
   label: ParseKeys;
 };
@@ -41,7 +41,7 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
       value={activeTab}
     >
       <Tabs.List ref={setRootRef}>
-        {tabs.map(({ Icon, key, label }) => (
+        {tabs.map(({ icon: Icon, key, label }) => (
           <Tabs.Tab
             className={classes.tab}
             classNames={{
@@ -64,7 +64,7 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
         />
       </Tabs.List>
 
-      {tabs.map(({ Content, key }) => (
+      {tabs.map(({ content: Content, key }) => (
         <Tabs.Panel className={classes.tabPanel} key={key} value={key}>
           <Content />
         </Tabs.Panel>
