@@ -33,11 +33,6 @@ export const GamesGrid = () => {
 
   const containerRef = useCallback((node) => setContainerEl(node), []);
 
-  /**
-   *  TODO - this needs to be powered by filters
-   *  perhaps we only return game titles and icons
-   *  here to reduce data stored in memory
-   */
   const { data: games } = useGamesQuery<GameStoreModel[]>(
     () => window.api.getFilteredGames(selectedFilters),
     [selectedFilters],
