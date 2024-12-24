@@ -21,6 +21,8 @@ type HeaderProps = {
   showLeftPane: boolean;
 };
 
+const Separator = () => <Divider orientation="vertical" size="xs" />;
+
 export const Header = ({ leftPaneWidth, onToggleLeftPane, showLeftPane }: HeaderProps) => {
   const { displayBattery, displayBatteryPercent, displayNetwork, displayTime, displaySeconds } =
     useInterfaceSettingsStore(
@@ -51,23 +53,23 @@ export const Header = ({ leftPaneWidth, onToggleLeftPane, showLeftPane }: Header
         <GameSync />
         {displayTime && (
           <>
-            <Divider orientation="vertical" size="xs" />
+            <Separator />
             <Clock showSeconds={displaySeconds} />
           </>
         )}
         {displayBattery && (
           <>
-            <Divider orientation="vertical" size="xs" />
+            <Separator />
             <BatteryIndicator showPercentage={displayBatteryPercent} />
           </>
         )}
         {displayNetwork && (
           <>
-            <Divider orientation="vertical" size="xs" />
+            <Separator />
             <NetworkIndicator />
           </>
         )}
-        <Divider orientation="vertical" size="xs" />
+        <Separator />
         <Group gap="xs">
           <SettingsControl />
           <PowerControl />
