@@ -49,6 +49,10 @@ export const findGameById = async (id: string) => {
   return await db.findOne<GameStoreModel>({ _id: id });
 };
 
+export const findGamesByEpicNamespace = async (ids: string[]) => {
+  return await db.find<GameStoreModel>({ "libraryMeta.namespace": { $in: ids }, library: "epic-game-store" });
+};
+
 export const findLastSyncedAt = async () => {
   /**
    * TODO - Is this right? Might need to spend

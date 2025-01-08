@@ -1,3 +1,4 @@
+import { GameStoreModel, LikeLibrary } from "@contracts/database/games";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { GameSyncMessage } from "@contracts/store/game";
 import { WebContents } from "electron";
@@ -12,11 +13,14 @@ import {
   EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
-import { findUnsyncedGames, updateGameByGameId } from "../database/games";
-import { findAndInsertNewGames } from "../libraries/steam/integration";
+import { findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
+import { graphqlGetGameId } from "../libraries/epic-games/api";
+import { findAndInsertNewGames as findAndInsertEpicGames } from "../libraries/epic-games/integration";
+import { findAndInsertNewGames as findAndInsertSteamGames } from "../libraries/steam/integration";
 import { decryptString } from "../util/safe-storage";
+
 export class GameSyncManager {
-  private syncQueue = fastq.promise((gameId: string) => this.worker(gameId), 1);
+  private syncQueue = fastq.promise((game: GameStoreModel) => this.worker(game), 1);
   private processing: number = 0;
   private total: number = 0;
 
@@ -25,15 +29,13 @@ export class GameSyncManager {
     private conf: Conf,
   ) {}
 
-  async worker(gameId) {
-    this.processing += 1;
-
-    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}?library=steam`);
+  async updateMetadata(gameId: string, library: LikeLibrary) {
+    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}?library=${library}`);
 
     if (response.status === 200) {
       const parsed = await response.json();
       /**
-       * TOSO - revisit this. The API contract
+       * TODO - revisit this. The API contract
        * should be shared. Move trulaunch-api into
        * this repo and convert to monorepo
        */
@@ -44,6 +46,35 @@ export class GameSyncManager {
       this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
     } else {
       this.sendMessage(EVENT_METADATA_SYNC_SKIPPED);
+    }
+  }
+
+  async epicWorker(game: GameStoreModel) {
+    const gameId = await graphqlGetGameId(game.libraryMeta!.namespace);
+
+    if (!gameId) {
+      updateGameById(game._id, { metadataSyncedAt: new Date() });
+      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
+      return;
+    }
+
+    this.updateMetadata(gameId, "epic-game-store");
+  }
+
+  async steamWorker(game: GameStoreModel) {
+    await this.updateMetadata(game.gameId!, "steam");
+  }
+
+  async worker(game: GameStoreModel) {
+    this.processing += 1;
+
+    switch (game.library) {
+      case "steam":
+        await this.updateMetadata(game.gameId!, "steam");
+        break;
+      case "epic-game-store":
+        await this.epicWorker(game);
+        break;
     }
 
     if (!this.syncQueue.length()) {
@@ -57,15 +88,15 @@ export class GameSyncManager {
     const config = this.conf.get("library_settings.state.steamIntegration") as SteamIntegrationDetails;
     const decrypedApiKey = decryptString(config.webApiKey);
 
-    await findAndInsertNewGames(config.steamId, decrypedApiKey);
+    await findAndInsertSteamGames(config.steamId, decrypedApiKey);
+    await findAndInsertEpicGames();
     this.sendMessage(EVENT_GAMES_LIST_UPDATED);
     const games = await findUnsyncedGames();
-    const gameIds = games.map(({ gameId }) => gameId);
-    this.total += gameIds.length;
+    this.total += games.length;
 
-    if (gameIds?.length) {
+    if (games?.length) {
       this.sendMessage(EVENT_METADATA_SYNC_INSERTED);
-      await Promise.all(gameIds.map((gameId) => this.syncQueue.push(gameId)));
+      await Promise.all(games.map((game) => this.syncQueue.push(game)));
     }
   }
 
