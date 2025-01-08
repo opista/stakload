@@ -33,7 +33,7 @@ export const findAndInsertNewGames = async (steamId: string, webApiKey: string) 
 
   const newGames = games
     .filter((game) => !matchedIds.includes(String(game.appid)))
-    .map((game) => mapOwnedGameDetailsToGameStoreModel(game, LIBRARY));
+    .map((game) => mapOwnedGameDetailsToGameStoreModel(game));
 
   await bulkInsertGames(newGames);
 };

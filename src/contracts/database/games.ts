@@ -9,6 +9,12 @@ export enum Library {
 
 export type LikeLibrary = `${Library}`;
 
+export type EpicLibraryMeta = {
+  namespace: string;
+};
+
+export type LibraryMeta = EpicLibraryMeta;
+
 export type Platform = "linux" | "mac" | "windows";
 
 /**
@@ -95,7 +101,7 @@ export type GameStoreModel = {
   description?: string;
   developers?: IdAndName[];
   firstReleaseDate?: string;
-  gameId: string;
+  gameId?: string;
   gameModes?: IdAndName[];
   genres?: IdAndName[];
   icon?: string;
@@ -103,6 +109,7 @@ export type GameStoreModel = {
   lastPlayedAt?: Date;
   // TODO this should be an id and name for filtering
   library: LikeLibrary;
+  libraryMeta?: LibraryMeta;
   listImage?: string;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
@@ -122,7 +129,10 @@ export type GameStoreModel = {
   websites?: Website[];
 };
 
-export type InitialGameStoreModel = Pick<GameStoreModel, "gameId" | "icon" | "library" | "name" | "sortableName">;
+export type InitialGameStoreModel = Pick<
+  GameStoreModel,
+  "gameId" | "icon" | "library" | "libraryMeta" | "name" | "sortableName"
+>;
 
 export type GameFilters = {
   ageRatings?: string[];
