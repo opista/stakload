@@ -10,7 +10,7 @@ import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
 import ProtonIcon from "@components/ProtonIcon/ProtonIcon";
 import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
-import { Container, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
+import { AspectRatio, Container, Flex, Grid, GridCol, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
 import { IconPuzzleOff } from "@tabler/icons-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -79,31 +79,58 @@ export const GameDetails = () => {
                 {/* TODO - Only show this icon if game isn't supported on system */}
                 <IncompatibilityIcon color="orange" size="xl" />
                 <LibraryIcon game={game} size="xl" />
-                {game.library === "steam" && <ProtonIcon gameId={game.gameId} platforms={game.platforms} size="xl" />}
+                {game.library === "steam" && <ProtonIcon gameId={game?.gameId} platforms={game.platforms} size="xl" />}
               </Group>
 
               {game.summary && (
-                <div className={classes.bodyInner}>
-                  <main className={classes.main}>
-                    <ContentCard
-                      content={
+                <main>
+                  <Grid>
+                    <GridCol span={6}>
+                      <ContentCard title={t("gameDetails.summary")}>
                         <Spoiler maxHeight={200}>
                           <Text>{game.summary}</Text>
                         </Spoiler>
-                      }
-                      title={t("gameDetails.summary")}
-                    />
-                    <ContentCard content={<GameDetailsTable game={game} />} title={t("gameDetails.details")} />
-                  </main>
-                  <div className={classes.sidebar}>
-                    <ContentCard content={<GameLinks websites={game.websites} />} title={t("gameDetails.links")} />
-                    <ContentCard
-                      content={<MediaCarousel height={200} images={game.screenshots} videos={game.videos} />}
-                      title={t("gameDetails.media")}
-                    />
-                  </div>
-                </div>
+                      </ContentCard>
+                    </GridCol>
+                    <GridCol span={6}>
+                      <AspectRatio ratio={3 / 2}>
+                        <MediaCarousel height="100%" images={game.screenshots} videos={game.videos} />
+                      </AspectRatio>
+                    </GridCol>
+                    <GridCol span={12}>
+                      <ContentCard title={t("gameDetails.links")}>
+                        <GameLinks websites={game.websites} />
+                      </ContentCard>
+                    </GridCol>
+                    <GridCol span={12}>
+                      <ContentCard title={t("gameDetails.details")}>
+                        <GameDetailsTable game={game} />
+                      </ContentCard>
+                    </GridCol>
+                    <GridCol span={12}>
+                      <Flex justify="flex-end">
+                        <ContentCard>
+                          <>
+                            <Flex justify="space-between">
+                              <Text className={classes.idLabel} size="xs">
+                                Game ID
+                              </Text>
+                              <Text size="xs">{game.gameId}</Text>
+                            </Flex>
+                            <Flex justify="space-between">
+                              <Text className={classes.idLabel} size="xs">
+                                IGDB ID
+                              </Text>
+                              <Text size="xs">{game.igdbId}</Text>
+                            </Flex>
+                          </>
+                        </ContentCard>
+                      </Flex>
+                    </GridCol>
+                  </Grid>
+                </main>
               )}
+              <div></div>
             </Container>
           </div>
         </ScrollArea>

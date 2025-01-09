@@ -6,35 +6,19 @@
 
 .scrollArea {
   container-type: inline-size;
+  height: 100%;
 }
 
-.scrollAreaViewport > div {
+.scrollAreaViewport>div {
   background-image: radial-gradient(circle at 100% 0%, var(--gradient-color) 0px, transparent 50%),
     radial-gradient(circle at 0% 100%, var(--gradient-color) 0px, transparent 50%),
     radial-gradient(circle at 100% 100%, var(--gradient-color) 0px, transparent 50%);
   backdrop-filter: blur(20px);
-}
-
-.main {
-  flex: 1;
-}
-
-.sidebar {
-  flex-grow: 1;
-  max-width: 300px;
-  min-width: 300px;
-}
-
-.bodyInner {
-  display: flex;
-  justify-content: space-between;
-  margin-top: var(--mantine-spacing-lg);
-  gap: var(--mantine-spacing-lg);
-  width: 100%;
+  min-height: 100%;
 }
 
 .contentContainer {
-  margin-top: -200px;
+  margin-top: -20vh;
 }
 
 .iconGroup {
@@ -52,17 +36,8 @@
   text-shadow: #000 0px 0px 0.2rem;
 }
 
-@container (max-width: 700px) {
-  .contentContainer {
-    flex: 0 0 100%;
-    max-width: none;
-  }
-
-  .bodyInner {
-    flex-wrap: wrap;
-  }
-
-  .sidebar {
-    max-width: 100%;
-  }
+.idLabel {
+  margin-right: var(--mantine-spacing-xl);
 }
+
+@container (max-width: 700px) {}

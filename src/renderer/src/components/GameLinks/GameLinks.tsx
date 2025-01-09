@@ -1,6 +1,6 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { LikeWebsiteCategoryText, Website, WebsiteCategoryText } from "@contracts/database/games";
-import { SimpleGrid, UnstyledButton } from "@mantine/core";
+import { Flex, UnstyledButton } from "@mantine/core";
 import {
   IconBrandAndroid,
   IconBrandApple,
@@ -65,11 +65,10 @@ type IconPropsMap = {
 };
 
 type GameLinksProps = {
-  columns?: number;
   websites?: Website[];
 };
 
-export const GameLinks = ({ columns = 6, websites }: GameLinksProps) => {
+export const GameLinks = ({ websites }: GameLinksProps) => {
   const { t } = useTranslation();
 
   const defaultIcon = {
@@ -162,9 +161,5 @@ export const GameLinks = ({ columns = 6, websites }: GameLinksProps) => {
       return <WebsiteIcon icon={icon} key={website} label={label} url={formattedUrl} />;
     });
 
-  return (
-    <SimpleGrid cols={columns} spacing="xs">
-      {buttons}
-    </SimpleGrid>
-  );
+  return <Flex gap="xs">{buttons}</Flex>;
 };

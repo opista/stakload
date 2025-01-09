@@ -4,15 +4,17 @@ import { ReactNode } from "react";
 import classes from "./ContentCard.module.css";
 
 type ContentCardProps = {
-  content: ReactNode;
-  title: ReactNode;
+  children: ReactNode;
+  title?: ReactNode;
 };
 
-export const ContentCard = ({ content, title }: ContentCardProps) => (
+export const ContentCard = ({ children, title }: ContentCardProps) => (
   <Paper classNames={{ root: classes.container }}>
-    <Title classNames={{ root: classes.title }} order={2}>
-      {title}
-    </Title>
-    {content}
+    {title && (
+      <Title classNames={{ root: classes.title }} order={2}>
+        {title}
+      </Title>
+    )}
+    {children}
   </Paper>
 );

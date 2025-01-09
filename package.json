@@ -49,6 +49,7 @@
     "clsx": "^2.1.1",
     "electron-conf": "^1.2.1",
     "electron-updater": "^6.1.7",
+    "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
     "fastq": "^1.17.1",
     "graphql": "^16.10.0",
