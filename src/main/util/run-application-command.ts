@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
 
-import { BIN_DIR } from "../constants";
+import { BIN_DIR, IS_WINDOWS } from "../constants";
 
 export const runApplicationCommand = async (
   application: string,
@@ -11,7 +11,9 @@ export const runApplicationCommand = async (
     const stdout: string[] = [];
     const stderr: string[] = [];
 
-    const process = spawn(`${application} ${command}`, args, { cwd: BIN_DIR, shell: true });
+    const applicationPath = [!IS_WINDOWS && "./", application].filter(Boolean).join("");
+
+    const process = spawn(`${applicationPath} ${command}`, args, { cwd: BIN_DIR, shell: true });
 
     process.stdout.setEncoding("utf8");
     process.stdout.on("data", (data) => {
@@ -29,8 +31,8 @@ export const runApplicationCommand = async (
       }
 
       resolve({
-        stdout: stdout.join("\n"),
-        stderr: stderr.join("\n"),
+        stdout: stdout.join(""),
+        stderr: stderr.join(""),
       });
     });
 
