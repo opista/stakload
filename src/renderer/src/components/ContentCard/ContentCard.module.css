@@ -1,8 +1,8 @@
 .container {
   padding: var(--mantine-spacing-md) var(--mantine-spacing-lg) var(--mantine-spacing-lg);
-  background-color: var(--mantine-color-dark-light-hover);
+  background-color: rgb(80 80 80 / 28%);
 
-  + .container {
+  +.container {
     margin-top: var(--mantine-spacing-lg);
   }
 }
