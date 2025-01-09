@@ -1,3 +1,7 @@
+.themeIcon {
+  display: flex;
+}
+
 .icon {
   height: 80%;
   width: 80%;
