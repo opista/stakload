@@ -37,7 +37,7 @@ export const MediaVideo = ({ id }: MediaVideoProps) => {
               />
             </AspectRatio>
           ),
-          size: "xl",
+          size: "70%",
           title: t("media"),
         })
       }

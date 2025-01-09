@@ -1,17 +1,21 @@
 import { Carousel } from "@mantine/carousel";
 import { IconCaretLeftFilled, IconCaretRightFilled } from "@tabler/icons-react";
+import Autoplay from "embla-carousel-autoplay";
+import { useRef } from "react";
 
 import { MediaImage } from "../MediaImage/MediaImage";
 import { MediaVideo } from "../MediaVideo/MediaVideo";
 import classes from "./MediaCarousel.module.css";
 
 type MediaCarouselProps = {
-  height?: number;
+  height?: string | number;
   images?: string[];
   videos?: string[];
 };
 
 export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaCarouselProps) => {
+  const autoplay = useRef(Autoplay({ delay: 5000 }));
+
   const imageSlides = images?.map((image) => (
     <Carousel.Slide key={image}>
       <MediaImage src={image} />
@@ -40,8 +44,11 @@ export const MediaCarousel = ({ height = 300, images = [], videos = [] }: MediaC
       height={height}
       includeGapInSize
       loop
-      nextControlIcon={<IconCaretRightFilled />}
-      previousControlIcon={<IconCaretLeftFilled />}
+      nextControlIcon={<IconCaretRightFilled size="70%" />}
+      onMouseEnter={autoplay.current.stop}
+      onMouseLeave={autoplay.current.reset}
+      plugins={[autoplay.current]}
+      previousControlIcon={<IconCaretLeftFilled size="70%" />}
       slideGap={0}
       slideSize="100%"
       withControls={!!slides.length}

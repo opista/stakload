@@ -1,11 +1,16 @@
 .controls {
-  height: 100%;
-  top: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .control {
-  border-radius: 0;
-  height: 100%;
+  margin: var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-md);
+  height: 30px;
+  width: 30px;
+  color: var(--mantine-color-default-color);
+  background-color: var(--mantine-color-dark-filled);
+  border: none;
 }
 
 .indicator {
@@ -24,6 +29,6 @@
 }
 
 .root {
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
   overflow: hidden;
 }
