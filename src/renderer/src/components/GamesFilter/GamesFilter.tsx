@@ -1,6 +1,6 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
-import { LikeAgeRatingText } from "@contracts/database/games";
+import { LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
@@ -38,6 +38,33 @@ const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
   {
     label: "ageRating.EIGHTEEN",
     value: "EIGHTEEN",
+  },
+];
+
+const libraryFilters: { label: string; value: LikeLibrary }[] = [
+  {
+    label: "Epic Game Store",
+    value: "epic-game-store",
+  },
+  {
+    label: "GOG",
+    value: "gog",
+  },
+  {
+    label: "Microsoft",
+    value: "microsoft",
+  },
+  {
+    label: "Steam",
+    value: "steam",
+  },
+  {
+    label: "Xbox Game Pass Ultimate Cloud",
+    value: "xbox-game-pass-ultimate-cloud",
+  },
+  {
+    label: "Xbox Marketplace",
+    value: "xbox-marketplace",
   },
 ];
 
@@ -129,6 +156,16 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Title>
           <Grid>
             <Grid.Col span={6}>
+              <MultiSelect
+                className={classes.select}
+                clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                data={libraryFilters}
+                label="Libraries"
+                onChange={onFilterChange("libraries")}
+                searchable
+                value={selectedFilters.libraries}
+              />
               <MultiSelect
                 className={classes.select}
                 clearable
