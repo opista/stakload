@@ -2,17 +2,19 @@ import { GameStoreModel } from "@contracts/database/games";
 import { BackgroundImage } from "@mantine/core";
 import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
 import { rgbToHsl } from "@util/rgb-to-hsl";
+import clsx from "clsx";
 import Vibrant from "node-vibrant";
 import { useEffect } from "react";
 
 import classes from "./GameHero.module.css";
 
 type GameHeroProps = {
+  className?: string;
   game: GameStoreModel;
   onPaletteChange?: (hsl: string | null) => void;
 };
 
-export const GameHero = ({ game, onPaletteChange }: GameHeroProps) => {
+export const GameHero = ({ className, game, onPaletteChange }: GameHeroProps) => {
   const media = getHighestRatioMedia(game?.artworks);
   const headerImage = media?.url || game?.screenshots?.[0];
 
@@ -44,5 +46,5 @@ export const GameHero = ({ game, onPaletteChange }: GameHeroProps) => {
       });
   }, [headerImage]);
 
-  return <BackgroundImage className={classes.hero} src={headerImage || ""} />;
+  return <BackgroundImage className={clsx(classes.hero, className)} src={headerImage || ""} />;
 };

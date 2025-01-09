@@ -1,5 +1,5 @@
 .hero {
-  height: 40vh;
+  height: 50vh;
   background-color: var(--mantine-primary-color-light);
   mask-image: linear-gradient(to bottom,
       black 0%,
