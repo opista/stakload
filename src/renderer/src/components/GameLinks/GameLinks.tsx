@@ -1,7 +1,9 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
 import { LikeWebsiteCategoryText, Website, WebsiteCategoryText } from "@contracts/database/games";
-import { Flex, UnstyledButton } from "@mantine/core";
+import { Flex, Menu, MenuDropdown, MenuItem, MenuTarget, UnstyledButton } from "@mantine/core";
 import {
+  IconApps,
   IconBrandAndroid,
   IconBrandApple,
   IconBrandDiscord,
@@ -15,11 +17,12 @@ import {
   IconBrandX,
   IconBrandYoutube,
   IconDeviceTablet,
+  IconExternalLink,
   IconProps,
   IconQuestionMark,
   IconWorldWww,
 } from "@tabler/icons-react";
-import { FC } from "react";
+import { FC, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconEpicGames } from "../../icons/IconEpicGames";
@@ -46,20 +49,52 @@ const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
   "IPAD",
 ];
 
+type DropdownProps = WebsiteIconProps & {
+  deepLink: string;
+};
+
 type WebsiteIconProps = {
   icon: FC<IconProps>;
   label: string;
-  url: string;
+  url?: string;
 };
 
-const WebsiteIcon = ({ icon, label, url }: WebsiteIconProps) => (
-  <UnstyledButton component="a" href={url} rel="noreferrer" target="_blank">
-    <ActionIcon aria-label={label} icon={icon} size="lg" title={label} variant="filled" />
-  </UnstyledButton>
-);
+const Dropdown = ({ deepLink, icon, label, url }: DropdownProps) => {
+  return (
+    <Menu arrowOffset={16} position="bottom-start" width={200} withArrow>
+      <MenuTarget>
+        <ActionIcon aria-label={label} icon={icon} size="lg" title={label} variant="filled" />
+      </MenuTarget>
+
+      <MenuDropdown>
+        <MenuItem component="a" href={deepLink} leftSection={<IconApps size="16" />} target="_blank">
+          Application
+        </MenuItem>
+        <MenuItem component="a" href={url} leftSection={<IconExternalLink size="16" />} target="_blank">
+          Website
+        </MenuItem>
+      </MenuDropdown>
+    </Menu>
+  );
+};
+
+const WebsiteIcon = forwardRef<HTMLButtonElement, WebsiteIconProps>(function WebsiteIcon({ icon, label, url }, ref) {
+  return (
+    <ConditionalWrapper
+      condition={!!url}
+      wrapper={(children) => (
+        <UnstyledButton component="a" href={url} rel="noreferrer" target="_blank">
+          {children}
+        </UnstyledButton>
+      )}
+    >
+      <ActionIcon aria-label={label} icon={icon} ref={ref} size="lg" title={label} variant="filled" />
+    </ConditionalWrapper>
+  );
+});
 
 type IconPropsMap = {
-  formatter?: (url: string) => string;
+  deepLinkFormatter?: (url: string) => string | undefined;
   icon: FC<IconProps>;
   label: string;
 };
@@ -82,10 +117,24 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       label: "Android",
     },
     DISCORD: {
+      deepLinkFormatter: (url: string) => {
+        const [, id] = url.split("/invite/");
+
+        if (!id) return;
+
+        return `discord://invite/${id}`;
+      },
       icon: IconBrandDiscord,
       label: "Discord",
     },
     EPIC_GAMES: {
+      deepLinkFormatter: (url: string) => {
+        const [, slug] = url.match(/(?:product\/|p\/)([\w-]+)/) || [];
+
+        if (!slug) return;
+
+        return `com.epicgames.launcher://store/p/${slug}`;
+      },
       icon: IconEpicGames,
       label: "Epic Games",
     },
@@ -122,9 +171,9 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       label: "Reddit",
     },
     STEAM: {
+      deepLinkFormatter: (url: string) => `steam://openurl/${url}`,
       icon: IconBrandSteam,
       label: "Steam",
-      formatter: (url: string) => `steam://openurl/${url}`,
     },
     TWITCH: {
       icon: IconBrandTwitch,
@@ -156,9 +205,14 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
     .map(({ url, website }) => {
-      const { icon, label, formatter } = websiteIconPropsMap[website];
-      const formattedUrl = formatter?.(url) || url;
-      return <WebsiteIcon icon={icon} key={website} label={label} url={formattedUrl} />;
+      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[website];
+      const deepLink = deepLinkFormatter?.(url);
+
+      return deepLink ? (
+        <Dropdown deepLink={deepLink} icon={icon} key={website} label={label} url={url} />
+      ) : (
+        <WebsiteIcon icon={icon} key={website} label={label} url={url} />
+      );
     });
 
   return (

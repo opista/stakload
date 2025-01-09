@@ -87,7 +87,7 @@ export const GameDetails = () => {
                   <Grid>
                     <GridCol span={5}>
                       <ContentCard className={classes.summaryCard} title={t("gameDetails.summary")}>
-                        <Spoiler maxHeight={200}>
+                        <Spoiler maxHeight={300}>
                           <Text>{game.summary}</Text>
                         </Spoiler>
                       </ContentCard>
