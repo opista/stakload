@@ -161,5 +161,9 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       return <WebsiteIcon icon={icon} key={website} label={label} url={formattedUrl} />;
     });
 
-  return <Flex gap="xs">{buttons}</Flex>;
+  return (
+    <Flex gap="xs" wrap="wrap">
+      {buttons}
+    </Flex>
+  );
 };
