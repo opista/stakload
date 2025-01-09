@@ -202,6 +202,16 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
+                data={filters?.platforms}
+                label="Platforms"
+                onChange={onFilterChange("platforms")}
+                searchable
+                value={selectedFilters.platforms}
+              />
+              <MultiSelect
+                className={classes.select}
+                clearable
+                comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={ageRatingFilters.map(({ label, value }) => ({ label: t(label), value }))}
                 label="Age ratings"
                 onChange={onFilterChange("ageRatings")}

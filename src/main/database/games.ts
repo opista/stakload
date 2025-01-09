@@ -113,6 +113,7 @@ export const findGameFilters = async () => {
     "developers",
     "gameModes",
     "genres",
+    "platforms",
     "playerPerspectives",
     "publishers",
   ];

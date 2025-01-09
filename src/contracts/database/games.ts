@@ -15,8 +15,6 @@ export type EpicLibraryMeta = {
 
 export type LibraryMeta = EpicLibraryMeta;
 
-export type Platform = "linux" | "mac" | "windows";
-
 /**
  * TODO these are duplicates, we should consolidate
  * once we have moved the API into this repo
@@ -114,8 +112,6 @@ export type GameStoreModel = {
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
   name: string;
-  // TODO Hmmm, what should we do here?
-  platform?: Platform[];
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
