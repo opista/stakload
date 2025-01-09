@@ -39,7 +39,14 @@ export class GameSyncManager {
        * should be shared. Move trulaunch-api into
        * this repo and convert to monorepo
        */
-      await updateGameByGameId(gameId, { ...parsed, metadataSyncedAt: new Date() });
+
+      const { icon, ...rest } = parsed;
+
+      await updateGameByGameId(gameId, {
+        ...rest,
+        ...(library !== "steam" && { icon }),
+        metadataSyncedAt: new Date(),
+      });
       this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
     } else if (response.status === 404) {
       await updateGameByGameId(gameId, { metadataSyncedAt: new Date() });
