@@ -3,12 +3,13 @@ import { Header } from "@components/Header/Header";
 import { SettingsModal } from "@components/Settings/SettingsModal/SettingsModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { AppShell, Divider, Flex, Stack } from "@mantine/core";
+import { AppShell, Divider, Flex, Stack, Text } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { DEFAULT_NAV_PANE_WIDTH, useSystemStore } from "@store/system.store";
 import { Allotment, AllotmentHandle } from "allotment";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
@@ -23,6 +24,7 @@ const MAX_NAV_WIDTH = 500;
 
 export const DesktopLayout = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { navigationPaneWidth, setNavigationPaneWidth } = useSystemStore(
     useShallow((state) => ({
       navigationPaneWidth: state.navigationPaneWidth,
@@ -83,14 +85,19 @@ export const DesktopLayout = () => {
               visible={showLeftPane}
             >
               <Stack className={classes.navbar} gap={0}>
-                <AppShell.Section className={classes.navSection}>
-                  <Flex align="center" className={classes.filterContainer} justify="center">
-                    <SearchControl />
-                    <GamesFilter />
-                  </Flex>
-                  <Flex>
-                    <CollectionSelect className={classes.collectionSelect} />
-                  </Flex>
+                <AppShell.Section className={classes.filterSection}>
+                  <Stack gap="xs">
+                    <Flex align="center" justify="center">
+                      <SearchControl />
+                      <GamesFilter />
+                    </Flex>
+                    <Flex>
+                      <CollectionSelect className={classes.collectionSelect} />
+                    </Flex>
+                    <Flex justify="flex-end">
+                      <Text size="sm">{t("resultsWithCount", { count: games?.length || 0 })}</Text>
+                    </Flex>
+                  </Stack>
                 </AppShell.Section>
                 <Divider />
                 <AppShell.Section className={classes.navSection} flex={1}>

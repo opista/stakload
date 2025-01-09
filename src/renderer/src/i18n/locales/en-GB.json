@@ -147,5 +147,7 @@
     "native": "Native",
     "unknown": "Unknown"
   },
-  "enabled": "Enabled"
+  "enabled": "Enabled",
+  "resultsWithCount_one": "{{count}} result",
+  "resultsWithCount_other": "{{count}} results"
 }
