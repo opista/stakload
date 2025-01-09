@@ -5,7 +5,6 @@ import { mapOwnedGameToGameStoreModel } from "./util/map-owned-game-to-game-stor
 
 export const findAndInsertNewGames = async () => {
   const games = await getOwnedGames();
-
   const matches = await findGamesByEpicNamespace(games.map(({ metadata: { namespace } }) => namespace));
   const matchedIds = matches.map(({ libraryMeta }) => libraryMeta?.namespace);
 

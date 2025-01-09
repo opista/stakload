@@ -49,16 +49,24 @@ export class GameSyncManager {
     }
   }
 
-  async epicWorker(game: GameStoreModel) {
-    const gameId = await graphqlGetGameId(game.libraryMeta!.namespace);
+  /**
+   * TODO - Major tidy up required here
+   */
 
+  async epicWorker(game: GameStoreModel) {
+    if (game.gameId) {
+      return this.updateMetadata(game.gameId, "epic-game-store");
+    }
+
+    const gameId = await graphqlGetGameId(game.libraryMeta!.namespace);
     if (!gameId) {
-      updateGameById(game._id, { metadataSyncedAt: new Date() });
+      await updateGameById(game._id, { metadataSyncedAt: new Date() });
       this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
       return;
     }
 
-    this.updateMetadata(gameId, "epic-game-store");
+    await updateGameById(game._id, { gameId });
+    return this.updateMetadata(gameId, "epic-game-store");
   }
 
   async steamWorker(game: GameStoreModel) {

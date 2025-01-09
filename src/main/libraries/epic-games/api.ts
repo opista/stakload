@@ -16,21 +16,14 @@ export const graphqlGetGameId = async (namespace: string): Promise<string | null
     fetchPolicy: "no-cache",
     query: CatalogQuery,
     variables: {
+      count: 1000,
       country: "US",
       language: "en",
       namespace,
     },
   });
 
-  if (result.data.Catalog.catalogOffers.elements.length === 0) {
-    console.error("No game found for namespace", namespace);
-    return null;
-  }
+  const game = result.data.Catalog.catalogOffers.elements.find(({ offerType }) => offerType === "BASE_GAME");
 
-  if (result.data.Catalog.catalogOffers.elements.length > 1) {
-    console.error("Multiple games found for namespace", namespace);
-    return null;
-  }
-
-  return result.data.Catalog.catalogOffers.elements[0].id;
+  return game?.id ?? null;
 };

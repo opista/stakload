@@ -9,7 +9,7 @@ import { OwnedGame } from "./types/owned-game";
  * operating systems
  */
 
-const APPLICATION_NAME = "legendary.exe";
+const APPLICATION_NAME = "legendary";
 
 type LoginModel = {
   data?: {
@@ -58,9 +58,10 @@ export const logout = async () => {
 export const getOwnedGames = async (): Promise<OwnedGame[]> => {
   try {
     const result = await runApplicationCommand(APPLICATION_NAME, "list", [
+      "--force-refresh",
       "--include-non-installable",
       "--json",
-      "--force-refresh",
+      "--platform Windows",
     ]);
 
     return JSON.parse(result.stdout);
