@@ -66,7 +66,7 @@ export const GameDetails = () => {
           viewportRef={containerRef}
         >
           <BackToTop container={containerRef.current} />
-          <GameHero game={game} onPaletteChange={onPaletteChange} />
+          <GameHero className={classes.hero} game={game} onPaletteChange={onPaletteChange} />
           {/* TODO - identify if a game has no content, and if so, show
           a message and potentially add an option to search for metadata. 
           We'll need to build this into the API too */}
@@ -85,22 +85,17 @@ export const GameDetails = () => {
               {game.summary && (
                 <main>
                   <Grid>
-                    <GridCol span={6}>
-                      <ContentCard title={t("gameDetails.summary")}>
+                    <GridCol span={5}>
+                      <ContentCard className={classes.summaryCard} title={t("gameDetails.summary")}>
                         <Spoiler maxHeight={200}>
                           <Text>{game.summary}</Text>
                         </Spoiler>
                       </ContentCard>
                     </GridCol>
-                    <GridCol span={6}>
-                      <AspectRatio ratio={3 / 2}>
+                    <GridCol span={7}>
+                      <AspectRatio ratio={16 / 9}>
                         <MediaCarousel height="100%" images={game.screenshots} videos={game.videos} />
                       </AspectRatio>
-                    </GridCol>
-                    <GridCol span={12}>
-                      <ContentCard title={t("gameDetails.links")}>
-                        <GameLinks websites={game.websites} />
-                      </ContentCard>
                     </GridCol>
                     <GridCol span={12}>
                       <ContentCard title={t("gameDetails.details")}>
@@ -108,23 +103,26 @@ export const GameDetails = () => {
                       </ContentCard>
                     </GridCol>
                     <GridCol span={12}>
+                      <ContentCard title={t("gameDetails.links")}>
+                        <GameLinks websites={game.websites} />
+                      </ContentCard>
+                    </GridCol>
+                    <GridCol span={12}>
                       <Flex justify="flex-end">
-                        <ContentCard>
-                          <>
-                            <Flex justify="space-between">
-                              <Text className={classes.idLabel} size="xs">
-                                Game ID
-                              </Text>
-                              <Text size="xs">{game.gameId}</Text>
-                            </Flex>
-                            <Flex justify="space-between">
-                              <Text className={classes.idLabel} size="xs">
-                                IGDB ID
-                              </Text>
-                              <Text size="xs">{game.igdbId}</Text>
-                            </Flex>
-                          </>
-                        </ContentCard>
+                        <div>
+                          <Flex justify="space-between">
+                            <Text className={classes.idLabel} size="xs">
+                              Game ID
+                            </Text>
+                            <Text size="xs">{game.gameId}</Text>
+                          </Flex>
+                          <Flex justify="space-between">
+                            <Text className={classes.idLabel} size="xs">
+                              IGDB ID
+                            </Text>
+                            <Text size="xs">{game.igdbId}</Text>
+                          </Flex>
+                        </div>
                       </Flex>
                     </GridCol>
                   </Grid>

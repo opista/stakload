@@ -4,6 +4,10 @@
   container-type: inline-size;
 }
 
+.contentContainer {
+  margin-top: 15vh;
+}
+
 .scrollArea {
   container-type: inline-size;
   height: 100%;
@@ -17,8 +21,8 @@
   min-height: 100%;
 }
 
-.contentContainer {
-  margin-top: -20vh;
+.summaryCard {
+  height: 100%;
 }
 
 .iconGroup {
@@ -26,18 +30,31 @@
 }
 
 .title {
+  display: flex;
+  align-items: end;
   margin-bottom: var(--mantine-spacing-md);
   line-height: var(--mantine-line-height-xs);
-  color: var(--mantine-primary-color-contrast);
+  color: var(--mantine-color-default-color);
   font-weight: 900;
   font-size: 50px;
   width: 100%;
+  height: calc(3 * 50px * var(--mantine-line-height-xs));
   max-width: 900px;
   text-shadow: #000 0px 0px 0.2rem;
+  opacity: 0.7;
 }
 
 .idLabel {
   margin-right: var(--mantine-spacing-xl);
+}
+
+
+.hero {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 @container (max-width: 700px) {}
