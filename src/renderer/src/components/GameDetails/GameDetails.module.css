@@ -6,6 +6,7 @@
 
 .contentContainer {
   margin-top: 15vh;
+  margin-bottom: 50px;
 }
 
 .scrollArea {
@@ -13,7 +14,7 @@
   height: 100%;
 }
 
-.scrollAreaViewport>div {
+.scrollAreaViewport > div {
   background-image: radial-gradient(circle at 100% 0%, var(--gradient-color) 0px, transparent 50%),
     radial-gradient(circle at 0% 100%, var(--gradient-color) 0px, transparent 50%),
     radial-gradient(circle at 100% 100%, var(--gradient-color) 0px, transparent 50%);
@@ -48,7 +49,6 @@
   margin-right: var(--mantine-spacing-xl);
 }
 
-
 .hero {
   position: absolute;
   z-index: -1;
@@ -57,4 +57,5 @@
   width: 100%;
 }
 
-@container (max-width: 700px) {}
+@container (max-width: 700px) {
+}
