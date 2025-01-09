@@ -30,7 +30,7 @@ export const TooltipIcon = ({
       position={position}
       {...restTooltipProps}
     >
-      <ThemeIcon variant={variant} {...restThemeIconProps}>
+      <ThemeIcon className={classes.themeIcon} variant={variant} {...restThemeIconProps}>
         {loading ? (
           <Loader color={style?.color} size="sm" />
         ) : (

@@ -27,6 +27,7 @@ export const getFilteredGames = async ({
   developers,
   gameModes,
   genres,
+  libraries,
   platforms,
   playerPerspectives,
   publishers,
@@ -35,6 +36,7 @@ export const getFilteredGames = async ({
     .find<GameStoreModel>({
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
       ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
+      ...(libraries?.length && { library: { $in: libraries } }),
       ...idMatcher("developers", developers),
       ...idMatcher("gameModes", gameModes),
       ...idMatcher("genres", genres),
@@ -47,6 +49,10 @@ export const getFilteredGames = async ({
 
 export const findGameById = async (id: string) => {
   return await db.findOne<GameStoreModel>({ _id: id });
+};
+
+export const findGamesByEpicNamespace = async (ids: string[]) => {
+  return await db.find<GameStoreModel>({ "libraryMeta.namespace": { $in: ids }, library: "epic-game-store" });
 };
 
 export const findLastSyncedAt = async () => {

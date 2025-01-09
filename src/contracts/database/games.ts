@@ -139,6 +139,7 @@ export type GameFilters = {
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
+  libraries?: string[];
   platforms?: string[];
   playerPerspectives?: string[];
   publishers?: string[];

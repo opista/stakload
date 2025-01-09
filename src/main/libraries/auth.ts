@@ -1,20 +1,20 @@
-import { writeFileSync } from "node:fs";
-
 import { LikeLibrary } from "@contracts/database/games";
 import { BrowserWindow, session } from "electron";
 
-import { getAuthToken, getLibraryItems } from "./epic-games/api";
+import { findAndInsertNewGames } from "./epic-games/integration";
+import { login } from "./epic-games/legendary";
 
 export const authenticateLibraryIntegration = async (library: LikeLibrary, parent: BrowserWindow) => {
   const integrationSession = session.fromPartition("epic-games-auth"); // Isolated session for safety
 
   const integrationWindow = new BrowserWindow({
     alwaysOnTop: true,
+    autoHideMenuBar: true,
     center: true,
     closable: true,
     fullscreen: false,
     fullscreenable: false,
-    height: 500,
+    height: 520,
     modal: false,
     movable: true,
     parent,
@@ -37,12 +37,20 @@ export const authenticateLibraryIntegration = async (library: LikeLibrary, paren
 
       const { authorizationCode } = parsed;
 
-      const token = await getAuthToken(authorizationCode);
-      // const assets = await getAssets(token);
-      const test = await getLibraryItems(token);
-      // const catalogItem = await getCatalogItem(assets[1].namespace, assets[1].catalogItemId, token);
+      console.log(parsed);
 
-      writeFileSync("library.json", JSON.stringify(test, null, "\t"));
+      const x = await login(authorizationCode);
+
+      await findAndInsertNewGames();
+
+      console.log({ x });
+
+      // const token = await getAuthToken(authorizationCode);
+      // // const assets = await getAssets(token);
+      // const test = await getLibraryItems(token);
+      // // const catalogItem = await getCatalogItem(assets[1].namespace, assets[1].catalogItemId, token);
+
+      // writeFileSync("library.json", JSON.stringify(test, null, "\t"));
       // parent.webContents.send(EPIC_GAMES_INTEGRATION_RESULT, { success: !!parsed.authorizationCode });
       // integrationWindow.webContents.off("did-navigate", networkRequestHandler);
       integrationWindow.close();

@@ -1,10 +1,11 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin } from "electron-vite";
 import { resolve } from "path";
+import graphqlLoader from "vite-plugin-graphql-loader";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin(), graphqlLoader()],
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
