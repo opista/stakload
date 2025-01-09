@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import { IconProtonDB } from "../../icons/IconProtonDB";
 
 type ProtonIndicatorProps = {
-  gameId: string;
+  gameId?: string;
   platforms?: IdAndName[];
   size: MantineSize;
 };

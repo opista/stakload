@@ -6,8 +6,8 @@
 .control {
   margin: var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-md);
-  height: 30px;
-  width: 30px;
+  height: 40px;
+  width: 40px;
   color: var(--mantine-color-default-color);
   background-color: var(--mantine-color-dark-filled);
   border: none;
