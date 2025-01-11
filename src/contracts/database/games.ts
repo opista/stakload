@@ -105,7 +105,6 @@ export type GameStoreModel = {
   icon?: string;
   igdbId?: number;
   lastPlayedAt?: Date;
-  // TODO this should be an id and name for filtering
   library: LikeLibrary;
   libraryMeta?: LibraryMeta;
   listImage?: string;

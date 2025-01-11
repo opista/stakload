@@ -7,7 +7,6 @@ import "allotment/dist/style.css";
 import "./styles/styles.css";
 import "./i18n";
 
-import { DummyComponent } from "@components/DummyComponent/DummyComponent";
 import { GameDetails } from "@components/GameDetails/GameDetails";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { StrictMode } from "react";
@@ -29,9 +28,7 @@ createRoot(document.getElementById("root")!).render(
             <Route element={<GamesGrid />} index />
             <Route element={<GameDetails />} path=":id"></Route>
           </Route>
-          <Route element={<GamingLayout />} path="gaming">
-            <Route element={<DummyComponent />} index />
-          </Route>
+          <Route element={<GamingLayout />} path="gaming" />
         </Route>
       </Routes>
     </BrowserRouter>

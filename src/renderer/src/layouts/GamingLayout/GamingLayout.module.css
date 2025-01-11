@@ -1,0 +1,16 @@
+.main {
+  display: flex;
+  align-items: flex-end;
+}
+
+.header {
+  background: none;
+}
+
+.navbar {
+  background: none;
+}
+
+.footer {
+  background: none;
+}

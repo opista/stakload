@@ -66,6 +66,7 @@ export const getOwnedGames = async (): Promise<OwnedGame[]> => {
 
     return JSON.parse(result.stdout);
   } catch (err) {
+    console.log("something went wrong", err);
     return [];
   }
 };
