@@ -1,19 +1,15 @@
 .aspectRatio {
-  display: block;
   height: 100%;
-  transition: transform 0.3s ease;
-  width: 100%;
   border-radius: var(--mantine-radius-md);
   overflow: hidden;
+}
+
+.hoverEffect {
+  transition: transform 0.3s ease;
 
   &:hover {
     transform: scale(1.04);
   }
-}
-
-.backgroundImage {
-  height: 100%;
-  width: 100%;
 }
 
 .emptyContainer {
@@ -22,7 +18,7 @@
   color: var(--mantine-color-white);
   height: 100%;
   overflow: hidden;
-  padding: var(--mantine-spacing-sm);
+  padding-bottom: calc(100%/(3/4));
   position: relative;
   text-decoration: none;
   width: 100%;
@@ -39,7 +35,11 @@
 }
 
 .emptyText {
+  position: absolute;
+  bottom: var(--mantine-spacing-sm);
+  left: 50%;
   text-align: center;
+  transform: translateX(-50%);
 }
 
 .link {
