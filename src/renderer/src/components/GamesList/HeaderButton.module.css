@@ -1,0 +1,9 @@
+.button {
+  background: var(--mantine-color-dark-light-hover);
+  border: none;
+}
+
+.focused {
+  background-color: var(--ai-hover, var(--mantine-primary-color-filled-hover));
+  color: var(--ai-hover-color, var(--ai-color));
+}

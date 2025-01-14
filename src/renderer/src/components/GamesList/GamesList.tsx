@@ -5,6 +5,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef, useState } from "react";
 
 import { Game } from "./Game";
+import classes from "./GamesList.module.css";
 
 const FOCUS_KEY = "GAMES_LIST";
 
@@ -22,18 +23,7 @@ type GamesListProps = {
 export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const {
-    ref,
-    focusSelf,
-    focusKey,
-    focused,
-    hasFocusedChild,
-    //setFocus -- to set focus manually to some focusKey
-    // navigateByDirection, -- to manually navigate by direction
-    // pause, -- to pause all navigation events
-    // resume, -- to resume all navigation events
-    // updateAllLayouts -- to force update all layouts when needed
-  } = useFocusable({
+  const { ref, focusSelf, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: true,
     focusBoundaryDirections: ["left", "right"],
@@ -42,11 +32,7 @@ export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
     isFocusBoundary: true,
     focusKey: FOCUS_KEY,
     preferredChildFocusKey: undefined,
-    onEnterPress: () => {},
-    onEnterRelease: () => {},
     onArrowPress: () => true,
-    onFocus: () => console.log("GamesList focused"),
-    onBlur: () => {},
   });
 
   const columnVirtualizer = useVirtualizer({
@@ -85,23 +71,11 @@ export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
 
   return (
     <FocusContext.Provider value={focusKey}>
-      <div
-        className="List"
-        ref={mergeRefs(parentRef, ref)}
-        style={{
-          width: `100%`,
-          height: `400px`,
-          overflow: "hidden",
-          maskImage: "linear-gradient(90deg, rgba(0,0,0,0) 0px, rgba(0,0,0,1) 100px)",
-          maskRepeat: "no-repeat",
-          background: focused ? (hasFocusedChild ? "green" : "blue") : "transparent",
-        }}
-      >
+      <div className={classes.container} ref={mergeRefs(parentRef, ref)}>
         <div
+          className={classes.inner}
           style={{
             width: `${columnVirtualizer.getTotalSize()}px`,
-            height: "100%",
-            position: "relative",
           }}
         >
           {columnVirtualizer.getVirtualItems().map(({ index, size, start }) => (

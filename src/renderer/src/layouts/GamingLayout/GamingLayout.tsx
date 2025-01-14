@@ -1,8 +1,9 @@
 import { GamesList } from "@components/GamesList/GamesList";
+import { HeaderButtons } from "@components/GamesList/HeaderButtons";
 import Logo from "@components/Logo/Logo";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { AppShell, BackgroundImage, Button, Group, Text } from "@mantine/core";
+import { AppShell, BackgroundImage, Button, Group, Title } from "@mantine/core";
 import { getHighestResolutionMedia } from "@util/get-highest-resolution-media";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -20,7 +21,7 @@ export const GamingLayout = () => {
   const onSelectGame = (index: number) => setActiveGame(games?.[index] || null);
 
   return (
-    <AppShell footer={{ height: 60 }} header={{ height: 60 }} navbar={{ width: 100, breakpoint: "sm" }} padding="md">
+    <AppShell footer={{ height: 100 }} header={{ height: 100 }} navbar={{ width: 150, breakpoint: "sm" }} padding="md">
       {media?.url && (
         <BackgroundImage
           className={activeGame ? classes.fadeIn : classes.fadeOut}
@@ -31,12 +32,17 @@ export const GamingLayout = () => {
       <AppShell.Header className={classes.header}>
         <Group h="100%" justify="space-between" px="md">
           <Logo />
-          <Button onClick={() => navigate("/desktop")}>Back to desktop mode</Button>
+          <HeaderButtons />
+          <Button onClick={() => navigate("/desktop")}>TEMP: desktop</Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar className={classes.navbar}>Collections</AppShell.Navbar>
       <AppShell.Main className={classes.main}>
-        <Text>{activeGame?.name}</Text>
+        <div className={classes.gameInfo}>
+          <Title className={classes.title} lineClamp={2} order={1} textWrap="balance" title={activeGame?.name}>
+            {activeGame?.name}
+          </Title>
+        </div>
         <GamesList games={games} onSelectGame={onSelectGame} />
       </AppShell.Main>
       <AppShell.Footer className={classes.footer}></AppShell.Footer>
