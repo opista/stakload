@@ -17,3 +17,9 @@
     background: var(--mantine-primary-color-filled);
   }
 }
+
+.tooltip {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background: var(--mantine-color-default-hover);
+}

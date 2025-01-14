@@ -25,7 +25,10 @@ export const HeaderButton = ({ icon: Icon, onFocus, onSelect }: HeaderButtonProp
 
   return (
     <ActionIcon
-      className={clsx(classes.button, { [classes.focused]: focused })}
+      className={clsx(classes.button, {
+        [classes.focused]: focused,
+        [classes.active]: Icon.displayName === "IconHome",
+      })}
       radius="lg"
       ref={ref}
       size={42}

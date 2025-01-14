@@ -1,21 +1,16 @@
 import { Flex } from "@mantine/core";
-import { FocusContext, init, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
+import { FocusContext, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { IconCategory, IconHome, IconSearch, IconSettings } from "@tabler/icons-react";
 
 import { HeaderButton } from "./HeaderButton";
 
 const FOCUS_KEY = "HEADER_BUTTONS";
 
-init({
-  debug: false,
-  visualDebug: false,
-});
-
 export const HeaderButtons = () => {
   const { ref, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: false,
-    focusBoundaryDirections: ["left", "right"],
+    focusBoundaryDirections: ["right", "up"],
     trackChildren: true,
     autoRestoreFocus: true,
     isFocusBoundary: true,

@@ -1,6 +1,6 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { mergeRefs } from "@mantine/hooks";
-import { FocusContext, init, updateAllLayouts, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
+import { FocusContext, updateAllLayouts, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef, useState } from "react";
 
@@ -8,12 +8,6 @@ import { Game } from "./Game";
 import classes from "./GamesList.module.css";
 
 const FOCUS_KEY = "GAMES_LIST";
-
-init({
-  debug: false,
-  visualDebug: false,
-  useGetBoundingClientRect: true,
-});
 
 type GamesListProps = {
   games?: GameStoreModel[];
@@ -26,7 +20,7 @@ export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
   const { ref, focusSelf, focusKey } = useFocusable({
     focusable: true,
     saveLastFocusedChild: true,
-    focusBoundaryDirections: ["left", "right"],
+    focusBoundaryDirections: ["right", "down"],
     trackChildren: true,
     autoRestoreFocus: true,
     isFocusBoundary: true,
