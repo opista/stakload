@@ -24,8 +24,14 @@ export const HeaderButton = ({ icon: Icon, onFocus, onSelect }: HeaderButtonProp
   });
 
   return (
-    <ActionIcon className={clsx(classes.button, { [classes.focused]: focused })} ref={ref} size={42} variant="default">
-      <Icon size={24} />
+    <ActionIcon
+      className={clsx(classes.button, { [classes.focused]: focused })}
+      radius="lg"
+      ref={ref}
+      size={42}
+      variant="default"
+    >
+      <Icon size="60%" />
     </ActionIcon>
   );
 };
