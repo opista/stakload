@@ -53,7 +53,7 @@ $ npm run build:linux
   - Build out game filters
     - User should be able to save a collection of filters as a collection (like Steam)
     - User should be able to update and delete a filter
-  - Break down GameDetails into components, maybe make into a view? Currently a mess
+  - Break down GameDetailsView into components, maybe make into a view? Currently a mess
   - Look at dependency graph, anything we can kill?
   - Refactor any components that are:
     - Using prop styling, move it to CSS Modules

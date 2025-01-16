@@ -4,8 +4,8 @@ import { MantineSize } from "@mantine/core";
 import { IconBrandSteam, IconBrandWindows, IconBrandXbox, IconHelpHexagon, IconProps } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
-import { IconEpicGames } from "../../icons/IconEpicGames";
-import { IconGog } from "../../icons/IconGog";
+import { IconBrandEpicGames } from "../../icons/IconBrandEpicGames";
+import { IconBrandGog } from "../../icons/IconBrandGog";
 
 type LibraryIconProps = {
   game: GameStoreModel;
@@ -15,9 +15,9 @@ type LibraryIconProps = {
 const configSelector = (library: LikeLibrary) => {
   switch (library) {
     case "epic-game-store":
-      return { icon: IconEpicGames, library: "Epic Games" };
+      return { icon: IconBrandEpicGames, library: "Epic Games" };
     case "gog":
-      return { icon: IconGog, library: "GOG" };
+      return { icon: IconBrandGog, library: "GOG" };
     case "microsoft":
       return { icon: IconBrandWindows, library: "Microsoft" };
     case "steam":

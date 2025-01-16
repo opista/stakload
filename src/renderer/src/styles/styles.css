@@ -16,8 +16,18 @@
   }
 }
 
+
+html,
 body {
-  --mantine-color-body: #0d171f;
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  background: #0d171f;
+  border-radius: var(--mantine-radius-xl);
+  overflow: hidden;
 }
 
 /* TODO: Disable pointer events to prevent highlighting of page.

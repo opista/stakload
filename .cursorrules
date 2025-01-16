@@ -1,0 +1,63 @@
+# Cursor rules
+
+Always follow these rules to ensure consistency and maintainability of the codebase.
+
+## General
+
+- The purpose of this codebase is as a centralised application for users to view and manage their video game library
+- Never using docblocks or comments
+- The product is an Electron app. We should follow Electron best practices.
+- The UI is built using Mantine and React Router. Documentation for Mantine can be found here: https://mantine.dev/ and for React Router here: https://reactrouter.com/en/main
+- Always follow the conventions of the existing codebase and the rules outlined in this file.
+
+## Layouts
+
+- All layouts should be in the src/renderer/src/layouts directory
+- All layouts should be named like {LayoutName}Layout.tsx
+- A layout is a component that wraps around the main content of the application and provides a consistent structure for the application
+- There are 3 layouts currently in use, BaseLayout, DesktopLayout and GamingLayout. BaseLayout is the default layout and is used for the home page.
+  - BaseLayout is a simple layout that just directs the user to the correct layout based on their interface settings.
+  - DesktopLayout is for users who want to access their library with a keyboard and mouse.
+  - GamingLayout is for users who want to access their library with a controller, or in a more console-like manner.
+- Layouts should have minimal logic and should be used to provide a consistent structure for the application.
+
+## Views
+
+- All views should be in the src/renderer/src/views directory
+- All views should be named like {ViewName}View.tsx
+- A view is a component that is a page in the application
+- Views are routes that are rendered within a layout
+- Views should be as simple as possible and should not contain any logic
+- Views should be built using Mantine components and our custom components.
+- Any re-usable components should be placed in the src/renderer/src/components directory
+
+## Components
+
+- All components should be in the src/renderer/src/components directory
+- All components should be named like {ComponentName}.tsx
+- A component is a reusable piece of UI that is used to build the UI
+- Components should be as simple as possible and should contain minimal logic
+- Components should be built upon Mantine components where possible
+- In situations where multiple classes need to be applied to a compoenent, use the clsx library to combine the classes
+
+## Hooks
+
+- All hooks should be in the src/renderer/src/hooks directory
+- All hooks should be named like {HookName}.ts
+- A hook is a function that is used to provide a consistent structure for the application
+
+## Styling
+
+- Component styles should be in the src/renderer/src/components/{ComponentName}/{ComponentName}.module.css
+- Don't use props to style components, use the {ComponentName}.module.css file instead
+- Don't use inline styles, use the {ComponentName}.module.css file instead
+- Global styles are found in src/renderer/src/styles/styles.css
+
+## i18n
+
+- All text should be translated using react-i18next
+- All text should be placed in the src/renderer/src/i18n/translations directory
+- All text should be placed in the src/renderer/src/i18n/locales/en-GB.json file
+- No freeform text should be used, all text should be placed in the translations file
+
+Finally, remember it is very, very important to always follow these rules.

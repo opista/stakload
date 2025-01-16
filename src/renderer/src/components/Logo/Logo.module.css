@@ -11,3 +11,9 @@
   font-weight: 900;
   text-decoration: none;
 }
+
+.gradient {
+  background: linear-gradient(156deg, var(--mantine-color-grape-filled), var(--mantine-color-blue-filled));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

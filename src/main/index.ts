@@ -7,7 +7,6 @@ import { join } from "path";
 import {
   AUTHENTICATE_INTEGRATION,
   CLEAR_SYNC_QUEUE,
-  CLOSE_APP,
   CREATE_COLLECTION,
   DECRYPT,
   DELETE_COLLECTION,
@@ -28,6 +27,9 @@ import {
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
   UPDATE_COLLECTION,
+  WINDOW_CLOSE,
+  WINDOW_MAXIMIZE,
+  WINDOW_MINIMIZE,
 } from "../preload/channels";
 import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
 import { GameSyncManager } from "./channels/game-sync-manager";
@@ -42,8 +44,9 @@ import {
 import { getLocale } from "./channels/get-locale";
 import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
 import { getOS } from "./channels/os";
-import { closeApp, restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
+import { restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
+import { closeWindow, minimizeWindow, toggleWindowMaximized } from "./window";
 
 const conf = new Conf();
 
@@ -53,23 +56,30 @@ function createWindow() {
   // Create the browser window.
   const browserWindow = new BrowserWindow({
     autoHideMenuBar: true,
+    backgroundColor: "#00000000",
     center: true,
     closable: true,
     enableLargerThanScreen: false,
     focusable: true,
-    frame: true,
+    frame: false,
     fullscreenable: true,
-    height: 600,
+    height: 800,
     maximizable: true,
     minimizable: true,
-    minHeight: 600,
-    minWidth: 800,
+    minHeight: 800,
+    minWidth: 1280,
     movable: true,
     resizable: true,
     roundedCorners: true,
     show: false,
     title: "Trulaunch",
-    width: 800,
+    titleBarOverlay: false,
+    titleBarStyle: "hidden",
+    transparent: true,
+    width: 1280,
+    hasShadow: true,
+    vibrancy: "under-window",
+    visualEffectState: "active",
     webPreferences: {
       accessibleTitle: "Trulaunch",
       allowRunningInsecureContent: false,
@@ -163,12 +173,14 @@ app.whenReady().then(async () => {
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
   ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
   ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
-  ipcMain.on(CLOSE_APP, closeApp);
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
   ipcMain.on(SLEEP_DEVICE, sleepDevice);
   ipcMain.on(SYNC_GAMES, () => syncManager.sync());
+  ipcMain.on(WINDOW_MINIMIZE, () => minimizeWindow(browserWindow));
+  ipcMain.on(WINDOW_MAXIMIZE, () => toggleWindowMaximized(browserWindow));
+  ipcMain.on(WINDOW_CLOSE, () => closeWindow(browserWindow));
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

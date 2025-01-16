@@ -1,15 +1,13 @@
+import { settingsModalInnerProps } from "@components/Desktop/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameCover } from "@components/GameCover/GameCover";
-import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameStoreModel } from "@contracts/database/games";
 import { Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
-import { useGameStore } from "@store/game.store";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
-import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesGrid.module.css";
 
@@ -20,8 +18,7 @@ const SCROLLBAR_WIDTH = 6;
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
-export const GamesGrid = () => {
-  const games = useGameStore(useShallow((state) => state.games));
+export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 

@@ -1,25 +1,5 @@
-.header {
-  background: none;
-  border: none;
-  padding: var(--mantine-spacing-md);
-}
-
-.search {
-  width: 350px;
-}
-
-.actionIcon {
-  background-color: #15202c;
-  border-radius: var(--mantine-radius-lg);
-  height: 55px;
-  width: 55px;
-}
-
-/* .scrollAreaViewport > div {
-
-} */
-
 .main {
+  padding-top: calc(var(--app-shell-header-offset, 0rem) + var(--app-shell-padding) + 30px);
   display: flex;
   height: 100dvh;
 }

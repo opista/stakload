@@ -2,10 +2,6 @@ import { app } from "electron";
 
 import { execAsync } from "../util/exec-async";
 
-export const closeApp = () => {
-  app.exit(0);
-};
-
 export const restartApp = () => {
   app.relaunch();
   app.exit(0);

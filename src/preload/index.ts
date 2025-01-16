@@ -8,7 +8,6 @@ import { exposeConf } from "electron-conf/preload";
 import {
   AUTHENTICATE_INTEGRATION,
   CLEAR_SYNC_QUEUE,
-  CLOSE_APP,
   CREATE_COLLECTION,
   DECRYPT,
   ENCRYPT,
@@ -34,6 +33,9 @@ import {
   SLEEP_DEVICE,
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
+  WINDOW_CLOSE,
+  WINDOW_MAXIMIZE,
+  WINDOW_MINIMIZE,
 } from "./channels";
 import { listenerHandler } from "./util/listener-handler";
 
@@ -41,7 +43,6 @@ import { listenerHandler } from "./util/listener-handler";
 const api = {
   authenticateIntegration: (library: LikeLibrary) => ipcRenderer.invoke(AUTHENTICATE_INTEGRATION, library),
   clearSyncQueue: () => ipcRenderer.send(CLEAR_SYNC_QUEUE),
-  closeApp: (): void => ipcRenderer.send(CLOSE_APP),
   decrypt: (str: string) => ipcRenderer.invoke(DECRYPT, str),
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
   createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) =>
@@ -76,6 +77,9 @@ const api = {
   syncGames: () => ipcRenderer.send(SYNC_GAMES),
   testLibraryIntegration: (steamId: string, webApiKey: string) =>
     ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
+  minimizeWindow: () => ipcRenderer.send(WINDOW_MINIMIZE),
+  maximizeWindow: () => ipcRenderer.send(WINDOW_MAXIMIZE),
+  closeWindow: () => ipcRenderer.send(WINDOW_CLOSE),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

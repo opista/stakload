@@ -94,7 +94,6 @@
   "hideNotification": "Hide notification",
   "power": {
     "title": "Power",
-    "closeApp": "Close Trulaunch",
     "restartApp": "Restart Trulaunch",
     "switchToGaming": "Switch to Gaming Mode",
     "shutdown": "Shut down",
@@ -149,5 +148,21 @@
   },
   "enabled": "Enabled",
   "resultsWithCount_one": "{{count}} result",
-  "resultsWithCount_other": "{{count}} results"
+  "resultsWithCount_other": "{{count}} results",
+  "TODO": "REVISIT ALL ABOVE THIS LINE",
+  "collectionNotFound": "Collection not found",
+  "common": {
+    "window": {
+      "minimize": "Minimize",
+      "maximize": "Maximize",
+      "close": "Close"
+    }
+  },
+  "navigation": {
+    "toDesktop": "Switch to Desktop"
+  },
+  "gaming": {
+    "details": "Details",
+    "play": "Play"
+  }
 }

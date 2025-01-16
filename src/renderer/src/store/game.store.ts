@@ -16,20 +16,21 @@ const DEFAULT_FILTERS = {
 };
 
 type GameActions = {
+  fetchCollections: () => void;
   fetchGames: () => void;
   resetFilters: () => void;
+  setCurrentCollection: (id: string) => void;
   setCurrentGame: (game: GameStoreModel) => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
   setSelectedCollection: (selectedCollection: string) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
-  setSelectedGame: (selectedGame: GameState["selectedGame"]) => void;
 };
 
 type GameStore = GameState & GameActions;
 
 export const useGameStore = create<GameStore>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       games: [],
       currentGame: undefined,
       fetchGames: async () => {
@@ -38,6 +39,15 @@ export const useGameStore = create<GameStore>()(
       },
       setCurrentGame: (currentGame: GameStoreModel) => set(() => ({ currentGame })),
 
+      collections: [],
+      fetchCollections: async () => {
+        const collections = await window.api.getCollections();
+        set({ collections });
+      },
+      setCurrentCollection: (id: string) => {
+        const currentCollection = get().collections.find(({ _id }) => _id === id);
+        set({ currentCollection });
+      },
       selectedCollection: "",
       selectedGame: null,
       selectedFilters: DEFAULT_FILTERS,

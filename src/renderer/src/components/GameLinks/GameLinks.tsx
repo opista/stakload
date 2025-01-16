@@ -25,9 +25,9 @@ import {
 import { FC, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconEpicGames } from "../../icons/IconEpicGames";
-import { IconFandom } from "../../icons/IconFandom";
-import { IconGog } from "../../icons/IconGog";
+import { IconBrandEpicGames } from "../../icons/IconBrandEpicGames";
+import { IconBrandFandom } from "../../icons/IconBrandFandom";
+import { IconBrandGog } from "../../icons/IconBrandGog";
 
 const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
   "OFFICIAL",
@@ -135,7 +135,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
 
         return `com.epicgames.launcher://store/p/${slug}`;
       },
-      icon: IconEpicGames,
+      icon: IconBrandEpicGames,
       label: "Epic Games",
     },
     FACEBOOK: {
@@ -143,7 +143,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       label: "Facebook",
     },
     GOG: {
-      icon: IconGog,
+      icon: IconBrandGog,
       label: "GOG",
     },
     INSTAGRAM: {
@@ -184,7 +184,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       label: "Twitter",
     },
     WIKIA: {
-      icon: IconFandom,
+      icon: IconBrandFandom,
       label: "Fandom",
     },
     WIKIPEDIA: {

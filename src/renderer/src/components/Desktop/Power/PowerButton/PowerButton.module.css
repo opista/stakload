@@ -1,0 +1,11 @@
+.actionIcon {
+  background-color: #15202c;
+  border-radius: var(--mantine-radius-lg);
+  height: 55px;
+  width: 55px;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}

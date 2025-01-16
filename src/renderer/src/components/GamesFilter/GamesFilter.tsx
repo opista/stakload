@@ -1,12 +1,11 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
 import { LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
+import { ActionIcon, Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
-import { IconAdjustmentsAlt, IconAdjustmentsSpark, IconPlaylistAdd } from "@tabler/icons-react";
+import { IconAdjustmentsHorizontal, IconPlaylistAdd } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -90,8 +89,6 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
     setSelectedFilter(key, value);
 
-  const Icon = hasFilterSet ? IconAdjustmentsSpark : IconAdjustmentsAlt;
-
   const { data: filters } = useGamesQuery(window.api.getGameFilters);
 
   const onSaveFilters = () => {
@@ -123,12 +120,12 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       <Popover
         closeOnEscape
         disabled={disabled}
+        offset={16}
         onChange={setOpened}
         opened={opened}
-        position="right-start"
+        position="bottom"
         shadow="sm"
         width={500}
-        withArrow
       >
         <Popover.Target>
           <Indicator
@@ -141,12 +138,12 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           >
             <ActionIcon
               aria-label={t("filters")}
-              className={classes.icon}
+              className={classes.filtersButton}
               disabled={disabled}
-              icon={Icon}
               onClick={() => setOpened((o) => !o)}
-              size="lg"
-            />
+            >
+              <IconAdjustmentsHorizontal size={20} stroke={1} />
+            </ActionIcon>
           </Indicator>
         </Popover.Target>
         <Popover.Dropdown>

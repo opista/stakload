@@ -1,0 +1,23 @@
+.navbar {
+  background: none;
+  padding: var(--mantine-spacing-md);
+  padding-top: calc(var(--mantine-spacing-md) + 30px);
+}
+
+.card {
+  height: 100%;
+  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
+  border-radius: var(--mantine-radius-xl);
+  background: #15202c;
+}
+
+.logoContainer {
+  align-items: center;
+  flex-shrink: 0;
+  height: 100px;
+  justify-content: center;
+}
+
+.quickAccess {
+  margin-top: 60px;
+}

@@ -1,15 +1,17 @@
-import { Collections } from "@components/GamesList/Collections";
-import { GamesList } from "@components/GamesList/GamesList";
-import { HeaderButtons } from "@components/GamesList/HeaderButtons";
+import { Collections } from "@components/Gaming/GamesList/Collections";
+import { GamesList } from "@components/Gaming/GamesList/GamesList";
+import { HeaderButtons } from "@components/Gaming/GamesList/HeaderButtons";
 import Logo from "@components/Logo/Logo";
 import { GameStoreModel } from "@contracts/database/games";
-import { useGamesQuery } from "@hooks/use-games-query";
 import { AppShell, BackgroundImage, Button, Flex, Group, Text, Title } from "@mantine/core";
 import { init } from "@noriginmedia/norigin-spatial-navigation";
+import { useGameStore } from "@store/game.store";
 import { IconXboxAFilled, IconXboxXFilled } from "@tabler/icons-react";
 import { getHighestResolutionMedia } from "@util/get-highest-resolution-media";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamingLayout.module.css";
 
@@ -21,9 +23,10 @@ init({
 
 export const GamingLayout = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeGame, setActiveGame] = useState<GameStoreModel | null>(null);
 
-  const { data: games } = useGamesQuery<GameStoreModel[]>(() => window.api.getFilteredGames(), []);
+  const games = useGameStore(useShallow((state) => state.games.slice(60, 64)));
 
   const media = getHighestResolutionMedia(activeGame?.artworks);
 
@@ -42,7 +45,7 @@ export const GamingLayout = () => {
         <Group h="100%" justify="space-between" px="md">
           <Logo />
           <HeaderButtons />
-          <Button onClick={() => navigate("/desktop")}>TEMP: desktop</Button>
+          <Button onClick={() => navigate("/desktop")}>{t("navigation.toDesktop")}</Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar className={classes.navbar}>
@@ -52,7 +55,7 @@ export const GamingLayout = () => {
       </AppShell.Navbar>
       <AppShell.Main className={classes.main}>
         <div className={classes.gameInfo}>
-          <Title className={classes.title} lineClamp={2} order={1} textWrap="balance" title={activeGame?.name}>
+          <Title className={classes.title} order={1} title={activeGame?.name}>
             {activeGame?.name}
           </Title>
         </div>
@@ -61,10 +64,10 @@ export const GamingLayout = () => {
       <AppShell.Footer className={classes.footer}>
         <Flex align="center" gap="xl" h="100%" justify="flex-end" px="xl">
           <Flex align="center" gap="xs">
-            <Text size="md">Details</Text> <IconXboxAFilled color="#7EB900" size={32} />
+            <Text size="md">{t("gaming.details")}</Text> <IconXboxAFilled color="#7EB900" size={32} />
           </Flex>
           <Flex align="center" gap="xs">
-            <Text size="md">Play</Text> <IconXboxXFilled color="#00A3EE" size={32} />
+            <Text size="md">{t("gaming.play")}</Text> <IconXboxXFilled color="#00A3EE" size={32} />
           </Flex>
         </Flex>
       </AppShell.Footer>

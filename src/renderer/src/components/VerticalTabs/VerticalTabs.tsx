@@ -1,4 +1,4 @@
-import { FloatingIndicator, rem, Tabs } from "@mantine/core";
+import { FloatingIndicator, Tabs } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
 import { FC, useState } from "react";
@@ -29,8 +29,6 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
     setControlsRefs(controlsRefs);
   };
 
-  const iconStyle = { width: rem(12), height: rem(12) };
-
   return (
     <Tabs
       activateTabWithKeyboard
@@ -49,7 +47,7 @@ export const VerticalTabs = ({ defaultTab, tabs }: VerticalTabsProps) => {
               tabSection: classes.tabSection,
             }}
             key={key}
-            leftSection={<Icon style={iconStyle} />}
+            leftSection={<Icon className={classes.icon} />}
             ref={setControlRef(key)}
             value={key}
           >

@@ -1,4 +1,5 @@
 import { Box, MantineSize, Text } from "@mantine/core";
+import clsx from "clsx";
 import { memo } from "react";
 
 import classes from "./Logo.module.css";
@@ -8,11 +9,9 @@ type LogoProps = {
   useGradient?: boolean;
 };
 
-const DEFAULT_GRADIENT = { from: "grape", to: "blue", deg: 156 };
-
 const Logo = memo(({ size = "xl", useGradient = true }: LogoProps) => (
   <Box className={classes.container}>
-    <Text className={classes.logo} gradient={DEFAULT_GRADIENT} size={size} variant={useGradient ? "gradient" : "text"}>
+    <Text className={clsx(classes.logo, useGradient && classes.gradient)} size={size}>
       Trulaunch
     </Text>
   </Box>

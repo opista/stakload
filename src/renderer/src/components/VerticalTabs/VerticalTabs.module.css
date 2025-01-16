@@ -31,3 +31,8 @@
   border-top-left-radius: var(--mantine-radius-md);
   border-bottom-left-radius: var(--mantine-radius-md);
 }
+
+.icon {
+  width: 12px;
+  height: 12px;
+}

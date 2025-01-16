@@ -10,7 +10,7 @@ declare global {
     api: {
       authenticateIntegration: (library: LikeLibrary) => void;
       clearSyncQueue: () => void;
-      closeApp: () => void;
+      closeWindow: () => void;
       createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
       decrypt: (str: string) => Promise<string>;
       deleteCollection: (id: string) => Promise<boolean>;
@@ -24,6 +24,8 @@ declare global {
       getLocale: () => Promise<string>;
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
+      maximizeWindow: () => void;
+      minimizeWindow: () => void;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;

@@ -1,7 +1,6 @@
 export const GET_LOCALE = "GET_LOCALE";
 export const GET_OS = "GET_OS";
 
-export const CLOSE_APP = "CLOSE_APP";
 export const RESTART_APP = "RESTART_APP";
 export const SLEEP_DEVICE = "SLEEP_DEVICE";
 export const RESTART_DEVICE = "RESTART_DEVICE";
@@ -36,3 +35,7 @@ export const EPIC_GAMES_INTEGRATION_RESULT = "EPIC_GAMES_INTEGRATION_RESULT";
 
 export const DECRYPT = "DECRYPT";
 export const ENCRYPT = "ENCRYPT";
+
+export const WINDOW_MINIMIZE = "WINDOW_MINIMIZE";
+export const WINDOW_MAXIMIZE = "WINDOW_MAXIMIZE";
+export const WINDOW_CLOSE = "WINDOW_CLOSE";
