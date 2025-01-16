@@ -21,7 +21,7 @@ export const Navbar = () => {
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
             <NavbarLink href="/desktop/games" icon={IconCategory} label="Library" />
-            <NavbarLink defaultOpened={collections.length <= 4} icon={IconBooks} label="Collections">
+            <NavbarLink icon={IconBooks} label="Collections">
               {collections.map((collection) => (
                 <NavbarLink
                   href={`/desktop/collections/${collection._id}`}
