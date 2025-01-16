@@ -2,6 +2,7 @@
   --focus-border: var(--mantine-primary-color-filled);
   --separator-border: var(--mantine-color-dark-4);
   --scrollbar-width: 6px;
+  --color: #15202c;
 }
 
 * {
@@ -13,6 +14,10 @@
     border-radius: var(--mantine-radius-xs);
     background: var(--mantine-color-gray-0);
   }
+}
+
+body {
+  --mantine-color-body: #0d171f;
 }
 
 /* TODO: Disable pointer events to prevent highlighting of page.

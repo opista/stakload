@@ -3,7 +3,7 @@ import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowLeft, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
 import { useNavigate } from "react-router";
 
@@ -17,8 +17,6 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  const navigateToGamesList = () => navigate("..", { relative: "path" });
-
   const onRemoveConfirm = async (preventReadd: boolean) => {
     await window.api.removeGame(game._id, preventReadd);
     navigate("..");
@@ -29,9 +27,6 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
     <div className={classes.container}>
       <Container size="responsive">
         <Flex className={classes.header} justify="space-between">
-          <Group>
-            <ActionIcon aria-label={t("goBack")} icon={IconArrowLeft} onClick={navigateToGamesList} />
-          </Group>
           <RemoveGameModal
             gameTitle={game.name}
             onClose={closeDelete}

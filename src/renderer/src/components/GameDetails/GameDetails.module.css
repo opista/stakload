@@ -1,25 +1,18 @@
 .container {
   position: relative;
   height: 100%;
+  width: 100%;
   container-type: inline-size;
 }
 
 .contentContainer {
-  margin-top: 15vh;
+  margin-top: 100px;
   margin-bottom: 50px;
 }
 
 .scrollArea {
   container-type: inline-size;
   height: 100%;
-}
-
-.scrollAreaViewport > div {
-  background-image: radial-gradient(circle at 100% 0%, var(--gradient-color) 0px, transparent 50%),
-    radial-gradient(circle at 0% 100%, var(--gradient-color) 0px, transparent 50%),
-    radial-gradient(circle at 100% 100%, var(--gradient-color) 0px, transparent 50%);
-  backdrop-filter: blur(20px);
-  min-height: 100%;
 }
 
 .summaryCard {
@@ -31,8 +24,6 @@
 }
 
 .title {
-  display: flex;
-  align-items: end;
   margin-bottom: var(--mantine-spacing-md);
   line-height: var(--mantine-line-height-xs);
   color: var(--mantine-color-default-color);

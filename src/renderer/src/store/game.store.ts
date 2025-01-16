@@ -1,3 +1,4 @@
+import { GameStoreModel } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
 import { Conf } from "electron-conf/renderer";
@@ -15,7 +16,9 @@ const DEFAULT_FILTERS = {
 };
 
 type GameActions = {
+  fetchGames: () => void;
   resetFilters: () => void;
+  setCurrentGame: (game: GameStoreModel) => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
   setSelectedCollection: (selectedCollection: string) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
@@ -27,6 +30,14 @@ type GameStore = GameState & GameActions;
 export const useGameStore = create<GameStore>()(
   persist(
     (set) => ({
+      games: [],
+      currentGame: undefined,
+      fetchGames: async () => {
+        const games = await window.api.getFilteredGames();
+        set({ games });
+      },
+      setCurrentGame: (currentGame: GameStoreModel) => set(() => ({ currentGame })),
+
       selectedCollection: "",
       selectedGame: null,
       selectedFilters: DEFAULT_FILTERS,

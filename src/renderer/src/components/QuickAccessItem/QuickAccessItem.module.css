@@ -1,0 +1,21 @@
+.container {
+  align-items: center;
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs);
+
+  &:hover {
+    background-color: #1b2c3b;
+  }
+}
+
+.gameCover {
+  border-radius: var(--mantine-radius-md);
+  width: 35px;
+}
+
+.link {
+  color: inherit;
+  text-decoration: none;
+}

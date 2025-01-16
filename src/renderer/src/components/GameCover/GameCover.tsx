@@ -2,35 +2,38 @@ import { GameStoreModel } from "@contracts/database/games";
 import { AspectRatio, Image, Stack, Text } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import clsx from "clsx";
-import { Link } from "react-router";
 
 import classes from "./GameCover.module.css";
 
 const GAME_COVER_ART_RATIO = 3 / 4;
 
 type GameCoverProps = {
+  className?: string;
   game: GameStoreModel;
   hoverEffect?: boolean;
+  onClick?: (game: GameStoreModel) => void;
+  showGameTitle?: boolean;
 };
 
-const GameCoverArt = ({ game }: GameCoverProps) => <Image src={game.cover!} title={game.name} />;
+const GameCoverArt = ({ game }: { game: GameStoreModel }) => <Image src={game.cover!} title={game.name} />;
 
-const GameCoverEmpty = ({ game }: GameCoverProps) => (
-  <Stack align="center" className={classes.emptyContainer} justify="flex-end">
-    <IconDeviceGamepad2 className={classes.emptyIcon} stroke={1} />
-    <Text className={classes.emptyText} lineClamp={2}>
-      {game.name}
-    </Text>
+const GameCoverEmpty = ({ game, showGameTitle }: { game: GameStoreModel; showGameTitle?: boolean }) => (
+  <Stack className={classes.emptyContainer}>
+    <IconDeviceGamepad2 className={clsx(classes.emptyIcon, { [classes.centred]: !showGameTitle })} stroke={1} />
+    {showGameTitle && (
+      <Text className={classes.emptyText} lineClamp={2}>
+        {game.name}
+      </Text>
+    )}
   </Stack>
 );
 
-export const GameCover = ({ game, hoverEffect = true }: GameCoverProps) => (
+export const GameCover = ({ className, game, hoverEffect = true, onClick, showGameTitle = true }: GameCoverProps) => (
   <AspectRatio
-    className={clsx(classes.aspectRatio, { [classes.hoverEffect]: hoverEffect })}
+    className={clsx(classes.aspectRatio, className, { [classes.hoverEffect]: hoverEffect })}
+    onClick={() => onClick?.(game)}
     ratio={GAME_COVER_ART_RATIO}
   >
-    <Link className={classes.link} to={`/desktop/${game._id}`}>
-      {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} />}
-    </Link>
+    {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} showGameTitle={showGameTitle} />}
   </AspectRatio>
 );

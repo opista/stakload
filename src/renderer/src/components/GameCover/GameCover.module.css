@@ -1,6 +1,6 @@
 .aspectRatio {
   height: 100%;
-  border-radius: var(--mantine-radius-md);
+  border-radius: var(--mantine-radius-lg);
   overflow: hidden;
 }
 
@@ -8,17 +8,18 @@
   transition: transform 0.3s ease;
 
   &:hover {
-    transform: scale(1.04);
+    transform: scale(1.1);
   }
 }
 
 .emptyContainer {
-  background-color: var(--mantine-color-dark-5);
-  border-radius: var(--mantine-radius-md);
+  align-items: center;
+  justify-content: flex-end;
+  background-color: #1b2c3b;
   color: var(--mantine-color-white);
   height: 100%;
   overflow: hidden;
-  padding-bottom: calc(100%/(3/4));
+  padding-bottom: calc(100% / (3 / 4));
   position: relative;
   text-decoration: none;
   width: 100%;
@@ -30,8 +31,14 @@
   position: absolute;
   top: 0;
   transform: translateX(-50%);
-  width: 90%;
+  width: 70%;
   height: 90%;
+
+  &.centred {
+    height: auto;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .emptyText {
@@ -40,8 +47,4 @@
   left: 50%;
   text-align: center;
   transform: translateX(-50%);
-}
-
-.link {
-  text-decoration: none;
 }

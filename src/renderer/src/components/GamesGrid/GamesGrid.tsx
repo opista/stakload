@@ -1,14 +1,12 @@
-import BackToTop from "@components/BackToTop/BackToTop";
 import { GameCover } from "@components/GameCover/GameCover";
 import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameStoreModel } from "@contracts/database/games";
-import { useGamesQuery } from "@hooks/use-games-query";
 import { Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
-import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
 import { useShallow } from "zustand/react/shallow";
@@ -23,20 +21,9 @@ const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number
   rowIndex * columnCount + columnIndex;
 
 export const GamesGrid = () => {
-  const [containerEl, setContainerEl] = useState<Element | null>(null);
-  const { selectedFilters } = useGameStore(
-    useShallow((state) => ({
-      selectedFilters: state.selectedFilters,
-    })),
-  );
+  const games = useGameStore(useShallow((state) => state.games));
+  const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const containerRef = useCallback((node) => setContainerEl(node), []);
-
-  const { data: games } = useGamesQuery<GameStoreModel[]>(
-    () => window.api.getFilteredGames(selectedFilters),
-    [selectedFilters],
-  );
 
   const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
@@ -66,7 +53,7 @@ export const GamesGrid = () => {
 
   if (!games?.length) {
     return (
-      <Stack align="center" className={classes.emptyContainer} gap="xs" justify="center">
+      <Stack className={classes.emptyContainer}>
         <IconPacman color="yellow" size={60} stroke={0.5} />
         <Text c="dimmed">{t("noGamesFound")}</Text>
         <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
@@ -89,7 +76,7 @@ export const GamesGrid = () => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <GameCover game={game} />
+        <GameCover className={classes.game} game={game} onClick={(game) => navigate(`/desktop/games/${game._id}`)} />
       </Box>
     );
   };
@@ -130,7 +117,6 @@ export const GamesGrid = () => {
               height={height}
               itemData={games}
               itemKey={(args) => itemKey(args, columnCount)}
-              outerRef={containerRef}
               rowCount={rowCount}
               rowHeight={rowHeight}
               width={width}
@@ -140,7 +126,6 @@ export const GamesGrid = () => {
           );
         }}
       </AutoSizer>
-      <BackToTop container={containerEl} />
     </Box>
   );
 };
