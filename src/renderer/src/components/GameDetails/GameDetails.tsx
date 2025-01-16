@@ -10,7 +10,7 @@ import { GameStoreModel } from "@contracts/database/games";
 import { AspectRatio, Container, Flex, Grid, GridCol, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconPuzzleOff } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -18,7 +18,6 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./GameDetails.module.css";
 
 export const GameDetails = () => {
-  const [backgroundColor, setBackgroundColor] = useState<string | null>(null);
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
@@ -55,7 +54,6 @@ export const GameDetails = () => {
         <ScrollArea
           className={classes.scrollArea}
           classNames={{ root: classes.scrollArea, viewport: classes.scrollAreaViewport }}
-          style={{ "--gradient-color": backgroundColor }}
           viewportRef={containerRef}
         >
           {/* TODO - identify if a game has no content, and if so, show

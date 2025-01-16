@@ -40,7 +40,7 @@ export const DesktopLayout = () => {
             </Flex>
           </Flex>
         </AppShell.Header>
-        <Spotlight onClick={(id) => navigate(id, { relative: "path" })} />
+        <Spotlight onClick={(id) => navigate(`/desktop/games/${id}`)} />
         <Navbar />
         <AppShell.Main className={classes.main}>
           <Outlet />

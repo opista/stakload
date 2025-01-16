@@ -1,19 +1,17 @@
-import { NavLink } from "@mantine/core";
+import { NavLink, NavLinkProps } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
 import clsx from "clsx";
-import { FC, ReactNode, useMemo } from "react";
+import { FC, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 import classes from "./NavbarLink.module.css";
 
-type NavbarLinkProps = {
-  children?: ReactNode;
+type NavbarLinkProps = NavLinkProps & {
   href?: string;
   icon: FC<IconProps>;
-  label: string;
 };
 
-export const NavbarLink = ({ children, href, icon: Icon, label }: NavbarLinkProps) => {
+export const NavbarLink = ({ children, href, icon: Icon, label, ...rest }: NavbarLinkProps) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -21,10 +19,12 @@ export const NavbarLink = ({ children, href, icon: Icon, label }: NavbarLinkProp
 
   return (
     <NavLink
-      childrenOffset={28}
+      {...rest}
+      childrenOffset={10}
       className={clsx(classes.navLink, { [classes.active]: active })}
       label={label}
       leftSection={<Icon size={20} stroke={1.5} />}
+      noWrap
       onClick={() => href && navigate(href)}
     >
       {children}

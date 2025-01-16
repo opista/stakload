@@ -1,9 +1,9 @@
-import { GameStoreModel } from "@contracts/database/games";
-import { useGamesQuery } from "@hooks/use-games-query";
 import { Image } from "@mantine/core";
 import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
+import { useGameStore } from "@store/game.store";
 import { IconDeviceGamepad2, IconSearch } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./Spotlight.module.css";
 
@@ -22,7 +22,7 @@ const LeftSection = ({ icon }: { icon?: string }) => {
 };
 
 export const Spotlight = ({ onClick }: SpotlightProps) => {
-  const { data: games } = useGamesQuery<GameStoreModel[]>(window.api.getFilteredGames);
+  const games = useGameStore(useShallow((state) => state.games));
   const { t } = useTranslation();
 
   const actions: SpotlightActionData[] =
