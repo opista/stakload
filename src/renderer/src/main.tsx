@@ -17,6 +17,7 @@ import { DesktopLayout } from "./layouts/DesktopLayout/DesktopLayout";
 import { GamingLayout } from "./layouts/GamingLayout/GamingLayout";
 import { CollectionView } from "./views/CollectionView/CollectionView";
 import { GameDetailsView } from "./views/GameDetailsView/GameDetailsView";
+import { HomeView } from "./views/HomeView/HomeView";
 import { LibraryView } from "./views/LibraryView/LibraryView";
 
 createRoot(document.getElementById("root")!).render(
@@ -26,7 +27,7 @@ createRoot(document.getElementById("root")!).render(
         <Route element={<App />}>
           <Route element={<BaseLayout />} path="/" />
           <Route element={<DesktopLayout />} path="desktop">
-            <Route element={<></>} index />
+            <Route element={<HomeView />} index />
             <Route path="games">
               <Route element={<LibraryView />} index />
               <Route element={<GameDetailsView />} path=":id" />

@@ -40,7 +40,7 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - A component is a reusable piece of UI that is used to build the UI
 - Components should be as simple as possible and should contain minimal logic
 - Components should be built upon Mantine components where possible
-- In situations where multiple classes need to be applied to a compoenent, use the clsx library to combine the classes
+- In situations where multiple classes need to be applied to a compoenent, always use the clsx library to combine the classes
 
 ## Hooks
 
