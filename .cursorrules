@@ -9,6 +9,8 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - The product is an Electron app. We should follow Electron best practices.
 - The UI is built using Mantine and React Router. Documentation for Mantine can be found here: https://mantine.dev/ and for React Router here: https://reactrouter.com/en/main
 - Always follow the conventions of the existing codebase and the rules outlined in this file.
+- Define object keys in alphabetical order
+- Define type keys in alphabetical order
 
 ## Layouts
 
