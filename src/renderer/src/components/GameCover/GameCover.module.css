@@ -12,6 +12,10 @@
   }
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .emptyContainer {
   align-items: center;
   justify-content: flex-end;

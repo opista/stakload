@@ -30,7 +30,10 @@ const GameCoverEmpty = ({ game, showGameTitle }: { game: GameStoreModel; showGam
 
 export const GameCover = ({ className, game, hoverEffect = true, onClick, showGameTitle = true }: GameCoverProps) => (
   <AspectRatio
-    className={clsx(classes.aspectRatio, className, { [classes.hoverEffect]: hoverEffect })}
+    className={clsx(classes.aspectRatio, className, {
+      [classes.hoverEffect]: hoverEffect,
+      [classes.clickable]: !!onClick,
+    })}
     onClick={() => onClick?.(game)}
     ratio={GAME_COVER_ART_RATIO}
   >

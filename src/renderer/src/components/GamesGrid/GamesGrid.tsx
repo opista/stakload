@@ -73,7 +73,7 @@ export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <GameCover className={classes.game} game={game} onClick={(game) => navigate(`/desktop/games/${game._id}`)} />
+        <GameCover game={game} onClick={(game) => navigate(`/desktop/games/${game._id}`)} />
       </Box>
     );
   };
