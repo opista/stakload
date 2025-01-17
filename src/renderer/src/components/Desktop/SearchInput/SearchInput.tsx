@@ -17,7 +17,7 @@ export const SearchInput = ({ className, disabled }: SelectProps) => {
       leftSection={<IconSearch size={16} />}
       leftSectionPointerEvents="none"
       limit={5}
-      placeholder={t("search")}
+      placeholder={t("searchInput.placeholder")}
       rightSection={<GamesFilter />}
       rightSectionPointerEvents="all"
       searchable

@@ -14,13 +14,13 @@ export const WindowControls = () => {
   return (
     <Group className={classes.container}>
       <Group className={classes.inner} gap="xs">
-        <ActionIcon aria-label={t("common.window.minimize")} color="gray" onClick={handleMinimize} variant="subtle">
+        <ActionIcon aria-label={t("windowControls.minimize")} color="gray" onClick={handleMinimize} variant="subtle">
           <IconMinus size={16} />
         </ActionIcon>
-        <ActionIcon aria-label={t("common.window.maximize")} color="gray" onClick={handleMaximize} variant="subtle">
+        <ActionIcon aria-label={t("windowControls.maximize")} color="gray" onClick={handleMaximize} variant="subtle">
           <IconSquare size={16} />
         </ActionIcon>
-        <ActionIcon aria-label={t("common.window.close")} color="gray" onClick={handleClose} variant="subtle">
+        <ActionIcon aria-label={t("windowControls.close")} color="gray" onClick={handleClose} variant="subtle">
           <IconX size={16} />
         </ActionIcon>
       </Group>

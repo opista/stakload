@@ -51,7 +51,7 @@ export const Spotlight = () => {
       nothingFound={t("spotlight.noResultsFound")}
       searchProps={{
         leftSection: <IconSearch stroke={1.5} />,
-        placeholder: t("search"),
+        placeholder: t("common.search"),
       }}
     />
   );

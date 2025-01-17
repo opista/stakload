@@ -22,11 +22,11 @@ const GeneralSettings = () => {
 
   const uiOptions: { label: string; value: UIMode }[] = [
     {
-      label: t("interfaceSettings.desktopMode"),
+      label: t("settings.interface.desktopMode"),
       value: "desktop",
     },
     {
-      label: t("interfaceSettings.gamingMode"),
+      label: t("settings.interface.gamingMode"),
       value: "gaming",
     },
   ];
@@ -34,12 +34,12 @@ const GeneralSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("interfaceSettings.general")}
+        {t("settings.interface.general")}
       </Title>
       <ThemeSelector onChange={setTheme} value={theme} />
       <SettingsSelect
         data={uiOptions}
-        label={t("interfaceSettings.defaultUI")}
+        label={t("settings.interface.defaultUI")}
         onChange={(value) => setDefaultUI(value)}
         value={defaultUI}
       />
@@ -69,17 +69,17 @@ const TimeSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("interfaceSettings.time")}
+        {t("settings.interface.time.title")}
       </Title>
       <SettingsCheckbox
         checked={displayTime}
-        label={t("interfaceSettings.displayTime")}
+        label={t("settings.interface.time.displayTime")}
         onCheckboxChange={onSetDisplayTime}
       />
       <SettingsCheckbox
         checked={displaySeconds}
         disabled={!displayTime}
-        label={t("interfaceSettings.displaySeconds")}
+        label={t("settings.interface.time.displaySeconds")}
         onCheckboxChange={setDisplaySeconds}
       />
     </>
@@ -109,17 +109,17 @@ const BatterySettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("interfaceSettings.battery")}
+        {t("settings.interface.battery.title")}
       </Title>
       <SettingsCheckbox
         checked={displayBattery}
-        label={t("interfaceSettings.displayBattery")}
+        label={t("settings.interface.battery.displayBattery")}
         onCheckboxChange={onSetDisplayBattery}
       />
       <SettingsCheckbox
         checked={displayBatteryPercent}
         disabled={!displayBattery}
-        label={t("interfaceSettings.displayBatteryPercentage")}
+        label={t("settings.interface.battery.displayBatteryPercentage")}
         onCheckboxChange={setDisplayBatteryPercent}
       />
     </>
@@ -137,11 +137,11 @@ const NetworkSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("interfaceSettings.network")}
+        {t("settings.interface.network.title")}
       </Title>
       <SettingsCheckbox
         checked={displayNetwork}
-        label={t("interfaceSettings.displayNetworkStatus")}
+        label={t("settings.interface.network.displayNetworkStatus")}
         onCheckboxChange={setDisplayNetwork}
       />
     </>

@@ -19,7 +19,7 @@ export const MediaImage = ({ src }: MediaImageProps) => {
           centered: true,
           children: <img className={classes.backgroundImage} src={src} />,
           size: "auto",
-          title: t("media"),
+          title: t("mediaImage.title"),
         })
       }
     >

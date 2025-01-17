@@ -24,10 +24,10 @@ export const PowerButton = () => {
   return (
     <>
       <ActionIcon
-        aria-label={t("quit")}
+        aria-label={t("power.quit")}
         className={classes.actionIcon}
         onClick={openPowerControlModal}
-        title={t("shortcutWithValue", { value: shortcut })}
+        title={t("settingsButton.shortcutWithValue", { value: shortcut })}
       >
         <IconPower className={classes.icon} stroke={1} />
       </ActionIcon>

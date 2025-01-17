@@ -22,31 +22,31 @@ export const SettingsModal = ({ id, innerProps }: ContextModalProps<SettingsModa
       content: SettingsInterface,
       icon: IconDeviceImac,
       key: "interface",
-      label: "settingsNavigation.interface",
+      label: "settings.navigation.interface",
     },
     {
       content: () => <SettingsLibrary id={id} />,
       icon: IconLibrary,
       key: "library",
-      label: "settingsNavigation.library",
+      label: "settings.navigation.library",
     },
     {
       content: () => <SettingsNotification />,
       icon: IconBell,
       key: "notifications",
-      label: "settingsNavigation.notifications",
+      label: "settings.navigation.notifications",
     },
     {
       content: ShortcutsView,
       icon: IconCommand,
       key: "shortcuts",
-      label: "settingsNavigation.shortcuts",
+      label: "settings.navigation.shortcuts",
     },
     {
       content: SettingsAbout,
       icon: IconUser,
       key: "about",
-      label: "settingsNavigation.about",
+      label: "settings.navigation.about",
     },
   ];
 

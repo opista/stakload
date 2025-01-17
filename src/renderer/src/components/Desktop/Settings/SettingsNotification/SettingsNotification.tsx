@@ -34,16 +34,16 @@ const SystemSettings = () => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("notificationSettings.system")}
+        {t("settings.notification.system")}
       </Title>
       <SettingsCheckbox
         checked={networkDisconnect}
-        label={t("notificationSettings.notifyOnNetworkDisconnect")}
+        label={t("settings.notification.networkDisconnect")}
         onCheckboxChange={setNetworkDisconnect}
       />
       <SettingsSelect
         data={batteryOptions}
-        label={t("notificationSettings.notifyLowBattery")}
+        label={t("settings.notification.lowBattery")}
         onChange={(value) => setLowBattery(Number(value))}
         value={String(lowBattery)}
       />

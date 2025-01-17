@@ -44,7 +44,7 @@ export const LibraryIcon = ({ game, size, ...rest }: LibraryIconProps & IconProp
         size,
       }}
       tooltipProps={{
-        label: library ? t("thisIsALibraryGame", { library }) : t("libraryNotRecognised"),
+        label: library ? t("libraryIcon.libraryGame", { library }) : t("libraryIcon.unrecognized"),
       }}
     />
   );

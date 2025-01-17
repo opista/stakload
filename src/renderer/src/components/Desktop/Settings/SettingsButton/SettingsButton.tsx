@@ -17,7 +17,7 @@ export const SettingsButton = () => {
     modals.closeAll();
     modals.openContextModal({
       modal: "settings",
-      title: t("settings"),
+      title: t("settingsButton.title"),
       innerProps: settingsModalInnerProps,
     });
   };
@@ -26,10 +26,10 @@ export const SettingsButton = () => {
 
   return (
     <ActionIcon
-      aria-label={t("settings")}
+      aria-label={t("settingsButton.title")}
       className={classes.actionIcon}
       onClick={openSettingsModal}
-      title={t("shortcutWithValue", { value: shortcut })}
+      title={t("settingsButton.shortcut", { value: shortcut })}
     >
       <IconSettings className={classes.icon} stroke={1} />
     </ActionIcon>

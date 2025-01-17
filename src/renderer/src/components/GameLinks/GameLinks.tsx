@@ -60,6 +60,7 @@ type WebsiteIconProps = {
 };
 
 const Dropdown = ({ deepLink, icon, label, url }: DropdownProps) => {
+  const { t } = useTranslation();
   return (
     <Menu arrowOffset={16} position="bottom-start" width={200} withArrow>
       <MenuTarget>
@@ -68,10 +69,10 @@ const Dropdown = ({ deepLink, icon, label, url }: DropdownProps) => {
 
       <MenuDropdown>
         <MenuItem component="a" href={deepLink} leftSection={<IconApps size="16" />} target="_blank">
-          Application
+          {t("links.application")}
         </MenuItem>
         <MenuItem component="a" href={url} leftSection={<IconExternalLink size="16" />} target="_blank">
-          Website
+          {t("links.website")}
         </MenuItem>
       </MenuDropdown>
     </Menu>

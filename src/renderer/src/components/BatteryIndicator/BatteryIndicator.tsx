@@ -37,7 +37,9 @@ export const BatteryIndicator = ({ showPercentage = true }: BatteryIndicatorProp
   if (!percentage) return null;
 
   const Icon = BatteryIcon(isCharging, percentage);
-  const tooltipLabel = isCharging ? t("charging", { level: percentage }) : t("batteryLevel", { level: percentage });
+  const tooltipLabel = isCharging
+    ? t("battery.charging", { level: percentage })
+    : t("battery.batteryLevel", { level: percentage });
 
   return (
     <Box className={classes.container}>

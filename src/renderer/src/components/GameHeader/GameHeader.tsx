@@ -34,9 +34,8 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             opened={openedDelete}
           />
           <Group gap="xs">
-            {/* TODO - Do we even want to implement this yet? */}
-            <ActionIcon aria-label={t("edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
-            <ActionIcon aria-label={t("delete")} icon={IconTrash} onClick={openDelete} />
+            <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
+            <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />
           </Group>
         </Flex>
       </Container>

@@ -13,7 +13,13 @@ export const SettingsAbout = () => {
   return (
     <Stack className={classes.container}>
       <UnstyledButton component="a" href={homepage} target="_blank">
-        <ActionIcon aria-label={t("githubRepository")} color="gray" icon={IconBrandGithub} size="xl" variant="white" />
+        <ActionIcon
+          aria-label={t("about.githubRepository")}
+          color="gray"
+          icon={IconBrandGithub}
+          size="xl"
+          variant="white"
+        />
       </UnstyledButton>
       <Flex align="center" direction="row" gap="md" justify="center" wrap="wrap">
         <Logo />

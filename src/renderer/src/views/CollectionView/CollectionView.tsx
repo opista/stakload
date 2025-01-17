@@ -52,7 +52,7 @@ export const CollectionView = () => {
   );
 
   if (!collection) {
-    return <Title order={3}>{t("collectionNotFound")}</Title>;
+    return <Title order={3}>{t("collection.notFound")}</Title>;
   }
 
   return (

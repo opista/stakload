@@ -14,9 +14,9 @@ export const GameSync = () => {
     <Group align="center">
       <Loader size={24} />
       <div>
-        <Text size="sm">{t("sync.syncingLibrary")}</Text>
+        <Text size="sm">{t("gameSync.syncingLibrary")}</Text>
         <Text size="xs">
-          {t("sync.updating", {
+          {t("gameSync.updating", {
             processing,
             total,
           })}

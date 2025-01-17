@@ -102,13 +102,13 @@ export const GameDetailsView = () => {
                         <div>
                           <Flex justify="space-between">
                             <Text className={classes.idLabel} size="xs">
-                              Game ID
+                              {t("game.gameId")}
                             </Text>
                             <Text size="xs">{game.gameId}</Text>
                           </Flex>
                           <Flex justify="space-between">
                             <Text className={classes.idLabel} size="xs">
-                              IGDB ID
+                              {t("game.igdbId")}
                             </Text>
                             <Text size="xs">{game.igdbId}</Text>
                           </Flex>
@@ -129,7 +129,7 @@ export const GameDetailsView = () => {
   const GameNotFound = () => (
     <Stack align="center" h="100%" justify="center">
       <IconPuzzleOff color="orange" size={60} stroke={0.5} />
-      <Text>{t("gameNotFound")}</Text>
+      <Text>{t("game.notFound")}</Text>
     </Stack>
   );
 

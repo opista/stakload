@@ -40,13 +40,13 @@ const GeneralSettings = ({ id }: { id: string }) => {
   return (
     <>
       <Title className={classes.title} order={2} size="h3">
-        {t("librarySettings.general")}
+        {t("settings.library.general")}
       </Title>
       <div className={classes.buttonContainer}>
         <div>
-          <label className={classes.label}>{t("librarySettings.syncLibrary")} </label>
+          <label className={classes.label}>{t("settings.library.syncLibrary")} </label>
           <span className={classes.date}>
-            {t("librarySettings.lastSync", {
+            {t("settings.library.lastSync", {
               val: lastSync,
               formatParams: {
                 val: { dateStyle: "short", timeStyle: "short" },
@@ -55,13 +55,13 @@ const GeneralSettings = ({ id }: { id: string }) => {
           </span>
         </div>
         <Button color="red" onClick={onSyncClick} size="xs">
-          {t("librarySettings.syncLibrary")}
+          {t("settings.library.syncLibrary")}
         </Button>
       </div>
       <SettingsCheckbox
         checked={syncOnStartup}
-        label={t("librarySettings.syncOnStartup")}
-        labelInfo={t("librarySettings.syncOnStartupInfo")}
+        label={t("settings.library.syncOnStartup")}
+        labelInfo={t("settings.library.syncOnStartupInfo")}
         onCheckboxChange={setSyncOnStartup}
       />
     </>
@@ -139,7 +139,7 @@ const SteamSettings = () => {
       <SettingsCheckbox
         checked={steamIntegrationEnabled}
         disabled={isLoading || !steamIntegration?.steamId || !steamIntegration.webApiKey}
-        label={t("enabled")}
+        label={t("common.enabled")}
         onCheckboxChange={toggleSteamIntegration}
       />
       <TextInput
@@ -167,21 +167,21 @@ const SteamSettings = () => {
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
           mounted={isUpdated}
-          text={t("integration.detailsSaved")}
+          text={t("settings.integration.detailsSaved")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
           mounted={isIntegrationValid === true}
-          text={t("integration.success")}
+          text={t("common.success")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedXFilled}
           iconProps={{ className: classes.cross }}
           mounted={isIntegrationValid === false}
-          text={t("integration.failure")}
+          text={t("common.failure")}
         />
         <Flex gap="xs">
           <Button
@@ -191,10 +191,10 @@ const SteamSettings = () => {
             size="xs"
             variant="light"
           >
-            {t("integration.test")}
+            {t("settings.integration.test")}
           </Button>
           <Button disabled={isLoading || !isIntegrationValid} onClick={onSave} size="xs">
-            {t("integration.save")}
+            {t("settings.integration.save")}
           </Button>
         </Flex>
       </Flex>
@@ -208,10 +208,10 @@ const EpicGamesSettings = () => {
   const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const removeListener = window.api.onEpicGamesAuthentication((_event, { success }) => {
+    const removeListener = window.api.onEpicGamesAuthentication((_event: unknown, data: unknown) => {
       setIsLoading(false);
-      setIsIntegrationValid(success);
-      console.log("result", success);
+      setIsIntegrationValid((data as { success: boolean }).success);
+      console.log("result", (data as { success: boolean }).success);
     });
     return () => removeListener();
   }, []);
@@ -223,7 +223,7 @@ const EpicGamesSettings = () => {
 
   return (
     <>
-      <SettingsTitle subtitle={t("librarySettings.authSecurity", { library: "Epic Games" })} title="Epic Games" />
+      <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "Epic Games" })} title="Epic Games" />
 
       <Flex justify="flex-end">
         <SettingsStatusIndicator
@@ -231,18 +231,18 @@ const EpicGamesSettings = () => {
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
           mounted={isIntegrationValid === true}
-          text={t("integration.success")}
+          text={t("common.success")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedXFilled}
           iconProps={{ className: classes.cross }}
           mounted={isIntegrationValid === false}
-          text={t("integration.failure")}
+          text={t("common.failure")}
         />
         <Flex gap="xs">
           <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
-            {t("integration.authenticate")}
+            {t("settings.integration.authenticate")}
           </Button>
         </Flex>
       </Flex>

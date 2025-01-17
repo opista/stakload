@@ -137,7 +137,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
             withBorder
           >
             <ActionIcon
-              aria-label={t("filters")}
+              aria-label={t("filters.title")}
               className={classes.filtersButton}
               disabled={disabled}
               onClick={() => setOpened((o) => !o)}
@@ -147,9 +147,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Indicator>
         </Popover.Target>
         <Popover.Dropdown>
-          {/* TODO - Add more filters */}
           <Title className={classes.title} size="h3">
-            {t("filters")}
+            {t("filters.title")}
           </Title>
           <Grid>
             <Grid.Col span={6}>
@@ -158,7 +157,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={libraryFilters}
-                label="Libraries"
+                label={t("filters.libraries")}
                 onChange={onFilterChange("libraries")}
                 searchable
                 value={selectedFilters.libraries}
@@ -168,7 +167,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["developers"]}
-                label="Developers"
+                label={t("filters.developers")}
                 onChange={onFilterChange("developers")}
                 searchable
                 value={selectedFilters.developers}
@@ -178,7 +177,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["publishers"]}
-                label="Publishers"
+                label={t("filters.publishers")}
                 onChange={onFilterChange("publishers")}
                 searchable
                 value={selectedFilters.publishers}
@@ -188,7 +187,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["playerPerspectives"]}
-                label="Player perspectives"
+                label={t("filters.playerPerspectives")}
                 onChange={onFilterChange("playerPerspectives")}
                 searchable
                 value={selectedFilters.playerPerspectives}
@@ -200,7 +199,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.platforms}
-                label="Platforms"
+                label={t("filters.platforms")}
                 onChange={onFilterChange("platforms")}
                 searchable
                 value={selectedFilters.platforms}
@@ -210,7 +209,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={ageRatingFilters.map(({ label, value }) => ({ label: t(label), value }))}
-                label="Age ratings"
+                label={t("filters.ageRatings")}
                 onChange={onFilterChange("ageRatings")}
                 searchable
                 value={selectedFilters.ageRatings}
@@ -220,7 +219,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["gameModes"]}
-                label="Game modes"
+                label={t("filters.gameModes")}
                 onChange={onFilterChange("gameModes")}
                 searchable
                 value={selectedFilters.gameModes}
@@ -230,7 +229,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["genres"]}
-                label="Genres"
+                label={t("filters.genres")}
                 onChange={onFilterChange("genres")}
                 searchable
                 value={selectedFilters.genres}
@@ -239,10 +238,10 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Grid>
           <Group classNames={{ root: classes.buttonContainer }} justify="flex-end">
             <Button color="red" onClick={onClearFilters}>
-              Clear filters
+              {t("filters.clearFilters")}
             </Button>
             <Button disabled={!hasFilterSet} leftSection={<IconPlaylistAdd />} onClick={onSaveFilters}>
-              Create collection
+              {t("filters.createCollection")}
             </Button>
           </Group>
         </Popover.Dropdown>
