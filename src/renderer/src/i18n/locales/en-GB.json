@@ -164,5 +164,8 @@
   "gaming": {
     "details": "Details",
     "play": "Play"
+  },
+  "featuredGame": {
+    "viewDetails": "View details"
   }
 }

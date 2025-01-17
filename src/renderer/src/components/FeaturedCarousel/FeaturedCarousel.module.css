@@ -1,0 +1,49 @@
+.container {
+  background: #15202c;
+  border-radius: var(--mantine-radius-lg);
+  overflow: hidden;
+  padding: var(--mantine-spacing-md);
+  display: flex;
+  gap: var(--mantine-spacing-sm);
+}
+
+.mainImage {
+  border-radius: var(--mantine-radius-lg);
+}
+
+
+.sideImagesContainer {
+  gap: var(--mantine-spacing-xs);
+  height: 100%;
+}
+
+.sideImage {
+  border-radius: var(--mantine-radius-lg);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+  height: 100%;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mainImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.visible {
+  opacity: 1;
+}
