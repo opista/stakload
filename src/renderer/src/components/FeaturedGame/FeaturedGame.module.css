@@ -47,3 +47,13 @@
 .visible {
   opacity: 1;
 }
+
+.placeholder {
+  opacity: initial;
+  background-color: #1b2c3b;
+  cursor: default;
+
+  &:hover {
+    opacity: initial;
+  }
+}

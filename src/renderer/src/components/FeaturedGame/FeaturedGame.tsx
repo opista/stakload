@@ -1,6 +1,7 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { AspectRatio, BackgroundImage, Badge, Card, Grid, Group, Stack, Text, Title } from "@mantine/core";
 import { useHover, useInterval, useInViewport } from "@mantine/hooks";
+import clsx from "clsx";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,27 +15,28 @@ type FeaturedGameProps = {
 
 export const FeaturedGame = ({ game }: FeaturedGameProps) => {
   const { t } = useTranslation();
-  if (!game.screenshots?.length) return null;
+  const hasScreenshots = !!game.screenshots?.length;
+  const screenshots = hasScreenshots ? game.screenshots!.slice(0, 3) : [];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const screenshots = game.screenshots.slice(0, 3);
   const { hovered, ref: hoverRef } = useHover();
   const { ref: inViewportRef, inViewport } = useInViewport();
 
   const interval = useInterval(() => {
     setCurrentIndex((current) => (current + 1) % screenshots.length);
-  }, 2000);
+  }, 10000);
 
   useEffect(() => {
-    if (hovered || !inViewport) {
+    if (!hasScreenshots || hovered || !inViewport) {
       interval.stop();
     } else {
       interval.start();
     }
     return interval.stop;
-  }, [hovered, inViewport]);
+  }, [hovered, inViewport, hasScreenshots]);
 
   const handleImageClick = (index: number) => {
+    if (!hasScreenshots) return;
     setCurrentIndex(index);
     interval.stop();
     interval.start();
@@ -46,26 +48,34 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
         <Grid.Col span={5}>
           <AspectRatio ratio={3 / 2}>
             <div className={classes.mainImageContainer} ref={hoverRef}>
-              {screenshots.map((screenshot, index) => (
-                <BackgroundImage
-                  className={`${classes.mainImage} ${index === currentIndex ? classes.visible : ""}`}
-                  key={screenshot}
-                  src={screenshot}
-                />
-              ))}
+              {hasScreenshots ? (
+                screenshots.map((screenshot, index) => (
+                  <BackgroundImage
+                    className={clsx(classes.mainImage, { [classes.visible]: index === currentIndex })}
+                    key={screenshot}
+                    src={screenshot}
+                  />
+                ))
+              ) : (
+                <div className={clsx(classes.mainImage, classes.placeholder)} />
+              )}
             </div>
           </AspectRatio>
         </Grid.Col>
         <Grid.Col ref={inViewportRef} span={1}>
           <Stack className={classes.sideImagesContainer} justify="space-between">
-            {screenshots.map((screenshot, index) => (
-              <BackgroundImage
-                className={classes.sideImage}
-                key={screenshot}
-                onClick={() => handleImageClick(index)}
-                src={screenshot}
-              />
-            ))}
+            {hasScreenshots
+              ? screenshots.map((screenshot, index) => (
+                  <BackgroundImage
+                    className={classes.sideImage}
+                    key={screenshot}
+                    onClick={() => handleImageClick(index)}
+                    src={screenshot}
+                  />
+                ))
+              : Array(3)
+                  .fill(null)
+                  .map((_, index) => <div className={clsx(classes.sideImage, classes.placeholder)} key={index} />)}
           </Stack>
         </Grid.Col>
         <Grid.Col span={5}>
