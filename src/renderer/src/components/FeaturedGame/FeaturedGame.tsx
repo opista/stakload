@@ -1,38 +1,38 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { AspectRatio, BackgroundImage, Badge, Card, Grid, Group, Stack, Text, Title } from "@mantine/core";
-import { useHover, useInterval } from "@mantine/hooks";
+import { useHover, useInterval, useInViewport } from "@mantine/hooks";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
-import classes from "./FeaturedCarousel.module.css";
+import classes from "./FeaturedGame.module.css";
 
-type Props = {
+type FeaturedGameProps = {
   game: GameStoreModel;
 };
 
-export const FeaturedCarousel = ({ game }: Props) => {
+export const FeaturedGame = ({ game }: FeaturedGameProps) => {
   const { t } = useTranslation();
-
   if (!game.screenshots?.length) return null;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const screenshots = game.screenshots.slice(0, 3);
-  const { hovered, ref } = useHover();
+  const { hovered, ref: hoverRef } = useHover();
+  const { ref: inViewportRef, inViewport } = useInViewport();
 
   const interval = useInterval(() => {
     setCurrentIndex((current) => (current + 1) % screenshots.length);
   }, 2000);
 
   useEffect(() => {
-    if (hovered) {
+    if (hovered || !inViewport) {
       interval.stop();
     } else {
       interval.start();
     }
     return interval.stop;
-  }, [hovered]);
+  }, [hovered, inViewport]);
 
   const handleImageClick = (index: number) => {
     setCurrentIndex(index);
@@ -45,7 +45,7 @@ export const FeaturedCarousel = ({ game }: Props) => {
       <Grid grow gutter="xs">
         <Grid.Col span={5}>
           <AspectRatio ratio={3 / 2}>
-            <div className={classes.mainImageContainer} ref={ref}>
+            <div className={classes.mainImageContainer} ref={hoverRef}>
               {screenshots.map((screenshot, index) => (
                 <BackgroundImage
                   className={`${classes.mainImage} ${index === currentIndex ? classes.visible : ""}`}
@@ -56,7 +56,7 @@ export const FeaturedCarousel = ({ game }: Props) => {
             </div>
           </AspectRatio>
         </Grid.Col>
-        <Grid.Col span={1}>
+        <Grid.Col ref={inViewportRef} span={1}>
           <Stack className={classes.sideImagesContainer} justify="space-between">
             {screenshots.map((screenshot, index) => (
               <BackgroundImage
@@ -80,7 +80,7 @@ export const FeaturedCarousel = ({ game }: Props) => {
                 </Badge>
               ))}
             </Group>
-            <Text lineClamp={4} mb="sm">
+            <Text lineClamp={3} mb="sm">
               {game.summary}
             </Text>
             <NavLink to={`/desktop/games/${game._id}`}>{t("featuredGame.viewDetails")}</NavLink>
