@@ -1,6 +1,6 @@
 import { settingsModalInnerProps } from "@components/Desktop/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameCover } from "@components/GameCover/GameCover";
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { Box, Button, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
@@ -18,7 +18,11 @@ const SCROLLBAR_WIDTH = 6;
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
-export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
+type GamesGridProps = {
+  games: GameListModel[];
+};
+
+export const GamesGrid = ({ games }: GamesGridProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -43,7 +47,7 @@ export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
   const onImportClick = () => {
     modals.openContextModal({
       modal: "settings",
-      title: t("settings"),
+      title: t("gamesGrid.settings"),
       innerProps: { ...settingsModalInnerProps, defaultTab: "library" },
     });
   };
@@ -52,9 +56,9 @@ export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
     return (
       <Stack className={classes.emptyContainer}>
         <IconPacman color="yellow" size={60} stroke={0.5} />
-        <Text c="dimmed">{t("noGamesFound")}</Text>
+        <Text c="dimmed">{t("gamesGrid.noGamesFound")}</Text>
         <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
-          {t("importLibrary")}
+          {t("gamesGrid.importLibrary")}
         </Button>
       </Stack>
     );
@@ -85,7 +89,7 @@ export const GamesGrid = ({ games }: { games: GameStoreModel[] }) => {
       rowIndex,
     }: {
       columnIndex: number;
-      data: GameStoreModel[];
+      data: GameListModel[];
       rowIndex: number;
     },
     columnCount: number,

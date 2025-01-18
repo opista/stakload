@@ -1,4 +1,4 @@
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { AspectRatio, Image, Stack, Text } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
 import clsx from "clsx";
@@ -9,15 +9,15 @@ const GAME_COVER_ART_RATIO = 3 / 4;
 
 type GameCoverProps = {
   className?: string;
-  game: GameStoreModel;
+  game: GameListModel;
   hoverEffect?: boolean;
-  onClick?: (game: GameStoreModel) => void;
+  onClick?: (game: GameListModel) => void;
   showGameTitle?: boolean;
 };
 
-const GameCoverArt = ({ game }: { game: GameStoreModel }) => <Image src={game.cover!} title={game.name} />;
+const GameCoverArt = ({ game }: { game: GameListModel }) => <Image src={game.cover!} title={game.name} />;
 
-const GameCoverEmpty = ({ game, showGameTitle }: { game: GameStoreModel; showGameTitle?: boolean }) => (
+const GameCoverEmpty = ({ game, showGameTitle }: { game: GameListModel; showGameTitle?: boolean }) => (
   <Stack className={classes.emptyContainer}>
     <IconDeviceGamepad2 className={clsx(classes.emptyIcon, { [classes.centred]: !showGameTitle })} stroke={1} />
     {showGameTitle && (

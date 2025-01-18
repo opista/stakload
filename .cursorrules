@@ -12,6 +12,14 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - Define object keys in alphabetical order
 - Define type keys in alphabetical order
 
+## Electron <> Renderer Communication
+
+- All Electron <> Renderer communication should be done using the contextBridge API.
+- All Electron <> Renderer communication should be done using the ipcRenderer API.
+- When adding new custom APIs, create a channel in src/preload/channels.ts. Follow the existing convention in this file.
+- When adding new custom APIs, create a handler in src/main/channels/{channelType}.ts. Follow the existing convention in this file.
+- When adding new custom APIs, expose the API in src/preload/index.ts. Ensure that the types are also defined in src/preload/index.d.ts
+
 ## Layouts
 
 - All layouts should be in the src/renderer/src/layouts directory
@@ -54,6 +62,7 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - Don't use props to style components, use the {ComponentName}.module.css file instead
 - Don't use inline styles, use the {ComponentName}.module.css file instead
 - Global styles are found in src/renderer/src/styles/styles.css
+- flex/grid-related props on Stack/Group/Flex components should be left as-is.
 
 ## i18n
 
@@ -61,5 +70,12 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - All text should be placed in the src/renderer/src/i18n/translations directory
 - All text should be placed in the src/renderer/src/i18n/locales/en-GB.json file
 - No freeform text should be used, all text should be placed in the translations file
+- All translations should be scoped to the component they are used in. For example, if a translation is in the GameCover component, it should be structured as "gameCover.{string}"
+- If a translation is used in multiple places, it should be placed in the "common" object.
+
+## Tooling
+
+- Reach for Mantine components first, then custom components if there isn't a suitable Mantine component
+- If you are requested to create a feature using a tool or library but it isn't fit for purpose, suggest a suitable alternative with a list of justifications.
 
 Finally, remember it is very, very important to always follow these rules.

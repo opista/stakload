@@ -24,7 +24,9 @@ import {
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
+  GET_GAMES_LIST,
   GET_LOCALE,
+  GET_NEW_GAMES,
   GET_OS,
   GET_PROTONDB_TIER,
   REMOVE_GAME,
@@ -80,6 +82,8 @@ const api = {
   minimizeWindow: () => ipcRenderer.send(WINDOW_MINIMIZE),
   maximizeWindow: () => ipcRenderer.send(WINDOW_MAXIMIZE),
   closeWindow: () => ipcRenderer.send(WINDOW_CLOSE),
+  getGamesList: () => ipcRenderer.invoke(GET_GAMES_LIST),
+  getNewGames: () => ipcRenderer.invoke(GET_NEW_GAMES),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

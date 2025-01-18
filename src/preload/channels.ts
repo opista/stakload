@@ -39,3 +39,6 @@ export const ENCRYPT = "ENCRYPT";
 export const WINDOW_MINIMIZE = "WINDOW_MINIMIZE";
 export const WINDOW_MAXIMIZE = "WINDOW_MAXIMIZE";
 export const WINDOW_CLOSE = "WINDOW_CLOSE";
+
+export const GET_GAMES_LIST = "GET_GAMES_LIST";
+export const GET_NEW_GAMES = "GET_NEW_GAMES";

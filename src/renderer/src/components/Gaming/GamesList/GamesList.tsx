@@ -1,4 +1,4 @@
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { mergeRefs } from "@mantine/hooks";
 import { FocusContext, updateAllLayouts, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -10,7 +10,7 @@ import classes from "./GamesList.module.css";
 const FOCUS_KEY = "GAMES_LIST";
 
 type GamesListProps = {
-  games?: GameStoreModel[];
+  games?: GameListModel[];
   onSelectGame: (index: number) => void;
 };
 

@@ -3,21 +3,29 @@ import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const GamesHandler = () => {
-  const fetchGames = useGameStore(useShallow((state) => state.fetchGames));
+  const { fetchGamesList, fetchNewGames } = useGameStore(
+    useShallow((state) => ({
+      fetchGamesList: state.fetchGamesList,
+      fetchNewGames: state.fetchNewGames,
+    })),
+  );
+
+  const triggerUpdates = () => {
+    fetchGamesList();
+    fetchNewGames();
+  };
+
+  useEffect(() => triggerUpdates(), []);
 
   useEffect(() => {
-    fetchGames();
-  }, []);
-
-  useEffect(() => {
-    const removeListener = window.api.onSyncProcessed(() => fetchGames());
+    const removeListener = window.api.onSyncProcessed(() => triggerUpdates());
     return () => removeListener();
   }, []);
 
   useEffect(() => {
-    const removeListener = window.api.onGamesListUpdated(() => fetchGames());
+    const removeListener = window.api.onGamesListUpdated(() => triggerUpdates());
     return () => removeListener();
   }, []);
 
-  return <></>;
+  return null;
 };

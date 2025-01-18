@@ -1,4 +1,11 @@
-import { GameFilters, GameStoreModel, InitialGameStoreModel, LikeLibrary } from "@contracts/database/games";
+import {
+  FeaturedGameModel,
+  GameFilters,
+  GameListModel,
+  GameStoreModel,
+  InitialGameStoreModel,
+  LikeLibrary,
+} from "@contracts/database/games";
 
 import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
@@ -149,4 +156,48 @@ export const findGameFilters = async () => {
   }, {});
 
   return results;
+};
+
+export const getGamesList = async () => {
+  return await db
+    .find<GameListModel>(
+      { $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] },
+      { _id: 1, cover: 1, name: 1 },
+    )
+    .sort({ sortableName: 1 });
+};
+
+export const getNewGames = async () => {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  // First try to get games added in the last week
+  const recentGames = await db
+    .find<FeaturedGameModel>(
+      {
+        createdAt: { $gte: oneWeekAgo },
+        $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+      },
+      { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
+    )
+    .sort({ createdAt: -1 })
+    .limit(10);
+
+  // If we don't have enough recent games, fetch more based on createdAt
+  if (recentGames.length < 3) {
+    const remainingGames = await db
+      .find<FeaturedGameModel>(
+        {
+          createdAt: { $lt: oneWeekAgo },
+          $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+        },
+        { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
+      )
+      .sort({ createdAt: -1 })
+      .limit(3 - recentGames.length);
+
+    return [...recentGames, ...remainingGames];
+  }
+
+  return recentGames;
 };

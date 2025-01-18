@@ -7,15 +7,22 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./HomeView.module.css";
 
 export const HomeView = () => {
-  const games = useGameStore(useShallow((state) => state.games));
+  const { gamesList, newGames } = useGameStore(
+    useShallow((state) => ({
+      gamesList: state.gamesList,
+      newGames: state.newGames,
+    })),
+  );
+
+  // TODO: Add metadata to store model for last played
+  const games = gamesList.slice(0, 10);
+
   return (
     <Stack className={classes.container}>
-      <GamesCarousel games={games.slice(70, 75)} title="Continue Playing" />
-
-      <FeaturedGamesCarousel games={games.slice(1, 4)} title="Recently Added" />
-
+      <GamesCarousel games={games} title="Continue Playing" />
+      <FeaturedGamesCarousel games={newGames} title="Recently Added" />
       <Stack className={classes.contained}>
-        <Title order={2}>TODO</Title>
+        <Title order={2}>Launchers</Title>
       </Stack>
     </Stack>
   );

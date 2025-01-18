@@ -1,5 +1,5 @@
 import { GameStoreModel } from "@contracts/database/games";
-import { GameState } from "@contracts/store/game";
+import { GameActions, GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
 import { Conf } from "electron-conf/renderer";
 import { create } from "zustand";
@@ -15,30 +15,46 @@ const DEFAULT_FILTERS = {
   publishers: undefined,
 };
 
-type GameActions = {
-  fetchCollections: () => void;
-  fetchGames: () => void;
-  resetFilters: () => void;
-  setCurrentCollection: (id: string) => void;
-  setCurrentGame: (game: GameStoreModel) => void;
-  setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
-  setSelectedCollection: (selectedCollection: string) => void;
-  setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
-};
-
 type GameStore = GameState & GameActions;
 
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
-      games: [],
-      currentGame: undefined,
-      fetchGames: async () => {
-        const games = await window.api.getFilteredGames();
-        set({ games });
-      },
-      setCurrentGame: (currentGame: GameStoreModel) => set(() => ({ currentGame })),
+      gamesList: [],
+      newGames: [],
+      gamesDetails: {},
+      gamesPreview: {},
 
+      fetchGamesList: async () => {
+        try {
+          const games = await window.api.getGamesList();
+          set({ gamesList: games });
+        } catch (err) {
+          console.log("action: fetchGamesList", err);
+        }
+      },
+
+      fetchNewGames: async () => {
+        try {
+          const games = await window.api.getNewGames();
+          console.log("new games", games);
+          set({ newGames: games });
+        } catch (err) {
+          console.log("action: fetchNewGames", err);
+        }
+      },
+
+      fetchGameDetails: async (id: string) => {
+        const details = await window.api.getGameById(id);
+        set((state) => ({
+          gamesDetails: {
+            ...state.gamesDetails,
+            [id]: details,
+          },
+        }));
+      },
+
+      currentGame: undefined,
       collections: [],
       fetchCollections: async () => {
         const collections = await window.api.getCollections();
@@ -59,6 +75,7 @@ export const useGameStore = create<GameStore>()(
             ...filters,
           },
         })),
+      setCurrentGame: (game: GameStoreModel) => set({ currentGame: game }),
       setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
       setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
       setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>

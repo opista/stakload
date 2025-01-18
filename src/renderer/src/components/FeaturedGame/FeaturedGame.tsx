@@ -1,4 +1,4 @@
-import { GameStoreModel } from "@contracts/database/games";
+import { FeaturedGameModel } from "@contracts/database/games";
 import { AspectRatio, BackgroundImage, Badge, Card, Grid, Group, Stack, Text, Title } from "@mantine/core";
 import { useHover, useInterval, useInViewport } from "@mantine/hooks";
 import clsx from "clsx";
@@ -10,7 +10,7 @@ import { NavLink } from "react-router";
 import classes from "./FeaturedGame.module.css";
 
 type FeaturedGameProps = {
-  game: GameStoreModel;
+  game: FeaturedGameModel;
 };
 
 export const FeaturedGame = ({ game }: FeaturedGameProps) => {

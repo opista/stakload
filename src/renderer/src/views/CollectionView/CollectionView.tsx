@@ -1,5 +1,5 @@
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
-import { GameStoreModel, IdAndName } from "@contracts/database/games";
+import { GameListModel, IdAndName } from "@contracts/database/games";
 import { Flex, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { useMemo } from "react";
@@ -9,24 +9,22 @@ import { useShallow } from "zustand/react/shallow";
 
 import classes from "./CollectionView.module.css";
 
-const filterGamesByCollectionRules = <T extends GameStoreModel>(
-  games: T[],
-  filters: Partial<Record<keyof T, string[]>> | undefined,
-): T[] => {
+const filterGamesByCollectionRules = (
+  games: GameListModel[],
+  filters: Record<string, string[]> | undefined,
+): GameListModel[] => {
   if (!filters) return games;
 
   return games.filter((game) =>
     Object.entries(filters)
       .filter(([_key, filterValues]) => filterValues.length)
       .every(([key, filterValues]) => {
-        const gameValue = game[key as keyof T];
-        // Handle IdAndName[] fields
+        const gameValue = game[key as keyof GameListModel];
+
         if (Array.isArray(gameValue) && gameValue.length > 0 && "id" in gameValue[0]) {
           const gameIds = (gameValue as IdAndName[]).map((item) => item.id);
           return filterValues.some((value) => gameIds.includes(value));
         }
-
-        // Handle string fields
         if (typeof gameValue === "string") {
           return filterValues.includes(gameValue);
         }
@@ -37,18 +35,19 @@ const filterGamesByCollectionRules = <T extends GameStoreModel>(
 };
 
 export const CollectionView = () => {
-  const { t } = useTranslation();
   const { id } = useParams();
-  const { collection, games } = useGameStore(
+  const { t } = useTranslation();
+
+  const { collection, gamesList } = useGameStore(
     useShallow((state) => ({
-      collection: state.collections.find(({ _id }) => _id === id),
-      games: state.games,
+      collection: state.collections.find((c) => c._id === id),
+      gamesList: state.gamesList,
     })),
   );
 
   const filteredGames = useMemo(
-    () => filterGamesByCollectionRules(games, collection?.filters),
-    [games, collection?.filters],
+    () => filterGamesByCollectionRules(gamesList, collection?.filters),
+    [gamesList, collection?.filters],
   );
 
   if (!collection) {

@@ -2,7 +2,15 @@ import { GameFilters } from "@contracts/database/games";
 import { IpcMainInvokeEvent, WebContents } from "electron";
 
 import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
-import { findGameById, findGameFilters, findLastSyncedAt, getFilteredGames, removeGameById } from "../database/games";
+import {
+  findGameById,
+  findGameFilters,
+  findLastSyncedAt,
+  getFilteredGames,
+  getGamesList,
+  getNewGames,
+  removeGameById,
+} from "../database/games";
 
 export const getFilteredGameLibrary = (_event: IpcMainInvokeEvent, filters?: GameFilters) => getFilteredGames(filters);
 
@@ -28,3 +36,7 @@ export const getProtondbTier = async (_event: IpcMainInvokeEvent, gameId: string
     return null;
   }
 };
+
+export const getGamesListHandler = (_event: IpcMainInvokeEvent) => getGamesList();
+
+export const getNewGamesHandler = (_event: IpcMainInvokeEvent) => getNewGames();

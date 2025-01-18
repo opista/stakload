@@ -1,7 +1,8 @@
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { useGameStore } from "@store/game.store";
+import { useShallow } from "zustand/react/shallow";
 
 export const LibraryView = () => {
-  const games = useGameStore((state) => state.games);
-  return <GamesGrid games={games} />;
+  const gamesList = useGameStore(useShallow((state) => state.gamesList));
+  return <GamesGrid games={gamesList} />;
 };

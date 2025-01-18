@@ -1,5 +1,12 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters, GameStoreModel, LikeLibrary, Platform } from "@contracts/database/games";
+import {
+  FeaturedGameModel,
+  GameFilters,
+  GameListModel,
+  GameStoreModel,
+  LikeLibrary,
+  Platform,
+} from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
@@ -21,7 +28,9 @@ declare global {
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGamesLastSyncedAt: () => Promise<Date>;
+      getGamesList: () => Promise<GameListModel[]>;
       getLocale: () => Promise<string>;
+      getNewGames: () => Promise<FeaturedGameModel[]>;
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
       maximizeWindow: () => void;

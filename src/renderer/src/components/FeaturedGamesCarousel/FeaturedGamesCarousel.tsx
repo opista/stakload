@@ -1,5 +1,5 @@
 import { FeaturedGame } from "@components/FeaturedGame/FeaturedGame";
-import { GameStoreModel } from "@contracts/database/games";
+import { FeaturedGameModel } from "@contracts/database/games";
 import { Carousel } from "@mantine/carousel";
 import { Stack, Title } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
@@ -7,7 +7,7 @@ import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import classes from "./FeaturedGamesCarousel.module.css";
 
 type FeaturedGamesCarouselProps = {
-  games: GameStoreModel[];
+  games: FeaturedGameModel[];
   title: string;
 };
 

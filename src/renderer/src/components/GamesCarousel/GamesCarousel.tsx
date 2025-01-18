@@ -1,5 +1,5 @@
 import { GameCover } from "@components/GameCover/GameCover";
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { Carousel } from "@mantine/carousel";
 import { Stack, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
@@ -10,7 +10,7 @@ import { useNavigate } from "react-router";
 import classes from "./GamesCarousel.module.css";
 
 type GamesCarouselProps = {
-  games: GameStoreModel[];
+  games: GameListModel[];
   loop?: boolean;
   title: string;
 };

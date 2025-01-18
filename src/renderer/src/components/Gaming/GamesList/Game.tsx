@@ -1,13 +1,13 @@
 import { GameCover } from "@components/GameCover/GameCover";
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 
 import classes from "./Game.module.css";
 
 type GameProps = {
-  game: GameStoreModel;
-  onFocus: (game: GameStoreModel) => void;
-  onSelect: (game: GameStoreModel) => void;
+  game: GameListModel;
+  onFocus: (game: GameListModel) => void;
+  onSelect: (game: GameListModel) => void;
   size: number;
   start: number;
 };

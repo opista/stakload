@@ -212,5 +212,10 @@
     "close": "Close",
     "maximize": "Maximize",
     "minimize": "Minimize"
+  },
+  "gamesGrid": {
+    "noGamesFound": "No games found",
+    "importLibrary": "Import library",
+    "settings": "Settings"
   }
 }

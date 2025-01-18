@@ -16,7 +16,9 @@ import {
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
+  GET_GAMES_LIST,
   GET_LOCALE,
+  GET_NEW_GAMES,
   GET_OS,
   GET_PROTONDB_TIER,
   REMOVE_GAME,
@@ -38,6 +40,8 @@ import {
   getGameById,
   getGameFilters,
   getGamesLastSyncedAt,
+  getGamesListHandler,
+  getNewGamesHandler,
   getProtondbTier,
   removeGame,
 } from "./channels/games";
@@ -181,6 +185,9 @@ app.whenReady().then(async () => {
   ipcMain.on(WINDOW_MINIMIZE, () => minimizeWindow(browserWindow));
   ipcMain.on(WINDOW_MAXIMIZE, () => toggleWindowMaximized(browserWindow));
   ipcMain.on(WINDOW_CLOSE, () => closeWindow(browserWindow));
+
+  ipcMain.handle(GET_GAMES_LIST, getGamesListHandler);
+  ipcMain.handle(GET_NEW_GAMES, getNewGamesHandler);
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

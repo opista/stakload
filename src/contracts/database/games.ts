@@ -139,3 +139,9 @@ export type GameFilters = {
   playerPerspectives?: string[];
   publishers?: string[];
 };
+
+// Basic model for grid/list views
+export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "name">;
+
+// Additional fields needed for game previews/featured games
+export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
