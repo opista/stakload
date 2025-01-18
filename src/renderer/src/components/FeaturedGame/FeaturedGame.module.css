@@ -57,3 +57,20 @@
     opacity: initial;
   }
 }
+
+.contentContainer {
+  height: 100%;
+  padding: var(--mantine-spacing-sm);
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.genreContainer {
+  margin-bottom: var(--mantine-spacing-md);
+}
+
+.summary {
+  margin-bottom: var(--mantine-spacing-sm);
+}

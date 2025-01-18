@@ -79,18 +79,18 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
           </Stack>
         </Grid.Col>
         <Grid.Col span={5}>
-          <Stack align="flex-start" gap={0} h="100%" justify="flex-start" p="sm">
-            <Title lineClamp={1} mb="sm" order={2}>
+          <Stack align="flex-start" className={classes.contentContainer} gap={0} justify="flex-start">
+            <Title className={classes.title} lineClamp={1} order={2}>
               {game.name}
             </Title>
-            <Group gap="xs" mb="md">
+            <Group className={classes.genreContainer} gap="xs">
               {game.genres?.map((genre) => (
                 <Badge color="cyan" key={genre.id} radius="md" size="md" variant="light">
                   {genre.name}
                 </Badge>
               ))}
             </Group>
-            <Text lineClamp={3} mb="sm">
+            <Text className={classes.summary} lineClamp={3}>
               {game.summary}
             </Text>
             <NavLink to={`/desktop/games/${game._id}`}>{t("featuredGame.viewDetails")}</NavLink>
