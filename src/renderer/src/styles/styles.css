@@ -30,8 +30,3 @@ body {
   overflow: hidden;
   user-select: none;
 }
-
-/* TODO: Disable pointer events to prevent highlighting of page.
-Are we going to cause problems doing this? Also, should we create our
-own custom context menu? What would be it's purpose? Perhaps actions like
-"remove game", "play game" etc. */
