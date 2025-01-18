@@ -8,7 +8,7 @@
   height: 100%;
   padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
   border-radius: var(--mantine-radius-xl);
-  background: #15202c;
+  background: var(--color);
 }
 
 .logoContainer {

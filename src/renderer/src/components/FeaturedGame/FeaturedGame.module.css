@@ -1,5 +1,5 @@
 .container {
-  background: #15202c;
+  background: var(--color);
   border-radius: var(--mantine-radius-lg);
   overflow: hidden;
   padding: var(--mantine-spacing-md);

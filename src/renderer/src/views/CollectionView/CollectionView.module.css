@@ -7,5 +7,13 @@
 }
 
 .header {
-  padding-left: var(--mantine-spacing-md);
+  padding: 0 var(--mantine-spacing-md);
+}
+
+.actionIcon {
+  background-color: var(--color);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-xs);
+  width: auto;
+  height: auto;
 }

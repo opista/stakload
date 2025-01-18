@@ -1,6 +1,6 @@
 .input {
   color: currentColor;
-  background-color: #15202c;
+  background-color: var(--color);
   border: none;
   border-radius: var(--mantine-radius-lg);
   height: 55px;

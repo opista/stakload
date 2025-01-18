@@ -118,8 +118,6 @@ export type GameStoreModel = {
   sortableName?: string;
   storyline?: string;
   summary?: string;
-  // TODO - bin this?
-  type?: "app" | "game";
   videos?: string[];
   websites?: Website[];
 };

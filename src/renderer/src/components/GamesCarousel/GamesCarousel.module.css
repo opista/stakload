@@ -10,7 +10,7 @@
   padding: var(--mantine-spacing-xs);
   opacity: 1;
   border-radius: var(--mantine-radius-md);
-  background-color: #15202c;
+  background-color: var(--color);
   color: white;
   border: none;
 
