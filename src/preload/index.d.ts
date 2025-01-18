@@ -18,7 +18,9 @@ declare global {
       authenticateIntegration: (library: LikeLibrary) => void;
       clearSyncQueue: () => void;
       closeWindow: () => void;
-      createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
+      createCollection: (
+        collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
+      ) => Promise<CollectionStoreModel>;
       decrypt: (str: string) => Promise<string>;
       deleteCollection: (id: string) => Promise<boolean>;
       encrypt: (str: string) => Promise<string>;

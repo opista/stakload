@@ -4,7 +4,7 @@ import { createDb } from "./util/create-db";
 
 const db = createDb("collections");
 
-export const addCollection = async (collection: Pick<CollectionStoreModel, "name" | "filters">) => {
+export const addCollection = async (collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) => {
   return await db.insert<Omit<CollectionStoreModel, "_id">>(collection);
 };
 

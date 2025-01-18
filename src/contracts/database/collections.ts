@@ -1,7 +1,8 @@
-import { GameStoreModel } from "./games";
+import { GameFilters } from "./games";
 
 export type CollectionStoreModel = {
   _id: string;
-  filters: Record<keyof GameStoreModel, string[]>;
+  filters: GameFilters;
+  icon?: string;
   name: string;
 };
