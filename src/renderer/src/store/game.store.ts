@@ -26,22 +26,13 @@ export const useGameStore = create<GameStore>()(
       gamesPreview: {},
 
       fetchGamesList: async () => {
-        try {
-          const games = await window.api.getGamesList();
-          set({ gamesList: games });
-        } catch (err) {
-          console.log("action: fetchGamesList", err);
-        }
+        const games = await window.api.getGamesList();
+        set({ gamesList: games });
       },
 
       fetchNewGames: async () => {
-        try {
-          const games = await window.api.getNewGames();
-          console.log("new games", games);
-          set({ newGames: games });
-        } catch (err) {
-          console.log("action: fetchNewGames", err);
-        }
+        const games = await window.api.getNewGames();
+        set({ newGames: games });
       },
 
       fetchGameDetails: async (id: string) => {
