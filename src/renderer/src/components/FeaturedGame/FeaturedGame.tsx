@@ -80,7 +80,7 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
         </Grid.Col>
         <Grid.Col span={5}>
           <Stack align="flex-start" gap={0} h="100%" justify="flex-start" p="sm">
-            <Title mb="sm" order={2}>
+            <Title lineClamp={1} mb="sm" order={2}>
               {game.name}
             </Title>
             <Group gap="xs" mb="md">
