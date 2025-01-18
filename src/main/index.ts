@@ -13,7 +13,6 @@ import {
   ENCRYPT,
   GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
-  GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
@@ -38,7 +37,6 @@ import { createCollection, deleteCollection, getCollections, updateCollection } 
 import { GameSyncManager } from "./channels/game-sync-manager";
 import {
   getCollectionGamesHandler,
-  getFilteredGameLibrary,
   getGameById,
   getGameFilters,
   getGamesLastSyncedAt,
@@ -169,7 +167,6 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_COLLECTIONS, getCollections);
   ipcMain.handle(UPDATE_COLLECTION, updateCollection(browserWindow.webContents));
   ipcMain.handle(DELETE_COLLECTION, deleteCollection(browserWindow.webContents));
-  ipcMain.handle(GET_FILTERED_GAMES, getFilteredGameLibrary);
   ipcMain.handle(GET_GAME_FILTERS, getGameFilters);
   ipcMain.handle(GET_GAME_BY_ID, getGameById);
   ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);

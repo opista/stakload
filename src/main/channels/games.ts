@@ -1,4 +1,3 @@
-import { GameFilters } from "@contracts/database/games";
 import { IpcMainInvokeEvent, WebContents } from "electron";
 
 import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
@@ -12,8 +11,6 @@ import {
   getNewGames,
   removeGameById,
 } from "../database/games";
-
-export const getFilteredGameLibrary = (_event: IpcMainInvokeEvent, filters?: GameFilters) => getFilteredGames(filters);
 
 export const getGameFilters = (_event: IpcMainInvokeEvent) => findGameFilters();
 

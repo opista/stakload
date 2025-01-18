@@ -1,5 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters, LikeLibrary } from "@contracts/database/games";
+import { LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
@@ -21,7 +21,6 @@ import {
   EVENT_SYNC_QUEUE_CLEARED,
   GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
-  GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
@@ -32,6 +31,7 @@ import {
   GET_PROTONDB_TIER,
   REMOVE_GAME,
   RESTART_APP,
+  RESTART_DEVICE,
   SHUTDOWN_DEVICE,
   SLEEP_DEVICE,
   SYNC_GAMES,
@@ -51,7 +51,6 @@ const api = {
   createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) =>
     ipcRenderer.invoke(CREATE_COLLECTION, collection),
   getCollections: () => ipcRenderer.invoke(GET_COLLECTIONS),
-  getFilteredGames: (filters?: GameFilters) => ipcRenderer.invoke(GET_FILTERED_GAMES, filters),
   getGameFilters: () => ipcRenderer.invoke(GET_GAME_FILTERS),
   getGameById: (id: string) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
   getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),
@@ -74,7 +73,7 @@ const api = {
     listenerHandler(EPIC_GAMES_INTEGRATION_RESULT, listener),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
-  restartDevice: (): void => ipcRenderer.send(RESTART_APP),
+  restartDevice: (): void => ipcRenderer.send(RESTART_DEVICE),
   shutdownDevice: (): void => ipcRenderer.send(SHUTDOWN_DEVICE),
   sleepDevice: (): void => ipcRenderer.send(SLEEP_DEVICE),
   syncGames: () => ipcRenderer.send(SYNC_GAMES),

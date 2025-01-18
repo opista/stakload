@@ -1,5 +1,5 @@
 import { FeaturedGameModel } from "@contracts/database/games";
-import { AspectRatio, BackgroundImage, Badge, Card, Grid, Group, Stack, Text, Title } from "@mantine/core";
+import { AspectRatio, BackgroundImage, Badge, Card, Grid, Group, ScrollArea, Stack, Text, Title } from "@mantine/core";
 import { useHover, useInterval, useInViewport } from "@mantine/hooks";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -83,13 +83,15 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
             <Title className={classes.title} lineClamp={1} order={2}>
               {game.name}
             </Title>
-            <Group className={classes.genreContainer} gap="xs">
-              {game.genres?.map((genre) => (
-                <Badge color="cyan" key={genre.id} radius="md" size="md" variant="light">
-                  {genre.name}
-                </Badge>
-              ))}
-            </Group>
+            <ScrollArea scrollHideDelay={500} scrollbarSize={8} type="hover">
+              <Group className={classes.genreContainer} gap="xs" wrap="nowrap">
+                {game.genres?.map((genre) => (
+                  <Badge color="cyan" key={genre.id} radius="md" size="md" style={{ flexShrink: 0 }} variant="light">
+                    {genre.name}
+                  </Badge>
+                ))}
+              </Group>
+            </ScrollArea>
             <Text className={classes.summary} lineClamp={3}>
               {game.summary}
             </Text>

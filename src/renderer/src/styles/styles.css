@@ -28,6 +28,7 @@ body {
   background: #0d171f;
   border-radius: var(--mantine-radius-xl);
   overflow: hidden;
+  user-select: none;
 }
 
 /* TODO: Disable pointer events to prevent highlighting of page.
