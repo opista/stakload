@@ -19,6 +19,7 @@ import {
   EVENT_METADATA_SYNC_PROCESSED,
   EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
+  GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
@@ -84,6 +85,7 @@ const api = {
   closeWindow: () => ipcRenderer.send(WINDOW_CLOSE),
   getGamesList: () => ipcRenderer.invoke(GET_GAMES_LIST),
   getNewGames: () => ipcRenderer.invoke(GET_NEW_GAMES),
+  getCollectionGames: (id: string) => ipcRenderer.invoke(GET_COLLECTION_GAMES, id),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

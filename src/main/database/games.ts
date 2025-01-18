@@ -40,17 +40,20 @@ export const getFilteredGames = async ({
   publishers,
 }: GameFilters = {}) => {
   return await db
-    .find<GameStoreModel>({
-      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
-      ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
-      ...(libraries?.length && { library: { $in: libraries } }),
-      ...idMatcher("developers", developers),
-      ...idMatcher("gameModes", gameModes),
-      ...idMatcher("genres", genres),
-      ...idMatcher("platforms", platforms),
-      ...idMatcher("playerPerspectives", playerPerspectives),
-      ...idMatcher("publishers", publishers),
-    })
+    .find<GameListModel>(
+      {
+        $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+        ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
+        ...(libraries?.length && { library: { $in: libraries } }),
+        ...idMatcher("developers", developers),
+        ...idMatcher("gameModes", gameModes),
+        ...idMatcher("genres", genres),
+        ...idMatcher("platforms", platforms),
+        ...idMatcher("playerPerspectives", playerPerspectives),
+        ...idMatcher("publishers", publishers),
+      },
+      { _id: 1, cover: 1, name: 1 },
+    )
     .sort({ sortableName: 1 });
 };
 

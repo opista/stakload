@@ -11,6 +11,7 @@ import {
   DECRYPT,
   DELETE_COLLECTION,
   ENCRYPT,
+  GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
   GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
@@ -36,6 +37,7 @@ import {
 import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
 import { GameSyncManager } from "./channels/game-sync-manager";
 import {
+  getCollectionGamesHandler,
   getFilteredGameLibrary,
   getGameById,
   getGameFilters,
@@ -188,6 +190,7 @@ app.whenReady().then(async () => {
 
   ipcMain.handle(GET_GAMES_LIST, getGamesListHandler);
   ipcMain.handle(GET_NEW_GAMES, getNewGamesHandler);
+  ipcMain.handle(GET_COLLECTION_GAMES, getCollectionGamesHandler);
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

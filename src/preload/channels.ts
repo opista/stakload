@@ -42,3 +42,5 @@ export const WINDOW_CLOSE = "WINDOW_CLOSE";
 
 export const GET_GAMES_LIST = "GET_GAMES_LIST";
 export const GET_NEW_GAMES = "GET_NEW_GAMES";
+
+export const GET_COLLECTION_GAMES = "GET_COLLECTION_GAMES";

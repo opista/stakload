@@ -23,6 +23,7 @@ declare global {
       deleteCollection: (id: string) => Promise<boolean>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
+      getCollectionGames: (id: string) => Promise<GameListModel[]>;
       getCollections: () => Promise<CollectionStoreModel[]>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
