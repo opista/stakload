@@ -1,6 +1,6 @@
 import { FeaturedGamesCarousel } from "@components/FeaturedGamesCarousel/FeaturedGamesCarousel";
 import { GamesCarousel } from "@components/GamesCarousel/GamesCarousel";
-import { Stack, Title } from "@mantine/core";
+import { ScrollArea, Stack, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { useShallow } from "zustand/react/shallow";
 
@@ -18,12 +18,14 @@ export const HomeView = () => {
   const games = gamesList.slice(0, 10);
 
   return (
-    <Stack className={classes.container}>
-      <GamesCarousel games={games} title="Continue Playing" />
-      <FeaturedGamesCarousel games={newGames} title="Recently Added" />
-      <Stack className={classes.contained}>
-        <Title order={2}>Launchers</Title>
+    <ScrollArea>
+      <Stack className={classes.container}>
+        <GamesCarousel games={games} title="Continue Playing" />
+        <FeaturedGamesCarousel games={newGames} title="Recently Added" />
+        <Stack className={classes.contained}>
+          <Title order={2}>Launchers</Title>
+        </Stack>
       </Stack>
-    </Stack>
+    </ScrollArea>
   );
 };
