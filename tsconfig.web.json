@@ -29,6 +29,9 @@
       "@hooks/*": [
         "src/renderer/src/hooks/*"
       ],
+      "@icons/*": [
+        "src/renderer/src/icons/*"
+      ],
       "@store/*": [
         "src/renderer/src/store/*"
       ],

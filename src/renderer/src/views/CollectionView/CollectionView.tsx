@@ -1,9 +1,10 @@
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GameListModel } from "@contracts/database/games";
-import { ActionIcon, Flex, Title } from "@mantine/core";
+import { ActionIcon, Flex, Group, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconEdit, IconTrash } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { IconDeviceGamepad, IconEdit, IconTrash } from "@tabler/icons-react";
+import { importDynamicIcon } from "@util/import-dynamic-icon";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -16,6 +17,11 @@ export const CollectionView = () => {
   const [games, setGames] = useState<GameListModel[]>([]);
 
   const collection = useGameStore(useShallow((state) => state.collections.find((c) => c._id === id)));
+
+  const Icon = useMemo(() => {
+    if (!collection?.icon) return IconDeviceGamepad;
+    return importDynamicIcon(collection.icon, IconDeviceGamepad);
+  }, [collection?.icon]);
 
   useEffect(() => {
     if (collection?.filters) {
@@ -40,7 +46,10 @@ export const CollectionView = () => {
   return (
     <div className={classes.container}>
       <Flex className={classes.header} justify="space-between">
-        <Title order={1}>{collection.name}</Title>
+        <Group align="center" gap="sm">
+          <Icon size={40} />
+          <Title order={1}>{collection.name}</Title>
+        </Group>
         <Flex gap="4px">
           <ActionIcon
             aria-label={t("settingsButton.title")}

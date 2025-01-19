@@ -96,8 +96,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
     openCreate();
   };
 
-  const onCreate = async (name: string) => {
-    const collection = await window.api.createCollection({ name, filters: selectedFilters });
+  const onCreate = async (name: string, icon?: string) => {
+    const collection = await window.api.createCollection({ name, filters: selectedFilters, icon });
     setSelectedCollection(collection._id);
     closeCreate();
   };
@@ -246,7 +246,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Group>
         </Popover.Dropdown>
       </Popover>
-      <CollectionCreateModal onClose={() => {}} onConfirm={onCreate} opened={openedCreate} />
+      <CollectionCreateModal onClose={() => closeCreate()} onConfirm={onCreate} opened={openedCreate} />
     </>
   );
 };
