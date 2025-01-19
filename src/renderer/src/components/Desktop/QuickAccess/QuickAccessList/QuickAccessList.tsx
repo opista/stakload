@@ -1,6 +1,7 @@
 import { QuickAccessItem } from "@components/Desktop/QuickAccess/QuickAccessItem/QuickAccessItem";
-import { Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
+import { IconBolt } from "@tabler/icons-react";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./QuickAccessList.module.css";
@@ -23,9 +24,12 @@ export const QuickAccessList = ({ className }: QuickAccessListProps) => {
 
   return (
     <Stack className={className}>
-      <Text className={classes.title} size="xs">
-        Quick access
-      </Text>
+      <Group gap={4}>
+        <IconBolt size={16} />
+        <Text className={classes.title} size="xs">
+          Quick access
+        </Text>
+      </Group>
 
       <Stack gap={0}>
         {sortedGames.map((game) => (
