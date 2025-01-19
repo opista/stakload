@@ -26,6 +26,11 @@ export const Spotlight = () => {
       actions={actions}
       limit={7}
       nothingFound={t("spotlight.noResultsFound")}
+      overlayProps={{
+        backgroundOpacity: 0.5,
+        blur: 3,
+        radius: "xl",
+      }}
       searchProps={{
         leftSection: <IconSearch stroke={1.5} />,
         placeholder: t("common.search"),
