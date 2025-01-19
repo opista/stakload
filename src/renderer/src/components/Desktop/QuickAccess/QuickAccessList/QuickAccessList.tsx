@@ -10,7 +10,8 @@ type QuickAccessListProps = {
 };
 
 export const QuickAccessList = ({ className }: QuickAccessListProps) => {
-  const games = useGameStore(useShallow((state) => state.games.slice(60, 64)));
+  // TODO - Update to use quickAccessGames query
+  const games = useGameStore(useShallow((state) => state.gamesList.slice(60, 64)));
 
   return (
     <Stack className={className}>

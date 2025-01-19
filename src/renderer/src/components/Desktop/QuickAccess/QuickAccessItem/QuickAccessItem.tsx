@@ -1,12 +1,12 @@
 import { GameCover } from "@components/GameCover/GameCover";
-import { GameStoreModel } from "@contracts/database/games";
+import { GameListModel } from "@contracts/database/games";
 import { Flex, Text } from "@mantine/core";
 import { NavLink } from "react-router";
 
 import classes from "./QuickAccessItem.module.css";
 
 type QuickAccessItemProps = {
-  game: GameStoreModel;
+  game: GameListModel;
 };
 
 export const QuickAccessItem = ({ game }: QuickAccessItemProps) => (
