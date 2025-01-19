@@ -99,15 +99,6 @@
     "online": "Connected to network",
     "offline": "No network connection"
   },
-  "power": {
-    "quit": "Quit",
-    "restart": "Restart",
-    "restartApp": "Restart Trulaunch",
-    "shutdown": "Shut down",
-    "sleep": "Sleep",
-    "switchToGaming": "Switch to Gaming Mode",
-    "title": "Power"
-  },
   "protondb": {
     "borked": "Borked",
     "bronze": "Bronze",
@@ -209,6 +200,7 @@
   },
   "windowControls": {
     "close": "Close",
+    "gamingMode": "Gaming mode",
     "maximize": "Maximize",
     "minimize": "Minimize"
   },

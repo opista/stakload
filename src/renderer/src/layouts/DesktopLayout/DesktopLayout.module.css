@@ -1,5 +1,4 @@
 .main {
-  padding-top: calc(var(--app-shell-header-offset, 0rem) + var(--app-shell-padding) + 30px);
   display: flex;
   height: 100dvh;
 }

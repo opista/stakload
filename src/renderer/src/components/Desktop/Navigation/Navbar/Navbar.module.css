@@ -1,7 +1,6 @@
 .navbar {
   background: none;
   padding: var(--mantine-spacing-md);
-  padding-top: calc(var(--mantine-spacing-md) + 30px);
 }
 
 .card {

@@ -1,7 +1,6 @@
 import { CollectionsHandler } from "@components/CollectionsHandler/CollectionsHandler";
 import { Header } from "@components/Desktop/Header/Header";
 import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
-import { WindowControls } from "@components/Desktop/WindowControls/WindowControls";
 import { GameHero } from "@components/GameHero/GameHero";
 import { GamesHandler } from "@components/GamesHandler/GamesHandler";
 import { AppShell } from "@mantine/core";
@@ -21,11 +20,10 @@ export const DesktopLayout = () => {
 
   return (
     <ModalsProvider>
-      <WindowControls />
       <GamesHandler />
       <CollectionsHandler />
       {inGameView ? <GameHero className={classes.hero} game={currentGame} /> : null}
-      <AppShell header={{ height: 90 }} layout="alt" navbar={{ width: 300, breakpoint: "xs" }} withBorder={false}>
+      <AppShell header={{ height: 48 }} navbar={{ width: 300, breakpoint: "xs" }} withBorder={false}>
         <Header />
         <Spotlight />
         <Navbar />
