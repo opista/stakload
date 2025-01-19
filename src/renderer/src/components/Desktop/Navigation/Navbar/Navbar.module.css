@@ -1,6 +1,6 @@
 .navbar {
   background: none;
-  padding: var(--mantine-spacing-md);
+  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
 }
 
 .card {
@@ -22,5 +22,6 @@
 }
 
 .search {
+  flex-shrink: 0;
   margin-bottom: 32px;
 }

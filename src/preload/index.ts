@@ -10,6 +10,7 @@ import {
   CLEAR_SYNC_QUEUE,
   CREATE_COLLECTION,
   DECRYPT,
+  DELETE_COLLECTION,
   ENCRYPT,
   EPIC_GAMES_INTEGRATION_RESULT,
   EVENT_COLLECTIONS_LIST_UPDATED,
@@ -85,6 +86,7 @@ const api = {
   getGamesList: () => ipcRenderer.invoke(GET_GAMES_LIST),
   getNewGames: () => ipcRenderer.invoke(GET_NEW_GAMES),
   getCollectionGames: (id: string) => ipcRenderer.invoke(GET_COLLECTION_GAMES, id),
+  deleteCollection: (id: string) => ipcRenderer.invoke(DELETE_COLLECTION, id),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

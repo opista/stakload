@@ -2,7 +2,7 @@
   --stack-gap: 50px !important;
   min-height: 100%;
   overflow-y: auto;
-  padding: var(--mantine-spacing-md) 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
+  padding: 0 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
   width: 100%;
 }
 

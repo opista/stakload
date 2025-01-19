@@ -32,7 +32,7 @@ export const App = () => {
           size: "xl",
           overlayProps: {
             radius: "xl",
-            backgroundOpacity: 0.55,
+            backgroundOpacity: 0.5,
             blur: 3,
           },
         },

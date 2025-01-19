@@ -1,5 +1,5 @@
 .container {
-  padding: var(--mantine-spacing-md);
+  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
   height: 100%;
   width: 100%;
 }

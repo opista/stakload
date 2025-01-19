@@ -1,25 +1,27 @@
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GameListModel } from "@contracts/database/games";
-import { ActionIcon, Flex, Group, Title } from "@mantine/core";
+import { ActionIcon, Flex, Group, Text, Title } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { IconDeviceGamepad, IconEdit, IconTrash } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./CollectionView.module.css";
 
 export const CollectionView = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { t } = useTranslation();
   const [games, setGames] = useState<GameListModel[]>([]);
-
   const collection = useGameStore(useShallow((state) => state.collections.find((c) => c._id === id)));
 
   const Icon = useMemo(() => {
     if (!collection?.icon) return IconDeviceGamepad;
+
     return importDynamicIcon(collection.icon, IconDeviceGamepad);
   }, [collection?.icon]);
 
@@ -33,14 +35,23 @@ export const CollectionView = () => {
     return <Title order={3}>{t("collection.notFound")}</Title>;
   }
 
+  const onDeleteConfirm = async () => {
+    await window.api.deleteCollection(collection._id);
+    navigate("/desktop/games");
+  };
+
+  const openDeleteModal = () =>
+    modals.openConfirmModal({
+      title: `Delete ${collection.name} collection`,
+      children: <Text size="sm">Are you sure you want to delete this collection? This action is irreversible.</Text>,
+      labels: { confirm: "Delete", cancel: "Cancel" },
+      size: "sm",
+      onConfirm: () => onDeleteConfirm(),
+    });
+
   // TODO: Implement edit collection
   const onEditClick = () => {
     console.log("edit");
-  };
-
-  // TODO: Implement delete collection
-  const onDeleteClick = () => {
-    console.log("delete");
   };
 
   return (
@@ -62,7 +73,7 @@ export const CollectionView = () => {
           <ActionIcon
             aria-label={t("settingsButton.title")}
             className={classes.actionIcon}
-            onClick={onDeleteClick}
+            onClick={() => openDeleteModal()}
             title={"delete"}
           >
             <IconTrash size={20} stroke={1} />
