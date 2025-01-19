@@ -1,5 +1,6 @@
 import { NavbarLink } from "@components/Desktop/Navigation/NavbarLink/NavbarLink";
 import { QuickAccessList } from "@components/Desktop/QuickAccess/QuickAccessList/QuickAccessList";
+import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
 import Logo from "@components/Logo/Logo";
 import { AppShell, Card, Flex, ScrollArea, Stack } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
@@ -43,6 +44,7 @@ export const Navbar = () => {
         <Flex className={classes.logoContainer}>
           <Logo />
         </Flex>
+        <SearchButton className={classes.search} />
         <ScrollArea>
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />

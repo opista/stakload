@@ -1,0 +1,42 @@
+.root {
+  border: none;
+  height: 44px;
+  padding-left: var(--mantine-spacing-md);
+  padding-right: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-md);
+  width: 100%;
+  background-color: #1b2c3b;
+
+  &.disabled {
+    background-color: var(--mantine-color-dark-6);
+    color: var(--mantine-color-dark-3);
+    cursor: not-allowed;
+  }
+}
+
+.text {
+  flex: 1;
+  font-size: var(--mantine-font-size-sm);
+}
+
+.shortcut {
+  font-weight: 700;
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 7px;
+  border-radius: var(--ai-radius, var(--mantine-radius-sm));
+  border: 1px solid;
+  font-weight: bold;
+  color: var(--mantine-color-dark-text);
+  border-color: var(--mantine-color-dark-7);
+  background-color: var(--mantine-color-default-color);
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.icon {
+  height: 16px;
+  width: 16px;
+}
