@@ -1,17 +1,11 @@
 import { Kbd, Table } from "@mantine/core";
+import { ParseKeys } from "i18next";
 import { Fragment } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
 
 import classes from "./SettingsShortcutsView.module.css";
 
-type ShortcutKey =
-  | "settingsShortcuts.openSettings"
-  | "settingsShortcuts.quitApplication"
-  | "settingsShortcuts.searchLibrary";
-
-const elements: { name: ShortcutKey; shortcuts: string[] }[] = [
-  { name: "settingsShortcuts.openSettings", shortcuts: ["S"] },
-  { name: "settingsShortcuts.quitApplication", shortcuts: ["Q"] },
+const elements: { name: ParseKeys; shortcuts: string[] }[] = [
   { name: "settingsShortcuts.searchLibrary", shortcuts: ["Ctrl", "K"] },
 ];
 

@@ -178,8 +178,6 @@
   },
   "settingsShortcuts": {
     "action": "Action",
-    "openSettings": "Open settings",
-    "quitApplication": "Quit application",
     "searchLibrary": "Search library",
     "shortcut": "Shortcut"
   },
