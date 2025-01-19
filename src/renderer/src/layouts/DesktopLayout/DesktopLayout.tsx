@@ -1,7 +1,6 @@
 import { CollectionsHandler } from "@components/CollectionsHandler/CollectionsHandler";
 import { Header } from "@components/Desktop/Header/Header";
 import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
-import { SettingsModal } from "@components/Desktop/Settings/SettingsModal/SettingsModal";
 import { WindowControls } from "@components/Desktop/WindowControls/WindowControls";
 import { GameHero } from "@components/GameHero/GameHero";
 import { GamesHandler } from "@components/GamesHandler/GamesHandler";
@@ -21,7 +20,7 @@ export const DesktopLayout = () => {
   const inGameView = params.id && params.id === currentGame?._id;
 
   return (
-    <ModalsProvider modals={{ settings: SettingsModal }}>
+    <ModalsProvider>
       <WindowControls />
       <GamesHandler />
       <CollectionsHandler />

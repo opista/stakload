@@ -4,10 +4,10 @@ import { Code, Flex, Stack, UnstyledButton } from "@mantine/core";
 import { IconBrandGithub } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
-import { homepage, version } from "../../../../../../../package.json";
-import classes from "./SettingsAbout.module.css";
+import { homepage, version } from "../../../../../package.json";
+import classes from "./SettingsAboutView.module.css";
 
-export const SettingsAbout = () => {
+export const SettingsAboutView = () => {
   const { t } = useTranslation();
 
   return (

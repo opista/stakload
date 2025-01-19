@@ -41,7 +41,6 @@
     "@mantine/form": "^7.13.4",
     "@mantine/hooks": "^7.13.4",
     "@mantine/modals": "^7.13.4",
-    "@mantine/notifications": "^7.13.4",
     "@mantine/spotlight": "^7.13.4",
     "@noriginmedia/norigin-spatial-navigation": "^2.2.2",
     "@tabler/icons-react": "^3.21.0",

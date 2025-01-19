@@ -1,5 +1,4 @@
 import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useSystemStore } from "@store/system.store";
 import clsx from "clsx";
@@ -32,6 +31,7 @@ export const App = () => {
         defaultProps: {
           size: "xl",
           overlayProps: {
+            radius: "xl",
             backgroundOpacity: 0.55,
             blur: 3,
           },
@@ -77,7 +77,6 @@ export const App = () => {
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <Outlet />
-        <Notifications />
       </MantineProvider>
     </>
   );

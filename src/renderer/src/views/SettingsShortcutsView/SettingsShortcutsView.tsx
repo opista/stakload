@@ -2,7 +2,7 @@ import { Kbd, Table } from "@mantine/core";
 import { Fragment } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
 
-import classes from "./SettingsShortcuts.module.css";
+import classes from "./SettingsShortcutsView.module.css";
 
 type ShortcutKey =
   | "settingsShortcuts.openSettings"
@@ -15,7 +15,7 @@ const elements: { name: ShortcutKey; shortcuts: string[] }[] = [
   { name: "settingsShortcuts.searchLibrary", shortcuts: ["Ctrl", "K"] },
 ];
 
-export const ShortcutsView = () => {
+export const SettingsShortcutsView = () => {
   const { t } = useTranslation();
   const rows = elements.map(({ name, shortcuts }) => (
     <Table.Tr key={name}>
@@ -32,14 +32,16 @@ export const ShortcutsView = () => {
   ));
 
   return (
-    <Table highlightOnHover striped="even">
-      <Table.Thead>
-        <Table.Tr>
-          <Table.Th>{t("settingsShortcuts.action")}</Table.Th>
-          <Table.Th className={classes.shortcutColumn}>{t("settingsShortcuts.shortcut")}</Table.Th>
-        </Table.Tr>
-      </Table.Thead>
-      <Table.Tbody>{rows}</Table.Tbody>
-    </Table>
+    <div className={classes.container}>
+      <Table highlightOnHover striped="even">
+        <Table.Thead>
+          <Table.Tr>
+            <Table.Th>{t("settingsShortcuts.action")}</Table.Th>
+            <Table.Th className={classes.shortcutColumn}>{t("settingsShortcuts.shortcut")}</Table.Th>
+          </Table.Tr>
+        </Table.Thead>
+        <Table.Tbody>{rows}</Table.Tbody>
+      </Table>
+    </div>
   );
 };

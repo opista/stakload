@@ -4,7 +4,17 @@ import Logo from "@components/Logo/Logo";
 import { AppShell, Card, Flex, ScrollArea, Stack } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import type { IconProps } from "@tabler/icons-react";
-import { IconBooks, IconCategory, IconDeviceGamepad, IconHome } from "@tabler/icons-react";
+import {
+  IconBooks,
+  IconCategory,
+  IconCommand,
+  IconDeviceGamepad,
+  IconDeviceImac,
+  IconHome,
+  IconLibrary,
+  IconSettings,
+  IconUser,
+} from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import type { FC } from "react";
 import { useMemo } from "react";
@@ -46,6 +56,12 @@ export const Navbar = () => {
                   label={collection.name}
                 />
               ))}
+            </NavbarLink>
+            <NavbarLink icon={IconSettings} label="Settings">
+              <NavbarLink href="/desktop/settings/interface" icon={IconDeviceImac} label="Interface" />
+              <NavbarLink href="/desktop/settings/library" icon={IconLibrary} label="Library" />
+              <NavbarLink href="/desktop/settings/shortcuts" icon={IconCommand} label="Shortcuts" />
+              <NavbarLink href="/desktop/settings/about" icon={IconUser} label="About" />
             </NavbarLink>
           </Stack>
           <QuickAccessList className={classes.quickAccess} />

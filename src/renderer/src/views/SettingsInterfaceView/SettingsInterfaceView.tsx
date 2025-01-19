@@ -4,10 +4,10 @@ import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
-import { SettingsSelect } from "../SettingsSelect/SettingsSelect";
-import { ThemeSelector } from "../ThemeSelector/ThemeSelector";
-import classes from "./SettingsInterface.module.css";
+import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
+import { SettingsSelect } from "../../components/Desktop/Settings/SettingsSelect/SettingsSelect";
+import { ThemeSelector } from "../../components/Desktop/Settings/ThemeSelector/ThemeSelector";
+import classes from "./SettingsInterfaceView.module.css";
 
 const GeneralSettings = () => {
   const { defaultUI, setDefaultUI, theme, setTheme } = useInterfaceSettingsStore(
@@ -148,9 +148,9 @@ const NetworkSettings = () => {
   );
 };
 
-export const SettingsInterface = () => {
+export const SettingsInterfaceView = () => {
   return (
-    <>
+    <div className={classes.container}>
       <GeneralSettings />
       <Divider className={classes.divider} />
       <TimeSettings />
@@ -158,6 +158,6 @@ export const SettingsInterface = () => {
       <BatterySettings />
       <Divider className={classes.divider} />
       <NetworkSettings />
-    </>
+    </div>
   );
 };

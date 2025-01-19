@@ -1,18 +1,17 @@
 import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
 import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
-import { modals } from "@mantine/modals";
 import { useLibrarySettingsStore } from "@store/library-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import { SettingsCheckbox } from "../SettingsCheckbox/SettingsCheckbox";
-import { SettingsStatusIndicator } from "../SettingsStatusIndicator/SettingsStatusIndicator";
-import { SettingsTitle } from "../SettingsTitle/SettingsTitle";
-import classes from "./SettingsLibrary.module.css";
+import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
+import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
+import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
+import classes from "./SettingsLibraryView.module.css";
 
-const GeneralSettings = ({ id }: { id: string }) => {
+const GeneralSettings = () => {
   const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(
     useShallow((state) => ({
       setSyncOnStartup: state.setSyncOnStartup,
@@ -34,7 +33,6 @@ const GeneralSettings = ({ id }: { id: string }) => {
    */
   const onSyncClick = async () => {
     await window.api.syncGames();
-    modals.close(id);
   };
 
   return (
@@ -261,15 +259,15 @@ const EpicGamesSettings = () => {
  * using electron-conf
  *
  */
-export const SettingsLibrary = ({ id }: { id: string }) => {
+export const SettingsLibraryView = () => {
   return (
-    <>
-      <GeneralSettings id={id} />
+    <div className={classes.container}>
+      <GeneralSettings />
       <Divider className={classes.divider} />
       <SteamSettings />
       <Divider className={classes.divider} />
       <EpicGamesSettings />
       <Divider className={classes.divider} />
-    </>
+    </div>
   );
 };

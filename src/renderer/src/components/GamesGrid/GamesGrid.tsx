@@ -1,8 +1,6 @@
-import { settingsModalInnerProps } from "@components/Desktop/Settings/SettingsModal/SettingsModalInnerProps";
 import { GameCover } from "@components/GameCover/GameCover";
 import { GameListModel } from "@contracts/database/games";
 import { Box, Button, Stack, Text } from "@mantine/core";
-import { modals } from "@mantine/modals";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -44,13 +42,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     };
   };
 
-  const onImportClick = () => {
-    modals.openContextModal({
-      modal: "settings",
-      title: t("gamesGrid.settings"),
-      innerProps: { ...settingsModalInnerProps, defaultTab: "library" },
-    });
-  };
+  const onImportClick = () => navigate("/desktop/settings/library");
 
   if (!games?.length) {
     return (

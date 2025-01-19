@@ -1,3 +1,9 @@
+.container {
+  width: 100%;
+  padding: var(--mantine-spacing-md);
+}
+
+
 .divider {
   margin-top: var(--mantine-spacing-sm);
   margin-bottom: var(--mantine-spacing-sm);

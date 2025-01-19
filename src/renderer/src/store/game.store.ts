@@ -1,11 +1,7 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { GameActions, GameState } from "@contracts/store/game";
-import { createConfStorage } from "@util/create-conf-storage";
-import { Conf } from "electron-conf/renderer";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-const conf = new Conf();
 
 const DEFAULT_FILTERS = {
   developers: undefined,
@@ -79,7 +75,6 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: "game",
-      storage: createConfStorage(conf),
     },
   ),
 );
