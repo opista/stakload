@@ -48,7 +48,7 @@ export const Navbar = () => {
         <ScrollArea>
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
-            <NavbarLink href="/desktop/games" icon={IconCategory} label="Library" />
+            <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
             <NavbarLink icon={IconBooks} label="Collections">
               {collections.map((collection) => (
                 <NavbarLink

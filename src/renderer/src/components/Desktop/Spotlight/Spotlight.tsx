@@ -18,7 +18,7 @@ export const Spotlight = () => {
       id: game._id,
       label: game.name,
       leftSection: <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />,
-      onClick: () => navigate(`/desktop/games/${game._id}`),
+      onClick: () => navigate(`/desktop/library/${game._id}`),
     })) || [];
 
   return (

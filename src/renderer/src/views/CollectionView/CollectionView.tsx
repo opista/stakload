@@ -37,7 +37,7 @@ export const CollectionView = () => {
 
   const onDeleteConfirm = async () => {
     await window.api.deleteCollection(collection._id);
-    navigate("/desktop/games");
+    navigate("/desktop/library");
   };
 
   const openDeleteModal = () =>

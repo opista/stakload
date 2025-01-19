@@ -32,7 +32,7 @@ createRoot(document.getElementById("root")!).render(
           <Route element={<BaseLayout />} path="/" />
           <Route element={<DesktopLayout />} path="desktop">
             <Route element={<HomeView />} index />
-            <Route path="games">
+            <Route path="library">
               <Route element={<LibraryView />} index />
               <Route element={<GameDetailsView />} path=":id" />
             </Route>

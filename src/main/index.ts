@@ -21,6 +21,7 @@ import {
   GET_NEW_GAMES,
   GET_OS,
   GET_PROTONDB_TIER,
+  GET_QUICK_ACCESS_GAMES,
   REMOVE_GAME,
   RESTART_APP,
   RESTART_DEVICE,
@@ -28,6 +29,7 @@ import {
   SLEEP_DEVICE,
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
+  TOGGLE_QUICK_ACCESS_GAME,
   UPDATE_COLLECTION,
   WINDOW_CLOSE,
   WINDOW_MAXIMIZE,
@@ -43,7 +45,9 @@ import {
   getGamesListHandler,
   getNewGamesHandler,
   getProtondbTier,
+  getQuickAccessGamesHandler,
   removeGame,
+  toggleQuickAccessGameHandler,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
 import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
@@ -188,6 +192,8 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_GAMES_LIST, getGamesListHandler);
   ipcMain.handle(GET_NEW_GAMES, getNewGamesHandler);
   ipcMain.handle(GET_COLLECTION_GAMES, getCollectionGamesHandler);
+  ipcMain.handle(GET_QUICK_ACCESS_GAMES, getQuickAccessGamesHandler);
+  ipcMain.handle(TOGGLE_QUICK_ACCESS_GAME, toggleQuickAccessGameHandler(browserWindow.webContents));
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

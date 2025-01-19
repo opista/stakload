@@ -10,8 +10,16 @@ type QuickAccessListProps = {
 };
 
 export const QuickAccessList = ({ className }: QuickAccessListProps) => {
-  // TODO - Update to use quickAccessGames query
-  const games = useGameStore(useShallow((state) => state.gamesList.slice(60, 64)));
+  const { quickAccessGames, quickAccessGamesOrder } = useGameStore(
+    useShallow((state) => ({
+      quickAccessGames: state.quickAccessGames,
+      quickAccessGamesOrder: state.quickAccessGamesOrder,
+    })),
+  );
+
+  const sortedGames = quickAccessGames.sort(
+    (a, b) => quickAccessGamesOrder.indexOf(a._id) - quickAccessGamesOrder.indexOf(b._id),
+  );
 
   return (
     <Stack className={className}>
@@ -20,7 +28,7 @@ export const QuickAccessList = ({ className }: QuickAccessListProps) => {
       </Text>
 
       <Stack gap={0}>
-        {games.map((game) => (
+        {sortedGames.map((game) => (
           <QuickAccessItem game={game} key={game._id} />
         ))}
       </Stack>

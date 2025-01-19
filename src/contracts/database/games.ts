@@ -114,6 +114,7 @@ export type GameStoreModel = {
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
+  quickAccess?: boolean;
   screenshots?: string[];
   sortableName?: string;
   storyline?: string;

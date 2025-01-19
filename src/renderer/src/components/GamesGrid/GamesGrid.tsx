@@ -69,7 +69,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <GameCover game={game} onClick={(game) => navigate(`/desktop/games/${game._id}`)} />
+        <GameCover game={game} onClick={(game) => navigate(`/desktop/library/${game._id}`)} />
       </Box>
     );
   };

@@ -3,9 +3,11 @@ import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconPencil, IconTrash } from "@tabler/icons-react";
+import { useGameStore } from "@store/game.store";
+import { IconBolt, IconPencil, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
 import { useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameHeader.module.css";
 
@@ -16,6 +18,12 @@ type GameHeaderProps = {
 export const GameHeader = ({ game }: GameHeaderProps) => {
   const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const navigate = useNavigate();
+
+  const { toggleQuickAccessGame } = useGameStore(
+    useShallow((state) => ({
+      toggleQuickAccessGame: state.toggleQuickAccessGame,
+    })),
+  );
 
   const onRemoveConfirm = async (preventReadd: boolean) => {
     await window.api.removeGame(game._id, preventReadd);
@@ -34,6 +42,7 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             opened={openedDelete}
           />
           <Group gap="xs">
+            <ActionIcon aria-label="Quick access" icon={IconBolt} onClick={() => toggleQuickAccessGame(game._id)} />
             <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
             <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />
           </Group>

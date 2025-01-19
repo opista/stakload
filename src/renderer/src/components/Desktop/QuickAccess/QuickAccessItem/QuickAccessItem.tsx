@@ -10,7 +10,7 @@ type QuickAccessItemProps = {
 };
 
 export const QuickAccessItem = ({ game }: QuickAccessItemProps) => (
-  <NavLink className={classes.link} to={`/desktop/games/${game._id}`}>
+  <NavLink className={classes.link} to={`/desktop/library/${game._id}`}>
     <Flex className={classes.container}>
       <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
       <Text lineClamp={1} size="xs">

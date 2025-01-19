@@ -3,14 +3,16 @@ import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const GamesHandler = () => {
-  const { fetchGamesList, fetchNewGames } = useGameStore(
+  const { fetchQuickAccessGames, fetchGamesList, fetchNewGames } = useGameStore(
     useShallow((state) => ({
       fetchGamesList: state.fetchGamesList,
       fetchNewGames: state.fetchNewGames,
+      fetchQuickAccessGames: state.fetchQuickAccessGames,
     })),
   );
 
   const triggerUpdates = () => {
+    fetchQuickAccessGames();
     fetchGamesList();
     fetchNewGames();
   };
