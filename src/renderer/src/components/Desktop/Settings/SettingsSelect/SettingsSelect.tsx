@@ -11,9 +11,9 @@ export const SettingsSelect = ({ onChange, ...props }: SettingsSelectProps) => {
     <Select
       allowDeselect={false}
       classNames={{
+        input: classes.input,
         label: classes.label,
         root: classes.root,
-        input: classes.input,
       }}
       onChange={(value) => onChange?.(value as string)}
       {...props}

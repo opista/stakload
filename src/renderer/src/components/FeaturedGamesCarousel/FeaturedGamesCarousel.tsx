@@ -17,8 +17,8 @@ export const FeaturedGamesCarousel = ({ games, title }: FeaturedGamesCarouselPro
     <Carousel
       align="start"
       classNames={{
-        controls: classes.controls,
         control: classes.control,
+        controls: classes.controls,
       }}
       loop
       nextControlIcon={<IconArrowRight size={20} stroke={2} />}

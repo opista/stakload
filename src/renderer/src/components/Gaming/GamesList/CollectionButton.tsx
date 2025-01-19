@@ -14,8 +14,8 @@ type CollectionButtonProps = {
 
 export const CollectionButton = ({ collection, onFocus, onSelect }: CollectionButtonProps) => {
   const { focused, ref } = useFocusable({
-    focusable: true,
     focusKey: collection.name,
+    focusable: true,
     onEnterPress: onSelect,
     onFocus: () => {
       console.log("focus collection button");
@@ -31,7 +31,7 @@ export const CollectionButton = ({ collection, onFocus, onSelect }: CollectionBu
       offset={0}
       opened={focused}
       position="right"
-      transitionProps={{ transition: "fade-right", duration: 300 }}
+      transitionProps={{ duration: 300, transition: "fade-right" }}
     >
       <ActionIcon
         className={clsx(classes.button, { [classes.focused]: focused })}

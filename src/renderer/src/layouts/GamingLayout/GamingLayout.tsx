@@ -17,8 +17,8 @@ import classes from "./GamingLayout.module.css";
 
 init({
   debug: false,
-  visualDebug: false,
   useGetBoundingClientRect: true,
+  visualDebug: false,
 });
 
 export const GamingLayout = () => {
@@ -33,12 +33,12 @@ export const GamingLayout = () => {
   const onSelectGame = (index: number) => setActiveGame(games?.[index] || null);
 
   return (
-    <AppShell footer={{ height: 100 }} header={{ height: 100 }} navbar={{ width: 150, breakpoint: "sm" }} padding="md">
+    <AppShell footer={{ height: 100 }} header={{ height: 100 }} navbar={{ breakpoint: "sm", width: 150 }} padding="md">
       {media?.url && (
         <BackgroundImage
           className={activeGame ? classes.fadeIn : classes.fadeOut}
           src={media.url}
-          style={{ position: "fixed", width: "100%", height: "100%", opacity: "0.2" }}
+          style={{ height: "100%", opacity: "0.2", position: "fixed", width: "100%" }}
         />
       )}
       <AppShell.Header className={classes.header}>

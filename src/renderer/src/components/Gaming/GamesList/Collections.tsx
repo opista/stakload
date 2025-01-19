@@ -9,15 +9,15 @@ const FOCUS_KEY = "COLLECTION_BUTTONS";
 
 export const Collections = () => {
   const { ref, focusKey } = useFocusable({
-    focusable: true,
-    saveLastFocusedChild: false,
-    focusBoundaryDirections: ["up", "down"],
-    trackChildren: true,
     autoRestoreFocus: true,
-    isFocusBoundary: true,
+    focusBoundaryDirections: ["up", "down"],
     focusKey: FOCUS_KEY,
-    preferredChildFocusKey: undefined,
+    focusable: true,
+    isFocusBoundary: true,
     onArrowPress: () => true,
+    preferredChildFocusKey: undefined,
+    saveLastFocusedChild: false,
+    trackChildren: true,
   });
 
   const collections = useGameStore(useShallow((state) => state.collections));

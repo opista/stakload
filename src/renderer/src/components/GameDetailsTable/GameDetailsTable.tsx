@@ -18,20 +18,19 @@ type GameDetailsTableProps = {
 
 const firstColumn: Column[] = [
   {
-    label: "gameDetails.releaseDate",
     formatter: ({ firstReleaseDate }: GameStoreModel) =>
       firstReleaseDate &&
       new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(new Date(firstReleaseDate)),
+    label: "gameDetails.releaseDate",
   },
   {
-    label: "gameDetails.ageRating",
     formatter: ({ ageRating }: GameStoreModel, t: TFunction) => {
       if (!ageRating) return;
       return t(`ageRating.${ageRating}`);
     },
+    label: "gameDetails.ageRating",
   },
   {
-    label: "gameDetails.developers",
     formatter: ({ developers }: GameStoreModel) => (
       <>
         {developers?.map((developer) => (
@@ -41,9 +40,9 @@ const firstColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.developers",
   },
   {
-    label: "gameDetails.publishers",
     formatter: ({ publishers }: GameStoreModel) => (
       <>
         {publishers?.map((publisher) => (
@@ -53,9 +52,9 @@ const firstColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.publishers",
   },
   {
-    label: "gameDetails.gameModes",
     formatter: ({ gameModes }: GameStoreModel) => (
       <>
         {gameModes?.map((mode) => (
@@ -65,12 +64,12 @@ const firstColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.gameModes",
   },
 ];
 
 const secondColumn: Column[] = [
   {
-    label: "gameDetails.genres",
     formatter: ({ genres }: GameStoreModel) => (
       <>
         {genres?.map((genre) => (
@@ -80,9 +79,9 @@ const secondColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.genres",
   },
   {
-    label: "gameDetails.platforms",
     formatter: ({ platforms }: GameStoreModel) => (
       <>
         {platforms?.map((platform) => (
@@ -92,9 +91,9 @@ const secondColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.platforms",
   },
   {
-    label: "gameDetails.perspectives",
     formatter: ({ playerPerspectives }: GameStoreModel) => (
       <>
         {playerPerspectives?.map((perspective) => (
@@ -104,6 +103,7 @@ const secondColumn: Column[] = [
         ))}
       </>
     ),
+    label: "gameDetails.perspectives",
   },
 ];
 

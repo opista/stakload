@@ -11,6 +11,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
+    plugins: [react()],
     resolve: {
       alias: {
         "@api": resolve("src/renderer/src/api"),
@@ -24,6 +25,5 @@ export default defineConfig({
         "@util": resolve("src/renderer/src/util"),
       },
     },
-    plugins: [react()],
   },
 });

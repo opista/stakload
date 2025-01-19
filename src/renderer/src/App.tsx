@@ -15,7 +15,6 @@ export const App = () => {
   const setOperatingSystem = useSystemStore(useShallow((state) => state.setOperatingSystem));
 
   const theme = createTheme({
-    defaultRadius: "md",
     components: {
       Checkbox: Checkbox.extend({
         defaultProps: {
@@ -29,12 +28,12 @@ export const App = () => {
       }),
       Modal: Modal.extend({
         defaultProps: {
-          size: "xl",
           overlayProps: {
-            radius: "xl",
             backgroundOpacity: 0.5,
             blur: 3,
+            radius: "xl",
           },
+          size: "xl",
         },
       }),
       ScrollArea: ScrollArea.extend({
@@ -43,6 +42,7 @@ export const App = () => {
         },
       }),
     },
+    defaultRadius: "md",
     primaryColor,
     respectReducedMotion: true,
   });

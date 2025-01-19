@@ -5,7 +5,7 @@ import { FC } from "react";
 export const IconBrandFandom: FC<IconProps> = ({ size, stroke, style, ...rest }) => {
   return (
     <svg
-      style={{ width: rem(size), height: rem(size), ...style }}
+      style={{ height: rem(size), width: rem(size), ...style }}
       viewBox="-.0051691 -.32816992 174.01068235 242.34816992"
       xmlns="http://www.w3.org/2000/svg"
       {...rest}

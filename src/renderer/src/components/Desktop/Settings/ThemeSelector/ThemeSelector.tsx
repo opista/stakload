@@ -14,13 +14,13 @@ export const ThemeSelector = ({ onChange, value }: ThemeSelectorProps) => {
   const { colors } = useMantineTheme();
 
   const options = {
-    yellow: colors.yellow["8"],
-    orange: colors.orange["8"],
-    pink: colors.pink["8"],
-    violet: colors.violet["8"],
     blue: colors.blue["8"],
     cyan: colors.cyan["8"],
     lime: colors.lime["8"],
+    orange: colors.orange["8"],
+    pink: colors.pink["8"],
+    violet: colors.violet["8"],
+    yellow: colors.yellow["8"],
   };
 
   return (

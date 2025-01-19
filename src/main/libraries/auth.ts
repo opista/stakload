@@ -20,12 +20,12 @@ export const authenticateLibraryIntegration = async (library: LikeLibrary, paren
     parent,
     resizable: false,
     show: false,
-    width: 350,
     webPreferences: {
-      nodeIntegration: false,
       contextIsolation: true,
+      nodeIntegration: false,
       session: integrationSession,
     },
+    width: 350,
   });
 
   await integrationSession.clearStorageData({ storages: ["cookies"] });

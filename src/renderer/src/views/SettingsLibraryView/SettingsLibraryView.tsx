@@ -45,10 +45,10 @@ const GeneralSettings = () => {
           <label className={classes.label}>{t("settings.library.syncLibrary")} </label>
           <span className={classes.date}>
             {t("settings.library.lastSync", {
-              val: lastSync,
               formatParams: {
                 val: { dateStyle: "short", timeStyle: "short" },
               },
+              val: lastSync,
             })}
           </span>
         </div>

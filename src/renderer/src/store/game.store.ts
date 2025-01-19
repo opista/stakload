@@ -16,21 +16,12 @@ const DEFAULT_FILTERS = {
 type GameStore = GameState & GameActions;
 
 export const useGameStore = create<GameStore>()((set, get) => ({
-  gamesList: [],
-  newGames: [],
-  gamesDetails: {},
-  gamesPreview: {},
-
-  fetchGamesList: async () => {
-    const games = await window.api.getGamesList();
-    set({ gamesList: games });
+  collections: [],
+  currentGame: undefined,
+  fetchCollections: async () => {
+    const collections = await window.api.getCollections();
+    set({ collections });
   },
-
-  fetchNewGames: async () => {
-    const games = await window.api.getNewGames();
-    set({ newGames: games });
-  },
-
   fetchGameDetails: async (id: string) => {
     const details = await window.api.getGameById(id);
     set((state) => ({
@@ -40,21 +31,29 @@ export const useGameStore = create<GameStore>()((set, get) => ({
       },
     }));
   },
-
-  currentGame: undefined,
-  collections: [],
-  fetchCollections: async () => {
-    const collections = await window.api.getCollections();
-    set({ collections });
+  fetchGamesList: async () => {
+    const games = await window.api.getGamesList();
+    set({ gamesList: games });
   },
+  fetchNewGames: async () => {
+    const games = await window.api.getNewGames();
+    set({ newGames: games });
+  },
+  gamesDetails: {},
+  gamesList: [],
+  gamesPreview: {},
+  newGames: [],
+  resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
+  selectedCollection: "",
+  selectedFilters: DEFAULT_FILTERS,
+  selectedGame: null,
+
   setCurrentCollection: (id: string) => {
     const currentCollection = get().collections.find(({ _id }) => _id === id);
     set({ currentCollection });
   },
-  selectedCollection: "",
-  selectedGame: null,
-  selectedFilters: DEFAULT_FILTERS,
-  resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
+
+  setCurrentGame: (game: GameStoreModel) => set({ currentGame: game }),
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) =>
     set(() => ({
       selectedFilters: {
@@ -62,9 +61,7 @@ export const useGameStore = create<GameStore>()((set, get) => ({
         ...filters,
       },
     })),
-  setCurrentGame: (game: GameStoreModel) => set({ currentGame: game }),
   setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
-  setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
     set((state) => ({
       selectedFilters: {
@@ -72,4 +69,5 @@ export const useGameStore = create<GameStore>()((set, get) => ({
         [key]: value,
       },
     })),
+  setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
 }));

@@ -32,8 +32,8 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
       <Carousel
         align="start"
         classNames={{
-          controls: classes.controls,
           control: classes.control,
+          controls: classes.controls,
         }}
         controlSize={26}
         key={slideCount}

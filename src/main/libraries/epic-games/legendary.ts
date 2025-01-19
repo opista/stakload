@@ -25,10 +25,10 @@ export const login = async (authorizationCode: string): Promise<LoginModel> => {
     const match = /Successfully logged in as "(.*?)"/.exec(result.stderr);
     if (match) {
       return {
-        success: true,
         data: {
           username: match[1],
         },
+        success: true,
       };
     }
 

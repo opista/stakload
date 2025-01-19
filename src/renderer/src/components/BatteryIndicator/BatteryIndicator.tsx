@@ -1,6 +1,5 @@
-import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
 import { useBatteryDetails } from "@hooks/use-battery-details";
-import { Box, Text, Tooltip, UnstyledButton } from "@mantine/core";
+import { Box, Text, UnstyledButton } from "@mantine/core";
 import {
   IconBatteryCharging,
   IconBatteryVertical1,
@@ -8,13 +7,8 @@ import {
   IconBatteryVertical3,
   IconBatteryVertical4,
 } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
 
 import classes from "./BatteryIndicator.module.css";
-
-type BatteryIndicatorProps = {
-  showPercentage?: boolean;
-};
 
 const BatteryIcon = (isCharging: boolean, percentage: number) => {
   if (isCharging) {
@@ -30,32 +24,19 @@ const BatteryIcon = (isCharging: boolean, percentage: number) => {
   return IconBatteryVertical4;
 };
 
-export const BatteryIndicator = ({ showPercentage = true }: BatteryIndicatorProps) => {
-  const { t } = useTranslation();
+export const BatteryIndicator = () => {
   const { isCharging, percentage } = useBatteryDetails();
 
   if (!percentage) return null;
 
   const Icon = BatteryIcon(isCharging, percentage);
-  const tooltipLabel = isCharging
-    ? t("battery.charging", { level: percentage })
-    : t("battery.batteryLevel", { level: percentage });
 
   return (
     <Box className={classes.container}>
-      {showPercentage && <Text size="sm">{percentage}%</Text>}
-      <ConditionalWrapper
-        condition={!showPercentage}
-        wrapper={(children) => (
-          <Tooltip events={{ hover: true, focus: true, touch: false }} label={tooltipLabel} withArrow>
-            {children}
-          </Tooltip>
-        )}
-      >
-        <UnstyledButton className={classes.button}>
-          <Icon color={percentage <= 15 ? "var(--mantine-color-red-8)" : undefined} stroke={1.5} />
-        </UnstyledButton>
-      </ConditionalWrapper>
+      <Text size="sm">{percentage}%</Text>
+      <UnstyledButton className={classes.button}>
+        <Icon color={percentage <= 15 ? "var(--mantine-color-red-8)" : undefined} stroke={1.5} />
+      </UnstyledButton>
     </Box>
   );
 };

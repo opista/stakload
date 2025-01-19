@@ -62,7 +62,7 @@ export const findGameById = async (id: string) => {
 };
 
 export const findGamesByEpicNamespace = async (ids: string[]) => {
-  return await db.find<GameStoreModel>({ "libraryMeta.namespace": { $in: ids }, library: "epic-game-store" });
+  return await db.find<GameStoreModel>({ library: "epic-game-store", "libraryMeta.namespace": { $in: ids } });
 };
 
 export const findLastSyncedAt = async () => {
@@ -115,7 +115,7 @@ export const removeGameById = async (id: string, preventReadd: boolean = false) 
 };
 
 export const findGamesByGameIds = async (ids: string[], library: LikeLibrary) => {
-  return await db.find({ gameId: { $in: ids }, library }, { gameId: 1, _id: 0 });
+  return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
 };
 
 export const findGameFilters = async () => {
@@ -178,8 +178,8 @@ export const getNewGames = async () => {
   const recentGames = await db
     .find<FeaturedGameModel>(
       {
-        createdAt: { $gte: oneWeekAgo },
         $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+        createdAt: { $gte: oneWeekAgo },
       },
       { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
     )
@@ -191,8 +191,8 @@ export const getNewGames = async () => {
     const remainingGames = await db
       .find<FeaturedGameModel>(
         {
-          createdAt: { $lt: oneWeekAgo },
           $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+          createdAt: { $lt: oneWeekAgo },
         },
         { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
       )

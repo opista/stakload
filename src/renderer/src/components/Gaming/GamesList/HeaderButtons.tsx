@@ -8,15 +8,15 @@ const FOCUS_KEY = "HEADER_BUTTONS";
 
 export const HeaderButtons = () => {
   const { ref, focusKey } = useFocusable({
-    focusable: true,
-    saveLastFocusedChild: false,
-    focusBoundaryDirections: ["right", "up"],
-    trackChildren: true,
     autoRestoreFocus: true,
-    isFocusBoundary: true,
+    focusBoundaryDirections: ["right", "up"],
     focusKey: FOCUS_KEY,
-    preferredChildFocusKey: undefined,
+    focusable: true,
+    isFocusBoundary: true,
     onArrowPress: () => true,
+    preferredChildFocusKey: undefined,
+    saveLastFocusedChild: false,
+    trackChildren: true,
   });
 
   return (

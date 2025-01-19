@@ -14,8 +14,8 @@ const GeneralSettings = () => {
     useShallow((state) => ({
       defaultUI: state.defaultUI,
       setDefaultUI: state.setDefaultUI,
-      theme: state.theme,
       setTheme: state.setTheme,
+      theme: state.theme,
     })),
   );
   const { t } = useTranslation();

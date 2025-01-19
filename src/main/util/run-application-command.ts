@@ -31,8 +31,8 @@ export const runApplicationCommand = async (
       }
 
       resolve({
-        stdout: stdout.join(""),
         stderr: stderr.join(""),
+        stdout: stdout.join(""),
       });
     });
 

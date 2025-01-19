@@ -24,7 +24,7 @@ export const TooltipIcon = ({
 
   return (
     <Tooltip
-      events={{ hover: true, focus: true, touch: false }}
+      events={{ focus: true, hover: true, touch: false }}
       maw={maw}
       multiline
       position={position}

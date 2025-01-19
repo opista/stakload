@@ -28,13 +28,13 @@ const IconSelector = ({ onSelect, selectedIcon }: IconSelectorProps) => {
           padding="xs"
           shadow="sm"
           style={{
-            cursor: "pointer",
-            backgroundColor: selectedIcon === Icon.displayName ? "var(--mantine-color-blue-1)" : undefined,
-            height: ITEM_SIZE,
-            width: ITEM_SIZE,
-            display: "flex",
             alignItems: "center",
+            backgroundColor: selectedIcon === Icon.displayName ? "var(--mantine-color-blue-1)" : undefined,
+            cursor: "pointer",
+            display: "flex",
+            height: ITEM_SIZE,
             justifyContent: "center",
+            width: ITEM_SIZE,
           }}
         >
           <Icon size={24} />

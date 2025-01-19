@@ -8,8 +8,8 @@ const STEAM_STORE_API_BASE_URL = "https://store.steampowered.com/api";
 const apiRequest = async <T>(path: string): Promise<T> => {
   try {
     const response = await fetch(path, {
-      method: "GET",
       headers: { accept: "application/json" },
+      method: "GET",
     });
 
     const parsed = await response.json();
@@ -24,9 +24,9 @@ const apiRequest = async <T>(path: string): Promise<T> => {
 
 export const getOwnedGames = async (key: string, steamId: string) => {
   const query = buildQueryParams({
-    key,
     include_appinfo: "true",
     include_played_free_games: "true",
+    key,
     steamid: steamId,
   });
   const result = await apiRequest<OwnedGamesResponse>(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`);

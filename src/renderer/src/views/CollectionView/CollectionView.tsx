@@ -42,11 +42,11 @@ export const CollectionView = () => {
 
   const openDeleteModal = () =>
     modals.openConfirmModal({
-      title: `Delete ${collection.name} collection`,
       children: <Text size="sm">Are you sure you want to delete this collection? This action is irreversible.</Text>,
-      labels: { confirm: "Delete", cancel: "Cancel" },
-      size: "sm",
+      labels: { cancel: "Cancel", confirm: "Delete" },
       onConfirm: () => onDeleteConfirm(),
+      size: "sm",
+      title: `Delete ${collection.name} collection`,
     });
 
   // TODO: Implement edit collection

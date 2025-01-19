@@ -76,11 +76,11 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       useShallow((state) => ({
         hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
         resetFilters: state.resetFilters,
-        setSelectedCollection: state.setSelectedCollection,
         selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
         selectedFilters: state.selectedFilters,
-        setSelectedFilter: state.setSelectedFilter,
         setMultipleFilters: state.setMultipleFilters,
+        setSelectedCollection: state.setSelectedCollection,
+        setSelectedFilter: state.setSelectedFilter,
       })),
     );
 
@@ -97,7 +97,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   };
 
   const onCreate = async (name: string, icon?: string) => {
-    const collection = await window.api.createCollection({ name, filters: selectedFilters, icon });
+    const collection = await window.api.createCollection({ filters: selectedFilters, icon, name });
     setSelectedCollection(collection._id);
     closeCreate();
   };

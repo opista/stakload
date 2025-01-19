@@ -10,7 +10,7 @@ export const IconBrandEpicGames: FC<IconProps> = ({ size, stroke, style, ...rest
       stroke={`${stroke}`}
       strokeLinejoin="round"
       strokeMiterlimit="1.41421"
-      style={{ width: rem(size), height: rem(size), ...style }}
+      style={{ height: rem(size), width: rem(size), ...style }}
       viewBox="0 0 400 350"
       xmlns="http://www.w3.org/2000/svg"
       {...rest}

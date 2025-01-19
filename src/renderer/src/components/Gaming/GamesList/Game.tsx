@@ -14,8 +14,8 @@ type GameProps = {
 
 export const Game = ({ game, onFocus, onSelect, size, start }: GameProps) => {
   const { ref } = useFocusable({
-    focusable: true,
     focusKey: `GAME-${game?._id}`,
+    focusable: true,
     onEnterPress: () => onSelect(game),
     onFocus: () => onFocus(game),
   });

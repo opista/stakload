@@ -7,11 +7,11 @@ export function createConfStorage<S>(store: Conf): PersistStorage<S> | undefined
       const str = await store.get(key);
       return str as StorageValue<S>;
     },
+    removeItem: (key: string) => store.delete(key),
     setItem: (key: string, value: StorageValue<S>) => {
       const cleaned = JSON.parse(JSON.stringify(value, null, "\t"));
       return store.set(key, cleaned);
     },
-    removeItem: (key: string) => store.delete(key),
   };
 
   return persistStorage;

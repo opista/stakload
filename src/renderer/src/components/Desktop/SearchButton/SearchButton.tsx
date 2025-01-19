@@ -3,15 +3,12 @@ import { BoxProps, ElementProps, Group, Text, UnstyledButton } from "@mantine/co
 import { spotlight } from "@mantine/spotlight";
 import { IconSearch } from "@tabler/icons-react";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
 
 import classes from "./SearchButton.module.css";
 
 type SearchButtonProps = BoxProps & ElementProps<"button">;
 
 export const SearchButton = ({ className, disabled, ...others }: SearchButtonProps) => {
-  const { t } = useTranslation();
-
   return (
     <UnstyledButton
       {...others}

@@ -6,7 +6,7 @@ export const IconBrandProtonDB: FC<IconProps> = ({ size, stroke, style, ...rest 
   return (
     <svg
       {...rest}
-      style={{ width: rem(size), height: rem(size), ...style }}
+      style={{ height: rem(size), width: rem(size), ...style }}
       viewBox="0 0 491 491"
       x="0"
       xmlSpace="preserve"

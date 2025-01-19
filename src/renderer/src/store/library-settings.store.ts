@@ -18,10 +18,10 @@ type LibrarySettingsStore = LibrarySettingsState & LibrarySettingsActions;
 export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
   persist(
     (set) => ({
-      syncOnStartup: true,
-      steamIntegrationEnabled: false,
       setSteamIntegration: (steamIntegration) => set({ steamIntegration }),
       setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
+      steamIntegrationEnabled: false,
+      syncOnStartup: true,
       toggleSteamIntegration: () =>
         set((state) => ({
           steamIntegrationEnabled: !state.steamIntegrationEnabled,

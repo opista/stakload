@@ -18,23 +18,23 @@ export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const { ref, focusSelf, focusKey } = useFocusable({
-    focusable: true,
-    saveLastFocusedChild: true,
-    focusBoundaryDirections: ["right", "down"],
-    trackChildren: true,
     autoRestoreFocus: true,
-    isFocusBoundary: true,
+    focusBoundaryDirections: ["right", "down"],
     focusKey: FOCUS_KEY,
-    preferredChildFocusKey: undefined,
+    focusable: true,
+    isFocusBoundary: true,
     onArrowPress: () => true,
+    preferredChildFocusKey: undefined,
+    saveLastFocusedChild: true,
+    trackChildren: true,
   });
 
   const columnVirtualizer = useVirtualizer({
-    horizontal: true,
     count: games?.length || 0,
+    estimateSize: (index) => (index === activeIndex ? 300 : 210),
     gap: 16,
     getScrollElement: () => parentRef.current,
-    estimateSize: (index) => (index === activeIndex ? 300 : 210),
+    horizontal: true,
     overscan: 5,
     paddingStart: 100,
     scrollPaddingStart: 100,

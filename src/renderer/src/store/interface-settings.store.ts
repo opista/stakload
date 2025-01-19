@@ -27,7 +27,6 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       displayNetwork: true,
       displaySeconds: true,
       displayTime: true,
-      theme: "violet",
       setDefaultUI: (defaultUI) => set({ defaultUI }),
       setDisplayBattery: (displayBattery) => set({ displayBattery }),
       setDisplayBatteryPercent: (displayBatteryPercent) => set({ displayBatteryPercent }),
@@ -35,6 +34,7 @@ export const useInterfaceSettingsStore = create<InterfaceSettingsStore>()(
       setDisplaySeconds: (displaySeconds) => set({ displaySeconds }),
       setDisplayTime: (displayTime) => set({ displayTime }),
       setTheme: (theme) => set({ theme }),
+      theme: "violet",
     }),
     {
       name: "interface_settings",

@@ -14,8 +14,8 @@ type HeaderButtonProps = {
 
 export const HeaderButton = ({ icon: Icon, onFocus, onSelect }: HeaderButtonProps) => {
   const { focused, ref } = useFocusable({
-    focusable: true,
     focusKey: `HEADER-BUTTON-${Icon.displayName}`,
+    focusable: true,
     onEnterPress: onSelect,
     onFocus: () => {
       console.log("focus", Icon.displayName);

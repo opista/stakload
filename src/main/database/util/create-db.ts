@@ -9,8 +9,8 @@ export const createDb = (name: string, datastoreOptions?: DatastoreOptions) => {
   return Datastore.create({
     ...datastoreOptions,
     autoload: true,
-    filename: path.join(app.getPath("userData"), "databases", `${name}.db`),
     compareStrings: (a, b) => a.toLowerCase().localeCompare(b.toLowerCase()),
+    filename: path.join(app.getPath("userData"), "databases", `${name}.db`),
     timestampData: true,
   });
 };

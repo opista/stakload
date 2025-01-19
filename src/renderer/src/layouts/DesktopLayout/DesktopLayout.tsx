@@ -23,7 +23,7 @@ export const DesktopLayout = () => {
       <GamesHandler />
       <CollectionsHandler />
       {inGameView ? <GameHero className={classes.hero} game={currentGame} /> : null}
-      <AppShell header={{ height: 48 }} navbar={{ width: 300, breakpoint: "xs" }} withBorder={false}>
+      <AppShell header={{ height: 48 }} navbar={{ breakpoint: "xs", width: 300 }} withBorder={false}>
         <Header />
         <Spotlight />
         <Navbar />

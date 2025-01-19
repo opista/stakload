@@ -6,7 +6,7 @@ export const IconBrandGog: FC<IconProps> = ({ size, stroke, style, ...rest }) =>
   return (
     <svg
       stroke={`${stroke}`}
-      style={{ width: rem(size), height: rem(size), ...style }}
+      style={{ height: rem(size), width: rem(size), ...style }}
       viewBox="0 0 64 64"
       xmlSpace="preserve"
       xmlns="http://www.w3.org/2000/svg"

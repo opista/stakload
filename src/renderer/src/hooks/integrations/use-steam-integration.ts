@@ -9,8 +9,8 @@ export const useSteamIntegration = () => {
     useLibrarySettingsStore(
       useShallow((state) => ({
         setStoreSteamIntegration: state.setSteamIntegration,
-        storeSteamIntegration: state.steamIntegration,
         steamIntegrationEnabled: state.steamIntegrationEnabled,
+        storeSteamIntegration: state.steamIntegration,
         toggleSteamIntegration: state.toggleSteamIntegration,
       })),
     );
@@ -40,9 +40,9 @@ export const useSteamIntegration = () => {
   };
 
   return {
+    setSteamIntegration,
     steamIntegration: decryptedSteamIntegration,
     steamIntegrationEnabled,
-    setSteamIntegration,
     toggleSteamIntegration,
   };
 };

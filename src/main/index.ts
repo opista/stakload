@@ -67,11 +67,12 @@ function createWindow() {
     focusable: true,
     frame: false,
     fullscreenable: true,
+    hasShadow: true,
     height: 800,
     maximizable: true,
-    minimizable: true,
     minHeight: 800,
     minWidth: 1280,
+    minimizable: true,
     movable: true,
     resizable: true,
     roundedCorners: true,
@@ -80,8 +81,6 @@ function createWindow() {
     titleBarOverlay: false,
     titleBarStyle: "hidden",
     transparent: true,
-    width: 1280,
-    hasShadow: true,
     vibrancy: "under-window",
     visualEffectState: "active",
     webPreferences: {
@@ -107,6 +106,7 @@ function createWindow() {
       webSecurity: true,
       zoomFactor: 1.0,
     },
+    width: 1280,
   });
 
   const syncManager = new GameSyncManager(browserWindow.webContents, conf);
