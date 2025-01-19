@@ -22,3 +22,5 @@ export const IconBrandProtonDB: FC<IconProps> = ({ size, stroke, style, ...rest 
     </svg>
   );
 };
+
+IconBrandProtonDB.displayName = "IconBrandProtonDB";

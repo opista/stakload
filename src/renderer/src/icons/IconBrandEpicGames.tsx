@@ -24,3 +24,5 @@ export const IconBrandEpicGames: FC<IconProps> = ({ size, stroke, style, ...rest
     </svg>
   );
 };
+
+IconBrandEpicGames.displayName = "IconBrandEpicGames";

@@ -20,3 +20,5 @@ export const IconBrandGog: FC<IconProps> = ({ size, stroke, style, ...rest }) =>
     </svg>
   );
 };
+
+IconBrandGog.displayName = "IconBrandGog";

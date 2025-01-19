@@ -18,3 +18,5 @@ export const IconBrandFandom: FC<IconProps> = ({ size, stroke, style, ...rest })
     </svg>
   );
 };
+
+IconBrandFandom.displayName = "IconBrandFandom";

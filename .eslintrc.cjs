@@ -54,4 +54,12 @@ module.exports = {
       version: "18.3.1",
     },
   },
+  overrides: [
+    {
+      files: ["src/renderer/src/icons/*.tsx"],
+      rules: {
+        "react/display-name": ["error", { ignoreTranspilerName: true }],
+      },
+    },
+  ],
 };
