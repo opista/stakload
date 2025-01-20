@@ -133,22 +133,12 @@
     "interface": {
       "battery": {
         "displayBattery": "Display battery",
-        "displayBatteryPercentage": "Display battery percentage",
         "title": "Battery"
       },
       "defaultUI": "Default UI",
       "desktopMode": "Desktop mode",
       "gamingMode": "Gaming mode",
-      "general": "General",
-      "network": {
-        "displayNetworkStatus": "Display network status",
-        "title": "Network"
-      },
-      "time": {
-        "displaySeconds": "Display seconds",
-        "displayTime": "Display time",
-        "title": "Time"
-      }
+      "general": "General"
     },
     "library": {
       "authSecurity": "Authentication data is securely stored on your device and is only used to interact with {{library}} servers",
