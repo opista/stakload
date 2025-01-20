@@ -1,12 +1,12 @@
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
-import { useLibrarySettingsStore } from "@store/library-settings.store";
+import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 export const useSteamIntegration = () => {
   const [decryptedSteamIntegration, setDecryptedSteamIntegration] = useState<SteamIntegrationDetails | null>(null);
   const { steamIntegrationEnabled, storeSteamIntegration, setStoreSteamIntegration, toggleSteamIntegration } =
-    useLibrarySettingsStore(
+    useIntegrationSettingsStore(
       useShallow((state) => ({
         setStoreSteamIntegration: state.setSteamIntegration,
         steamIntegrationEnabled: state.steamIntegrationEnabled,

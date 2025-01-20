@@ -42,7 +42,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     };
   };
 
-  const onImportClick = () => navigate("/desktop/settings/library");
+  const onImportClick = () => navigate("/desktop/settings/integrations");
 
   if (!games?.length) {
     return (
@@ -89,14 +89,6 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     return games[index]?._id || index;
   };
-
-  /**
-   * TODO
-   * When a user clicks back from the game details
-   * view, we lose the original scroll position of
-   * this list. We should record it and return the
-   * user back to where they were
-   */
 
   return (
     <Box className={classes.container}>

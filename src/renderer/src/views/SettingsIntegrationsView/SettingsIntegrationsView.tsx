@@ -1,6 +1,6 @@
 import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
 import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
-import { useLibrarySettingsStore } from "@store/library-settings.store";
+import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
@@ -9,10 +9,10 @@ import { useShallow } from "zustand/react/shallow";
 import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
 import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
 import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
-import classes from "./SettingsLibraryView.module.css";
+import classes from "./SettingsIntegrationsView.module.css";
 
 const GeneralSettings = () => {
-  const { setSyncOnStartup, syncOnStartup } = useLibrarySettingsStore(
+  const { setSyncOnStartup, syncOnStartup } = useIntegrationSettingsStore(
     useShallow((state) => ({
       setSyncOnStartup: state.setSyncOnStartup,
       syncOnStartup: state.syncOnStartup,
@@ -259,7 +259,7 @@ const EpicGamesSettings = () => {
  * using electron-conf
  *
  */
-export const SettingsLibraryView = () => {
+export const SettingsIntegrationsView = () => {
   return (
     <div className={classes.container}>
       <GeneralSettings />

@@ -1,5 +1,5 @@
-import { SteamIntegrationDetails } from "@contracts/integrations/steam";
-import { LibrarySettingsState } from "@contracts/store/library-settings";
+import { IntegrationSettingsActions } from "@contracts/store/integration-settings";
+import { IntegrationSettingsState } from "@contracts/store/integration-settings";
 import { createConfStorage } from "@util/create-conf-storage";
 import { Conf } from "electron-conf/renderer";
 import { create } from "zustand";
@@ -7,15 +7,9 @@ import { persist } from "zustand/middleware";
 
 const conf = new Conf();
 
-type LibrarySettingsActions = {
-  setSteamIntegration: (encryptedIntegration: SteamIntegrationDetails) => void;
-  setSyncOnStartup: (syncOnStartup: LibrarySettingsState["syncOnStartup"]) => void;
-  toggleSteamIntegration: () => void;
-};
+type IntegrationSettingsStore = IntegrationSettingsState & IntegrationSettingsActions;
 
-type LibrarySettingsStore = LibrarySettingsState & LibrarySettingsActions;
-
-export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
+export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
   persist(
     (set) => ({
       setSteamIntegration: (steamIntegration) => set({ steamIntegration }),
@@ -28,7 +22,7 @@ export const useLibrarySettingsStore = create<LibrarySettingsStore>()(
         })),
     }),
     {
-      name: "library_settings",
+      name: "integration_settings",
       storage: createConfStorage(conf),
     },
   ),
