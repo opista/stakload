@@ -1,21 +1,42 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { GameListModel } from "@contracts/database/games";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Flex, Text } from "@mantine/core";
-import { NavLink } from "react-router";
+import { useNavigate } from "react-router";
 
 import classes from "./QuickAccessItem.module.css";
 
 type QuickAccessItemProps = {
+  editMode?: boolean;
   game: GameListModel;
 };
 
-export const QuickAccessItem = ({ game }: QuickAccessItemProps) => (
-  <NavLink className={classes.link} to={`/desktop/library/${game._id}`}>
-    <Flex className={classes.container}>
-      <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
-      <Text lineClamp={1} size="xs">
-        {game.name}
-      </Text>
-    </Flex>
-  </NavLink>
-);
+export const QuickAccessItem = ({ editMode, game }: QuickAccessItemProps) => {
+  const navigate = useNavigate();
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
+
+  const style = {
+    cursor: editMode ? "grab" : "default",
+    opacity: isDragging ? 0.5 : 1,
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  const onClick = () => {
+    if (!editMode) {
+      navigate(`/desktop/library/${game._id}`);
+    }
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...(editMode ? { ...attributes, ...listeners } : {})}>
+      <Flex className={classes.container} onClick={onClick}>
+        <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
+        <Text lineClamp={1} size="xs">
+          {game.name}
+        </Text>
+      </Flex>
+    </div>
+  );
+};
