@@ -1,4 +1,3 @@
-import { GameStoreModel } from "@contracts/database/games";
 import { GameActions, GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
 import { Conf } from "electron-conf/renderer";
@@ -25,7 +24,6 @@ export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
       collections: [],
-      currentGame: undefined,
 
       fetchCollections: async () => {
         const collections = await window.api.getCollections();
@@ -69,7 +67,6 @@ export const useGameStore = create<GameStore>()(
         set({ currentCollection });
       },
 
-      setCurrentGame: (game: GameStoreModel) => set({ currentGame: game }),
       setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) =>
         set(() => ({
           selectedFilters: {

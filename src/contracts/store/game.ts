@@ -4,7 +4,6 @@ import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel } from "@
 export type GameState = {
   collections: CollectionStoreModel[];
   currentCollection?: CollectionStoreModel;
-  currentGame?: GameStoreModel;
   gamesDetails: Record<string, GameStoreModel>;
   gamesList: GameListModel[];
   newGames: FeaturedGameModel[];
@@ -23,7 +22,6 @@ export type GameActions = {
   fetchQuickAccessGames: () => Promise<void>;
   resetFilters: () => void;
   setCurrentCollection: (id: string) => void;
-  setCurrentGame: (game: GameStoreModel) => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
   setQuickAccessGameOrder: (ids: string[]) => void;
   setSelectedCollection: (selectedCollection: string) => void;

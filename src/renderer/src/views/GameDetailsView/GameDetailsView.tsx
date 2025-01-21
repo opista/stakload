@@ -1,6 +1,7 @@
 import { ContentCard } from "@components/ContentCard/ContentCard";
 import { GameDetailsTable } from "@components/GameDetailsTable/GameDetailsTable";
 import { GameHeader } from "@components/GameHeader/GameHeader";
+import { GameHero } from "@components/GameHero/GameHero";
 import { GameLinks } from "@components/GameLinks/GameLinks";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
@@ -35,11 +36,10 @@ export const GameDetailsView = () => {
   const navigate = useNavigate();
   const params = useParams();
 
-  const { fetchGameDetails, gameDetails, setCurrentGame } = useGameStore(
+  const { fetchGameDetails, gameDetails } = useGameStore(
     useShallow((state) => ({
       fetchGameDetails: state.fetchGameDetails,
       gameDetails: params.id ? state.gamesDetails[params.id] : undefined,
-      setCurrentGame: state.setCurrentGame,
     })),
   );
 
@@ -49,20 +49,10 @@ export const GameDetailsView = () => {
 
   useEffect(() => {
     if (!params.id) return;
-    if (gameDetails) {
-      setCurrentGame(gameDetails);
-      return;
-    }
+    if (gameDetails) return;
 
-    const loadDetails = async () => {
-      const details = await fetchGameDetails(params.id!);
-      if (details) {
-        setCurrentGame(details);
-      }
-    };
-
-    loadDetails();
-  }, [params.id, gameDetails, fetchGameDetails, setCurrentGame]);
+    fetchGameDetails(params.id!);
+  }, [params.id, gameDetails, fetchGameDetails]);
 
   if (!params.id) {
     navigate("/desktop/library");
@@ -79,6 +69,7 @@ export const GameDetailsView = () => {
 
   return (
     <Stack align="stretch" className={classes.container} gap={0} justify="flex-start">
+      <GameHero className={classes.hero} game={gameDetails} />
       <Game containerRef={containerRef} game={gameDetails} />
     </Stack>
   );
