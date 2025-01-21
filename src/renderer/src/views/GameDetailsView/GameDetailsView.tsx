@@ -49,7 +49,10 @@ export const GameDetailsView = () => {
 
   useEffect(() => {
     if (!params.id) return;
-    if (gameDetails) return;
+    if (gameDetails) {
+      setCurrentGame(gameDetails);
+      return;
+    }
 
     const loadDetails = async () => {
       const details = await fetchGameDetails(params.id!);
