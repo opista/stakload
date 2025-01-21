@@ -2,7 +2,7 @@ import { CollectionCreateModal } from "@components/CollectionCreateModal/Collect
 import { LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { ActionIcon, Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
+import { ActionIcon, Button, Checkbox, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsHorizontal, IconPlaylistAdd } from "@tabler/icons-react";
@@ -152,6 +152,11 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Title>
           <Grid>
             <Grid.Col span={6}>
+              <Checkbox
+                checked={selectedFilters.isInstalled}
+                label={t("filters.isInstalled")}
+                onChange={(event) => setSelectedFilter("isInstalled", event.target.checked ? true : null)}
+              />
               <MultiSelect
                 className={classes.select}
                 clearable

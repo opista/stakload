@@ -34,6 +34,7 @@ export const getFilteredGames = async ({
   developers,
   gameModes,
   genres,
+  isInstalled,
   libraries,
   platforms,
   playerPerspectives,
@@ -44,6 +45,7 @@ export const getFilteredGames = async ({
       {
         $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
         ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
+        ...(isInstalled != undefined && { isInstalled }),
         ...(libraries?.length && { library: { $in: libraries } }),
         ...idMatcher("developers", developers),
         ...idMatcher("gameModes", gameModes),

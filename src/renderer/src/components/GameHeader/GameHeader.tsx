@@ -1,4 +1,5 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { GameControls } from "@components/Desktop/GameControls/GameControls";
 import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
@@ -41,6 +42,9 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             onConfirm={onRemoveConfirm}
             opened={openedDelete}
           />
+          <Group>
+            <GameControls game={game} />
+          </Group>
           <Group gap="xs">
             <ActionIcon aria-label="Quick access" icon={IconBolt} onClick={() => toggleQuickAccessGame(game._id)} />
             <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />

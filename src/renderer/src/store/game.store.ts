@@ -12,6 +12,7 @@ const DEFAULT_FILTERS = {
   developers: undefined,
   gameModes: undefined,
   genres: undefined,
+  isInstalled: undefined,
   libraries: undefined,
   platforms: undefined,
   playerPerspectives: undefined,
