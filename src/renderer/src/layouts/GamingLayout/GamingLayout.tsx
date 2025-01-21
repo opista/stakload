@@ -2,12 +2,11 @@ import { Collections } from "@components/Gaming/GamesList/Collections";
 import { GamesList } from "@components/Gaming/GamesList/GamesList";
 import { HeaderButtons } from "@components/Gaming/GamesList/HeaderButtons";
 import Logo from "@components/Logo/Logo";
-import { GameStoreModel } from "@contracts/database/games";
-import { AppShell, BackgroundImage, Button, Flex, Group, Text, Title } from "@mantine/core";
+import { GameListModel } from "@contracts/database/games";
+import { AppShell, Button, Flex, Group, Text, Title } from "@mantine/core";
 import { init } from "@noriginmedia/norigin-spatial-navigation";
 import { useGameStore } from "@store/game.store";
 import { IconXboxAFilled, IconXboxXFilled } from "@tabler/icons-react";
-import { getHighestResolutionMedia } from "@util/get-highest-resolution-media";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -24,23 +23,22 @@ init({
 export const GamingLayout = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const [activeGame, setActiveGame] = useState<GameStoreModel | null>(null);
+  const [activeGame, setActiveGame] = useState<GameListModel | null>(null);
+  const gamesList = useGameStore(useShallow((state) => state.gamesList));
 
-  const games = useGameStore(useShallow((state) => state.games.slice(60, 64)));
+  // const media = getHighestResolutionMedia(activeGame?.artworks);
 
-  const media = getHighestResolutionMedia(activeGame?.artworks);
-
-  const onSelectGame = (index: number) => setActiveGame(games?.[index] || null);
+  const onSelectGame = (index: number) => setActiveGame(gamesList?.[index] || null);
 
   return (
     <AppShell footer={{ height: 100 }} header={{ height: 100 }} navbar={{ breakpoint: "sm", width: 150 }} padding="md">
-      {media?.url && (
+      {/* {media?.url && (
         <BackgroundImage
           className={activeGame ? classes.fadeIn : classes.fadeOut}
           src={media.url}
           style={{ height: "100%", opacity: "0.2", position: "fixed", width: "100%" }}
         />
-      )}
+      )} */}
       <AppShell.Header className={classes.header}>
         <Group h="100%" justify="space-between" px="md">
           <Logo />
@@ -59,7 +57,7 @@ export const GamingLayout = () => {
             {activeGame?.name}
           </Title>
         </div>
-        <GamesList games={games} onSelectGame={onSelectGame} />
+        <GamesList games={gamesList} onSelectGame={onSelectGame} />
       </AppShell.Main>
       <AppShell.Footer className={classes.footer}>
         <Flex align="center" gap="xl" h="100%" justify="flex-end" px="xl">

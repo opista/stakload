@@ -1,6 +1,9 @@
 import { Stack } from "@mantine/core";
 import { FocusContext, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
 import { useGameStore } from "@store/game.store";
+import { IconDeviceGamepad, IconProps } from "@tabler/icons-react";
+import { importDynamicIcon } from "@util/import-dynamic-icon";
+import { FC, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { CollectionButton } from "./CollectionButton";
@@ -22,11 +25,27 @@ export const Collections = () => {
 
   const collections = useGameStore(useShallow((state) => state.collections));
 
+  const iconCache = useMemo(() => {
+    const cache = new Map<string, FC<IconProps>>();
+
+    collections.forEach((collection) => {
+      if (collection.icon && !cache.has(collection.icon)) {
+        cache.set(collection.icon, importDynamicIcon(collection.icon, IconDeviceGamepad));
+      }
+    });
+
+    return cache;
+  }, [collections]);
+
   return (
     <FocusContext.Provider value={focusKey}>
       <Stack gap="md" ref={ref}>
         {collections.map((collection) => (
-          <CollectionButton collection={collection} key={collection.name} />
+          <CollectionButton
+            icon={collection.icon ? iconCache.get(collection.icon) || IconDeviceGamepad : IconDeviceGamepad}
+            key={collection.name}
+            name={collection.name}
+          />
         ))}
       </Stack>
     </FocusContext.Provider>

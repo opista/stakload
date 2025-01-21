@@ -1,20 +1,21 @@
-import { CollectionStoreModel } from "@contracts/database/collections";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { useFocusable } from "@noriginmedia/norigin-spatial-navigation";
-import { IconDeviceGamepad } from "@tabler/icons-react";
+import { IconProps } from "@tabler/icons-react";
 import clsx from "clsx";
+import { FC } from "react";
 
 import classes from "./CollectionButton.module.css";
 
 type CollectionButtonProps = {
-  collection: CollectionStoreModel;
+  icon: FC<IconProps>;
+  name: string;
   onFocus?: () => void;
   onSelect?: () => void;
 };
 
-export const CollectionButton = ({ collection, onFocus, onSelect }: CollectionButtonProps) => {
+export const CollectionButton = ({ icon: Icon, name, onFocus, onSelect }: CollectionButtonProps) => {
   const { focused, ref } = useFocusable({
-    focusKey: collection.name,
+    focusKey: name,
     focusable: true,
     onEnterPress: onSelect,
     onFocus: () => {
@@ -27,7 +28,7 @@ export const CollectionButton = ({ collection, onFocus, onSelect }: CollectionBu
     <Tooltip
       className={classes.tooltip}
       color="gray"
-      label={collection.name}
+      label={name}
       offset={0}
       opened={focused}
       position="right"
@@ -40,7 +41,7 @@ export const CollectionButton = ({ collection, onFocus, onSelect }: CollectionBu
         size={60}
         variant="default"
       >
-        <IconDeviceGamepad size="70%" />
+        <Icon size="70%" />
       </ActionIcon>
     </Tooltip>
   );
