@@ -43,6 +43,9 @@ export const App = () => {
       }),
     },
     defaultRadius: "md",
+    fontFamily: "Inter, sans-serif",
+    fontSmoothing: true,
+    headings: { fontFamily: "Readex Pro, sans-serif" },
     primaryColor,
     respectReducedMotion: true,
   });
