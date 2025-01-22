@@ -1,6 +1,6 @@
 import { ContentCard } from "@components/ContentCard/ContentCard";
+import { GameHeader } from "@components/Desktop/GameHeader/GameHeader";
 import { GameDetailsTable } from "@components/GameDetailsTable/GameDetailsTable";
-import { GameHeader } from "@components/GameHeader/GameHeader";
 import { GameHero } from "@components/GameHero/GameHero";
 import { GameLinks } from "@components/GameLinks/GameLinks";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";

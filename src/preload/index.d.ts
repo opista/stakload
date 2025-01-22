@@ -37,6 +37,8 @@ declare global {
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
       getQuickLaunchGames: () => Promise<GameListModel[]>;
+      installGame: (id: string) => void;
+      launchGame: (id: string) => void;
       maximizeWindow: () => void;
       minimizeWindow: () => void;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
@@ -55,6 +57,7 @@ declare global {
       syncGames: () => void;
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
       toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
+      uninstallGame: (id: string) => void;
       updateCollection: (
         id: string,
         updates: Pick<CollectionStoreModel, "name" | "filters">,

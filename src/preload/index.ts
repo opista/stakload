@@ -31,6 +31,8 @@ import {
   GET_OS,
   GET_PROTONDB_TIER,
   GET_QUICK_ACCESS_GAMES,
+  INSTALL_GAME,
+  LAUNCH_GAME,
   REMOVE_GAME,
   RESTART_APP,
   RESTART_DEVICE,
@@ -39,6 +41,7 @@ import {
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
   TOGGLE_QUICK_ACCESS_GAME,
+  UNINSTALL_GAME,
   WINDOW_CLOSE,
   WINDOW_MAXIMIZE,
   WINDOW_MINIMIZE,
@@ -66,6 +69,8 @@ const api = {
   getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
   getProtondbTier: (gameId: string) => ipcRenderer.invoke(GET_PROTONDB_TIER, gameId),
   getQuickLaunchGames: () => ipcRenderer.invoke(GET_QUICK_ACCESS_GAMES),
+  installGame: (id: string) => ipcRenderer.send(INSTALL_GAME, id),
+  launchGame: (id: string) => ipcRenderer.send(LAUNCH_GAME, id),
   maximizeWindow: () => ipcRenderer.send(WINDOW_MAXIMIZE),
   minimizeWindow: () => ipcRenderer.send(WINDOW_MINIMIZE),
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_COLLECTIONS_LIST_UPDATED, listener),
@@ -91,6 +96,7 @@ const api = {
   testLibraryIntegration: (steamId: string, webApiKey: string) =>
     ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
   toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(TOGGLE_QUICK_ACCESS_GAME, id),
+  uninstallGame: (id: string) => ipcRenderer.send(UNINSTALL_GAME, id),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

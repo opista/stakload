@@ -22,6 +22,8 @@ import {
   GET_OS,
   GET_PROTONDB_TIER,
   GET_QUICK_ACCESS_GAMES,
+  INSTALL_GAME,
+  LAUNCH_GAME,
   REMOVE_GAME,
   RESTART_APP,
   RESTART_DEVICE,
@@ -30,6 +32,7 @@ import {
   SYNC_GAMES,
   TEST_STEAM_INTEGRATION,
   TOGGLE_QUICK_ACCESS_GAME,
+  UNINSTALL_GAME,
   UPDATE_COLLECTION,
   WINDOW_CLOSE,
   WINDOW_MAXIMIZE,
@@ -46,8 +49,11 @@ import {
   getNewGamesHandler,
   getProtondbTier,
   getQuickLaunchGamesHandler,
+  installGameHandler,
+  launchGameHandler,
   removeGame,
   toggleQuickLaunchGameHandler,
+  uninstallGameHandler,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
 import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
@@ -194,6 +200,9 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_COLLECTION_GAMES, getCollectionGamesHandler);
   ipcMain.handle(GET_QUICK_ACCESS_GAMES, getQuickLaunchGamesHandler);
   ipcMain.handle(TOGGLE_QUICK_ACCESS_GAME, toggleQuickLaunchGameHandler(browserWindow.webContents));
+  ipcMain.on(LAUNCH_GAME, (_, id: string) => launchGameHandler(id));
+  ipcMain.on(INSTALL_GAME, (_, id: string) => installGameHandler(id));
+  ipcMain.on(UNINSTALL_GAME, (_, id: string) => uninstallGameHandler(id));
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

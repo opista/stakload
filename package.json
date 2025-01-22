@@ -48,6 +48,7 @@
     "@tabler/icons-react": "^3.21.0",
     "@tanstack/react-virtual": "^3.11.2",
     "@types/nedb": "^1.8.16",
+    "@types/winreg": "^1.2.36",
     "allotment": "^1.20.2",
     "clsx": "^2.1.1",
     "electron-conf": "^1.2.1",

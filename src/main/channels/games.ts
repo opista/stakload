@@ -13,6 +13,7 @@ import {
   removeGameById,
   toggleQuickLaunchGame,
 } from "../database/games";
+import { installGame, launchGame, uninstallGame } from "../libraries/launchers";
 
 export const getGameFilters = (_event: IpcMainInvokeEvent) => findGameFilters();
 
@@ -55,3 +56,24 @@ export const toggleQuickLaunchGameHandler =
     contents.send(EVENT_GAMES_LIST_UPDATED);
     return updated;
   };
+
+export const launchGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await launchGame(game);
+};
+
+export const installGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await installGame(game);
+};
+
+export const uninstallGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await uninstallGame(game);
+};

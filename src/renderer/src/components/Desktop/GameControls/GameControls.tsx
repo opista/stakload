@@ -4,8 +4,9 @@ import { Button, Group } from "@mantine/core";
 export const GameControls = ({ game }: { game: GameStoreModel }) => {
   return (
     <Group>
-      <a href={`steam://run/${game.gameId}`}>Launch</a>
-      <Button>Uninstall</Button>
+      <Button onClick={() => window.api.launchGame(game._id)}>Launch</Button>
+      <Button onClick={() => window.api.uninstallGame(game._id)}>Install</Button>
+      <Button onClick={() => window.api.uninstallGame(game._id)}>Uninstall</Button>
     </Group>
   );
 };

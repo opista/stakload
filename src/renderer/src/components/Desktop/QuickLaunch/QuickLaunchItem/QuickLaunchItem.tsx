@@ -5,7 +5,6 @@ import { CSS } from "@dnd-kit/utilities";
 import { Flex, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import clsx from "clsx";
-import { useNavigate } from "react-router";
 
 import classes from "./QuickLaunchItem.module.css";
 
@@ -15,7 +14,6 @@ type QuickLaunchItemProps = {
 };
 
 export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
-  const navigate = useNavigate();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
 
   const style = {
@@ -26,9 +24,9 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   };
 
   const onClick = () => {
-    if (!editMode) {
-      navigate(`/desktop/library/${game._id}`);
-    }
+    if (editMode) return;
+
+    window.api.launchGame(game._id);
   };
 
   return (
