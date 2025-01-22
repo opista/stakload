@@ -4,6 +4,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Flex, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
+import clsx from "clsx";
 import { useNavigate } from "react-router";
 
 import classes from "./QuickLaunchItem.module.css";
@@ -32,7 +33,7 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
 
   return (
     <div ref={setNodeRef} style={style} {...(editMode ? { ...attributes, ...listeners } : {})}>
-      <Flex className={classes.container} onClick={onClick}>
+      <Flex className={clsx(classes.container, { [classes.clickable]: !editMode })} onClick={onClick}>
         <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
         <Stack className={classes.textContainer}>
           <Text className={classes.gameName} lineClamp={1} size="xs">

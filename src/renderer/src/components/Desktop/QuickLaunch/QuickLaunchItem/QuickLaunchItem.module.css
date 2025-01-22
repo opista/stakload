@@ -18,6 +18,7 @@
 .textContainer {
   position: relative;
   gap: 0;
+  width: 100%;
 }
 
 .gameName {
@@ -36,11 +37,11 @@
   font-weight: bold;
 }
 
-.container:hover .gameName {
+.clickable:hover .gameName {
   transform: translateY(-50%);
 }
 
-.container:hover .launchGroup {
+.clickable:hover .launchGroup {
   transform: translateY(50%);
   opacity: 1;
 }
