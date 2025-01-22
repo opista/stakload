@@ -9,6 +9,7 @@ export const mapOwnedGameToGameStoreModel = (game: OwnedGame): InitialGameStoreM
   return {
     library: "epic-game-store",
     libraryMeta: {
+      appName: game.app_name,
       namespace: game.metadata.namespace,
     },
     name,

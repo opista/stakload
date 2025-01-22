@@ -10,6 +10,7 @@ export enum Library {
 export type LikeLibrary = `${Library}`;
 
 export type EpicLibraryMeta = {
+  appName: string;
   namespace: string;
 };
 
