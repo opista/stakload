@@ -207,17 +207,17 @@ export const getNewGames = async () => {
   return recentGames;
 };
 
-export const getQuickAccessGames = async () => {
+export const getQuickLaunchGames = async () => {
   return await db.find<GameListModel>(
     {
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
-      quickAccess: true,
+      quickLaunch: true,
     },
     { _id: 1, cover: 1, name: 1 },
   );
 };
 
-export const toggleQuickAccessGame = async (id: string) => {
+export const toggleQuickLaunchGame = async (id: string) => {
   const game = await findGameById(id);
-  return await updateGameById(id, { quickAccess: !game?.quickAccess });
+  return await updateGameById(id, { quickLaunch: !game?.quickLaunch });
 };

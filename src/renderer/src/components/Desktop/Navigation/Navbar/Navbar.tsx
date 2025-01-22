@@ -1,5 +1,5 @@
 import { NavbarLink } from "@components/Desktop/Navigation/NavbarLink/NavbarLink";
-import { QuickAccessList } from "@components/Desktop/QuickAccess/QuickAccessList/QuickAccessList";
+import { QuickLaunchList } from "@components/Desktop/QuickLaunch/QuickLaunchList/QuickLaunchList";
 import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
 import Logo from "@components/Logo/Logo";
 import { AppShell, Card, Flex, ScrollArea, Stack } from "@mantine/core";
@@ -66,7 +66,7 @@ export const Navbar = () => {
               <NavbarLink href="/desktop/settings/about" icon={IconUser} label="About" />
             </NavbarLink>
           </Stack>
-          <QuickAccessList className={classes.quickAccess} />
+          <QuickLaunchList className={classes.quickLaunch} />
         </ScrollArea>
       </Card>
     </AppShell.Navbar>

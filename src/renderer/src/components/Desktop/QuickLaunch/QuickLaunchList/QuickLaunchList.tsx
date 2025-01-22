@@ -19,20 +19,20 @@ import { IconBolt, IconEdit } from "@tabler/icons-react";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { QuickAccessItem } from "../QuickAccessItem/QuickAccessItem";
-import classes from "./QuickAccessList.module.css";
+import { QuickLaunchItem } from "../QuickLaunchItem/QuickLaunchItem";
+import classes from "./QuickLaunchList.module.css";
 
-type QuickAccessListProps = {
+type QuickLaunchListProps = {
   className?: string;
 };
 
-export const QuickAccessList = ({ className }: QuickAccessListProps) => {
+export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
   const [editMode, setEditMode] = useState(false);
-  const { quickAccessGames, quickAccessGamesOrder, setQuickAccessGameOrder } = useGameStore(
+  const { quickLaunchGames, quickLaunchGamesOrder, setQuickLaunchGameOrder } = useGameStore(
     useShallow((state) => ({
-      quickAccessGames: state.quickAccessGames,
-      quickAccessGamesOrder: state.quickAccessGamesOrder,
-      setQuickAccessGameOrder: state.setQuickAccessGameOrder,
+      quickLaunchGames: state.quickLaunchGames,
+      quickLaunchGamesOrder: state.quickLaunchGamesOrder,
+      setQuickLaunchGameOrder: state.setQuickLaunchGameOrder,
     })),
   );
 
@@ -47,21 +47,21 @@ export const QuickAccessList = ({ className }: QuickAccessListProps) => {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
-    const oldIndex = quickAccessGamesOrder.indexOf(active.id.toString());
-    const newIndex = quickAccessGamesOrder.indexOf(over.id.toString());
+    const oldIndex = quickLaunchGamesOrder.indexOf(active.id.toString());
+    const newIndex = quickLaunchGamesOrder.indexOf(over.id.toString());
 
-    const newOrder = arrayMove(quickAccessGamesOrder, oldIndex, newIndex);
-    setQuickAccessGameOrder(newOrder);
+    const newOrder = arrayMove(quickLaunchGamesOrder, oldIndex, newIndex);
+    setQuickLaunchGameOrder(newOrder);
   };
 
-  const sortedGames = quickAccessGames.sort(
-    (a, b) => quickAccessGamesOrder.indexOf(a._id) - quickAccessGamesOrder.indexOf(b._id),
+  const sortedGames = quickLaunchGames.sort(
+    (a, b) => quickLaunchGamesOrder.indexOf(a._id) - quickLaunchGamesOrder.indexOf(b._id),
   );
 
   const gamesList = (
     <Stack gap={0}>
       {sortedGames.map((game) => (
-        <QuickAccessItem editMode={editMode} game={game} key={game._id} />
+        <QuickLaunchItem editMode={editMode} game={game} key={game._id} />
       ))}
     </Stack>
   );
@@ -72,7 +72,7 @@ export const QuickAccessList = ({ className }: QuickAccessListProps) => {
         <Group gap={4}>
           <IconBolt size={16} />
           <Text className={classes.title} size="xs">
-            Quick access
+            Quick Launch
           </Text>
         </Group>
         <ActionIcon onClick={() => setEditMode(!editMode)} size="sm" variant={editMode ? "filled" : "subtle"}>

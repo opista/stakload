@@ -65,7 +65,7 @@ const api = {
   getNewGames: () => ipcRenderer.invoke(GET_NEW_GAMES),
   getOS: (): Promise<string> => ipcRenderer.invoke(GET_OS),
   getProtondbTier: (gameId: string) => ipcRenderer.invoke(GET_PROTONDB_TIER, gameId),
-  getQuickAccessGames: () => ipcRenderer.invoke(GET_QUICK_ACCESS_GAMES),
+  getQuickLaunchGames: () => ipcRenderer.invoke(GET_QUICK_ACCESS_GAMES),
   maximizeWindow: () => ipcRenderer.send(WINDOW_MAXIMIZE),
   minimizeWindow: () => ipcRenderer.send(WINDOW_MINIMIZE),
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_COLLECTIONS_LIST_UPDATED, listener),
@@ -90,7 +90,7 @@ const api = {
   syncGames: () => ipcRenderer.send(SYNC_GAMES),
   testLibraryIntegration: (steamId: string, webApiKey: string) =>
     ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
-  toggleQuickAccessGame: (id: string) => ipcRenderer.invoke(TOGGLE_QUICK_ACCESS_GAME, id),
+  toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(TOGGLE_QUICK_ACCESS_GAME, id),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -9,9 +9,9 @@ import {
   getFilteredGames,
   getGamesList,
   getNewGames,
-  getQuickAccessGames,
+  getQuickLaunchGames,
   removeGameById,
-  toggleQuickAccessGame,
+  toggleQuickLaunchGame,
 } from "../database/games";
 
 export const getGameFilters = (_event: IpcMainInvokeEvent) => findGameFilters();
@@ -39,7 +39,7 @@ export const getProtondbTier = async (_event: IpcMainInvokeEvent, gameId: string
 
 export const getGamesListHandler = (_event: IpcMainInvokeEvent) => getGamesList();
 
-export const getQuickAccessGamesHandler = (_event: IpcMainInvokeEvent) => getQuickAccessGames();
+export const getQuickLaunchGamesHandler = (_event: IpcMainInvokeEvent) => getQuickLaunchGames();
 
 export const getNewGamesHandler = (_event: IpcMainInvokeEvent) => getNewGames();
 
@@ -49,9 +49,9 @@ export const getCollectionGamesHandler = async (_event: IpcMainInvokeEvent, id: 
   return getFilteredGames(collection.filters);
 };
 
-export const toggleQuickAccessGameHandler =
+export const toggleQuickLaunchGameHandler =
   (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string) => {
-    const updated = await toggleQuickAccessGame(id);
+    const updated = await toggleQuickLaunchGame(id);
     contents.send(EVENT_GAMES_LIST_UPDATED);
     return updated;
   };

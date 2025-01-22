@@ -20,9 +20,9 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  const { toggleQuickAccessGame } = useGameStore(
+  const { toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
-      toggleQuickAccessGame: state.toggleQuickAccessGame,
+      toggleQuickLaunchGame: state.toggleQuickLaunchGame,
     })),
   );
 
@@ -46,7 +46,7 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             <GameControls game={game} />
           </Group>
           <Group gap="xs">
-            <ActionIcon aria-label="Quick access" icon={IconBolt} onClick={() => toggleQuickAccessGame(game._id)} />
+            <ActionIcon aria-label="Quick access" icon={IconBolt} onClick={() => toggleQuickLaunchGame(game._id)} />
             <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
             <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />
           </Group>

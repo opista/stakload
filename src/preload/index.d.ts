@@ -36,7 +36,7 @@ declare global {
       getNewGames: () => Promise<FeaturedGameModel[]>;
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
-      getQuickAccessGames: () => Promise<GameListModel[]>;
+      getQuickLaunchGames: () => Promise<GameListModel[]>;
       maximizeWindow: () => void;
       minimizeWindow: () => void;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
@@ -54,7 +54,7 @@ declare global {
       sleepDevice: () => void;
       syncGames: () => void;
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
-      toggleQuickAccessGame: (id: string) => Promise<GameStoreModel>;
+      toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
       updateCollection: (
         id: string,
         updates: Pick<CollectionStoreModel, "name" | "filters">,

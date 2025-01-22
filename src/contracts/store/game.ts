@@ -7,8 +7,8 @@ export type GameState = {
   gamesDetails: Record<string, GameStoreModel>;
   gamesList: GameListModel[];
   newGames: FeaturedGameModel[];
-  quickAccessGames: GameListModel[];
-  quickAccessGamesOrder: string[];
+  quickLaunchGames: GameListModel[];
+  quickLaunchGamesOrder: string[];
   selectedCollection: string;
   selectedFilters: GameFilters;
   selectedGame: string | null;
@@ -19,15 +19,15 @@ export type GameActions = {
   fetchGameDetails: (id: string) => Promise<GameStoreModel>;
   fetchGamesList: () => Promise<void>;
   fetchNewGames: () => Promise<void>;
-  fetchQuickAccessGames: () => Promise<void>;
+  fetchQuickLaunchGames: () => Promise<void>;
   resetFilters: () => void;
   setCurrentCollection: (id: string) => void;
   setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
-  setQuickAccessGameOrder: (ids: string[]) => void;
+  setQuickLaunchGameOrder: (ids: string[]) => void;
   setSelectedCollection: (selectedCollection: string) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
   setSelectedGame: (selectedGame: string | null) => void;
-  toggleQuickAccessGame: (id: string) => Promise<void>;
+  toggleQuickLaunchGame: (id: string) => Promise<void>;
 };
 
 export type GameSyncMessage = {

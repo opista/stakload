@@ -48,6 +48,7 @@ export const GameDetailsView = () => {
   }, [params.id]);
 
   useEffect(() => {
+    console.log(gameDetails);
     if (!params.id) return;
     if (gameDetails) return;
 

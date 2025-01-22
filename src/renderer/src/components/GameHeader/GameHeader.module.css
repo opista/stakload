@@ -1,6 +1,6 @@
 .container {
-  background-color: var(--mantine-color-body);
-  border-bottom: 1px solid var(--separator-border);
+  background: var(--color);
+  border-radius: var(--mantine-radius-lg);
 }
 
 .header {

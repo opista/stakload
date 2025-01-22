@@ -5,14 +5,14 @@ import { CSS } from "@dnd-kit/utilities";
 import { Flex, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 
-import classes from "./QuickAccessItem.module.css";
+import classes from "./QuickLaunchItem.module.css";
 
-type QuickAccessItemProps = {
+type QuickLaunchItemProps = {
   editMode?: boolean;
   game: GameListModel;
 };
 
-export const QuickAccessItem = ({ editMode, game }: QuickAccessItemProps) => {
+export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   const navigate = useNavigate();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
 
@@ -36,6 +36,7 @@ export const QuickAccessItem = ({ editMode, game }: QuickAccessItemProps) => {
         <Text lineClamp={1} size="xs">
           {game.name}
         </Text>
+        {/* <Text>Launch</Text> */}
       </Flex>
     </div>
   );

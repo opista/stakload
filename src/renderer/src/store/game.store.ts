@@ -47,16 +47,16 @@ export const useGameStore = create<GameStore>()(
         const games = await window.api.getNewGames();
         set({ newGames: games });
       },
-      fetchQuickAccessGames: async () => {
-        const quickAccessGames = await window.api.getQuickAccessGames();
-        set({ quickAccessGames });
+      fetchQuickLaunchGames: async () => {
+        const quickLaunchGames = await window.api.getQuickLaunchGames();
+        set({ quickLaunchGames });
       },
       gamesDetails: {},
       gamesList: [],
       gamesPreview: {},
       newGames: [],
-      quickAccessGames: [],
-      quickAccessGamesOrder: [],
+      quickLaunchGames: [],
+      quickLaunchGamesOrder: [],
       resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
       selectedCollection: "",
       selectedFilters: DEFAULT_FILTERS,
@@ -74,7 +74,7 @@ export const useGameStore = create<GameStore>()(
             ...filters,
           },
         })),
-      setQuickAccessGameOrder: (ids: string[]) => set({ quickAccessGamesOrder: ids }),
+      setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
       setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
         set((state) => ({
@@ -84,22 +84,22 @@ export const useGameStore = create<GameStore>()(
           },
         })),
       setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
-      toggleQuickAccessGame: async (id: string) => {
-        const { quickAccess } = await window.api.toggleQuickAccessGame(id);
+      toggleQuickLaunchGame: async (id: string) => {
+        const { quickLaunch } = await window.api.toggleQuickLaunchGame(id);
 
         set((state) => {
-          if (!quickAccess) {
+          if (!quickLaunch) {
             return {
-              quickAccessGamesOrder: state.quickAccessGamesOrder.filter((gameId) => gameId !== id),
+              quickLaunchGamesOrder: state.quickLaunchGamesOrder.filter((gameId) => gameId !== id),
             };
           }
 
-          if (state.quickAccessGamesOrder.includes(id)) {
+          if (state.quickLaunchGamesOrder.includes(id)) {
             return state;
           }
 
           return {
-            quickAccessGamesOrder: [...state.quickAccessGamesOrder, id],
+            quickLaunchGamesOrder: [...state.quickLaunchGamesOrder, id],
           };
         });
       },
