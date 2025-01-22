@@ -15,7 +15,32 @@
   width: 35px;
 }
 
-.link {
-  color: inherit;
-  text-decoration: none;
+.textContainer {
+  position: relative;
+  gap: 0;
+}
+
+.gameName {
+  transition: transform 0.35s ease;
+}
+
+.launchGroup {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(100%);
+  transition: all 0.35s ease;
+  opacity: 0;
+}
+
+.launchText {
+  font-weight: bold;
+}
+
+.container:hover .gameName {
+  transform: translateY(-50%);
+}
+
+.container:hover .launchGroup {
+  transform: translateY(50%);
+  opacity: 1;
 }

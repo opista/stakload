@@ -2,7 +2,8 @@ import { GameCover } from "@components/GameCover/GameCover";
 import { GameListModel } from "@contracts/database/games";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Flex, Text } from "@mantine/core";
+import { Flex, Group, Stack, Text } from "@mantine/core";
+import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useNavigate } from "react-router";
 
 import classes from "./QuickLaunchItem.module.css";
@@ -33,10 +34,17 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
     <div ref={setNodeRef} style={style} {...(editMode ? { ...attributes, ...listeners } : {})}>
       <Flex className={classes.container} onClick={onClick}>
         <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
-        <Text lineClamp={1} size="xs">
-          {game.name}
-        </Text>
-        {/* <Text>Launch</Text> */}
+        <Stack className={classes.textContainer}>
+          <Text className={classes.gameName} lineClamp={1} size="xs">
+            {game.name}
+          </Text>
+          <Group className={classes.launchGroup} gap={4}>
+            <IconPlayerPlayFilled size={12} />
+            <Text className={classes.launchText} size="xs">
+              Launch
+            </Text>
+          </Group>
+        </Stack>
       </Flex>
     </div>
   );
