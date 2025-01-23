@@ -32,7 +32,13 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   return (
     <div ref={setNodeRef} style={style} {...(editMode ? { ...attributes, ...listeners } : {})}>
       <Flex className={clsx(classes.container, { [classes.clickable]: !editMode })} onClick={onClick}>
-        <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />
+        <GameCover
+          className={classes.gameCover}
+          game={game}
+          hoverEffect={false}
+          showGameTitle={false}
+          showLibraryIcon={false}
+        />
         <Stack className={classes.textContainer}>
           <Text className={classes.gameName} lineClamp={1} size="xs">
             {game.name}

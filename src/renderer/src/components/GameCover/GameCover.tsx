@@ -1,6 +1,7 @@
 import { GameListModel } from "@contracts/database/games";
 import { AspectRatio, Image, Stack, Text } from "@mantine/core";
 import { IconDeviceGamepad2 } from "@tabler/icons-react";
+import { mapLibraryIcon } from "@util/map-library-icon";
 import clsx from "clsx";
 
 import classes from "./GameCover.module.css";
@@ -13,11 +14,24 @@ type GameCoverProps = {
   hoverEffect?: boolean;
   onClick?: (game: GameListModel) => void;
   showGameTitle?: boolean;
+  showLibraryIcon?: boolean;
+};
+
+const LibraryIcon = ({ game }: { game: GameListModel }) => {
+  const { icon: Icon } = mapLibraryIcon(game.library);
+  return <Icon className={classes.libraryIcon} />;
 };
 
 const GameCoverArt = ({ game }: { game: GameListModel }) => <Image src={game.cover!} title={game.name} />;
 
-const GameCoverEmpty = ({ game, showGameTitle }: { game: GameListModel; showGameTitle?: boolean }) => (
+const GameCoverEmpty = ({
+  game,
+  showGameTitle,
+}: {
+  game: GameListModel;
+  showGameTitle?: boolean;
+  showLibraryIcon?: boolean;
+}) => (
   <Stack className={classes.emptyContainer}>
     <IconDeviceGamepad2 className={clsx(classes.emptyIcon, { [classes.centred]: !showGameTitle })} stroke={1} />
     {showGameTitle && (
@@ -28,7 +42,14 @@ const GameCoverEmpty = ({ game, showGameTitle }: { game: GameListModel; showGame
   </Stack>
 );
 
-export const GameCover = ({ className, game, hoverEffect = true, onClick, showGameTitle = true }: GameCoverProps) => (
+export const GameCover = ({
+  className,
+  game,
+  hoverEffect = true,
+  onClick,
+  showGameTitle = true,
+  showLibraryIcon = true,
+}: GameCoverProps) => (
   <AspectRatio
     className={clsx(classes.aspectRatio, className, {
       [classes.hoverEffect]: hoverEffect,
@@ -37,6 +58,7 @@ export const GameCover = ({ className, game, hoverEffect = true, onClick, showGa
     onClick={() => onClick?.(game)}
     ratio={GAME_COVER_ART_RATIO}
   >
+    {showLibraryIcon && <LibraryIcon game={game} />}
     {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} showGameTitle={showGameTitle} />}
   </AspectRatio>
 );

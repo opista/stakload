@@ -1,12 +1,19 @@
 import { GameCover } from "@components/GameCover/GameCover";
+import { GameListModel } from "@contracts/database/games";
 import { Spotlight as MantineSpotlight, SpotlightActionData } from "@mantine/spotlight";
 import { useGameStore } from "@store/game.store";
 import { IconSearch } from "@tabler/icons-react";
+import { mapLibraryIcon } from "@util/map-library-icon";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./Spotlight.module.css";
+
+const LibraryIcon = ({ game }: { game: GameListModel }) => {
+  const { icon: Icon } = mapLibraryIcon(game.library);
+  return <Icon size={20} />;
+};
 
 export const Spotlight = () => {
   const games = useGameStore(useShallow((state) => state.gamesList));
@@ -17,8 +24,17 @@ export const Spotlight = () => {
     games?.map((game) => ({
       id: game._id,
       label: game.name,
-      leftSection: <GameCover className={classes.gameCover} game={game} hoverEffect={false} showGameTitle={false} />,
+      leftSection: (
+        <GameCover
+          className={classes.gameCover}
+          game={game}
+          hoverEffect={false}
+          showGameTitle={false}
+          showLibraryIcon={false}
+        />
+      ),
       onClick: () => navigate(`/desktop/library/${game._id}`),
+      rightSection: <LibraryIcon game={game} />,
     })) || [];
 
   return (
