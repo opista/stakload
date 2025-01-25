@@ -1,0 +1,58 @@
+.container {
+  width: 100%;
+  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
+}
+
+
+.divider {
+  margin-top: var(--mantine-spacing-sm);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.buttonContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.label {
+  font-size: var(--mantine-font-size-sm);
+}
+
+.date {
+  margin-left: 4px;
+  color: var(--mantine-color-dimmed);
+  font-size: var(--mantine-font-size-xs);
+}
+
+.inputRoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.input {
+  width: 300px;
+}
+
+.inputLabel {
+  flex: 1;
+}
+
+.statusIndicator {
+  flex: 1;
+}
+
+.check {
+  color: var(--mantine-color-green-8);
+}
+
+.cross {
+  color: var(--mantine-color-red-8);
+}

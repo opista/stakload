@@ -1,0 +1,47 @@
+.container {
+  align-items: center;
+  border-radius: var(--mantine-radius-md);
+  cursor: pointer;
+  gap: var(--mantine-spacing-xs);
+  padding: var(--mantine-spacing-xs);
+
+  &:hover {
+    background-color: #1b2c3b;
+  }
+}
+
+.gameCover {
+  border-radius: var(--mantine-radius-md);
+  width: 35px;
+}
+
+.textContainer {
+  position: relative;
+  gap: 0;
+  width: 100%;
+}
+
+.gameName {
+  transition: transform 0.35s ease;
+}
+
+.launchGroup {
+  position: absolute;
+  bottom: 0;
+  transform: translateY(100%);
+  transition: all 0.35s ease;
+  opacity: 0;
+}
+
+.launchText {
+  font-weight: bold;
+}
+
+.clickable:hover .gameName {
+  transform: translateY(-50%);
+}
+
+.clickable:hover .launchGroup {
+  transform: translateY(50%);
+  opacity: 1;
+}

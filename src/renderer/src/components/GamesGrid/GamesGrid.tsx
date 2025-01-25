@@ -1,17 +1,11 @@
-import BackToTop from "@components/BackToTop/BackToTop";
 import { GameCover } from "@components/GameCover/GameCover";
-import { settingsModalInnerProps } from "@components/Settings/SettingsModal/SettingsModalInnerProps";
-import { GameStoreModel } from "@contracts/database/games";
-import { useGamesQuery } from "@hooks/use-games-query";
+import { GameListModel } from "@contracts/database/games";
 import { Box, Button, Stack, Text } from "@mantine/core";
-import { modals } from "@mantine/modals";
-import { useGameStore } from "@store/game.store";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
-import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
-import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesGrid.module.css";
 
@@ -22,21 +16,13 @@ const SCROLLBAR_WIDTH = 6;
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
   rowIndex * columnCount + columnIndex;
 
-export const GamesGrid = () => {
-  const [containerEl, setContainerEl] = useState<Element | null>(null);
-  const { selectedFilters } = useGameStore(
-    useShallow((state) => ({
-      selectedFilters: state.selectedFilters,
-    })),
-  );
+type GamesGridProps = {
+  games: GameListModel[];
+};
+
+export const GamesGrid = ({ games }: GamesGridProps) => {
+  const navigate = useNavigate();
   const { t } = useTranslation();
-
-  const containerRef = useCallback((node) => setContainerEl(node), []);
-
-  const { data: games } = useGamesQuery<GameStoreModel[]>(
-    () => window.api.getFilteredGames(selectedFilters),
-    [selectedFilters],
-  );
 
   const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
@@ -56,21 +42,15 @@ export const GamesGrid = () => {
     };
   };
 
-  const onImportClick = () => {
-    modals.openContextModal({
-      modal: "settings",
-      title: t("settings"),
-      innerProps: { ...settingsModalInnerProps, defaultTab: "library" },
-    });
-  };
+  const onImportClick = () => navigate("/desktop/settings/integrations");
 
   if (!games?.length) {
     return (
-      <Stack align="center" className={classes.emptyContainer} gap="xs" justify="center">
+      <Stack className={classes.emptyContainer}>
         <IconPacman color="yellow" size={60} stroke={0.5} />
-        <Text c="dimmed">{t("noGamesFound")}</Text>
+        <Text c="dimmed">{t("gamesGrid.noGamesFound")}</Text>
         <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
-          {t("importLibrary")}
+          {t("gamesGrid.importLibrary")}
         </Button>
       </Stack>
     );
@@ -89,7 +69,7 @@ export const GamesGrid = () => {
 
     return (
       <Box style={{ ...style, padding: CELL_GAP }}>
-        <GameCover game={game} />
+        <GameCover game={game} onClick={(game) => navigate(`/desktop/library/${game._id}`)} />
       </Box>
     );
   };
@@ -101,7 +81,7 @@ export const GamesGrid = () => {
       rowIndex,
     }: {
       columnIndex: number;
-      data: GameStoreModel[];
+      data: GameListModel[];
       rowIndex: number;
     },
     columnCount: number,
@@ -109,14 +89,6 @@ export const GamesGrid = () => {
     const index = getItemIndex(rowIndex, columnIndex, columnCount);
     return games[index]?._id || index;
   };
-
-  /**
-   * TODO
-   * When a user clicks back from the game details
-   * view, we lose the original scroll position of
-   * this list. We should record it and return the
-   * user back to where they were
-   */
 
   return (
     <Box className={classes.container}>
@@ -130,7 +102,6 @@ export const GamesGrid = () => {
               height={height}
               itemData={games}
               itemKey={(args) => itemKey(args, columnCount)}
-              outerRef={containerRef}
               rowCount={rowCount}
               rowHeight={rowHeight}
               width={width}
@@ -140,7 +111,6 @@ export const GamesGrid = () => {
           );
         }}
       </AutoSizer>
-      <BackToTop container={containerEl} />
     </Box>
   );
 };

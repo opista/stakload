@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mantine-spacing-md);
+  width: 100%;
+}
+
+.header {
+  padding: 0 var(--mantine-spacing-md);
+}
+
+.actionIcon {
+  background-color: var(--color);
+  border-radius: var(--mantine-radius-md);
+  padding: var(--mantine-spacing-xs);
+  width: auto;
+  height: auto;
+}

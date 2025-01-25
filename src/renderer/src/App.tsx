@@ -1,5 +1,4 @@
 import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
-import { Notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useSystemStore } from "@store/system.store";
 import clsx from "clsx";
@@ -16,7 +15,6 @@ export const App = () => {
   const setOperatingSystem = useSystemStore(useShallow((state) => state.setOperatingSystem));
 
   const theme = createTheme({
-    defaultRadius: "md",
     components: {
       Checkbox: Checkbox.extend({
         defaultProps: {
@@ -30,11 +28,12 @@ export const App = () => {
       }),
       Modal: Modal.extend({
         defaultProps: {
-          size: "xl",
           overlayProps: {
-            backgroundOpacity: 0.55,
+            backgroundOpacity: 0.5,
             blur: 3,
+            radius: "xl",
           },
+          size: "xl",
         },
       }),
       ScrollArea: ScrollArea.extend({
@@ -43,6 +42,10 @@ export const App = () => {
         },
       }),
     },
+    defaultRadius: "md",
+    fontFamily: "Inter, sans-serif",
+    fontSmoothing: true,
+    headings: { fontFamily: "Readex Pro, sans-serif" },
     primaryColor,
     respectReducedMotion: true,
   });
@@ -77,7 +80,6 @@ export const App = () => {
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <Outlet />
-        <Notifications />
       </MantineProvider>
     </>
   );

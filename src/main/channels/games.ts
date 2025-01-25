@@ -1,10 +1,19 @@
-import { GameFilters } from "@contracts/database/games";
 import { IpcMainInvokeEvent, WebContents } from "electron";
 
 import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
-import { findGameById, findGameFilters, findLastSyncedAt, getFilteredGames, removeGameById } from "../database/games";
-
-export const getFilteredGameLibrary = (_event: IpcMainInvokeEvent, filters?: GameFilters) => getFilteredGames(filters);
+import { findCollectionById } from "../database/collections";
+import {
+  findGameById,
+  findGameFilters,
+  findLastSyncedAt,
+  getFilteredGames,
+  getGamesList,
+  getNewGames,
+  getQuickLaunchGames,
+  removeGameById,
+  toggleQuickLaunchGame,
+} from "../database/games";
+import { installGame, launchGame, uninstallGame } from "../libraries/launchers";
 
 export const getGameFilters = (_event: IpcMainInvokeEvent) => findGameFilters();
 
@@ -27,4 +36,44 @@ export const getProtondbTier = async (_event: IpcMainInvokeEvent, gameId: string
     // TODO - Logging
     return null;
   }
+};
+
+export const getGamesListHandler = (_event: IpcMainInvokeEvent) => getGamesList();
+
+export const getQuickLaunchGamesHandler = (_event: IpcMainInvokeEvent) => getQuickLaunchGames();
+
+export const getNewGamesHandler = (_event: IpcMainInvokeEvent) => getNewGames();
+
+export const getCollectionGamesHandler = async (_event: IpcMainInvokeEvent, id: string) => {
+  const collection = await findCollectionById(id);
+  if (!collection) return [];
+  return getFilteredGames(collection.filters);
+};
+
+export const toggleQuickLaunchGameHandler =
+  (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string) => {
+    const updated = await toggleQuickLaunchGame(id);
+    contents.send(EVENT_GAMES_LIST_UPDATED);
+    return updated;
+  };
+
+export const launchGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await launchGame(game);
+};
+
+export const installGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await installGame(game);
+};
+
+export const uninstallGameHandler = async (id: string) => {
+  const game = await findGameById(id);
+  // TODO - Proper handling
+  if (!game) return;
+  await uninstallGame(game);
 };

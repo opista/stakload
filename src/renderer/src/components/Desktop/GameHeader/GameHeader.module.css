@@ -1,0 +1,8 @@
+.container {
+  background: var(--color);
+  border-radius: var(--mantine-radius-lg);
+}
+
+.header {
+  padding: var(--mantine-spacing-md) 0;
+}

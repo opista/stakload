@@ -1,4 +1,10 @@
 module.exports = {
+  env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
+    node: true,
+  },
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
@@ -6,22 +12,24 @@ module.exports = {
     "@electron-toolkit/eslint-config-prettier",
     "plugin:typescript-sort-keys/recommended",
   ],
-  env: {
-    browser: true,
-    commonjs: true,
-    es6: true,
-    node: true,
-  },
   globals: {
     JSX: true,
   },
+  overrides: [
+    {
+      files: ["src/renderer/src/icons/*.tsx"],
+      rules: {
+        "react/display-name": ["error", { ignoreTranspilerName: true }],
+      },
+    },
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
     },
-    sourceType: "module",
     ecmaVersion: 2021,
+    sourceType: "module",
   },
   plugins: ["@typescript-eslint", "unused-imports", "react-refresh", "simple-import-sort"],
   rules: {
@@ -35,10 +43,10 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
-        vars: "all",
         args: "after-used",
-        ignoreRestSiblings: true,
         argsIgnorePattern: "^_",
+        ignoreRestSiblings: true,
+        vars: "all",
       },
     ],
     "@typescript-eslint/no-var-requires": "off",
@@ -47,6 +55,7 @@ module.exports = {
     "react/jsx-sort-props": "error",
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": "error",
+    "sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
     "unused-imports/no-unused-imports": "error",
   },
   settings: {

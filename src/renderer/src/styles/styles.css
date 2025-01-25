@@ -1,7 +1,6 @@
 :root {
-  --focus-border: var(--mantine-primary-color-filled);
-  --separator-border: var(--mantine-color-dark-4);
   --scrollbar-width: 6px;
+  --color: #15202c;
 }
 
 * {
@@ -15,7 +14,17 @@
   }
 }
 
-/* TODO: Disable pointer events to prevent highlighting of page.
-Are we going to cause problems doing this? Also, should we create our
-own custom context menu? What would be it's purpose? Perhaps actions like
-"remove game", "play game" etc. */
+
+html,
+body {
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  background: #0d171f;
+  border-radius: var(--mantine-radius-xl);
+  overflow: hidden;
+  user-select: none;
+}

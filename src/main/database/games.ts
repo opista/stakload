@@ -1,4 +1,11 @@
-import { GameFilters, GameStoreModel, InitialGameStoreModel, LikeLibrary } from "@contracts/database/games";
+import {
+  FeaturedGameModel,
+  GameFilters,
+  GameListModel,
+  GameStoreModel,
+  InitialGameStoreModel,
+  LikeLibrary,
+} from "@contracts/database/games";
 
 import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
@@ -27,23 +34,28 @@ export const getFilteredGames = async ({
   developers,
   gameModes,
   genres,
+  isInstalled,
   libraries,
   platforms,
   playerPerspectives,
   publishers,
 }: GameFilters = {}) => {
   return await db
-    .find<GameStoreModel>({
-      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
-      ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
-      ...(libraries?.length && { library: { $in: libraries } }),
-      ...idMatcher("developers", developers),
-      ...idMatcher("gameModes", gameModes),
-      ...idMatcher("genres", genres),
-      ...idMatcher("platforms", platforms),
-      ...idMatcher("playerPerspectives", playerPerspectives),
-      ...idMatcher("publishers", publishers),
-    })
+    .find<GameListModel>(
+      {
+        $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+        ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
+        ...(isInstalled != undefined && { isInstalled }),
+        ...(libraries?.length && { library: { $in: libraries } }),
+        ...idMatcher("developers", developers),
+        ...idMatcher("gameModes", gameModes),
+        ...idMatcher("genres", genres),
+        ...idMatcher("platforms", platforms),
+        ...idMatcher("playerPerspectives", playerPerspectives),
+        ...idMatcher("publishers", publishers),
+      },
+      { _id: 1, cover: 1, name: 1 },
+    )
     .sort({ sortableName: 1 });
 };
 
@@ -52,7 +64,7 @@ export const findGameById = async (id: string) => {
 };
 
 export const findGamesByEpicNamespace = async (ids: string[]) => {
-  return await db.find<GameStoreModel>({ "libraryMeta.namespace": { $in: ids }, library: "epic-game-store" });
+  return await db.find<GameStoreModel>({ library: "epic-game-store", "libraryMeta.namespace": { $in: ids } });
 };
 
 export const findLastSyncedAt = async () => {
@@ -105,7 +117,7 @@ export const removeGameById = async (id: string, preventReadd: boolean = false) 
 };
 
 export const findGamesByGameIds = async (ids: string[], library: LikeLibrary) => {
-  return await db.find({ gameId: { $in: ids }, library }, { gameId: 1, _id: 0 });
+  return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
 };
 
 export const findGameFilters = async () => {
@@ -149,4 +161,63 @@ export const findGameFilters = async () => {
   }, {});
 
   return results;
+};
+
+export const getGamesList = async () => {
+  return await db
+    .find<GameListModel>(
+      { $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] },
+      { _id: 1, cover: 1, name: 1 },
+    )
+    .sort({ sortableName: 1 });
+};
+
+export const getNewGames = async () => {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+  // First try to get games added in the last week
+  const recentGames = await db
+    .find<FeaturedGameModel>(
+      {
+        $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+        createdAt: { $gte: oneWeekAgo },
+      },
+      { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
+    )
+    .sort({ createdAt: -1 })
+    .limit(10);
+
+  // If we don't have enough recent games, fetch more based on createdAt
+  if (recentGames.length < 3) {
+    const remainingGames = await db
+      .find<FeaturedGameModel>(
+        {
+          $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+          createdAt: { $lt: oneWeekAgo },
+        },
+        { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
+      )
+      .sort({ createdAt: -1 })
+      .limit(3 - recentGames.length);
+
+    return [...recentGames, ...remainingGames];
+  }
+
+  return recentGames;
+};
+
+export const getQuickLaunchGames = async () => {
+  return await db.find<GameListModel>(
+    {
+      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+      quickLaunch: true,
+    },
+    { _id: 1, cover: 1, name: 1 },
+  );
+};
+
+export const toggleQuickLaunchGame = async (id: string) => {
+  const game = await findGameById(id);
+  return await updateGameById(id, { quickLaunch: !game?.quickLaunch });
 };

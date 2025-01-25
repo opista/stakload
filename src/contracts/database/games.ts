@@ -10,6 +10,7 @@ export enum Library {
 export type LikeLibrary = `${Library}`;
 
 export type EpicLibraryMeta = {
+  appName: string;
   namespace: string;
 };
 
@@ -104,6 +105,8 @@ export type GameStoreModel = {
   genres?: IdAndName[];
   icon?: string;
   igdbId?: number;
+  installationDetails?: InstallationDetails;
+  isInstalled?: boolean;
   lastPlayedAt?: Date;
   library: LikeLibrary;
   libraryMeta?: LibraryMeta;
@@ -114,12 +117,11 @@ export type GameStoreModel = {
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
+  quickLaunch?: boolean;
   screenshots?: string[];
   sortableName?: string;
   storyline?: string;
   summary?: string;
-  // TODO - bin this?
-  type?: "app" | "game";
   videos?: string[];
   websites?: Website[];
 };
@@ -134,8 +136,30 @@ export type GameFilters = {
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
+  isInstalled?: boolean;
   libraries?: string[];
   platforms?: string[];
   playerPerspectives?: string[];
   publishers?: string[];
+};
+
+// Basic model for grid/list views
+export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "name">;
+
+// Additional fields needed for game previews/featured games
+export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
+
+export type InstallationDetails = {
+  installLocation: string;
+  installedAt: Date;
+  lastUpdated: Date;
+  size: number;
+};
+
+export type SteamManifestData = {
+  gameId: string;
+  installLocation: string;
+  installedAt: Date;
+  lastUpdated: Date;
+  size: number;
 };

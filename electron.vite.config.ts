@@ -11,6 +11,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
   },
   renderer: {
+    plugins: [react()],
     resolve: {
       alias: {
         "@api": resolve("src/renderer/src/api"),
@@ -18,11 +19,11 @@ export default defineConfig({
         "@constants": resolve("src/renderer/src/constants"),
         "@database": resolve("src/renderer/src/database"),
         "@hooks": resolve("src/renderer/src/hooks"),
+        "@icons": resolve("src/renderer/src/icons"),
         "@renderer": resolve("src/renderer/src"),
         "@store": resolve("src/renderer/src/store"),
         "@util": resolve("src/renderer/src/util"),
       },
     },
-    plugins: [react()],
   },
 });

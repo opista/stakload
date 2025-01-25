@@ -1,5 +1,12 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters, GameStoreModel, LikeLibrary, Platform } from "@contracts/database/games";
+import {
+  FeaturedGameModel,
+  GameFilters,
+  GameListModel,
+  GameStoreModel,
+  LikeLibrary,
+  Platform,
+} from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
@@ -10,20 +17,30 @@ declare global {
     api: {
       authenticateIntegration: (library: LikeLibrary) => void;
       clearSyncQueue: () => void;
-      closeApp: () => void;
-      createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) => Promise<CollectionStoreModel>;
+      closeWindow: () => void;
+      createCollection: (
+        collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
+      ) => Promise<CollectionStoreModel>;
       decrypt: (str: string) => Promise<string>;
       deleteCollection: (id: string) => Promise<boolean>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
+      getCollectionGames: (id: string) => Promise<GameListModel[]>;
       getCollections: () => Promise<CollectionStoreModel[]>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGamesLastSyncedAt: () => Promise<Date>;
+      getGamesList: () => Promise<GameListModel[]>;
       getLocale: () => Promise<string>;
+      getNewGames: () => Promise<FeaturedGameModel[]>;
       getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
+      getQuickLaunchGames: () => Promise<GameListModel[]>;
+      installGame: (id: string) => void;
+      launchGame: (id: string) => void;
+      maximizeWindow: () => void;
+      minimizeWindow: () => void;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
@@ -39,6 +56,8 @@ declare global {
       sleepDevice: () => void;
       syncGames: () => void;
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
+      toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
+      uninstallGame: (id: string) => void;
       updateCollection: (
         id: string,
         updates: Pick<CollectionStoreModel, "name" | "filters">,

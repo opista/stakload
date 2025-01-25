@@ -4,12 +4,16 @@ import { createDb } from "./util/create-db";
 
 const db = createDb("collections");
 
-export const addCollection = async (collection: Pick<CollectionStoreModel, "name" | "filters">) => {
+export const addCollection = async (collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) => {
   return await db.insert<Omit<CollectionStoreModel, "_id">>(collection);
 };
 
 export const getAllCollections = async () => {
   return await db.find<CollectionStoreModel>({}).sort({ name: 1 });
+};
+
+export const findCollectionById = async (id: string) => {
+  return await db.findOne<CollectionStoreModel>({ _id: id });
 };
 
 export const updateCollectionById = async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters">) => {

@@ -6,7 +6,7 @@ import { addCollection, getAllCollections, removeCollectionById, updateCollectio
 
 export const createCollection =
   (contents: WebContents) =>
-  async (_event: IpcMainInvokeEvent, collection: Pick<CollectionStoreModel, "name" | "filters">) => {
+  async (_event: IpcMainInvokeEvent, collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) => {
     const created = await addCollection(collection);
     contents.send(EVENT_COLLECTIONS_LIST_UPDATED);
     return created;

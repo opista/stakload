@@ -14,7 +14,7 @@ export const IncompatibilityIcon = ({ color, size }: IconProps) => {
         variant: "filled",
       }}
       tooltipProps={{
-        label: t("gameDetails.gameNotNative"),
+        label: t("incompatibilityIcon.gameNotNative"),
       }}
     />
   );

@@ -1,0 +1,13 @@
+.container {
+  width: 100%;
+  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
+}
+
+.divider {
+  margin-top: var(--mantine-spacing-sm);
+  margin-bottom: var(--mantine-spacing-sm);
+}
+
+.title {
+  margin-bottom: var(--mantine-spacing-sm);
+}

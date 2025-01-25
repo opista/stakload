@@ -1,50 +1,37 @@
 import { GameStoreModel } from "@contracts/database/games";
 import { BackgroundImage } from "@mantine/core";
 import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
-import { rgbToHsl } from "@util/rgb-to-hsl";
 import clsx from "clsx";
-import Vibrant from "node-vibrant";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import classes from "./GameHero.module.css";
 
 type GameHeroProps = {
   className?: string;
   game: GameStoreModel;
-  onPaletteChange?: (hsl: string | null) => void;
 };
 
-export const GameHero = ({ className, game, onPaletteChange }: GameHeroProps) => {
-  const media = getHighestRatioMedia(game?.artworks);
-  const headerImage = media?.url || game?.screenshots?.[0];
+export const GameHero = ({ className, game }: GameHeroProps) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const headerImage = useMemo(() => {
+    const media = getHighestRatioMedia(game?.artworks);
+    return media?.url || game?.screenshots?.[0] || "";
+  }, [game]);
 
   useEffect(() => {
-    if (!headerImage) {
-      onPaletteChange?.(null);
-      return;
+    setIsLoaded(false);
+
+    if (headerImage) {
+      const img = new Image();
+      img.onload = () => {
+        setIsLoaded(true);
+      };
+      img.src = headerImage;
     }
-
-    const v = new Vibrant(headerImage);
-    v.getPalette()
-      .then((r) => {
-        const rgb = r.DarkMuted?.getRgb();
-        if (!rgb) {
-          throw new Error("No colour found");
-        }
-        const color = rgbToHsl(...rgb);
-        const formatted = `hsl(${color})`;
-
-        /**
-         * TODO - store color on game so that
-         * we can skip this process second time
-         * around?
-         */
-        onPaletteChange?.(formatted);
-      })
-      .catch(() => {
-        onPaletteChange?.(null);
-      });
   }, [headerImage]);
 
-  return <BackgroundImage className={clsx(classes.hero, className)} src={headerImage || ""} />;
+  return (
+    <BackgroundImage className={clsx(classes.hero, className, { [classes.visible]: isLoaded })} src={headerImage} />
+  );
 };

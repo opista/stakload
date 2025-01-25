@@ -48,12 +48,11 @@ $ npm run build:linux
 
 - Frontend
 
-  - Sometimes database queries are slow. We should update useQuery to return a loading state, and then update the UI to show it (maybe a skeleton loader?)
   - Should settings be on their own page rather than crushed into a modal? This may become more useful as we add more integrations to the libraries tab
   - Build out game filters
     - User should be able to save a collection of filters as a collection (like Steam)
     - User should be able to update and delete a filter
-  - Break down GameDetails into components, maybe make into a view? Currently a mess
+  - Break down GameDetailsView into components, maybe make into a view? Currently a mess
   - Look at dependency graph, anything we can kill?
   - Refactor any components that are:
     - Using prop styling, move it to CSS Modules

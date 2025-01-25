@@ -36,5 +36,5 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
     return () => removeListener();
   }, [query]);
 
-  return { data, isLoading, hasError };
+  return { data, hasError, isLoading };
 };

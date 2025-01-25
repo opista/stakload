@@ -1,12 +1,11 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
 import { LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
 import { GameState } from "@contracts/store/game";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
+import { ActionIcon, Button, Checkbox, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
-import { IconAdjustmentsAlt, IconAdjustmentsSpark, IconPlaylistAdd } from "@tabler/icons-react";
+import { IconAdjustmentsHorizontal, IconPlaylistAdd } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -77,11 +76,11 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       useShallow((state) => ({
         hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
         resetFilters: state.resetFilters,
-        setSelectedCollection: state.setSelectedCollection,
         selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
         selectedFilters: state.selectedFilters,
-        setSelectedFilter: state.setSelectedFilter,
         setMultipleFilters: state.setMultipleFilters,
+        setSelectedCollection: state.setSelectedCollection,
+        setSelectedFilter: state.setSelectedFilter,
       })),
     );
 
@@ -90,8 +89,6 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
     setSelectedFilter(key, value);
 
-  const Icon = hasFilterSet ? IconAdjustmentsSpark : IconAdjustmentsAlt;
-
   const { data: filters } = useGamesQuery(window.api.getGameFilters);
 
   const onSaveFilters = () => {
@@ -99,8 +96,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
     openCreate();
   };
 
-  const onCreate = async (name: string) => {
-    const collection = await window.api.createCollection({ name, filters: selectedFilters });
+  const onCreate = async (name: string, icon?: string) => {
+    const collection = await window.api.createCollection({ filters: selectedFilters, icon, name });
     setSelectedCollection(collection._id);
     closeCreate();
   };
@@ -123,12 +120,12 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
       <Popover
         closeOnEscape
         disabled={disabled}
+        offset={16}
         onChange={setOpened}
         opened={opened}
-        position="right-start"
+        position="bottom"
         shadow="sm"
         width={500}
-        withArrow
       >
         <Popover.Target>
           <Indicator
@@ -140,28 +137,32 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
             withBorder
           >
             <ActionIcon
-              aria-label={t("filters")}
-              className={classes.icon}
+              aria-label={t("filters.title")}
+              className={classes.filtersButton}
               disabled={disabled}
-              icon={Icon}
               onClick={() => setOpened((o) => !o)}
-              size="lg"
-            />
+            >
+              <IconAdjustmentsHorizontal size={20} stroke={1} />
+            </ActionIcon>
           </Indicator>
         </Popover.Target>
         <Popover.Dropdown>
-          {/* TODO - Add more filters */}
           <Title className={classes.title} size="h3">
-            {t("filters")}
+            {t("filters.title")}
           </Title>
           <Grid>
             <Grid.Col span={6}>
+              <Checkbox
+                checked={selectedFilters.isInstalled}
+                label={t("filters.isInstalled")}
+                onChange={(event) => setSelectedFilter("isInstalled", event.target.checked ? true : null)}
+              />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={libraryFilters}
-                label="Libraries"
+                label={t("filters.libraries")}
                 onChange={onFilterChange("libraries")}
                 searchable
                 value={selectedFilters.libraries}
@@ -171,7 +172,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["developers"]}
-                label="Developers"
+                label={t("filters.developers")}
                 onChange={onFilterChange("developers")}
                 searchable
                 value={selectedFilters.developers}
@@ -181,7 +182,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["publishers"]}
-                label="Publishers"
+                label={t("filters.publishers")}
                 onChange={onFilterChange("publishers")}
                 searchable
                 value={selectedFilters.publishers}
@@ -191,7 +192,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["playerPerspectives"]}
-                label="Player perspectives"
+                label={t("filters.playerPerspectives")}
                 onChange={onFilterChange("playerPerspectives")}
                 searchable
                 value={selectedFilters.playerPerspectives}
@@ -203,7 +204,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.platforms}
-                label="Platforms"
+                label={t("filters.platforms")}
                 onChange={onFilterChange("platforms")}
                 searchable
                 value={selectedFilters.platforms}
@@ -213,7 +214,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={ageRatingFilters.map(({ label, value }) => ({ label: t(label), value }))}
-                label="Age ratings"
+                label={t("filters.ageRatings")}
                 onChange={onFilterChange("ageRatings")}
                 searchable
                 value={selectedFilters.ageRatings}
@@ -223,7 +224,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["gameModes"]}
-                label="Game modes"
+                label={t("filters.gameModes")}
                 onChange={onFilterChange("gameModes")}
                 searchable
                 value={selectedFilters.gameModes}
@@ -233,7 +234,7 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
                 data={filters?.["genres"]}
-                label="Genres"
+                label={t("filters.genres")}
                 onChange={onFilterChange("genres")}
                 searchable
                 value={selectedFilters.genres}
@@ -242,15 +243,15 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           </Grid>
           <Group classNames={{ root: classes.buttonContainer }} justify="flex-end">
             <Button color="red" onClick={onClearFilters}>
-              Clear filters
+              {t("filters.clearFilters")}
             </Button>
             <Button disabled={!hasFilterSet} leftSection={<IconPlaylistAdd />} onClick={onSaveFilters}>
-              Create collection
+              {t("filters.createCollection")}
             </Button>
           </Group>
         </Popover.Dropdown>
       </Popover>
-      <CollectionCreateModal onClose={() => {}} onConfirm={onCreate} opened={openedCreate} />
+      <CollectionCreateModal onClose={() => closeCreate()} onConfirm={onCreate} opened={openedCreate} />
     </>
   );
 };

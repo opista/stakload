@@ -3,11 +3,16 @@
   border-radius: var(--mantine-radius-md);
   padding-left: var(--mantine-spacing-sm);
   padding-right: var(--mantine-spacing-sm);
-  user-select: none;
 }
 
 .logo {
   display: inline-block;
   font-weight: 900;
   text-decoration: none;
+}
+
+.gradient {
+  background: linear-gradient(156deg, var(--mantine-color-grape-filled), var(--mantine-color-blue-filled));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
