@@ -15,11 +15,13 @@ export const useGameStore = create<GameStore>()(
       collections: [],
       collectionsCache: {},
 
-      fetchCollectionGames: async (id: string) => {
-        const cachedList = get().collectionsCache[id];
+      fetchCollectionGames: async (id: string, { forceFetch = false }: { forceFetch?: boolean } = {}) => {
+        if (!forceFetch) {
+          const cachedList = get().collectionsCache[id];
 
-        if (cachedList) {
-          return cachedList;
+          if (cachedList) {
+            return cachedList;
+          }
         }
 
         const list = await window.api.getCollectionGames(id);

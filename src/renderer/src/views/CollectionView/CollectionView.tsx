@@ -57,8 +57,12 @@ export const CollectionView = () => {
       title: `Delete ${collection.name} collection`,
     });
 
-  // TODO: Implement edit collection
   const onEditClick = () => {
+    // TODO: Implement edit collection.
+    // ...
+    // Bust the cache, refresh the games list.
+    // delete comment once edit has been implemented.
+    fetchCollectionGames(id!, { forceFetch: true }).then(setGames);
     console.log("edit");
   };
 

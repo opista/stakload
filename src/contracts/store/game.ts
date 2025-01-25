@@ -12,7 +12,7 @@ export type GameState = {
 };
 
 export type GameActions = {
-  fetchCollectionGames: (id: string) => Promise<GameListModel[]>;
+  fetchCollectionGames: (id: string, { forceFetch }?: { forceFetch?: boolean }) => Promise<GameListModel[]>;
   fetchCollections: () => Promise<void>;
   fetchFilteredGames: (filters: GameFilters) => Promise<GameListModel[]>;
   fetchGameDetails: (id: string) => Promise<GameStoreModel>;
