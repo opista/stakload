@@ -10,6 +10,8 @@ import {
 import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
 
+const gameListFields = { _id: 1, cover: 1, library: 1, name: 1 };
+
 const db = createDb("games");
 
 export const bulkInsertGames = async (games: InitialGameStoreModel[]) => {
@@ -54,7 +56,7 @@ export const getFilteredGames = async ({
         ...idMatcher("playerPerspectives", playerPerspectives),
         ...idMatcher("publishers", publishers),
       },
-      { _id: 1, cover: 1, name: 1 },
+      gameListFields,
     )
     .sort({ sortableName: 1 });
 };
@@ -165,10 +167,7 @@ export const findGameFilters = async () => {
 
 export const getGamesList = async () => {
   return await db
-    .find<GameListModel>(
-      { $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] },
-      { _id: 1, cover: 1, name: 1 },
-    )
+    .find<GameListModel>({ $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }] }, gameListFields)
     .sort({ sortableName: 1 });
 };
 
@@ -213,7 +212,7 @@ export const getQuickLaunchGames = async () => {
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
       quickLaunch: true,
     },
-    { _id: 1, cover: 1, name: 1 },
+    gameListFields,
   );
 };
 

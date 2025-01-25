@@ -100,7 +100,7 @@ export class GameSyncManager {
   }
 
   async sync() {
-    const config = this.conf.get("library_settings.state.steamIntegration") as SteamIntegrationDetails;
+    const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
     const decrypedApiKey = decryptString(config.webApiKey);
 
     await findAndInsertSteamGames(config.steamId, decrypedApiKey);

@@ -144,7 +144,7 @@ export type GameFilters = {
 };
 
 // Basic model for grid/list views
-export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "name">;
+export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "library" | "name">;
 
 // Additional fields needed for game previews/featured games
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
