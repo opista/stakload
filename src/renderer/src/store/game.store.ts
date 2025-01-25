@@ -7,18 +7,6 @@ import { persist } from "zustand/middleware";
 
 const conf = new Conf();
 
-const DEFAULT_FILTERS = {
-  ageRatings: undefined,
-  developers: undefined,
-  gameModes: undefined,
-  genres: undefined,
-  isInstalled: undefined,
-  libraries: undefined,
-  platforms: undefined,
-  playerPerspectives: undefined,
-  publishers: undefined,
-};
-
 type GameStore = GameState & GameActions;
 
 export const useGameStore = create<GameStore>()(
@@ -44,9 +32,7 @@ export const useGameStore = create<GameStore>()(
         set({ collections });
       },
       fetchFilteredGames: async (filters: GameFilters) => {
-        const games = await window.api.getFilteredGames(filters);
-        set({ gamesList: games });
-        return games;
+        return await window.api.getFilteredGames(filters);
       },
       fetchGameDetails: async (id: string) => {
         const details = await window.api.getGameById(id);
@@ -77,19 +63,8 @@ export const useGameStore = create<GameStore>()(
       newGames: [],
       quickLaunchGames: [],
       quickLaunchGamesOrder: [],
-      resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
-      selectedCollection: "",
-      selectedFilters: DEFAULT_FILTERS,
 
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
-      setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
-      setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
-        set((state) => ({
-          selectedFilters: {
-            ...state.selectedFilters,
-            [key]: value,
-          },
-        })),
       toggleQuickLaunchGame: async (id: string) => {
         const { quickLaunch } = await window.api.toggleQuickLaunchGame(id);
 

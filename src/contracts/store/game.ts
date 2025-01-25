@@ -9,8 +9,6 @@ export type GameState = {
   newGames: FeaturedGameModel[];
   quickLaunchGames: GameListModel[];
   quickLaunchGamesOrder: string[];
-  selectedCollection: string;
-  selectedFilters: GameFilters;
 };
 
 export type GameActions = {
@@ -22,10 +20,7 @@ export type GameActions = {
   fetchNewGames: () => Promise<void>;
   fetchQuickLaunchGames: () => Promise<void>;
   invalidateCollectionCache: () => void;
-  resetFilters: () => void;
   setQuickLaunchGameOrder: (ids: string[]) => void;
-  setSelectedCollection: (selectedCollection: string) => void;
-  setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
   toggleQuickLaunchGame: (id: string) => Promise<void>;
 };
 

@@ -1,20 +1,31 @@
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
-import { LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
-import { GameState } from "@contracts/store/game";
+import { GameFilters, LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { ActionIcon, Button, Checkbox, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsHorizontal, IconPlaylistAdd } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesFilter.module.css";
 
+const DEFAULT_FILTERS: Record<keyof GameFilters, undefined> = {
+  ageRatings: undefined,
+  developers: undefined,
+  gameModes: undefined,
+  genres: undefined,
+  isInstalled: undefined,
+  libraries: undefined,
+  platforms: undefined,
+  playerPerspectives: undefined,
+  publishers: undefined,
+};
+
 type GamesFilterProps = {
   disabled?: boolean;
+  filters: GameFilters;
+  onChange: (filters: GameFilters) => void;
 };
 
 const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
@@ -67,28 +78,24 @@ const libraryFilters: { label: string; value: LikeLibrary }[] = [
   },
 ];
 
-export const GamesFilter = ({ disabled }: GamesFilterProps) => {
+export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) => {
   const [openedCreate, { close: closeCreate, open: openCreate }] = useDisclosure(false);
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
-  const { hasFilterSet, resetFilters, selectedFilterCount, selectedFilters, setSelectedCollection, setSelectedFilter } =
-    useGameStore(
-      useShallow((state) => ({
-        hasFilterSet: Object.values(state.selectedFilters).some((values) => values?.length),
-        resetFilters: state.resetFilters,
-        selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
-        selectedFilters: state.selectedFilters,
-        setSelectedCollection: state.setSelectedCollection,
-        setSelectedFilter: state.setSelectedFilter,
-      })),
-    );
+
+  const hasFilterSet = filters ? Object.values(filters).some((values) => values?.length) : false;
+  const resetFilters = () => onChange(DEFAULT_FILTERS);
+  const selectedFilterCount = filters ? Object.values(filters).filter((values) => values?.length).length : 0;
 
   const onClearFilters = () => resetFilters();
 
-  const onFilterChange = (key: keyof GameState["selectedFilters"]) => (value: string[]) =>
-    setSelectedFilter(key, value);
+  const onFilterChange = (key: keyof GameFilters) => (value: string[] | boolean | null) =>
+    onChange({
+      ...filters,
+      [key]: value,
+    });
 
-  const { data: filters } = useGamesQuery(window.api.getGameFilters);
+  const { data: filterOptions } = useGamesQuery(window.api.getGameFilters);
 
   const onSaveFilters = () => {
     setOpened(false);
@@ -96,8 +103,8 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
   };
 
   const onCreate = async (name: string, icon?: string) => {
-    const collection = await window.api.createCollection({ filters: selectedFilters, icon, name });
-    setSelectedCollection(collection._id);
+    if (!filters) return;
+    await window.api.createCollection({ filters, icon, name });
     closeCreate();
   };
 
@@ -152,9 +159,9 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
           <Grid>
             <Grid.Col span={6}>
               <Checkbox
-                checked={selectedFilters.isInstalled}
+                checked={filters.isInstalled || false}
                 label={t("filters.isInstalled")}
-                onChange={(event) => setSelectedFilter("isInstalled", event.target.checked ? true : null)}
+                onChange={(event) => onFilterChange("isInstalled")(event.target.checked ? true : null)}
               />
               <MultiSelect
                 className={classes.select}
@@ -164,37 +171,37 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 label={t("filters.libraries")}
                 onChange={onFilterChange("libraries")}
                 searchable
-                value={selectedFilters.libraries}
+                value={filters.libraries}
               />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.["developers"]}
+                data={filterOptions?.["developers"]}
                 label={t("filters.developers")}
                 onChange={onFilterChange("developers")}
                 searchable
-                value={selectedFilters.developers}
+                value={filters.developers}
               />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.["publishers"]}
+                data={filterOptions?.["publishers"]}
                 label={t("filters.publishers")}
                 onChange={onFilterChange("publishers")}
                 searchable
-                value={selectedFilters.publishers}
+                value={filters.publishers}
               />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.["playerPerspectives"]}
+                data={filterOptions?.["playerPerspectives"]}
                 label={t("filters.playerPerspectives")}
                 onChange={onFilterChange("playerPerspectives")}
                 searchable
-                value={selectedFilters.playerPerspectives}
+                value={filters.playerPerspectives}
               />
             </Grid.Col>
             <Grid.Col span={6}>
@@ -202,11 +209,11 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.platforms}
+                data={filterOptions?.platforms}
                 label={t("filters.platforms")}
                 onChange={onFilterChange("platforms")}
                 searchable
-                value={selectedFilters.platforms}
+                value={filters.platforms}
               />
               <MultiSelect
                 className={classes.select}
@@ -216,27 +223,27 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
                 label={t("filters.ageRatings")}
                 onChange={onFilterChange("ageRatings")}
                 searchable
-                value={selectedFilters.ageRatings}
+                value={filters.ageRatings}
               />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.["gameModes"]}
+                data={filterOptions?.["gameModes"]}
                 label={t("filters.gameModes")}
                 onChange={onFilterChange("gameModes")}
                 searchable
-                value={selectedFilters.gameModes}
+                value={filters.gameModes}
               />
               <MultiSelect
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filters?.["genres"]}
+                data={filterOptions?.["genres"]}
                 label={t("filters.genres")}
                 onChange={onFilterChange("genres")}
                 searchable
-                value={selectedFilters.genres}
+                value={filters.genres}
               />
             </Grid.Col>
           </Grid>
