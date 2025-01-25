@@ -9,10 +9,10 @@ import { useShallow } from "zustand/react/shallow";
 export const LibraryView = () => {
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
   const [filters, setFilters] = useState<GameFilters>({});
-  const [gamesList, setGamesList] = useState<GameListModel[]>([]);
+  const [filteredGames, setFilteredGames] = useState<GameListModel[]>([]);
 
   useEffect(() => {
-    fetchFilteredGames(filters).then(setGamesList);
+    fetchFilteredGames(filters).then(setFilteredGames);
   }, [filters]);
 
   return (
@@ -20,7 +20,7 @@ export const LibraryView = () => {
       <Flex align="center" justify="space-between" px="sm">
         <GamesFilter filters={filters} onChange={setFilters} />
       </Flex>
-      <GamesGrid games={gamesList} />
+      <GamesGrid games={filteredGames} />
     </Stack>
   );
 };

@@ -17,11 +17,11 @@ export const CollectionView = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [games, setGames] = useState<GameListModel[]>([]);
-  const { collection, fetchCollectionGames, gamesList } = useGameStore(
+  const { collection, fetchCollectionGames, collectionGames } = useGameStore(
     useShallow((state) => ({
       collection: state.collections.find((c) => c._id === id),
+      collectionGames: state.collectionsCache[id!],
       fetchCollectionGames: state.fetchCollectionGames,
-      gamesList: state.collectionsCache[id!],
     })),
   );
 
@@ -32,10 +32,10 @@ export const CollectionView = () => {
   }, [collection?.icon]);
 
   useEffect(() => {
-    if (!gamesList) {
+    if (!collectionGames) {
       fetchCollectionGames(id!).then(setGames);
     } else {
-      setGames(gamesList);
+      setGames(collectionGames);
     }
   }, []);
 
