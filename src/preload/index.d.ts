@@ -27,7 +27,7 @@ declare global {
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       getCollectionGames: (id: string) => Promise<GameListModel[]>;
       getCollections: () => Promise<CollectionStoreModel[]>;
-      getFilteredGames: (filters?: GameFilters) => Promise<GameStoreModel[]>;
+      getFilteredGames: (filters?: GameFilters) => Promise<GameListModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGamesLastSyncedAt: () => Promise<Date>;
@@ -60,7 +60,7 @@ declare global {
       uninstallGame: (id: string) => void;
       updateCollection: (
         id: string,
-        updates: Pick<CollectionStoreModel, "name" | "filters">,
+        updates: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
       ) => Promise<CollectionStoreModel>;
     };
     electron: ElectronAPI;

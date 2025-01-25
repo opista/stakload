@@ -78,7 +78,6 @@ export const GamesFilter = ({ disabled }: GamesFilterProps) => {
         resetFilters: state.resetFilters,
         selectedFilterCount: Object.values(state.selectedFilters).filter((values) => values?.length).length,
         selectedFilters: state.selectedFilters,
-        setMultipleFilters: state.setMultipleFilters,
         setSelectedCollection: state.setSelectedCollection,
         setSelectedFilter: state.setSelectedFilter,
       })),

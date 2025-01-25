@@ -3,7 +3,7 @@ import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel } from "@
 
 export type GameState = {
   collections: CollectionStoreModel[];
-  currentCollection?: CollectionStoreModel;
+  collectionsCache: Record<string, GameListModel[]>;
   gamesDetails: Record<string, GameStoreModel>;
   gamesList: GameListModel[];
   newGames: FeaturedGameModel[];
@@ -11,22 +11,21 @@ export type GameState = {
   quickLaunchGamesOrder: string[];
   selectedCollection: string;
   selectedFilters: GameFilters;
-  selectedGame: string | null;
 };
 
 export type GameActions = {
+  fetchCollectionGames: (id: string) => Promise<GameListModel[]>;
   fetchCollections: () => Promise<void>;
+  fetchFilteredGames: (filters: GameFilters) => Promise<GameListModel[]>;
   fetchGameDetails: (id: string) => Promise<GameStoreModel>;
   fetchGamesList: () => Promise<void>;
   fetchNewGames: () => Promise<void>;
   fetchQuickLaunchGames: () => Promise<void>;
+  invalidateCollectionCache: () => void;
   resetFilters: () => void;
-  setCurrentCollection: (id: string) => void;
-  setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) => void;
   setQuickLaunchGameOrder: (ids: string[]) => void;
   setSelectedCollection: (selectedCollection: string) => void;
   setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) => void;
-  setSelectedGame: (selectedGame: string | null) => void;
   toggleQuickLaunchGame: (id: string) => Promise<void>;
 };
 

@@ -1,3 +1,4 @@
+import { GameFilters } from "@contracts/database/games";
 import { IpcMainInvokeEvent, WebContents } from "electron";
 
 import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
@@ -77,3 +78,5 @@ export const uninstallGameHandler = async (id: string) => {
   if (!game) return;
   await uninstallGame(game);
 };
+
+export const getFilteredGamesHandler = (_event: IpcMainInvokeEvent, filters: GameFilters) => getFilteredGames(filters);

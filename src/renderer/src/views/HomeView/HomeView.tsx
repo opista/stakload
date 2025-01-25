@@ -7,20 +7,20 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./HomeView.module.css";
 
 export const HomeView = () => {
-  const { gamesList, newGames } = useGameStore(
+  // TODO - Quick launch games should be last played -
+  // we need a way to track this but it doesn't exist
+  // yet
+  const { newGames, quickLaunchGames } = useGameStore(
     useShallow((state) => ({
-      gamesList: state.gamesList,
       newGames: state.newGames,
+      quickLaunchGames: state.quickLaunchGames,
     })),
   );
-
-  // TODO: Add metadata to store model for last played
-  const games = gamesList.slice(0, 10);
 
   return (
     <ScrollArea>
       <Stack className={classes.container}>
-        <GamesCarousel games={games} title="Continue Playing" />
+        <GamesCarousel games={quickLaunchGames} title="Continue Playing" />
         <FeaturedGamesCarousel games={newGames} title="Recently Added" />
         <Stack className={classes.contained}>
           <Title order={2}>Launchers</Title>

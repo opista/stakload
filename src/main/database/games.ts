@@ -11,6 +11,7 @@ import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
 
 const gameListFields = { _id: 1, cover: 1, library: 1, name: 1 };
+const featuredGameFields = { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 };
 
 const db = createDb("games");
 
@@ -182,26 +183,10 @@ export const getNewGames = async () => {
         $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
         createdAt: { $gte: oneWeekAgo },
       },
-      { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
+      featuredGameFields,
     )
     .sort({ createdAt: -1 })
     .limit(10);
-
-  // If we don't have enough recent games, fetch more based on createdAt
-  if (recentGames.length < 3) {
-    const remainingGames = await db
-      .find<FeaturedGameModel>(
-        {
-          $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
-          createdAt: { $lt: oneWeekAgo },
-        },
-        { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
-      )
-      .sort({ createdAt: -1 })
-      .limit(3 - recentGames.length);
-
-    return [...recentGames, ...remainingGames];
-  }
 
   return recentGames;
 };

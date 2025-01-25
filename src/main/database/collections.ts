@@ -16,7 +16,10 @@ export const findCollectionById = async (id: string) => {
   return await db.findOne<CollectionStoreModel>({ _id: id });
 };
 
-export const updateCollectionById = async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters">) => {
+export const updateCollectionById = async (
+  id: string,
+  updates: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
+) => {
   return await db.update<CollectionStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
 };
 

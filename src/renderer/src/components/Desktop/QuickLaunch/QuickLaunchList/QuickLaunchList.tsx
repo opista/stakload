@@ -58,7 +58,7 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
     (a, b) => quickLaunchGamesOrder.indexOf(a._id) - quickLaunchGamesOrder.indexOf(b._id),
   );
 
-  const gamesList = (
+  const gameStack = (
     <Stack gap={0}>
       {sortedGames.map((game) => (
         <QuickLaunchItem editMode={editMode} game={game} key={game._id} />
@@ -83,11 +83,11 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
       {editMode ? (
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
           <SortableContext items={sortedGames.map((game) => game._id)} strategy={verticalListSortingStrategy}>
-            {gamesList}
+            {gameStack}
           </SortableContext>
         </DndContext>
       ) : (
-        gamesList
+        gameStack
       )}
     </Stack>
   );

@@ -17,7 +17,13 @@ export const CollectionView = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const [games, setGames] = useState<GameListModel[]>([]);
-  const collection = useGameStore(useShallow((state) => state.collections.find((c) => c._id === id)));
+  const { collection, fetchCollectionGames, gamesList } = useGameStore(
+    useShallow((state) => ({
+      collection: state.collections.find((c) => c._id === id),
+      fetchCollectionGames: state.fetchCollectionGames,
+      gamesList: state.collectionsCache[id!],
+    })),
+  );
 
   const Icon = useMemo(() => {
     if (!collection?.icon) return IconDeviceGamepad;
@@ -26,10 +32,12 @@ export const CollectionView = () => {
   }, [collection?.icon]);
 
   useEffect(() => {
-    if (collection?.filters) {
-      window.api.getCollectionGames(collection._id).then(setGames).catch(console.error);
+    if (!gamesList) {
+      fetchCollectionGames(id!).then(setGames);
+    } else {
+      setGames(gamesList);
     }
-  }, [collection?.filters]);
+  }, []);
 
   if (!collection) {
     return <Title order={3}>{t("collection.notFound")}</Title>;

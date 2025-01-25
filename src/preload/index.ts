@@ -1,5 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { LikeLibrary } from "@contracts/database/games";
+import { GameFilters, LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
@@ -22,6 +22,7 @@ import {
   EVENT_SYNC_QUEUE_CLEARED,
   GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
+  GET_FILTERED_GAMES,
   GET_GAME_BY_ID,
   GET_GAME_FILTERS,
   GET_GAMES_LAST_SYNCED_AT,
@@ -42,6 +43,7 @@ import {
   TEST_STEAM_INTEGRATION,
   TOGGLE_QUICK_ACCESS_GAME,
   UNINSTALL_GAME,
+  UPDATE_COLLECTION,
   WINDOW_CLOSE,
   WINDOW_MAXIMIZE,
   WINDOW_MINIMIZE,
@@ -60,6 +62,7 @@ const api = {
   encrypt: (str: string) => ipcRenderer.invoke(ENCRYPT, str),
   getCollectionGames: (id: string) => ipcRenderer.invoke(GET_COLLECTION_GAMES, id),
   getCollections: () => ipcRenderer.invoke(GET_COLLECTIONS),
+  getFilteredGames: (filters: GameFilters) => ipcRenderer.invoke(GET_FILTERED_GAMES, filters),
   getGameById: (id: string) => ipcRenderer.invoke(GET_GAME_BY_ID, id),
   getGameFilters: () => ipcRenderer.invoke(GET_GAME_FILTERS),
   getGamesLastSyncedAt: () => ipcRenderer.invoke(GET_GAMES_LAST_SYNCED_AT),
@@ -97,6 +100,8 @@ const api = {
     ipcRenderer.invoke(TEST_STEAM_INTEGRATION, steamId, webApiKey),
   toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(TOGGLE_QUICK_ACCESS_GAME, id),
   uninstallGame: (id: string) => ipcRenderer.send(UNINSTALL_GAME, id),
+  updateCollection: (id: string, updates: Pick<CollectionStoreModel, "icon" | "name" | "filters">) =>
+    ipcRenderer.invoke(UPDATE_COLLECTION, id, updates),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

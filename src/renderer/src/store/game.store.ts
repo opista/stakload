@@ -1,3 +1,4 @@
+import { GameFilters } from "@contracts/database/games";
 import { GameActions, GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
 import { Conf } from "electron-conf/renderer";
@@ -24,10 +25,28 @@ export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
       collections: [],
+      collectionsCache: {},
 
+      fetchCollectionGames: async (id: string) => {
+        const cachedList = get().collectionsCache[id];
+
+        if (cachedList) {
+          return cachedList;
+        }
+
+        const list = await window.api.getCollectionGames(id);
+        set({ collectionsCache: { ...get().collectionsCache, [id]: list } });
+
+        return list;
+      },
       fetchCollections: async () => {
         const collections = await window.api.getCollections();
         set({ collections });
+      },
+      fetchFilteredGames: async (filters: GameFilters) => {
+        const games = await window.api.getFilteredGames(filters);
+        set({ gamesList: games });
+        return games;
       },
       fetchGameDetails: async (id: string) => {
         const details = await window.api.getGameById(id);
@@ -53,27 +72,15 @@ export const useGameStore = create<GameStore>()(
       },
       gamesDetails: {},
       gamesList: [],
-      gamesPreview: {},
+
+      invalidateCollectionCache: () => set({ collectionsCache: {} }),
       newGames: [],
       quickLaunchGames: [],
       quickLaunchGamesOrder: [],
       resetFilters: () => set({ selectedFilters: DEFAULT_FILTERS }),
       selectedCollection: "",
       selectedFilters: DEFAULT_FILTERS,
-      selectedGame: null,
 
-      setCurrentCollection: (id: string) => {
-        const currentCollection = get().collections.find(({ _id }) => _id === id);
-        set({ currentCollection });
-      },
-
-      setMultipleFilters: (filters: Partial<GameState["selectedFilters"]>) =>
-        set(() => ({
-          selectedFilters: {
-            ...DEFAULT_FILTERS,
-            ...filters,
-          },
-        })),
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       setSelectedCollection: (selectedCollection: string) => set({ selectedCollection }),
       setSelectedFilter: (key: keyof GameState["selectedFilters"], value: string[]) =>
@@ -83,7 +90,6 @@ export const useGameStore = create<GameStore>()(
             [key]: value,
           },
         })),
-      setSelectedGame: (selectedGame: string | null) => set({ selectedGame }),
       toggleQuickLaunchGame: async (id: string) => {
         const { quickLaunch } = await window.api.toggleQuickLaunchGame(id);
 
@@ -106,6 +112,9 @@ export const useGameStore = create<GameStore>()(
     }),
     {
       name: "games",
+      partialize: (state) => ({
+        quickLaunchGamesOrder: state.quickLaunchGamesOrder,
+      }),
       storage: createConfStorage(conf),
     },
   ),
