@@ -131,13 +131,17 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement>;
                           <Text className={classes.idLabel} size="xs">
                             {t("game.gameId")}
                           </Text>
-                          <Text size="xs">{game.gameId}</Text>
+                          <Text className={classes.idValue} size="xs">
+                            {game.gameId}
+                          </Text>
                         </Flex>
                         <Flex justify="space-between">
                           <Text className={classes.idLabel} size="xs">
                             {t("game.igdbId")}
                           </Text>
-                          <Text size="xs">{game.igdbId}</Text>
+                          <Text className={classes.idValue} size="xs">
+                            {game.igdbId}
+                          </Text>
                         </Flex>
                       </div>
                     </Flex>

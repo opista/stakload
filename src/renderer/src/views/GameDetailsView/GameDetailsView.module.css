@@ -41,6 +41,10 @@
   margin-right: var(--mantine-spacing-xl);
 }
 
+.idValue {
+  user-select: all;
+}
+
 .hero {
   position: absolute;
   z-index: -1;
