@@ -103,7 +103,6 @@ export type GameStoreModel = {
   gameId?: string;
   gameModes?: IdAndName[];
   genres?: IdAndName[];
-  icon?: string;
   igdbId?: number;
   installationDetails?: InstallationDetails;
   isInstalled?: boolean;
@@ -128,7 +127,7 @@ export type GameStoreModel = {
 
 export type InitialGameStoreModel = Pick<
   GameStoreModel,
-  "gameId" | "icon" | "library" | "libraryMeta" | "name" | "sortableName"
+  "gameId" | "library" | "libraryMeta" | "name" | "sortableName"
 >;
 
 export type GameFilters = {
@@ -143,10 +142,8 @@ export type GameFilters = {
   publishers?: string[];
 };
 
-// Basic model for grid/list views
 export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "library" | "name">;
 
-// Additional fields needed for game previews/featured games
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
 
 export type InstallationDetails = {

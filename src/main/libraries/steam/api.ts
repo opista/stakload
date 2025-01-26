@@ -1,26 +1,7 @@
 import { buildQueryParams } from "../../util/build-query-params";
-import { AppDetailsResponse } from "./types/app-details";
 import { OwnedGamesResponse } from "./types/owned-game";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
-const STEAM_STORE_API_BASE_URL = "https://store.steampowered.com/api";
-
-const apiRequest = async <T>(path: string): Promise<T> => {
-  try {
-    const response = await fetch(path, {
-      headers: { accept: "application/json" },
-      method: "GET",
-    });
-
-    const parsed = await response.json();
-
-    return parsed as T;
-  } catch (err) {
-    const message = "Request to Steam API failed";
-    console.error(message, { err, path });
-    throw new Error(message);
-  }
-};
 
 export const getOwnedGames = async (key: string, steamId: string) => {
   const query = buildQueryParams({
@@ -29,15 +10,17 @@ export const getOwnedGames = async (key: string, steamId: string) => {
     key,
     steamid: steamId,
   });
-  const result = await apiRequest<OwnedGamesResponse>(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`);
+  try {
+    const response = await fetch(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`, {
+      headers: { accept: "application/json" },
+      method: "GET",
+    });
 
-  return result.response;
-};
-
-export const getAppDetails = async (appId: string) => {
-  const query = buildQueryParams({ appids: appId, l: "english" });
-
-  const result = await apiRequest<AppDetailsResponse>(`${STEAM_STORE_API_BASE_URL}/appdetails${query}`);
-
-  return result[appId].data;
+    const parsed: OwnedGamesResponse = await response.json();
+    return parsed.response.games;
+  } catch (err) {
+    const message = "Request to Steam API failed";
+    console.error(message, { err });
+    throw new Error(message);
+  }
 };

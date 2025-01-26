@@ -1,4 +1,5 @@
-import { GameStoreModel, LikeLibrary } from "@contracts/database/games";
+/* eslint-disable no-case-declarations */
+import { GameStoreModel, InitialGameStoreModel, LikeLibrary } from "@contracts/database/games";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { GameSyncMessage } from "@contracts/store/game";
 import { WebContents } from "electron";
@@ -13,9 +14,10 @@ import {
   EVENT_METADATA_SYNC_SKIPPED,
   EVENT_SYNC_QUEUE_CLEARED,
 } from "../../preload/channels";
-import { findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
+import { bulkInsertGames, findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
 import { graphqlGetGameId } from "../libraries/epic-games/api";
 import { findAndInsertNewGames as findAndInsertEpicGames } from "../libraries/epic-games/integration";
+import steamLibrary from "../libraries/steam";
 import { findAndInsertNewGames as findAndInsertSteamGames } from "../libraries/steam/integration";
 import { decryptString } from "../util/safe-storage";
 
@@ -127,3 +129,86 @@ export class GameSyncManager {
     this.total = 0;
   }
 }
+
+export type LibraryActions = {
+  getGameMetadata: (game: GameStoreModel) => Promise<void>;
+  getLibraryInstallationStates: () => Promise<void>;
+  getNewGames: (conf: Conf) => Promise<InitialGameStoreModel[]>;
+};
+
+const epic: LibraryActions = {
+  getGameMetadata: () => Promise.resolve(),
+  getLibraryInstallationStates: () => Promise.resolve(),
+  getNewGames: () => Promise.resolve([]),
+};
+
+// Probably stick this into the manager class for easy access and emitting events, tracking game sync count etc.
+const libraryWorker = async (library: LikeLibrary) => {
+  // TODO: Revisit this later, don't use a switch statement
+  const conf = "conf" as unknown as Conf;
+  switch (library) {
+    case "steam":
+      // TODO: Figure out translation - may need to pass key to frontend
+      emitSyncEvent("Syncing Steam games", { type: "info" });
+      const newGames = await steamLibrary.getNewGames(conf);
+      await bulkInsertGames(newGames);
+      await steamLibrary.getLibraryInstallationStates();
+      break;
+    case "epic-game-store":
+      emitSyncEvent("Syncing Epic games", { type: "info" });
+      const newGames = await epic.getNewGames(conf);
+      await bulkInsertGames(newGames);
+      await epic.getLibraryInstallationStates();
+      break;
+  }
+};
+
+const metadataWorker = async (game: GameStoreModel) => {
+  emitSyncEvent("Syncing metadata", { type: "info" });
+
+  // TODO: Revisit this later, don't use a switch statement
+  switch (game.library) {
+    case "steam":
+      const metadata = await steamLibrary.getGameMetadata(game);
+      await updateGameById(game._id, metadata);
+      break;
+    case "epic-game-store":
+      const metadata = await epic.getGameMetadata(game);
+      await updateGameById(game._id, metadata);
+      break;
+  }
+
+  // TODO - Update metadata in database
+};
+
+const emitSyncEvent = (message: string, { type }: { type: "error" | "success" | "info" }) => {
+  // TODO: Implement this
+  console.log(type, message);
+};
+
+const libraryQueue = fastq.promise(libraryWorker, 1);
+const metadataQueue = fastq.promise(metadataWorker, 3);
+
+let syncInProgress = false;
+
+export const syncLibraries = async (libraries: LikeLibrary[]) => {
+  if (syncInProgress) {
+    emitSyncEvent("A sync is already in progress.", { type: "error" });
+    return;
+  }
+
+  syncInProgress = true;
+  emitSyncEvent("Sync started", { type: "info" });
+
+  await Promise.all(libraries.map((library) => libraryQueue.push(library)));
+  await libraryQueue.drained();
+
+  const unsyncedGames = await findUnsyncedGames();
+  await Promise.all(unsyncedGames.map((game) => metadataQueue.push(game)));
+  await metadataQueue.drained();
+
+  emitSyncEvent("Sync complete", { type: "success" });
+  syncInProgress = false;
+};
+
+export const syncLibrary = (library: LikeLibrary) => libraryQueue.push(library);
