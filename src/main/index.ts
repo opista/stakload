@@ -121,6 +121,10 @@ function createWindow() {
     width: 1280,
   });
 
+  if (process.platform === "darwin") {
+    browserWindow.setWindowButtonVisibility(false);
+  }
+
   const syncManager = new GameSyncManager(browserWindow.webContents, conf);
 
   browserWindow.on("ready-to-show", async () => {

@@ -32,6 +32,7 @@ export const CollectionView = () => {
   }, [collection?.icon]);
 
   useEffect(() => {
+    // TODO: Add loading state.
     if (!collectionGames) {
       fetchCollectionGames(id!).then(setGames);
     } else {
