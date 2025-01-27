@@ -23,8 +23,3 @@ export type GameActions = {
   setQuickLaunchGameOrder: (ids: string[]) => void;
   toggleQuickLaunchGame: (id: string) => Promise<void>;
 };
-
-export type GameSyncMessage = {
-  processing: number;
-  total: number;
-};

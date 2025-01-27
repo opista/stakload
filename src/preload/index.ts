@@ -1,6 +1,6 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters, LikeLibrary } from "@contracts/database/games";
-import { GameSyncMessage } from "@contracts/store/game";
+import { GameSyncMessage } from "@contracts/sync";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
 import { exposeConf } from "electron-conf/preload";
@@ -14,12 +14,8 @@ import {
   ENCRYPT,
   EPIC_GAMES_INTEGRATION_RESULT,
   EVENT_COLLECTIONS_LIST_UPDATED,
+  EVENT_GAME_SYNC_STATUS,
   EVENT_GAMES_LIST_UPDATED,
-  EVENT_METADATA_SYNC_COMPLETE,
-  EVENT_METADATA_SYNC_INSERTED,
-  EVENT_METADATA_SYNC_PROCESSED,
-  EVENT_METADATA_SYNC_SKIPPED,
-  EVENT_SYNC_QUEUE_CLEARED,
   GET_COLLECTION_GAMES,
   GET_COLLECTIONS,
   GET_FILTERED_GAMES,
@@ -80,16 +76,8 @@ const api = {
   onEpicGamesAuthentication: (listener: (event, data: unknown) => void) =>
     listenerHandler(EPIC_GAMES_INTEGRATION_RESULT, listener),
   onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_GAMES_LIST_UPDATED, listener),
-  onSyncComplete: (listener: (event, data: GameSyncMessage) => void) =>
-    listenerHandler(EVENT_METADATA_SYNC_COMPLETE, listener),
-  onSyncInserted: (listener: (event, data: GameSyncMessage) => void) =>
-    listenerHandler(EVENT_METADATA_SYNC_INSERTED, listener),
-  onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) =>
-    listenerHandler(EVENT_METADATA_SYNC_PROCESSED, listener),
-  onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) =>
-    listenerHandler(EVENT_SYNC_QUEUE_CLEARED, listener),
-  onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) =>
-    listenerHandler(EVENT_METADATA_SYNC_SKIPPED, listener),
+  onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_GAME_SYNC_STATUS, listener),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(REMOVE_GAME, id, preventReadd),
   restartApp: (): void => ipcRenderer.send(RESTART_APP),
   restartDevice: (): void => ipcRenderer.send(RESTART_DEVICE),

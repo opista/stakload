@@ -1,4 +1,5 @@
 import { CollectionsHandler } from "@components/CollectionsHandler/CollectionsHandler";
+import { GameSync } from "@components/Desktop/GameSync/GameSync";
 import { Header } from "@components/Desktop/Header/Header";
 import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
 import { GamesHandler } from "@components/GamesHandler/GamesHandler";
@@ -13,6 +14,7 @@ export const DesktopLayout = () => (
   <ModalsProvider>
     <GamesHandler />
     <CollectionsHandler />
+    <GameSync />
     <AppShell header={{ height: 48 }} navbar={{ breakpoint: "xs", width: 300 }} withBorder={false}>
       <Header />
       <Spotlight />

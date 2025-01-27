@@ -94,7 +94,6 @@ export type GameStoreModel = {
   // TODO this should be an id and name for filtering
   ageRating?: LikeAgeRatingText;
   artworks?: Media[];
-  backgroundImage?: string;
   cover?: string;
   deletedAt?: Date;
   description?: string;
@@ -104,12 +103,11 @@ export type GameStoreModel = {
   gameModes?: IdAndName[];
   genres?: IdAndName[];
   igdbId?: number;
-  installationDetails?: InstallationDetails;
+  installationDetails?: GameInstallationDetails;
   isInstalled?: boolean;
   lastPlayedAt?: Date;
   library: LikeLibrary;
   libraryMeta?: LibraryMeta;
-  listImage?: string;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
   name: string;
@@ -124,11 +122,6 @@ export type GameStoreModel = {
   videos?: string[];
   websites?: Website[];
 };
-
-export type InitialGameStoreModel = Pick<
-  GameStoreModel,
-  "gameId" | "library" | "libraryMeta" | "name" | "sortableName"
->;
 
 export type GameFilters = {
   ageRatings?: string[];
@@ -146,15 +139,7 @@ export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "library" | "
 
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
 
-export type InstallationDetails = {
-  installLocation: string;
-  installedAt: Date;
-  lastUpdated: Date;
-  size: number;
-};
-
-export type SteamManifestData = {
-  gameId: string;
+export type GameInstallationDetails = {
   installLocation: string;
   installedAt: Date;
   lastUpdated: Date;

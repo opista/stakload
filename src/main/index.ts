@@ -1,3 +1,4 @@
+import { Library } from "@contracts/database/games";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { Conf } from "electron-conf/main";
@@ -58,7 +59,7 @@ import {
   uninstallGameHandler,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
-import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
+import { authenticateIntegration } from "./channels/integrations";
 import { getOS } from "./channels/os";
 import { restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
@@ -132,7 +133,7 @@ function createWindow() {
     const shouldAutoSync = conf.get("library_settings.state.syncOnStartup");
 
     if (shouldAutoSync) {
-      syncManager.sync();
+      syncManager.sync([Library.Steam]);
     }
   });
 
@@ -190,13 +191,13 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_PROTONDB_TIER, getProtondbTier);
   ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
-  ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
+  ipcMain.handle(TEST_STEAM_INTEGRATION, () => syncManager.isIntegrationValid(Library.Steam));
   ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
   ipcMain.on(SLEEP_DEVICE, sleepDevice);
-  ipcMain.on(SYNC_GAMES, () => syncManager.sync());
+  ipcMain.on(SYNC_GAMES, () => syncManager.sync([Library.EpicGameStore, Library.Steam]));
   ipcMain.on(WINDOW_MINIMIZE, () => minimizeWindow(browserWindow));
   ipcMain.on(WINDOW_MAXIMIZE, () => toggleWindowMaximized(browserWindow));
   ipcMain.on(WINDOW_CLOSE, () => closeWindow(browserWindow));

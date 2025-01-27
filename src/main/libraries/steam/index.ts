@@ -1,66 +1,69 @@
-import { GameStoreModel, LikeLibrary } from "@contracts/database/games";
+import { GameInstallationDetails, GameStoreModel, Library } from "@contracts/database/games";
+import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { Conf } from "electron-conf/main";
+import isEmpty from "lodash-es";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
-import { LibraryActions } from "../../channels/game-sync-manager";
 import { findGamesByGameIds } from "../../database/games";
-import { buildQueryParams } from "../../util/build-query-params";
 import { decryptString } from "../../util/safe-storage";
-import { OwnedGamesResponse } from "./types/owned-game";
-import { mapOwnedGameDetailsToGameStoreModel } from "./util/map-owned-game-details-to-game-store-model";
+import { LibraryActions } from "../types";
+import { getOwnedGames } from "./api";
+import { createSteamInstallationStrategy } from "./installation/create-steam-installation-strategy";
+import type { SteamInstallationStrategy } from "./installation/types";
+import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 
-const LIBRARY: LikeLibrary = "steam";
-const STEAM_API_BASE_URL = "https://api.steampowered.com";
+export class SteamLibrary implements LibraryActions {
+  private library = Library.Steam;
+  private steamInstallationStrategy: SteamInstallationStrategy;
 
-export const getOwnedGames = async (steamId: string, webApiKey: string) => {
-  const query = buildQueryParams({
-    include_appinfo: "true",
-    include_played_free_games: "true",
-    key: webApiKey,
-    steamid: steamId,
-  });
-  try {
-    const response = await fetch(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`, {
-      headers: { accept: "application/json" },
-      method: "GET",
-    });
-
-    const parsed: OwnedGamesResponse = await response.json();
-    return parsed.response.games;
-  } catch (err) {
-    const message = "Request to Steam API failed";
-    console.error(message, { err });
-    throw new Error(message);
+  constructor(private conf: Conf) {
+    this.steamInstallationStrategy = createSteamInstallationStrategy();
   }
-};
 
-const getGameMetadata = async (game: GameStoreModel) => {
-  const metadata = await fetchGameMetadata(game.gameId!, LIBRARY);
-  return metadata;
-};
+  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+    try {
+      const metadata = await fetchGameMetadata(game.gameId!, this.library);
+      return metadata;
+    } catch (err) {
+      console.error("Failed to fetch game metadata:", err);
+      return null;
+    }
+  }
 
-const getNewGames = async (conf: Conf) => {
-  const config = conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
-  const webApiKey = decryptString(config.webApiKey);
+  async getInstalledGames(): Promise<GameInstallationDetails[]> {
+    return this.steamInstallationStrategy.getInstalledGames();
+  }
 
-  const games = await getOwnedGames(config.steamId, webApiKey);
-  const matches = await findGamesByGameIds(
-    games.map(({ appid }) => String(appid)),
-    LIBRARY,
-  );
-  const matchedIds = matches.map(({ gameId }) => gameId);
+  async getNewGames(): Promise<Partial<GameStoreModel>[]> {
+    try {
+      const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
+      const webApiKey = decryptString(config.webApiKey);
+      const ownedGames = await getOwnedGames(config.steamId, webApiKey);
 
-  const newGames = games
-    .filter((game) => !matchedIds.includes(String(game.appid)))
-    .map((game) => mapOwnedGameDetailsToGameStoreModel(game));
+      const existingGames = await findGamesByGameIds(
+        ownedGames.map((game) => String(game.appid)),
+        this.library,
+      );
+      const existingIds = existingGames.map((game) => game.gameId);
 
-  return newGames;
-};
+      return ownedGames
+        .filter((game) => !existingIds.includes(String(game.appid)))
+        .map(mapOwnedGameDetailsToGameStoreModel);
+    } catch (err) {
+      console.error("Failed to get new games:", err);
+      return [];
+    }
+  }
 
-const steamLibrary: LibraryActions = {
-  getGameMetadata,
-  getLibraryInstallationStates: () => Promise.resolve(),
-  getNewGames,
-};
-
-export default steamLibrary;
+  async isIntegrationValid(): Promise<boolean> {
+    try {
+      const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
+      const webApiKey = decryptString(config.webApiKey);
+      const response = await getOwnedGames(config.steamId, webApiKey);
+      return !isEmpty(response);
+    } catch (err) {
+      console.error("Failed to validate integration:", err);
+      return false;
+    }
+  }
+}
