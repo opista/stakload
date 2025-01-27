@@ -7,6 +7,7 @@ export class MacSteamInstallationStrategy extends BaseSteamInstallationStrategy 
 
   async getApplicationPath(): Promise<string> {
     if (this.applicationPath) return this.applicationPath;
+
     const homeDir = process.env.HOME;
     const applicationPath = path.join(homeDir!, "Library/Application Support/Steam");
     this.applicationPath = applicationPath;

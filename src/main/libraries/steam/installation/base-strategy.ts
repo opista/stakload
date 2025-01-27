@@ -2,7 +2,14 @@ import fs from "fs/promises";
 import path from "path";
 import vdf from "vdf";
 
-import { SteamAppManifest, SteamAppStateFlags, SteamInstallationStrategy, SteamLibraryFolders } from "./types";
+import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
+import {
+  InstalledGameData,
+  SteamAppManifest,
+  SteamAppStateFlags,
+  SteamInstallationStrategy,
+  SteamLibraryFolders,
+} from "./types";
 
 export abstract class BaseSteamInstallationStrategy implements SteamInstallationStrategy {
   abstract applicationPath: string | undefined;
@@ -45,7 +52,7 @@ export abstract class BaseSteamInstallationStrategy implements SteamInstallation
     }
   }
 
-  async getInstalledGames(): Promise<SteamAppManifest[]> {
+  async getInstalledGames(): Promise<InstalledGameData[]> {
     const libraries = await this.getLibraryFolders();
 
     const libraryManifests = await Promise.all(
@@ -67,6 +74,6 @@ export abstract class BaseSteamInstallationStrategy implements SteamInstallation
       }),
     );
 
-    return libraryManifests.flat();
+    return libraryManifests.flat().map(mapAppManifestToGameInstallationDetails);
   }
 }

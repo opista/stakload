@@ -1,11 +1,11 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
-import { GameSyncAction, GameSyncErrorCode, GameSyncMessage } from "@contracts/sync";
+import { GameSyncErrorCode, GameSyncMessage } from "@contracts/sync";
 import { WebContents } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
 
 import { EVENT_GAME_SYNC_STATUS } from "../../preload/channels";
-import { bulkInsertGames, findUnsyncedGames, updateGameById } from "../database/games";
+import { bulkInsertGames, findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
 import { SteamLibrary } from "../libraries/steam";
 import { LibraryActions } from "../libraries/types";
 
@@ -41,26 +41,36 @@ export class GameSyncManager {
     const libraryImpl = this.libraries[library];
     if (!libraryImpl) {
       this.emitSyncEvent({
-        action: GameSyncAction.Error,
+        action: "error",
         code: GameSyncErrorCode.UnsupportedLibrary,
       });
       return;
     }
     // TODO: Figure out translation - may need to pass key to frontend
     this.emitSyncEvent({
-      action: GameSyncAction.Syncing,
+      action: "syncing",
       library,
     });
     const newGames = await libraryImpl.getNewGames();
     this.total += newGames.length;
     await bulkInsertGames(newGames);
-    await libraryImpl.getInstalledGames();
+
+    const installedGames = await libraryImpl.getInstalledGames();
+
+    await Promise.all(
+      installedGames.map((data) =>
+        updateGameByGameId(data.gameId, {
+          installationDetails: data.installationDetails,
+          isInstalled: true,
+        }),
+      ),
+    );
   }
 
   private async metadataWorker(game: GameStoreModel) {
     this.processing++;
     this.emitSyncEvent({
-      action: GameSyncAction.Metadata,
+      action: "metadata",
       processing: this.processing,
       total: this.total,
     });
@@ -69,14 +79,13 @@ export class GameSyncManager {
 
     if (!libraryImpl) {
       this.emitSyncEvent({
-        action: GameSyncAction.Error,
+        action: "error",
         code: GameSyncErrorCode.UnsupportedLibrary,
       });
       return;
     }
 
     const metadata = await libraryImpl.getGameMetadata(game);
-
     await updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
   }
 
@@ -89,7 +98,7 @@ export class GameSyncManager {
     await this.metadataQueue.drained();
 
     this.emitSyncEvent({
-      action: GameSyncAction.Complete,
+      action: "complete",
       processed: this.processing,
       total: this.total,
     });
@@ -121,7 +130,7 @@ export class GameSyncManager {
     this.libraryQueue.kill();
     this.metadataQueue.kill();
     this.emitSyncEvent({
-      action: GameSyncAction.Cancelled,
+      action: "cancelled",
     });
     this.reset();
   }

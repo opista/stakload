@@ -1,5 +1,3 @@
-import { GameSyncMessage } from "@contracts/sync";
-import { GameSyncAction } from "@contracts/sync";
 import { useEffect, useState } from "react";
 
 export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[] = []) => {
@@ -28,15 +26,8 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
     updateQuery();
   }, [...dependencies]);
 
-  const handleGameSyncStatus = (message: GameSyncMessage) => {
-    console.log(message.action, message.action === GameSyncAction.Metadata);
-    if (message.action === GameSyncAction.Metadata) {
-      updateQuery();
-    }
-  };
-
   useEffect(() => {
-    const removeListener = window.api.onSyncGameStatus((data) => handleGameSyncStatus(data));
+    const removeListener = window.api.onSyncGameStatus(() => updateQuery());
     return () => removeListener();
   }, [query]);
 

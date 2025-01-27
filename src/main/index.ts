@@ -130,11 +130,6 @@ function createWindow() {
 
   browserWindow.on("ready-to-show", async () => {
     browserWindow.show();
-    const shouldAutoSync = conf.get("library_settings.state.syncOnStartup");
-
-    if (shouldAutoSync) {
-      syncManager.sync([Library.Steam]);
-    }
   });
 
   browserWindow.webContents.setWindowOpenHandler((details) => {

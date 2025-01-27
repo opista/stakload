@@ -28,8 +28,12 @@ export enum SteamAppStateFlags {
   Installed = 4,
 }
 
+export interface InstalledGameData {
+  gameId: string;
+  installationDetails: GameInstallationDetails;
+}
 export interface SteamInstallationStrategy {
   getApplicationPath(): Promise<string>;
-  getInstalledGames(): Promise<GameInstallationDetails[]>;
+  getInstalledGames(): Promise<InstalledGameData[]>;
   getLibraryFolders(): Promise<string[]>;
 }

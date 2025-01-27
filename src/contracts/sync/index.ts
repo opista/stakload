@@ -1,10 +1,4 @@
-export enum GameSyncAction {
-  Cancelled = "cancelled",
-  Complete = "complete",
-  Error = "error",
-  Metadata = "metadata",
-  Syncing = "syncing",
-}
+export type GameSyncAction = "syncing" | "metadata" | "complete" | "cancelled" | "error";
 
 export enum GameSyncErrorCode {
   AlreadySyncing = "ALREADY_SYNCING",
@@ -17,28 +11,28 @@ interface BaseSyncMessage {
 }
 
 export interface CancelledSyncMessage extends BaseSyncMessage {
-  action: GameSyncAction.Cancelled;
+  action: "cancelled";
 }
 
 export interface CompleteSyncMessage extends BaseSyncMessage {
-  action: GameSyncAction.Complete;
+  action: "complete";
   processed: number;
   total: number;
 }
 
 export interface ErrorSyncMessage extends BaseSyncMessage {
-  action: GameSyncAction.Error;
+  action: "error";
   code: GameSyncErrorCode;
 }
 
 export interface MetadataSyncMessage extends BaseSyncMessage {
-  action: GameSyncAction.Metadata;
+  action: "metadata";
   processing: number;
   total: number;
 }
 
 export interface LibrarySyncMessage extends BaseSyncMessage {
-  action: GameSyncAction.Syncing;
+  action: "syncing";
   library: string;
 }
 

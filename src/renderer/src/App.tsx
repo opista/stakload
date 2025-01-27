@@ -1,4 +1,5 @@
 import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
+import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { useSystemStore } from "@store/system.store";
 import clsx from "clsx";
@@ -13,6 +14,16 @@ export const App = () => {
   const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
   const { i18n } = useTranslation();
   const setOperatingSystem = useSystemStore(useShallow((state) => state.setOperatingSystem));
+
+  const { syncOnStartup } = useIntegrationSettingsStore(
+    useShallow((state) => ({
+      syncOnStartup: state.syncOnStartup,
+    })),
+  );
+
+  if (syncOnStartup) {
+    window.api.syncGames();
+  }
 
   const theme = createTheme({
     components: {

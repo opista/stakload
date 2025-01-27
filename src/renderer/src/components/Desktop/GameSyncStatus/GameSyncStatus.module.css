@@ -1,5 +1,10 @@
 .container {
   background-color: #1b2c3b;
   border-radius: var(--mantine-radius-lg);
+  gap: var(--mantine-spacing-xs);
   padding: var(--mantine-spacing-sm);
+}
+
+.loader {
+  margin: 6px;
 }

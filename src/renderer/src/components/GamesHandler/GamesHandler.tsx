@@ -1,5 +1,3 @@
-import { GameSyncMessage } from "@contracts/sync";
-import { GameSyncAction } from "@contracts/sync";
 import { useGameStore } from "@store/game.store";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -19,17 +17,10 @@ export const GamesHandler = () => {
     fetchNewGames();
   };
 
-  const handleGameSyncStatus = (message: GameSyncMessage) => {
-    console.log(message.action, message.action === GameSyncAction.Metadata);
-    if (message.action === GameSyncAction.Metadata) {
-      triggerUpdates();
-    }
-  };
-
   useEffect(() => triggerUpdates(), []);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncGameStatus((data) => handleGameSyncStatus(data));
+    const removeListener = window.api.onSyncGameStatus(() => triggerUpdates());
     return () => removeListener();
   }, []);
 

@@ -1,4 +1,4 @@
-import { GameInstallationDetails, GameStoreModel, Library } from "@contracts/database/games";
+import { GameStoreModel, Library } from "@contracts/database/games";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { Conf } from "electron-conf/main";
 import isEmpty from "lodash-es";
@@ -9,7 +9,7 @@ import { decryptString } from "../../util/safe-storage";
 import { LibraryActions } from "../types";
 import { getOwnedGames } from "./api";
 import { createSteamInstallationStrategy } from "./installation/create-steam-installation-strategy";
-import type { SteamInstallationStrategy } from "./installation/types";
+import type { InstalledGameData, SteamInstallationStrategy } from "./installation/types";
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 
 export class SteamLibrary implements LibraryActions {
@@ -30,8 +30,7 @@ export class SteamLibrary implements LibraryActions {
     }
   }
 
-  async getInstalledGames(): Promise<GameInstallationDetails[]> {
-    // TODO: This isn't working. You need to update the games once you have the manifest files
+  async getInstalledGames(): Promise<InstalledGameData[]> {
     return this.steamInstallationStrategy.getInstalledGames();
   }
 
