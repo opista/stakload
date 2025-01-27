@@ -25,3 +25,10 @@
   flex-shrink: 0;
   margin-bottom: 32px;
 }
+
+.gameSyncStatus {
+  position: absolute;
+  bottom: var(--mantine-spacing-md);
+  left: var(--mantine-spacing-md);
+  right: var(--mantine-spacing-md);
+}
