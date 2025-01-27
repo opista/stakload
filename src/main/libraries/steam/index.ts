@@ -31,6 +31,7 @@ export class SteamLibrary implements LibraryActions {
   }
 
   async getInstalledGames(): Promise<GameInstallationDetails[]> {
+    // TODO: This isn't working. You need to update the games once you have the manifest files
     return this.steamInstallationStrategy.getInstalledGames();
   }
 
