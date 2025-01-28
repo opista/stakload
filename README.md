@@ -49,9 +49,6 @@ $ npm run build:linux
 - Frontend
 
   - Should settings be on their own page rather than crushed into a modal? This may become more useful as we add more integrations to the libraries tab
-  - Build out game filters
-    - User should be able to save a collection of filters as a collection (like Steam)
-    - User should be able to update and delete a filter
   - Break down GameDetailsView into components, maybe make into a view? Currently a mess
   - Look at dependency graph, anything we can kill?
   - Refactor any components that are:
@@ -63,7 +60,6 @@ $ npm run build:linux
   - Build "fullscreen" mode, a-la Steam Big Picture
     - Intro movie (later)
     - Should be easily navigable with a controller
-    - Should expose custom saved collections
   - System storage usage screen(?)
     - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
 
