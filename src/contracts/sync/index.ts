@@ -1,10 +1,6 @@
 export type GameSyncAction = "syncing" | "metadata" | "complete" | "cancelled" | "error";
 
-export enum GameSyncErrorCode {
-  AlreadySyncing = "ALREADY_SYNCING",
-  FetchFailed = "FETCH_FAILED",
-  UnsupportedLibrary = "UNSUPPORTED_LIBRARY",
-}
+export type GameSyncErrorCode = "ALREADY_SYNCING" | "FETCH_FAILED" | "UNSUPPORTED_LIBRARY";
 
 interface BaseSyncMessage {
   action: GameSyncAction;

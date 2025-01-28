@@ -1,10 +1,16 @@
 import { GameSyncAction, GameSyncMessage } from "@contracts/sync";
 import { useGameSync } from "@hooks/use-game-sync-status";
-import { ActionIcon, Center, Group, Loader, RingProgress, Text, Title, Transition } from "@mantine/core";
+import { ActionIcon, Center, Group, Loader, Modal, RingProgress, Stack, Text, Title, Transition } from "@mantine/core";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
-import { IconBrandSteam, IconCheck } from "@tabler/icons-react";
+import {
+  IconBrandSteam,
+  IconCheck,
+  IconProps,
+  IconSquareRoundedCheckFilled,
+  IconSquareRoundedXFilled,
+} from "@tabler/icons-react";
 import clsx from "clsx";
-import { CSSProperties, FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { CSSProperties, FC, ReactNode, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameSyncStatus.module.css";
@@ -78,6 +84,7 @@ const SyncComplete = ({ className, message, styles }: MessageProps) => {
   return (
     <Container
       className={className}
+      description={<Text size="sm">{message.total} games added</Text>}
       leftSection={
         <RingProgress
           label={
@@ -122,11 +129,46 @@ const messageActionMap: Record<GameSyncAction, FC<MessageProps> | null> = {
   syncing: SyncingLibrary,
 };
 
+const Icon = ({ state, ...rest }: IconProps & { state: "success" | "pending" | "failed" }) => {
+  if (state === "success") return <IconSquareRoundedCheckFilled {...rest} style={{ color: "green" }} />;
+  if (state === "pending") return <Loader m="2" size={16} type="dots" />;
+  if (state === "failed") return <IconSquareRoundedXFilled {...rest} style={{ color: "red" }} />;
+  return null;
+};
+
+const Line = ({
+  action,
+  description,
+  state,
+}: {
+  action: string;
+  description?: string;
+  state: "success" | "pending" | "failed";
+}) => {
+  return (
+    <Group align="flex-start" gap={4} mb={4}>
+      <Icon size={20} state={state} />
+      <Stack gap={0}>
+        <Text color={state === "failed" ? "red" : undefined} size="sm">
+          {action}
+        </Text>
+        {description && (
+          <Text color={state === "failed" ? "red" : undefined} size="xs">
+            {description}
+          </Text>
+        )}
+      </Stack>
+    </Group>
+  );
+};
+
 export const GameSyncStatus = ({ className }: GameSyncStatusProps) => {
   const message = useGameSync();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
-  const Component = useMemo(() => (message && messageActionMap[message.action])!, [message?.action]);
+  // const Component = useMemo(() => (message && messageActionMap[message.action])!, [message?.action]);
+
+  const Component = messageActionMap["syncing"];
 
   useEffect(() => {
     if (!message) return;
@@ -139,8 +181,26 @@ export const GameSyncStatus = ({ className }: GameSyncStatusProps) => {
   }, [message]);
 
   return (
-    <Transition duration={400} mounted={open} timingFunction="ease" transition="slide-up">
-      {(styles) => <Component className={className} message={message!} styles={styles} />}
-    </Transition>
+    <>
+      <Modal centered onClose={() => {}} opened={true}>
+        <Line action="Syncing Steam library" description="12 games added" state="success" />
+        <Line action="Syncing Epic Games Store library" description="Authentication failed" state="failed" />
+        <Line action="Syncing GOG library" state="pending" />
+      </Modal>
+      <Transition duration={400} mounted={open} timingFunction="ease" transition="slide-up">
+        {(styles) => (
+          <Component
+            className={className}
+            message={{
+              action: "syncing",
+              library: "Steam",
+              processing: 100,
+              total: 100,
+            }}
+            styles={styles}
+          />
+        )}
+      </Transition>
+    </>
   );
 };

@@ -1,5 +1,5 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
-import { GameSyncErrorCode, GameSyncMessage } from "@contracts/sync";
+import { GameSyncMessage } from "@contracts/sync";
 import { WebContents } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
@@ -42,7 +42,7 @@ export class GameSyncManager {
     if (!libraryImpl) {
       this.emitSyncEvent({
         action: "error",
-        code: GameSyncErrorCode.UnsupportedLibrary,
+        code: "UNSUPPORTED_LIBRARY",
       });
       return;
     }
@@ -80,7 +80,7 @@ export class GameSyncManager {
     if (!libraryImpl) {
       this.emitSyncEvent({
         action: "error",
-        code: GameSyncErrorCode.UnsupportedLibrary,
+        code: "UNSUPPORTED_LIBRARY",
       });
       return;
     }
