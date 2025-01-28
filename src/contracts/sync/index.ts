@@ -1,24 +1,19 @@
-export type GameSyncAction = "syncing" | "metadata" | "complete" | "cancelled" | "error";
+import { LikeLibrary } from "@contracts/database/games";
 
-export type GameSyncErrorCode = "ALREADY_SYNCING" | "FETCH_FAILED" | "UNSUPPORTED_LIBRARY";
+export type GameSyncAction = "complete" | "library" | "metadata";
 
 interface BaseSyncMessage {
   action: GameSyncAction;
 }
-
-export interface CancelledSyncMessage extends BaseSyncMessage {
-  action: "cancelled";
-}
-
 export interface CompleteSyncMessage extends BaseSyncMessage {
   action: "complete";
-  processed: number;
+  hasFailures: boolean;
   total: number;
 }
 
-export interface ErrorSyncMessage extends BaseSyncMessage {
-  action: "error";
-  code: GameSyncErrorCode;
+export interface LibrarySyncMessage extends BaseSyncMessage {
+  action: "library";
+  library: LikeLibrary;
 }
 
 export interface MetadataSyncMessage extends BaseSyncMessage {
@@ -27,14 +22,4 @@ export interface MetadataSyncMessage extends BaseSyncMessage {
   total: number;
 }
 
-export interface LibrarySyncMessage extends BaseSyncMessage {
-  action: "syncing";
-  library: string;
-}
-
-export type GameSyncMessage =
-  | LibrarySyncMessage
-  | MetadataSyncMessage
-  | CancelledSyncMessage
-  | CompleteSyncMessage
-  | ErrorSyncMessage;
+export type GameSyncMessage = CompleteSyncMessage | LibrarySyncMessage | MetadataSyncMessage;

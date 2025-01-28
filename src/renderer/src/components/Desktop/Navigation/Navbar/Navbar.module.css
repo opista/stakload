@@ -32,3 +32,7 @@
   left: var(--mantine-spacing-md);
   right: var(--mantine-spacing-md);
 }
+
+.bottomSpacer {
+  padding-bottom: 100px;
+}

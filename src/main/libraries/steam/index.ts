@@ -21,13 +21,8 @@ export class SteamLibrary implements LibraryActions {
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    try {
-      const metadata = await fetchGameMetadata(game.gameId!, this.library);
-      return metadata;
-    } catch (err) {
-      console.error("Failed to fetch game metadata:", err);
-      return null;
-    }
+    const metadata = await fetchGameMetadata(game.gameId!, this.library);
+    return metadata;
   }
 
   async getInstalledGames(): Promise<InstalledGameData[]> {

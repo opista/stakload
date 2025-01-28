@@ -1,16 +1,18 @@
 import { GameSyncAction, GameSyncMessage } from "@contracts/sync";
 import { useGameSync } from "@hooks/use-game-sync-status";
-import { ActionIcon, Center, Group, Loader, Modal, RingProgress, Stack, Text, Title, Transition } from "@mantine/core";
+import { ActionIcon, Center, Group, Loader, RingProgress, Stack, Text, Title, Transition } from "@mantine/core";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import {
   IconBrandSteam,
   IconCheck,
+  IconExclamationMark,
   IconProps,
   IconSquareRoundedCheckFilled,
   IconSquareRoundedXFilled,
+  IconX,
 } from "@tabler/icons-react";
 import clsx from "clsx";
-import { CSSProperties, FC, ReactNode, useEffect, useState } from "react";
+import { CSSProperties, FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameSyncStatus.module.css";
@@ -22,30 +24,40 @@ type GameSyncStatusProps = {
 type MessageProps = {
   className?: string;
   message: GameSyncMessage;
+  onClose?: () => void;
   styles?: CSSProperties;
 };
 
 type ContainerProps = GameSyncStatusProps & {
+  closable?: boolean;
   description?: ReactNode;
   leftSection: ReactNode;
+  onClose?: () => void;
   styles?: CSSProperties;
   title: ReactNode;
 };
 
-const Container = ({ className, description, leftSection, styles, title }: ContainerProps) => (
+const Container = ({ className, closable, description, leftSection, onClose, styles, title }: ContainerProps) => (
   <Group className={clsx(classes.container, className)} style={styles}>
-    {leftSection}
-    <div>
-      <Title order={5} size="sm">
-        {title}
-      </Title>
-      {description && <Group gap="4px">{description}</Group>}
-    </div>
+    <Group className={classes.leftSection}>
+      {leftSection}
+      <div>
+        <Title order={5} size="sm">
+          {title}
+        </Title>
+        {description && <Group gap="4px">{description}</Group>}
+      </div>
+    </Group>
+    {closable && (
+      <ActionIcon onClick={onClose} radius="sm" size="xs" style={{ alignSelf: "flex-start" }}>
+        <IconX size={10} />
+      </ActionIcon>
+    )}
   </Group>
 );
 
 const SyncingLibrary = ({ className, message, styles }: MessageProps) => {
-  if (message.action !== "syncing") return null;
+  if (message.action !== "library") return null;
   return (
     <Container
       className={className}
@@ -79,27 +91,30 @@ const SyncingMetadata = ({ className, message, styles }: MessageProps) => {
   );
 };
 
-const SyncComplete = ({ className, message, styles }: MessageProps) => {
+const SyncComplete = ({ className, message, onClose, styles }: MessageProps) => {
   if (message.action !== "complete") return null;
+  const { hasFailures, total } = message;
   return (
     <Container
       className={className}
-      description={<Text size="sm">{message.total} games added</Text>}
+      closable
+      description={<Text size="sm">{total} games added</Text>}
       leftSection={
         <RingProgress
           label={
             <Center>
-              <ActionIcon color="teal" radius="xl" size="xs" variant="light">
-                <IconCheck size={12} stroke={2} />
+              <ActionIcon color={hasFailures ? "orange" : "teal"} radius="xl" size="xs" variant="light">
+                {hasFailures ? <IconExclamationMark size={12} stroke={3} /> : <IconCheck size={12} stroke={2} />}
               </ActionIcon>
             </Center>
           }
-          sections={[{ color: "teal", value: 100 }]}
+          sections={[{ color: hasFailures ? "orange" : "teal", value: 100 }]}
           size={40}
           thickness={4}
           transitionDuration={350}
         />
       }
+      onClose={onClose}
       styles={styles}
       title="Sync complete"
     />
@@ -122,11 +137,9 @@ const Progress = ({ processing, total }: { processing: number; total: number }) 
 };
 
 const messageActionMap: Record<GameSyncAction, FC<MessageProps> | null> = {
-  cancelled: null,
   complete: SyncComplete,
-  error: null,
+  library: SyncingLibrary,
   metadata: SyncingMetadata,
-  syncing: SyncingLibrary,
 };
 
 const Icon = ({ state, ...rest }: IconProps & { state: "success" | "pending" | "failed" }) => {
@@ -164,42 +177,30 @@ const Line = ({
 
 export const GameSyncStatus = ({ className }: GameSyncStatusProps) => {
   const message = useGameSync();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
-  // const Component = useMemo(() => (message && messageActionMap[message.action])!, [message?.action]);
-
-  const Component = messageActionMap["syncing"];
+  const Component = useMemo(() => message?.action && messageActionMap[message.action], [message]);
 
   useEffect(() => {
-    if (!message) return;
-
+    if (!Component) return;
     setOpen(true);
-
-    if (message?.action === "complete") {
-      setTimeout(() => setOpen(false), 5000);
-    }
-  }, [message]);
+  }, [Component]);
 
   return (
     <>
-      <Modal centered onClose={() => {}} opened={true}>
+      {/* <Modal centered onClose={() => {}} opened={true}>
         <Line action="Syncing Steam library" description="12 games added" state="success" />
         <Line action="Syncing Epic Games Store library" description="Authentication failed" state="failed" />
         <Line action="Syncing GOG library" state="pending" />
-      </Modal>
+      </Modal> */}
       <Transition duration={400} mounted={open} timingFunction="ease" transition="slide-up">
-        {(styles) => (
-          <Component
-            className={className}
-            message={{
-              action: "syncing",
-              library: "Steam",
-              processing: 100,
-              total: 100,
-            }}
-            styles={styles}
-          />
-        )}
+        {(styles) =>
+          Component ? (
+            <Component className={className} message={message!} onClose={() => setOpen(false)} styles={styles} />
+          ) : (
+            <></>
+          )
+        }
       </Transition>
     </>
   );

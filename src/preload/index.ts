@@ -7,7 +7,6 @@ import { exposeConf } from "electron-conf/preload";
 
 import {
   AUTHENTICATE_INTEGRATION,
-  CLEAR_SYNC_QUEUE,
   CREATE_COLLECTION,
   DECRYPT,
   DELETE_COLLECTION,
@@ -49,7 +48,6 @@ import { listenerHandler } from "./util/listener-handler";
 // Custom APIs for renderer
 const api = {
   authenticateIntegration: (library: LikeLibrary) => ipcRenderer.invoke(AUTHENTICATE_INTEGRATION, library),
-  clearSyncQueue: () => ipcRenderer.send(CLEAR_SYNC_QUEUE),
   closeWindow: () => ipcRenderer.send(WINDOW_CLOSE),
   createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) =>
     ipcRenderer.invoke(CREATE_COLLECTION, collection),

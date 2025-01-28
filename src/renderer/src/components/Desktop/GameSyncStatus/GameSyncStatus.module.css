@@ -2,8 +2,12 @@
   background-color: #1b2c3b;
   border-radius: var(--mantine-radius-lg);
   box-shadow: var(--mantine-shadow-sm);
-  gap: var(--mantine-spacing-xs);
+  justify-content: space-between;
   padding: var(--mantine-spacing-sm);
+}
+
+.leftSection {
+  gap: var(--mantine-spacing-xs);
 }
 
 .loader {

@@ -46,7 +46,7 @@ export const Navbar = () => {
           <Logo />
         </Flex>
         <SearchButton className={classes.search} />
-        <ScrollArea>
+        <ScrollArea className={classes.scrollArea}>
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
             <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
@@ -68,6 +68,8 @@ export const Navbar = () => {
             </NavbarLink>
           </Stack>
           <QuickLaunchList className={classes.quickLaunch} />
+          {/* Spacer so that game sync status doesn't cover navbar content */}
+          <div className={classes.bottomSpacer} />
         </ScrollArea>
         <GameSyncStatus className={classes.gameSyncStatus} />
       </Card>

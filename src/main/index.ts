@@ -7,7 +7,6 @@ import { join } from "path";
 
 import {
   AUTHENTICATE_INTEGRATION,
-  CLEAR_SYNC_QUEUE,
   CREATE_COLLECTION,
   DECRYPT,
   DELETE_COLLECTION,
@@ -187,7 +186,6 @@ app.whenReady().then(async () => {
   ipcMain.handle(GET_OS, getOS);
   ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
   ipcMain.handle(TEST_STEAM_INTEGRATION, () => syncManager.isIntegrationValid(Library.Steam));
-  ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
   ipcMain.on(RESTART_APP, restartApp);
   ipcMain.on(RESTART_DEVICE, restartDevice);
   ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);

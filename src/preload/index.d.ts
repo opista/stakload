@@ -16,7 +16,6 @@ declare global {
   interface Window {
     api: {
       authenticateIntegration: (library: LikeLibrary) => void;
-      clearSyncQueue: () => void;
       closeWindow: () => void;
       createCollection: (
         collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
