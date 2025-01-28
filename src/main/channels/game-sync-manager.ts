@@ -9,10 +9,23 @@ import { bulkInsertGames, findUnsyncedGames, updateGameByGameId, updateGameById 
 import { SteamLibrary } from "../libraries/steam";
 import { LibraryActions } from "../libraries/types";
 
+interface SyncHistoryEntry {
+  action: "library" | "install" | "metadata" | "complete";
+  details?: {
+    count?: number;
+    errorCode?: "AUTHENTICATION_ERROR" | "UNSUPPORTED_LIBRARY" | "GAME_NOT_FOUND";
+    gameName?: string;
+  };
+  library?: LikeLibrary;
+  status: "success" | "failed";
+  timestamp: Date;
+}
+
 export class GameSyncManager {
-  private libraries: Partial<Record<Library, LibraryActions>>;
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
   private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
+  private history: SyncHistoryEntry[] = [];
+  private libraries: Partial<Record<Library, LibraryActions>>;
   private processing: number = 0;
   private syncInProgress = false;
   private total: number = 0;
@@ -27,66 +40,112 @@ export class GameSyncManager {
   }
 
   private emitSyncEvent(message: GameSyncMessage) {
-    console.log(message);
     this.webContents.send(EVENT_GAME_SYNC_STATUS, message);
   }
 
-  private reset() {
-    this.processing = 0;
-    this.syncInProgress = false;
-    this.total = 0;
+  private addHistoryEntry(entry: Omit<SyncHistoryEntry, "timestamp">) {
+    const historyEntry = {
+      ...entry,
+      timestamp: new Date(),
+    };
+    this.history.push(historyEntry);
+
+    switch (entry.action) {
+      case "complete":
+        this.emitSyncEvent({
+          action: "complete",
+          processed: this.processing,
+          total: this.total,
+        });
+        break;
+      case "library":
+        this.emitSyncEvent({
+          action: "library",
+          library: entry.library!,
+        });
+        break;
+      case "metadata":
+        this.emitSyncEvent({
+          action: "metadata",
+          processing: this.processing,
+          total: this.total,
+        });
+        break;
+    }
   }
 
   private async libraryWorker(library: LikeLibrary) {
     const libraryImpl = this.libraries[library];
     if (!libraryImpl) {
-      this.emitSyncEvent({
-        action: "error",
-        code: "UNSUPPORTED_LIBRARY",
+      this.addHistoryEntry({
+        action: "library",
+        details: { errorCode: "UNSUPPORTED_LIBRARY" },
+        library,
+        status: "failed",
       });
       return;
     }
-    // TODO: Figure out translation - may need to pass key to frontend
-    this.emitSyncEvent({
-      action: "syncing",
-      library,
-    });
-    const newGames = await libraryImpl.getNewGames();
-    this.total += newGames.length;
-    await bulkInsertGames(newGames);
 
-    const installedGames = await libraryImpl.getInstalledGames();
+    try {
+      const newGames = await libraryImpl.getNewGames();
+      this.total += newGames.length;
+      await bulkInsertGames(newGames);
 
-    await Promise.all(
-      installedGames.map((data) =>
-        updateGameByGameId(data.gameId, {
-          installationDetails: data.installationDetails,
-          isInstalled: true,
-        }),
-      ),
-    );
+      this.addHistoryEntry({
+        action: "library",
+        details: { count: newGames.length },
+        library,
+        status: "success",
+      });
+
+      const installedGames = await libraryImpl.getInstalledGames();
+      await Promise.all(
+        installedGames.map((data) =>
+          updateGameByGameId(data.gameId, {
+            installationDetails: data.installationDetails,
+            isInstalled: true,
+          }),
+        ),
+      );
+
+      this.addHistoryEntry({
+        action: "install",
+        details: { count: installedGames.length },
+        library,
+        status: "success",
+      });
+    } catch (error) {
+      this.addHistoryEntry({
+        action: "library",
+        details: { errorCode: "AUTHENTICATION_ERROR" },
+        library,
+        status: "failed",
+      });
+    }
   }
 
   private async metadataWorker(game: GameStoreModel) {
     this.processing++;
-    this.emitSyncEvent({
-      action: "metadata",
-      processing: this.processing,
-      total: this.total,
-    });
 
     const libraryImpl = this.libraries[game.library];
 
     if (!libraryImpl) {
-      this.emitSyncEvent({
-        action: "error",
-        code: "UNSUPPORTED_LIBRARY",
+      this.addHistoryEntry({
+        action: "metadata",
+        details: { errorCode: "UNSUPPORTED_LIBRARY", gameName: game.name },
+        status: "failed",
       });
       return;
     }
 
     const metadata = await libraryImpl.getGameMetadata(game);
     await updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
+
+    this.addHistoryEntry({
+      action: "metadata",
+      details: { gameName: game.name },
+      status: "success",
+    });
   }
 
   private async syncLibraries(libraries: LikeLibrary[]) {
@@ -97,13 +156,10 @@ export class GameSyncManager {
     await Promise.all(unsyncedGames.map((game) => this.metadataQueue.push(game)));
     await this.metadataQueue.drained();
 
-    this.emitSyncEvent({
+    this.addHistoryEntry({
       action: "complete",
-      processed: this.processing,
-      total: this.total,
+      status: "success",
     });
-
-    this.reset();
   }
 
   sync(libraries: LikeLibrary[]) {
@@ -124,14 +180,5 @@ export class GameSyncManager {
     }
 
     return libraryImpl.isIntegrationValid();
-  }
-
-  clear() {
-    this.libraryQueue.kill();
-    this.metadataQueue.kill();
-    this.emitSyncEvent({
-      action: "cancelled",
-    });
-    this.reset();
   }
 }
