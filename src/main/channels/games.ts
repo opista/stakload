@@ -1,7 +1,7 @@
 import { GameFilters } from "@contracts/database/games";
 import { IpcMainInvokeEvent, WebContents } from "electron";
 
-import { EVENT_GAMES_LIST_UPDATED } from "../../preload/channels";
+import { EVENT_CHANNELS } from "../../preload/channels";
 import { findCollectionById } from "../database/collections";
 import {
   findGameById,
@@ -25,7 +25,7 @@ export const getGamesLastSyncedAt = (_event: IpcMainInvokeEvent) => findLastSync
 export const removeGame =
   (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string, preventReadd: boolean) => {
     await removeGameById(id, preventReadd);
-    contents.send(EVENT_GAMES_LIST_UPDATED);
+    contents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
   };
 
 export const getProtondbTier = async (_event: IpcMainInvokeEvent, gameId: string) => {
@@ -54,7 +54,7 @@ export const getCollectionGamesHandler = async (_event: IpcMainInvokeEvent, id: 
 export const toggleQuickLaunchGameHandler =
   (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string) => {
     const updated = await toggleQuickLaunchGame(id);
-    contents.send(EVENT_GAMES_LIST_UPDATED);
+    contents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
     return updated;
   };
 

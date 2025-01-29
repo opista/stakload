@@ -4,7 +4,7 @@ import { WebContents } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
 
-import { EVENT_GAME_SYNC_STATUS } from "../../preload/channels";
+import { EVENT_CHANNELS } from "../../preload/channels";
 import { findUnsyncedGames, updateGameById } from "../database/games";
 import { EpicGamesStoreLibrary } from "../libraries/epic-games-store";
 import { SteamLibrary } from "../libraries/steam";
@@ -37,7 +37,7 @@ export class GameSyncManager {
   }
 
   private emitSyncEvent(message: GameSyncMessage) {
-    this.webContents.send(EVENT_GAME_SYNC_STATUS, message);
+    this.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
 
   private addFailureEntry(entry: FailureHistoryEntry) {
