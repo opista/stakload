@@ -21,8 +21,7 @@ export class SteamLibrary implements LibraryActions {
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    const metadata = await fetchGameMetadata(game.gameId!, this.library);
-    return metadata;
+    return await fetchGameMetadata(game.gameId!, this.library);
   }
 
   async getInstalledGames(): Promise<InstalledGameData[]> {
@@ -34,7 +33,6 @@ export class SteamLibrary implements LibraryActions {
       const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
       const webApiKey = decryptString(config.webApiKey);
       const ownedGames = await getOwnedGames(config.steamId, webApiKey);
-
       const existingGames = await findGamesByGameIds(
         ownedGames.map((game) => String(game.appid)),
         this.library,

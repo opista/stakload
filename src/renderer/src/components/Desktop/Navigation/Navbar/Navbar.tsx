@@ -46,7 +46,7 @@ export const Navbar = () => {
           <Logo />
         </Flex>
         <SearchButton className={classes.search} />
-        <ScrollArea className={classes.scrollArea}>
+        <ScrollArea>
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
             <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
