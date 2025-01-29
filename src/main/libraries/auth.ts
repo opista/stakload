@@ -1,8 +1,7 @@
 import { LikeLibrary } from "@contracts/database/games";
 import { BrowserWindow, session } from "electron";
 
-import { findAndInsertNewGames } from "./epic-games/integration";
-import { login } from "./epic-games/legendary";
+import { login } from "./epic-games-store/legendary";
 
 export const authenticateLibraryIntegration = async (library: LikeLibrary, parent: BrowserWindow) => {
   const integrationSession = session.fromPartition("epic-games-auth"); // Isolated session for safety
@@ -40,8 +39,6 @@ export const authenticateLibraryIntegration = async (library: LikeLibrary, paren
       console.log(parsed);
 
       const x = await login(authorizationCode);
-
-      await findAndInsertNewGames();
 
       console.log({ x });
 

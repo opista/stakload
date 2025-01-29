@@ -55,7 +55,7 @@ module.exports = {
     "react/jsx-sort-props": "error",
     "simple-import-sort/exports": "error",
     "simple-import-sort/imports": "error",
-    "sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
+    // "sort-keys": ["error", "asc", { caseSensitive: true, minKeys: 2, natural: false }],
     "unused-imports/no-unused-imports": "error",
   },
   settings: {

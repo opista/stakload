@@ -1,3 +1,4 @@
+import { GameSyncStatus } from "@components/Desktop/GameSyncStatus/GameSyncStatus";
 import { NavbarLink } from "@components/Desktop/Navigation/NavbarLink/NavbarLink";
 import { QuickLaunchList } from "@components/Desktop/QuickLaunch/QuickLaunchList/QuickLaunchList";
 import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
@@ -67,7 +68,10 @@ export const Navbar = () => {
             </NavbarLink>
           </Stack>
           <QuickLaunchList className={classes.quickLaunch} />
+          {/* Spacer so that game sync status doesn't cover navbar content */}
+          <div className={classes.bottomSpacer} />
         </ScrollArea>
+        <GameSyncStatus className={classes.gameSyncStatus} />
       </Card>
     </AppShell.Navbar>
   );

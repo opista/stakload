@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/core.cjs";
 
 import CatalogQuery from "./catalog-query.graphql";
-import { Catalog } from "./types/catalog";
+import { Catalog } from "./types";
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),

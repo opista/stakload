@@ -20,7 +20,7 @@ export const GamesHandler = () => {
   useEffect(() => triggerUpdates(), []);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncProcessed(() => triggerUpdates());
+    const removeListener = window.api.onSyncGameStatus(() => triggerUpdates());
     return () => removeListener();
   }, []);
 

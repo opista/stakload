@@ -1,11 +1,4 @@
-import {
-  FeaturedGameModel,
-  GameFilters,
-  GameListModel,
-  GameStoreModel,
-  InitialGameStoreModel,
-  LikeLibrary,
-} from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, LikeLibrary } from "@contracts/database/games";
 
 import { createDb } from "./util/create-db";
 import { idMatcher } from "./util/database-id-matcher";
@@ -15,17 +8,17 @@ const featuredGameFields = { _id: 1, genres: 1, name: 1, screenshots: 1, summary
 
 const db = createDb("games");
 
-export const bulkInsertGames = async (games: InitialGameStoreModel[]) => {
-  return await db.insertMany<Omit<GameStoreModel, "_id">>(games);
+export const bulkInsertGames = async (games: Partial<GameStoreModel>[]) => {
+  return await db.insertMany<Partial<GameStoreModel>>(games);
 };
 
-export const addGame = async (game: InitialGameStoreModel) => {
+export const addGame = async (game: Partial<GameStoreModel>[]) => {
   /**
    * TODO
    * When we add a game we need to trigger something
    * to go and perform a sync
    */
-  return await db.insert<Omit<GameStoreModel, "_id">>(game);
+  return await db.insert<Partial<GameStoreModel>>(game);
 };
 
 export const findUnsyncedGames = async () => {
@@ -68,6 +61,14 @@ export const findGameById = async (id: string) => {
 
 export const findGamesByEpicNamespace = async (ids: string[]) => {
   return await db.find<GameStoreModel>({ library: "epic-game-store", "libraryMeta.namespace": { $in: ids } });
+};
+
+export const updateGameByEpicAppName = async (appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) => {
+  return await db.update<GameStoreModel>(
+    { "libraryMeta.appName": appName },
+    { $set: updates },
+    { returnUpdatedDocs: true },
+  );
 };
 
 export const findLastSyncedAt = async () => {

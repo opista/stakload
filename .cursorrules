@@ -12,6 +12,8 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - Define object keys in alphabetical order
 - Define type keys in alphabetical order
 - Always use British English spelling
+- Be concise and to the point.
+- If you see changes to the codebase that you think could be improved, make the changes.
 
 ## Electron <> Renderer Communication
 

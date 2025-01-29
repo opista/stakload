@@ -94,7 +94,6 @@ export type GameStoreModel = {
   // TODO this should be an id and name for filtering
   ageRating?: LikeAgeRatingText;
   artworks?: Media[];
-  backgroundImage?: string;
   cover?: string;
   deletedAt?: Date;
   description?: string;
@@ -103,14 +102,12 @@ export type GameStoreModel = {
   gameId?: string;
   gameModes?: IdAndName[];
   genres?: IdAndName[];
-  icon?: string;
   igdbId?: number;
-  installationDetails?: InstallationDetails;
+  installationDetails?: GameInstallationDetails;
   isInstalled?: boolean;
   lastPlayedAt?: Date;
   library: LikeLibrary;
   libraryMeta?: LibraryMeta;
-  listImage?: string;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
   name: string;
@@ -126,11 +123,6 @@ export type GameStoreModel = {
   websites?: Website[];
 };
 
-export type InitialGameStoreModel = Pick<
-  GameStoreModel,
-  "gameId" | "icon" | "library" | "libraryMeta" | "name" | "sortableName"
->;
-
 export type GameFilters = {
   ageRatings?: string[];
   developers?: string[];
@@ -143,23 +135,11 @@ export type GameFilters = {
   publishers?: string[];
 };
 
-// Basic model for grid/list views
 export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "library" | "name">;
 
-// Additional fields needed for game previews/featured games
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
 
-export type InstallationDetails = {
+export type GameInstallationDetails = {
   installLocation: string;
   installedAt: Date;
-  lastUpdated: Date;
-  size: number;
-};
-
-export type SteamManifestData = {
-  gameId: string;
-  installLocation: string;
-  installedAt: Date;
-  lastUpdated: Date;
-  size: number;
 };

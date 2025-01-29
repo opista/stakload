@@ -6,9 +6,22 @@ import graphqlLoader from "vite-plugin-graphql-loader";
 export default defineConfig({
   main: {
     plugins: [externalizeDepsPlugin(), graphqlLoader()],
+    resolve: {
+      alias: {
+        "@api": resolve("src/main/api"),
+        "@contracts": resolve("src/contracts"),
+        "@database": resolve("src/main/database"),
+        "@util": resolve("src/main/util"),
+      },
+    },
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
+    resolve: {
+      alias: {
+        "@contracts": resolve("src/contracts"),
+      },
+    },
   },
   renderer: {
     plugins: [react()],
@@ -17,6 +30,7 @@ export default defineConfig({
         "@api": resolve("src/renderer/src/api"),
         "@components": resolve("src/renderer/src/components"),
         "@constants": resolve("src/renderer/src/constants"),
+        "@contracts": resolve("src/contracts"),
         "@database": resolve("src/renderer/src/database"),
         "@hooks": resolve("src/renderer/src/hooks"),
         "@icons": resolve("src/renderer/src/icons"),

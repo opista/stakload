@@ -1,0 +1,15 @@
+.container {
+  background-color: #1b2c3b;
+  border-radius: var(--mantine-radius-lg);
+  box-shadow: var(--mantine-shadow-sm);
+  justify-content: space-between;
+  padding: var(--mantine-spacing-sm);
+}
+
+.leftSection {
+  gap: var(--mantine-spacing-xs);
+}
+
+.loader {
+  margin: 6px;
+}

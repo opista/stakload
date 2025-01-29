@@ -16,7 +16,6 @@ declare global {
   interface Window {
     api: {
       authenticateIntegration: (library: LikeLibrary) => void;
-      clearSyncQueue: () => void;
       closeWindow: () => void;
       createCollection: (
         collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
@@ -44,11 +43,7 @@ declare global {
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
-      onSyncComplete: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onSyncInserted: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onSyncProcessed: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onSyncQueueCleared: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      onSyncSkipped: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;
       restartDevice: () => void;

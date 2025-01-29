@@ -1,3 +1,4 @@
+import { Library } from "@contracts/database/games";
 import { electronApp, is, optimizer } from "@electron-toolkit/utils";
 import { app, BrowserWindow, ipcMain, shell } from "electron";
 import { Conf } from "electron-conf/main";
@@ -5,39 +6,13 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-insta
 import { join } from "path";
 
 import {
-  AUTHENTICATE_INTEGRATION,
-  CLEAR_SYNC_QUEUE,
-  CREATE_COLLECTION,
-  DECRYPT,
-  DELETE_COLLECTION,
-  ENCRYPT,
-  GET_COLLECTION_GAMES,
-  GET_COLLECTIONS,
-  GET_FILTERED_GAMES,
-  GET_GAME_BY_ID,
-  GET_GAME_FILTERS,
-  GET_GAMES_LAST_SYNCED_AT,
-  GET_GAMES_LIST,
-  GET_LOCALE,
-  GET_NEW_GAMES,
-  GET_OS,
-  GET_PROTONDB_TIER,
-  GET_QUICK_ACCESS_GAMES,
-  INSTALL_GAME,
-  LAUNCH_GAME,
-  REMOVE_GAME,
-  RESTART_APP,
-  RESTART_DEVICE,
-  SHUTDOWN_DEVICE,
-  SLEEP_DEVICE,
-  SYNC_GAMES,
-  TEST_STEAM_INTEGRATION,
-  TOGGLE_QUICK_ACCESS_GAME,
-  UNINSTALL_GAME,
-  UPDATE_COLLECTION,
-  WINDOW_CLOSE,
-  WINDOW_MAXIMIZE,
-  WINDOW_MINIMIZE,
+  COLLECTION_CHANNELS,
+  GAME_CHANNELS,
+  INTEGRATION_CHANNELS,
+  QUICK_ACCESS_CHANNELS,
+  SECURITY_CHANNELS,
+  SYSTEM_CHANNELS,
+  WINDOW_CHANNELS,
 } from "../preload/channels";
 import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
 import { GameSyncManager } from "./channels/game-sync-manager";
@@ -58,14 +33,13 @@ import {
   uninstallGameHandler,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
-import { authenticateIntegration, testSteamIntegration } from "./channels/integrations";
+import { authenticateIntegration } from "./channels/integrations";
 import { getOS } from "./channels/os";
 import { restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
 import { closeWindow, minimizeWindow, toggleWindowMaximized } from "./window";
 
 const conf = new Conf();
-
 conf.registerRendererListener();
 
 function createWindow() {
@@ -129,11 +103,6 @@ function createWindow() {
 
   browserWindow.on("ready-to-show", async () => {
     browserWindow.show();
-    const shouldAutoSync = conf.get("library_settings.state.syncOnStartup");
-
-    if (shouldAutoSync) {
-      syncManager.sync();
-    }
   });
 
   browserWindow.webContents.setWindowOpenHandler((details) => {
@@ -176,40 +145,51 @@ app.whenReady().then(async () => {
 
   const { browserWindow, syncManager } = createWindow();
 
-  ipcMain.handle(AUTHENTICATE_INTEGRATION, authenticateIntegration(browserWindow));
-  ipcMain.handle(DECRYPT, decrypt);
-  ipcMain.handle(ENCRYPT, encrypt);
-  ipcMain.handle(CREATE_COLLECTION, createCollection(browserWindow.webContents));
-  ipcMain.handle(GET_COLLECTIONS, getCollections);
-  ipcMain.handle(UPDATE_COLLECTION, updateCollection(browserWindow.webContents));
-  ipcMain.handle(DELETE_COLLECTION, deleteCollection(browserWindow.webContents));
-  ipcMain.handle(GET_GAME_FILTERS, getGameFilters);
-  ipcMain.handle(GET_GAME_BY_ID, getGameById);
-  ipcMain.handle(GET_GAMES_LAST_SYNCED_AT, getGamesLastSyncedAt);
-  ipcMain.handle(GET_LOCALE, getLocale);
-  ipcMain.handle(GET_PROTONDB_TIER, getProtondbTier);
-  ipcMain.handle(GET_OS, getOS);
-  ipcMain.handle(REMOVE_GAME, removeGame(browserWindow.webContents));
-  ipcMain.handle(TEST_STEAM_INTEGRATION, testSteamIntegration);
-  ipcMain.on(CLEAR_SYNC_QUEUE, () => syncManager.clear());
-  ipcMain.on(RESTART_APP, restartApp);
-  ipcMain.on(RESTART_DEVICE, restartDevice);
-  ipcMain.on(SHUTDOWN_DEVICE, shutdownDevice);
-  ipcMain.on(SLEEP_DEVICE, sleepDevice);
-  ipcMain.on(SYNC_GAMES, () => syncManager.sync());
-  ipcMain.on(WINDOW_MINIMIZE, () => minimizeWindow(browserWindow));
-  ipcMain.on(WINDOW_MAXIMIZE, () => toggleWindowMaximized(browserWindow));
-  ipcMain.on(WINDOW_CLOSE, () => closeWindow(browserWindow));
+  // Integration Handlers
+  ipcMain.handle(INTEGRATION_CHANNELS.AUTHENTICATE, authenticateIntegration(browserWindow));
+  ipcMain.handle(INTEGRATION_CHANNELS.TEST_STEAM, () => syncManager.isIntegrationValid(Library.Steam));
 
-  ipcMain.handle(GET_GAMES_LIST, getGamesListHandler);
-  ipcMain.handle(GET_FILTERED_GAMES, getFilteredGamesHandler);
-  ipcMain.handle(GET_NEW_GAMES, getNewGamesHandler);
-  ipcMain.handle(GET_COLLECTION_GAMES, getCollectionGamesHandler);
-  ipcMain.handle(GET_QUICK_ACCESS_GAMES, getQuickLaunchGamesHandler);
-  ipcMain.handle(TOGGLE_QUICK_ACCESS_GAME, toggleQuickLaunchGameHandler(browserWindow.webContents));
-  ipcMain.on(LAUNCH_GAME, (_, id: string) => launchGameHandler(id));
-  ipcMain.on(INSTALL_GAME, (_, id: string) => installGameHandler(id));
-  ipcMain.on(UNINSTALL_GAME, (_, id: string) => uninstallGameHandler(id));
+  // Security Handlers
+  ipcMain.handle(SECURITY_CHANNELS.DECRYPT, decrypt);
+  ipcMain.handle(SECURITY_CHANNELS.ENCRYPT, encrypt);
+
+  // Collection Handlers
+  ipcMain.handle(COLLECTION_CHANNELS.CREATE, createCollection(browserWindow.webContents));
+  ipcMain.handle(COLLECTION_CHANNELS.GET_ALL, getCollections);
+  ipcMain.handle(COLLECTION_CHANNELS.UPDATE, updateCollection(browserWindow.webContents));
+  ipcMain.handle(COLLECTION_CHANNELS.DELETE, deleteCollection(browserWindow.webContents));
+
+  // Game Management Handlers
+  ipcMain.handle(GAME_CHANNELS.GET_FILTERS, getGameFilters);
+  ipcMain.handle(GAME_CHANNELS.GET_BY_ID, getGameById);
+  ipcMain.handle(GAME_CHANNELS.GET_LAST_SYNCED, getGamesLastSyncedAt);
+  ipcMain.handle(GAME_CHANNELS.GET_PROTONDB_TIER, getProtondbTier);
+  ipcMain.handle(GAME_CHANNELS.REMOVE, removeGame(browserWindow.webContents));
+  ipcMain.handle(GAME_CHANNELS.GET_LIST, getGamesListHandler);
+  ipcMain.handle(GAME_CHANNELS.GET_FILTERED, getFilteredGamesHandler);
+  ipcMain.handle(GAME_CHANNELS.GET_NEW, getNewGamesHandler);
+  ipcMain.on(GAME_CHANNELS.SYNC, () => syncManager.sync([Library.EpicGameStore, Library.Steam]));
+  ipcMain.on(GAME_CHANNELS.LAUNCH, (_, id: string) => launchGameHandler(id));
+  ipcMain.on(GAME_CHANNELS.INSTALL, (_, id: string) => installGameHandler(id));
+  ipcMain.on(GAME_CHANNELS.UNINSTALL, (_, id: string) => uninstallGameHandler(id));
+
+  // Quick Access Handlers
+  ipcMain.handle(COLLECTION_CHANNELS.GET_GAMES, getCollectionGamesHandler);
+  ipcMain.handle(QUICK_ACCESS_CHANNELS.GET_GAMES, getQuickLaunchGamesHandler);
+  ipcMain.handle(QUICK_ACCESS_CHANNELS.TOGGLE_GAME, toggleQuickLaunchGameHandler(browserWindow.webContents));
+
+  // System Handlers
+  ipcMain.handle(SYSTEM_CHANNELS.GET_LOCALE, getLocale);
+  ipcMain.handle(SYSTEM_CHANNELS.GET_OS, getOS);
+  ipcMain.on(SYSTEM_CHANNELS.RESTART_APP, restartApp);
+  ipcMain.on(SYSTEM_CHANNELS.RESTART_DEVICE, restartDevice);
+  ipcMain.on(SYSTEM_CHANNELS.SHUTDOWN_DEVICE, shutdownDevice);
+  ipcMain.on(SYSTEM_CHANNELS.SLEEP_DEVICE, sleepDevice);
+
+  // Window Management Handlers
+  ipcMain.on(WINDOW_CHANNELS.MINIMIZE, () => minimizeWindow(browserWindow));
+  ipcMain.on(WINDOW_CHANNELS.MAXIMIZE, () => toggleWindowMaximized(browserWindow));
+  ipcMain.on(WINDOW_CHANNELS.CLOSE, () => closeWindow(browserWindow));
 
   app.on("activate", function () {
     // On macOS it's common to re-create a window in the app when the

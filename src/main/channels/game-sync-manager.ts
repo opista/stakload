@@ -1,129 +1,154 @@
-import { GameStoreModel, LikeLibrary } from "@contracts/database/games";
-import { SteamIntegrationDetails } from "@contracts/integrations/steam";
-import { GameSyncMessage } from "@contracts/store/game";
+import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
+import { GameSyncMessage } from "@contracts/sync";
 import { WebContents } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
 
-import {
-  EVENT_GAMES_LIST_UPDATED,
-  EVENT_METADATA_SYNC_COMPLETE,
-  EVENT_METADATA_SYNC_INSERTED,
-  EVENT_METADATA_SYNC_PROCESSED,
-  EVENT_METADATA_SYNC_SKIPPED,
-  EVENT_SYNC_QUEUE_CLEARED,
-} from "../../preload/channels";
-import { findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
-import { graphqlGetGameId } from "../libraries/epic-games/api";
-import { findAndInsertNewGames as findAndInsertEpicGames } from "../libraries/epic-games/integration";
-import { findAndInsertNewGames as findAndInsertSteamGames } from "../libraries/steam/integration";
-import { decryptString } from "../util/safe-storage";
+import { EVENT_CHANNELS } from "../../preload/channels";
+import { findUnsyncedGames, updateGameById } from "../database/games";
+import { EpicGamesStoreLibrary } from "../libraries/epic-games-store";
+import { SteamLibrary } from "../libraries/steam";
+import { LibraryActions } from "../libraries/types";
+
+interface FailureHistoryEntry {
+  action: "library" | "install" | "metadata";
+  code: "AUTHENTICATION_ERROR" | "UNKNOWN_ERROR" | "UNSUPPORTED_LIBRARY";
+  gameName?: string;
+  library?: LikeLibrary;
+}
 
 export class GameSyncManager {
-  private syncQueue = fastq.promise((game: GameStoreModel) => this.worker(game), 1);
+  private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
+  private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
+  private failures: FailureHistoryEntry[] = [];
+  private libraries: Partial<Record<Library, LibraryActions>>;
   private processing: number = 0;
+  private syncInProgress = false;
   private total: number = 0;
 
   constructor(
     private webContents: WebContents,
     private conf: Conf,
-  ) {}
-
-  async updateMetadata(gameId: string, library: LikeLibrary) {
-    const response = await fetch(`${import.meta.env.MAIN_VITE_TRULAUNCH_API_URL}/games/${gameId}?library=${library}`);
-
-    if (response.status === 200) {
-      const parsed = await response.json();
-      /**
-       * TODO - revisit this. The API contract
-       * should be shared. Move trulaunch-api into
-       * this repo and convert to monorepo
-       */
-
-      const { icon, ...rest } = parsed;
-
-      await updateGameByGameId(gameId, {
-        ...rest,
-        ...(library !== "steam" && { icon }),
-        metadataSyncedAt: new Date(),
-      });
-      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
-    } else if (response.status === 404) {
-      await updateGameByGameId(gameId, { metadataSyncedAt: new Date() });
-      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
-    } else {
-      this.sendMessage(EVENT_METADATA_SYNC_SKIPPED);
-    }
+  ) {
+    this.libraries = {
+      [Library.EpicGameStore]: new EpicGamesStoreLibrary(),
+      [Library.Steam]: new SteamLibrary(this.conf),
+    };
   }
 
-  /**
-   * TODO - Major tidy up required here
-   */
+  private emitSyncEvent(message: GameSyncMessage) {
+    this.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
+  }
 
-  async epicWorker(game: GameStoreModel) {
-    if (game.gameId) {
-      return this.updateMetadata(game.gameId, "epic-game-store");
-    }
+  private addFailureEntry(entry: FailureHistoryEntry) {
+    this.failures.push(entry);
+  }
 
-    const gameId = await graphqlGetGameId(game.libraryMeta!.namespace);
-    if (!gameId) {
-      await updateGameById(game._id, { metadataSyncedAt: new Date() });
-      this.sendMessage(EVENT_METADATA_SYNC_PROCESSED);
+  private async libraryWorker(library: LikeLibrary) {
+    this.emitSyncEvent({
+      action: "library",
+      library,
+    });
+
+    const libraryImpl = this.libraries[library];
+    if (!libraryImpl) {
+      this.addFailureEntry({
+        action: "library",
+        code: "UNSUPPORTED_LIBRARY",
+        library,
+      });
       return;
     }
 
-    await updateGameById(game._id, { gameId });
-    return this.updateMetadata(gameId, "epic-game-store");
-  }
+    try {
+      const numberOfNewGames = await libraryImpl.addNewGames();
+      this.total += numberOfNewGames;
 
-  async steamWorker(game: GameStoreModel) {
-    await this.updateMetadata(game.gameId!, "steam");
-  }
-
-  async worker(game: GameStoreModel) {
-    this.processing += 1;
-
-    switch (game.library) {
-      case "steam":
-        await this.updateMetadata(game.gameId!, "steam");
-        break;
-      case "epic-game-store":
-        await this.epicWorker(game);
-        break;
-    }
-
-    if (!this.syncQueue.length()) {
-      this.sendMessage(EVENT_METADATA_SYNC_COMPLETE);
-      this.processing = 0;
-      this.total = 0;
+      await libraryImpl.updateInstalledGames();
+    } catch (error) {
+      this.addFailureEntry({
+        action: "library",
+        code: "AUTHENTICATION_ERROR",
+        library,
+      });
     }
   }
 
-  async sync() {
-    const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
-    const decrypedApiKey = decryptString(config.webApiKey);
+  private async metadataWorker(game: GameStoreModel) {
+    this.processing++;
 
-    await findAndInsertSteamGames(config.steamId, decrypedApiKey);
-    await findAndInsertEpicGames();
-    this.sendMessage(EVENT_GAMES_LIST_UPDATED);
-    const games = await findUnsyncedGames();
-    this.total += games.length;
+    this.emitSyncEvent({
+      action: "metadata",
+      processing: this.processing,
+      total: this.total,
+    });
 
-    if (games?.length) {
-      this.sendMessage(EVENT_METADATA_SYNC_INSERTED);
-      await Promise.all(games.map((game) => this.syncQueue.push(game)));
+    const libraryImpl = this.libraries[game.library];
+    if (!libraryImpl) {
+      this.addFailureEntry({
+        action: "metadata",
+        code: "UNSUPPORTED_LIBRARY",
+        gameName: game.name,
+        library: game.library,
+      });
+      return;
+    }
+
+    try {
+      const metadata = await libraryImpl.getGameMetadata(game);
+      await updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
+    } catch (error) {
+      this.addFailureEntry({
+        action: "metadata",
+        code: "UNKNOWN_ERROR",
+        gameName: game.name,
+        library: game.library,
+      });
     }
   }
 
-  sendMessage(channel: string) {
-    const data: GameSyncMessage = { processing: this.processing, total: this.total };
-    this.webContents.send(channel, data);
+  private async syncLibraries(libraries: LikeLibrary[]) {
+    await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
+    await this.libraryQueue.drained();
+
+    const unsyncedGames = await findUnsyncedGames();
+    await Promise.all(unsyncedGames.map((game) => this.metadataQueue.push(game)));
+    await this.metadataQueue.drained();
+
+    this.emitSyncEvent({
+      action: "complete",
+      hasFailures: !!this.failures.length,
+      total: this.total,
+    });
+
+    this.syncInProgress = false;
   }
 
-  clear() {
-    this.syncQueue.kill();
-    this.sendMessage(EVENT_SYNC_QUEUE_CLEARED);
+  sync(libraries: LikeLibrary[]) {
+    if (this.syncInProgress) {
+      return false;
+    }
+
+    this.reset();
+    this.syncInProgress = true;
+    this.syncLibraries(libraries);
+
+    return true;
+  }
+
+  private reset() {
+    this.failures = [];
     this.processing = 0;
+    this.syncInProgress = false;
     this.total = 0;
+  }
+
+  isIntegrationValid(library: LikeLibrary) {
+    const libraryImpl = this.libraries[library];
+    if (!libraryImpl) {
+      return false;
+    }
+
+    return libraryImpl.isIntegrationValid();
   }
 }
