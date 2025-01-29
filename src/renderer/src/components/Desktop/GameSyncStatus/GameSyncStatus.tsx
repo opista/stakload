@@ -2,14 +2,15 @@ import { GameSyncAction, GameSyncMessage } from "@contracts/sync";
 import { useGameSync } from "@hooks/use-game-sync-status";
 import { ActionIcon, Center, Group, Loader, RingProgress, Text, Title, Transition } from "@mantine/core";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
-import { IconBrandSteam, IconCheck, IconExclamationMark, IconX } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { mapLibraryIcon } from "@util/map-library-icon";
 import clsx from "clsx";
 import { CSSProperties, FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameSyncStatus.module.css";
 
-// TODO: This component is a bit messy, needs a cleanup
+// TODO: This component is so messy, needs a cleanup
 
 type GameSyncStatusProps = {
   className?: string;
@@ -52,13 +53,14 @@ const Container = ({ className, closable, description, leftSection, onClose, sty
 
 const SyncingLibrary = ({ className, message, styles }: MessageProps) => {
   if (message.action !== "library") return null;
+  const { icon: Icon, name } = mapLibraryIcon(message.library);
   return (
     <Container
       className={className}
       description={
         <>
-          <IconBrandSteam size={16} />
-          <Text size="sm">{message.library}</Text>
+          <Icon size={16} />
+          <Text size="sm">{name}</Text>
         </>
       }
       leftSection={<Loader className={classes.loader} size={28} />}
@@ -88,6 +90,9 @@ const SyncingMetadata = ({ className, message, styles }: MessageProps) => {
 const SyncComplete = ({ className, message, onClose, styles }: MessageProps) => {
   if (message.action !== "complete") return null;
   const { hasFailures, total } = message;
+
+  // TODO: Decide how to present failures
+  console.log(hasFailures);
   return (
     <Container
       className={className}
@@ -97,12 +102,12 @@ const SyncComplete = ({ className, message, onClose, styles }: MessageProps) => 
         <RingProgress
           label={
             <Center>
-              <ActionIcon color={hasFailures ? "orange" : "teal"} radius="xl" size="xs" variant="light">
-                {hasFailures ? <IconExclamationMark size={12} stroke={3} /> : <IconCheck size={12} stroke={2} />}
+              <ActionIcon color="teal" radius="xl" size="xs" variant="light">
+                <IconCheck size={12} stroke={2} />
               </ActionIcon>
             </Center>
           }
-          sections={[{ color: hasFailures ? "orange" : "teal", value: 100 }]}
+          sections={[{ color: "teal", value: 100 }]}
           size={40}
           thickness={4}
           transitionDuration={350}
