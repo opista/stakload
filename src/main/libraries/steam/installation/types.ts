@@ -32,7 +32,7 @@ export interface InstalledGameData {
   gameId: string;
   installationDetails: GameInstallationDetails;
 }
-export interface SteamInstallationStrategy {
+export interface InstallationStrategy {
   getApplicationPath(): Promise<string>;
   getInstalledGames(): Promise<InstalledGameData[]>;
   getLibraryFolders(): Promise<string[]>;

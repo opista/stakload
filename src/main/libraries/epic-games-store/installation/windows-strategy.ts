@@ -10,13 +10,13 @@ export class WindowsInstallationStrategy extends BaseInstallationStrategy {
 
     const reg = new Registry({
       hive: Registry.HKLM,
-      key: "\\SOFTWARE\\WOW6432Node\\Valve\\Steam",
+      key: "\\SOFTWARE\\WOW6432Node\\Epic Games\\EpicGamesLauncher",
     });
 
     return new Promise((resolve, reject) => {
-      reg.get("InstallPath", (err, item) => {
+      reg.get("AppInstallLocation", (err, item) => {
         if (err) reject(err);
-        if (!item?.value) reject(new Error("Steam installation not found"));
+        if (!item?.value) reject(new Error("Epic Games Store installation not found"));
         this.applicationPath = item.value;
         resolve(item.value);
       });

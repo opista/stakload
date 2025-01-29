@@ -9,7 +9,7 @@ export class MacInstallationStrategy extends BaseInstallationStrategy {
     if (this.applicationPath) return this.applicationPath;
 
     const homeDir = process.env.HOME;
-    const applicationPath = path.join(homeDir!, "Library/Application Support/Steam");
+    const applicationPath = path.join(homeDir!, "Library/Application Support/Epic");
     this.applicationPath = applicationPath;
     return applicationPath;
   }

@@ -4,14 +4,14 @@ import vdf from "vdf";
 
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
 import {
+  InstallationStrategy,
   InstalledGameData,
   SteamAppManifest,
   SteamAppStateFlags,
-  SteamInstallationStrategy,
   SteamLibraryFolders,
 } from "./types";
 
-export abstract class BaseSteamInstallationStrategy implements SteamInstallationStrategy {
+export abstract class BaseInstallationStrategy implements InstallationStrategy {
   abstract applicationPath: string | undefined;
 
   abstract getApplicationPath(): Promise<string>;

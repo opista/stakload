@@ -5,7 +5,8 @@ import { Conf } from "electron-conf/main";
 import fastq from "fastq";
 
 import { EVENT_GAME_SYNC_STATUS } from "../../preload/channels";
-import { bulkInsertGames, findUnsyncedGames, updateGameByGameId, updateGameById } from "../database/games";
+import { findUnsyncedGames, updateGameById } from "../database/games";
+import { EpicGamesStoreLibrary } from "../libraries/epic-games-store";
 import { SteamLibrary } from "../libraries/steam";
 import { LibraryActions } from "../libraries/types";
 
@@ -30,6 +31,7 @@ export class GameSyncManager {
     private conf: Conf,
   ) {
     this.libraries = {
+      [Library.EpicGameStore]: new EpicGamesStoreLibrary(),
       [Library.Steam]: new SteamLibrary(this.conf),
     };
   }
@@ -59,19 +61,10 @@ export class GameSyncManager {
     }
 
     try {
-      const newGames = await libraryImpl.getNewGames();
-      this.total += newGames.length;
-      await bulkInsertGames(newGames);
+      const numberOfNewGames = await libraryImpl.addNewGames();
+      this.total += numberOfNewGames;
 
-      const installedGames = await libraryImpl.getInstalledGames();
-      await Promise.all(
-        installedGames.map((data) =>
-          updateGameByGameId(data.gameId, {
-            installationDetails: data.installationDetails,
-            isInstalled: true,
-          }),
-        ),
-      );
+      await libraryImpl.updateInstalledGames();
     } catch (error) {
       this.addFailureEntry({
         action: "library",

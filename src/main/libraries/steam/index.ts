@@ -4,31 +4,40 @@ import { Conf } from "electron-conf/main";
 import isEmpty from "lodash-es";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
-import { findGamesByGameIds } from "../../database/games";
+import { bulkInsertGames, findGamesByGameIds, updateGameByGameId } from "../../database/games";
 import { decryptString } from "../../util/safe-storage";
 import { LibraryActions } from "../types";
 import { getOwnedGames } from "./api";
-import { createSteamInstallationStrategy } from "./installation/create-steam-installation-strategy";
-import type { InstalledGameData, SteamInstallationStrategy } from "./installation/types";
+import { createInstallationStrategy } from "./installation/create-installation-strategy";
+import type { InstallationStrategy } from "./installation/types";
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 
 export class SteamLibrary implements LibraryActions {
   private library = Library.Steam;
-  private steamInstallationStrategy: SteamInstallationStrategy;
+  private installationStrategy: InstallationStrategy;
 
   constructor(private conf: Conf) {
-    this.steamInstallationStrategy = createSteamInstallationStrategy();
+    this.installationStrategy = createInstallationStrategy();
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     return await fetchGameMetadata(game.gameId!, this.library);
   }
 
-  async getInstalledGames(): Promise<InstalledGameData[]> {
-    return this.steamInstallationStrategy.getInstalledGames();
+  async updateInstalledGames() {
+    const installedGames = await this.installationStrategy.getInstalledGames();
+
+    await Promise.all(
+      installedGames.map((data) =>
+        updateGameByGameId(data.gameId, {
+          installationDetails: data.installationDetails,
+          isInstalled: true,
+        }),
+      ),
+    );
   }
 
-  async getNewGames(): Promise<Partial<GameStoreModel>[]> {
+  async addNewGames() {
     try {
       const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
       const webApiKey = decryptString(config.webApiKey);
@@ -39,12 +48,16 @@ export class SteamLibrary implements LibraryActions {
       );
       const existingIds = existingGames.map((game) => game.gameId);
 
-      return ownedGames
+      const mappedGames = ownedGames
         .filter((game) => !existingIds.includes(String(game.appid)))
         .map(mapOwnedGameDetailsToGameStoreModel);
+
+      await bulkInsertGames(mappedGames);
+
+      return mappedGames.length;
     } catch (err) {
       console.error("Failed to get new games:", err);
-      return [];
+      return 0;
     }
   }
 

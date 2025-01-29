@@ -142,6 +142,4 @@ export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" |
 export type GameInstallationDetails = {
   installLocation: string;
   installedAt: Date;
-  lastUpdated: Date;
-  size: number;
 };

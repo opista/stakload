@@ -63,6 +63,14 @@ export const findGamesByEpicNamespace = async (ids: string[]) => {
   return await db.find<GameStoreModel>({ library: "epic-game-store", "libraryMeta.namespace": { $in: ids } });
 };
 
+export const updateGameByEpicAppName = async (appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) => {
+  return await db.update<GameStoreModel>(
+    { "libraryMeta.appName": appName },
+    { $set: updates },
+    { returnUpdatedDocs: true },
+  );
+};
+
 export const findLastSyncedAt = async () => {
   /**
    * TODO - Is this right? Might need to spend

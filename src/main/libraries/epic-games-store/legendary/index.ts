@@ -1,5 +1,5 @@
-import { runApplicationCommand } from "../../util/run-application-command";
-import { OwnedGame } from "./types/owned-game";
+import { runApplicationCommand } from "../../../util/run-application-command";
+import { OwnedGame } from "./types";
 
 /**
  * TODO
