@@ -4,7 +4,7 @@ import { Conf } from "electron-conf/main";
 import isEmpty from "lodash-es";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
-import { bulkInsertGames, findGamesByGameIds, updateGameByGameId } from "../../database/games";
+import { bulkInsertGames, findGamesByGameIds, getInstalledGames, updateGameByGameId } from "../../database/games";
 import { decryptString } from "../../util/safe-storage";
 import { LibraryActions } from "../types";
 import { getOwnedGames } from "./api";
@@ -26,15 +26,22 @@ export class SteamLibrary implements LibraryActions {
 
   async updateInstalledGames() {
     const installedGames = await this.installationStrategy.getInstalledGames();
+    const installedGameIds = installedGames.map((game) => game.gameId);
 
-    await Promise.all(
-      installedGames.map((data) =>
-        updateGameByGameId(data.gameId, {
-          installationDetails: data.installationDetails,
-          isInstalled: true,
-        }),
-      ),
+    const currentlyInstalledGames = await getInstalledGames(this.library);
+    const uninstalledGameIds = currentlyInstalledGames
+      .map((game) => game.gameId)
+      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
+
+    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
+      updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
     );
+
+    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
+      updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+    );
+
+    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
   }
 
   async addNewGames() {

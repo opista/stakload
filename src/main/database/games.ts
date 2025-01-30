@@ -206,3 +206,7 @@ export const toggleQuickLaunchGame = async (id: string) => {
   const game = await findGameById(id);
   return await updateGameById(id, { quickLaunch: !game?.quickLaunch });
 };
+
+export const getInstalledGames = async (library: LikeLibrary) => {
+  return await db.find<GameStoreModel>({ isInstalled: true, library });
+};

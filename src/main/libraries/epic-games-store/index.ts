@@ -4,6 +4,7 @@ import { fetchGameMetadata } from "../../api/trulaunch";
 import {
   bulkInsertGames,
   findGamesByEpicNamespace,
+  getInstalledGames,
   updateGameByEpicAppName,
   updateGameById,
 } from "../../database/games";
@@ -39,16 +40,22 @@ export class EpicGamesStoreLibrary implements LibraryActions {
 
   async updateInstalledGames() {
     const installedGames = await this.installationStrategy.getInstalledGames();
+    const installedGameAppNames = installedGames.map((game) => game.appName);
 
-    if (installedGames.length === 0) {
-      return;
-    }
+    const currentlyInstalledGames = await getInstalledGames(this.library);
+    const uninstalledAppNames = currentlyInstalledGames
+      .map((game) => game.libraryMeta?.appName)
+      .filter((appName): appName is string => !!appName && !installedGameAppNames.includes(appName));
 
-    await Promise.all(
-      installedGames.map(({ appName, installationDetails }) =>
-        updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
-      ),
+    const gamesToMarkUninstalled = uninstalledAppNames.map((appName) =>
+      updateGameByEpicAppName(appName, { installationDetails: undefined, isInstalled: false }),
     );
+
+    const gamesToMarkInstalled = installedGames.map(({ appName, installationDetails }) =>
+      updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
+    );
+
+    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
   }
 
   async isIntegrationValid(): Promise<boolean> {
