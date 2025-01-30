@@ -21,5 +21,6 @@ export type GameActions = {
   fetchQuickLaunchGames: () => Promise<void>;
   invalidateCollectionCache: () => void;
   setQuickLaunchGameOrder: (ids: string[]) => void;
+  toggleFavouriteGame: (id: string) => Promise<GameStoreModel>;
   toggleQuickLaunchGame: (id: string) => Promise<void>;
 };

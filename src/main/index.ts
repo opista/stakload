@@ -29,6 +29,7 @@ import {
   installGameHandler,
   launchGameHandler,
   removeGame,
+  toggleFavouriteGameHandler,
   toggleQuickLaunchGameHandler,
   uninstallGameHandler,
 } from "./channels/games";
@@ -168,6 +169,7 @@ app.whenReady().then(async () => {
   ipcMain.handle(GAME_CHANNELS.GET_LIST, getGamesListHandler);
   ipcMain.handle(GAME_CHANNELS.GET_FILTERED, getFilteredGamesHandler);
   ipcMain.handle(GAME_CHANNELS.GET_NEW, getNewGamesHandler);
+  ipcMain.handle(GAME_CHANNELS.TOGGLE_FAVOURITE, toggleFavouriteGameHandler(browserWindow.webContents));
   ipcMain.on(GAME_CHANNELS.SYNC, () => syncManager.sync([Library.EpicGameStore, Library.Steam]));
   ipcMain.on(GAME_CHANNELS.LAUNCH, (_, id: string) => launchGameHandler(id));
   ipcMain.on(GAME_CHANNELS.INSTALL, (_, id: string) => installGameHandler(id));

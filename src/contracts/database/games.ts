@@ -104,6 +104,7 @@ export type GameStoreModel = {
   genres?: IdAndName[];
   igdbId?: number;
   installationDetails?: GameInstallationDetails;
+  isFavourite?: boolean;
   isInstalled?: boolean;
   lastPlayedAt?: Date;
   library: LikeLibrary;
@@ -128,6 +129,7 @@ export type GameFilters = {
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
+  isFavourite?: boolean;
   isInstalled?: boolean;
   libraries?: string[];
   platforms?: string[];

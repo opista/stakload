@@ -53,6 +53,7 @@ const api = {
   launchGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.LAUNCH, id),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(GAME_CHANNELS.REMOVE, id, preventReadd),
   syncGames: () => ipcRenderer.send(GAME_CHANNELS.SYNC),
+  toggleFavouriteGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_FAVOURITE, id),
   uninstallGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.UNINSTALL, id),
 
   // Quick Access Management

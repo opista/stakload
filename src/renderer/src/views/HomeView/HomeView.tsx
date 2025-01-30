@@ -19,7 +19,7 @@ export const HomeView = () => {
 
   return (
     <ScrollArea>
-      <Stack className={classes.container}>
+      <Stack className={classes.container} gap={50}>
         <GamesCarousel games={quickLaunchGames} title="Continue Playing" />
         <FeaturedGamesCarousel games={newGames} title="Recently Added" />
         <Stack className={classes.contained}>

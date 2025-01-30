@@ -5,7 +5,7 @@ import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
-import { IconBolt, IconPencil, IconTrash } from "@tabler/icons-react";
+import { IconBolt, IconPencil, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -25,6 +25,8 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
       toggleQuickLaunchGame: state.toggleQuickLaunchGame,
     })),
   );
+
+  const toggleFavouriteGame = () => window.api.toggleFavouriteGame(game._id);
 
   const onRemoveConfirm = async (preventReadd: boolean) => {
     await window.api.removeGame(game._id, preventReadd);
@@ -46,6 +48,11 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             <GameControls game={game} />
           </Group>
           <Group gap="xs">
+            <ActionIcon
+              aria-label="Favourite"
+              icon={game.isFavourite ? IconStarFilled : IconStar}
+              onClick={() => toggleFavouriteGame()}
+            />
             <ActionIcon aria-label="Quick access" icon={IconBolt} onClick={() => toggleQuickLaunchGame(game._id)} />
             <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
             <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />

@@ -30,6 +30,7 @@ export const getFilteredGames = async ({
   developers,
   gameModes,
   genres,
+  isFavourite,
   isInstalled,
   libraries,
   platforms,
@@ -41,6 +42,7 @@ export const getFilteredGames = async ({
       {
         $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
         ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
+        ...(isFavourite != undefined && { isFavourite }),
         ...(isInstalled != undefined && { isInstalled }),
         ...(libraries?.length && { library: { $in: libraries } }),
         ...idMatcher("developers", developers),
@@ -205,6 +207,11 @@ export const getQuickLaunchGames = async () => {
 export const toggleQuickLaunchGame = async (id: string) => {
   const game = await findGameById(id);
   return await updateGameById(id, { quickLaunch: !game?.quickLaunch });
+};
+
+export const toggleFavouriteGame = async (id: string) => {
+  const game = await findGameById(id);
+  return await updateGameById(id, { isFavourite: !game?.isFavourite });
 };
 
 export const getInstalledGames = async (library: LikeLibrary) => {

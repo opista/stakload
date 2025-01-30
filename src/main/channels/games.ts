@@ -12,6 +12,7 @@ import {
   getNewGames,
   getQuickLaunchGames,
   removeGameById,
+  toggleFavouriteGame,
   toggleQuickLaunchGame,
 } from "../database/games";
 import { installGame, launchGame, uninstallGame } from "../libraries/launchers";
@@ -49,6 +50,12 @@ export const getCollectionGamesHandler = async (_event: IpcMainInvokeEvent, id: 
   const collection = await findCollectionById(id);
   if (!collection) return [];
   return getFilteredGames(collection.filters);
+};
+
+export const toggleFavouriteGameHandler = (contents: WebContents) => async (_event: IpcMainInvokeEvent, id: string) => {
+  const updated = await toggleFavouriteGame(id);
+  contents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+  return updated;
 };
 
 export const toggleQuickLaunchGameHandler =

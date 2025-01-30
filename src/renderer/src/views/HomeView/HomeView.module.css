@@ -1,12 +1,11 @@
 .container {
-  --stack-gap: 50px !important;
   min-height: 100%;
   overflow-y: auto;
   padding: 0 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
   width: 100%;
 }
 
-.container>* {
+.container > * {
   flex-shrink: 0;
   min-height: fit-content;
 }

@@ -15,6 +15,7 @@ import {
   IconHome,
   IconLayersIntersect,
   IconSettings,
+  IconStar,
   IconUser,
 } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
@@ -50,6 +51,7 @@ export const Navbar = () => {
           <Stack gap="xs">
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
             <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
+            <NavbarLink href="/desktop/favourites" icon={IconStar} label="Favourites" />
             <NavbarLink icon={IconBooks} label="Collections">
               {collections.map((collection) => (
                 <NavbarLink

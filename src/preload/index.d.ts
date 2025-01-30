@@ -51,6 +51,7 @@ declare global {
       sleepDevice: () => void;
       syncGames: () => void;
       testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
+      toggleFavouriteGame: (id: string) => Promise<GameStoreModel>;
       toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
       uninstallGame: (id: string) => void;
       updateCollection: (
