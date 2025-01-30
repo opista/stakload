@@ -27,11 +27,12 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 
 - All layouts should be in the src/renderer/src/layouts directory
 - All layouts should be named like {LayoutName}Layout.tsx
-- A layout is a component that wraps around the main content of the application and provides a consistent structure for the application
+- A layout is a component that wraps around the main content of a view and provides a consistent structure for the application
 - There are 3 layouts currently in use, BaseLayout, DesktopLayout and GamingLayout. BaseLayout is the default layout and is used for the home page.
   - BaseLayout is a simple layout that just directs the user to the correct layout based on their interface settings.
   - DesktopLayout is for users who want to access their library with a keyboard and mouse.
   - GamingLayout is for users who want to access their library with a controller, or in a more console-like manner.
+- We will likely never need to creat a new layout, but if we do, we should follow the existing convention in this file.
 - Layouts should have minimal logic and should be used to provide a consistent structure for the application.
 
 ## Views
@@ -51,7 +52,23 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - A component is a reusable piece of UI that is used to build the UI
 - Components should be as simple as possible and should contain minimal logic
 - Components should be built upon Mantine components where possible
-- In situations where multiple classes need to be applied to a compoenent, always use the clsx library to combine the classes
+- In situations where multiple classes need to be applied to a component, always use the clsx library to combine the classes
+- All components should have Props. Props should be defined above the component, named {ComponentName}Props
+- Components should be defined as anonymous functions, and should not be exported as default exports.
+
+## Error Handling
+
+- Use consistent error boundaries for route-level error handling
+- Handle all async operations with proper error states
+- Provide user-friendly error messages through i18n
+- Log errors appropriately for debugging
+
+## Media Handling
+
+- Define consistent aspect ratios for images (seen in GameCover component)
+- Use appropriate image formats and optimization
+- Handle loading states for media content
+- Provide fallbacks for failed media loads
 
 ## Hooks
 
@@ -67,6 +84,13 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - Global styles are found in src/renderer/src/styles/styles.css
 - flex/grid-related props on Stack/Group/Flex components should be left as-is.
 
+### Theme and Colors
+
+- Use CSS variables for colors, especially --mantine-\* variables where possible
+- Never use hardcoded hex colors
+- Define common color variables in styles.css, or overwrite the default Mantine variables in styles.css
+- Follow Mantine's color system for consistency
+
 ## i18n
 
 - All text should be translated using react-i18next
@@ -76,9 +100,45 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - All translations should be scoped to the component they are used in. For example, if a translation is in the GameCover component, it should be structured as "gameCover.{string}"
 - If a translation is used in multiple places, it should be placed in the "common" object.
 
+## Accessibility
+
+- Follow Mantine's accessibility guidelines
+- Ensure proper keyboard navigation
+- Maintain appropriate color contrast
+- Provide proper ARIA labels and roles
+- Support screen readers through meaningful text alternatives
+
+## Controller Support
+
+- All interactive elements with GamingLayout must be controller-accessible
+- Maintain consistent focus management
+- Provide visual feedback for controller navigation
+- Support standard controller button mappings
+
+## Data Management
+
+- Define consistent data fetching patterns
+- Handle data caching appropriately
+- Implement proper data refresh strategies
+- Manage local storage consistently
+
+## Animations
+
+- Use consistent transition timings (seen in various .module.css files)
+- Prefer transform animations for performance
+- Respect user's reduced motion preferences
+- Keep animations subtle and purposeful
+
 ## Tooling
 
 - Reach for Mantine components first, then custom components if there isn't a suitable Mantine component
 - If you are requested to create a feature using a tool or library but it isn't fit for purpose, suggest a suitable alternative with a list of justifications.
+
+## Testing
+
+- Define testing patterns and expectations
+- Specify which components require tests
+- Define coverage requirements
+- Specify testing tools and methodologies
 
 Finally, remember it is very, very important to always follow these rules.

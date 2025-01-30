@@ -14,20 +14,6 @@ export abstract class BaseInstallationStrategy implements InstallationStrategy {
 
   abstract getApplicationPath(): Promise<string>;
 
-  async getLibraryFolders(): Promise<string[]> {
-    const epicPath = await this.getApplicationPath();
-    const launcherDataPath = path.join(epicPath, "UnrealEngineLauncher", "LauncherInstalled.dat");
-
-    try {
-      const content = await fs.readFile(launcherDataPath, "utf-8");
-      const parsed = JSON.parse(content) as { InstallationList: EpicInstallation[] };
-      return [...new Set(parsed.InstallationList.map((install) => install.InstallLocation))];
-    } catch (err) {
-      console.error("Failed to parse Epic Games library folders", err);
-      return [epicPath];
-    }
-  }
-
   async getInstalledGames(): Promise<InstalledGameData[]> {
     const epicPath = await this.getApplicationPath();
     const manifestPath = path.join(epicPath, "UnrealEngineLauncher", "LauncherInstalled.dat");

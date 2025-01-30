@@ -8,5 +8,4 @@ export interface InstalledGameData {
 export interface InstallationStrategy {
   getApplicationPath(): Promise<string>;
   getInstalledGames(): Promise<InstalledGameData[]>;
-  getLibraryFolders(): Promise<string[]>;
 }
