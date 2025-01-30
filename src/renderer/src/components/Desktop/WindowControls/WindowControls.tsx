@@ -1,14 +1,22 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
-import { IconDeviceGamepad2, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
+import { useGameStore } from "@store/game.store";
+import { IconDeviceGamepad2, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./WindowControls.module.css";
 
 export const WindowControls = () => {
+  const gamesList = useGameStore(useShallow((state) => state.gamesList));
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  const handleRandomGame = () => {
+    const index = Math.floor(Math.random() * gamesList.length);
+    const randomGame = gamesList[index];
+    navigate(`/desktop/library/${randomGame._id}`);
+  };
   const handleGamingMode = () => navigate("/gaming");
   const handleMinimize = () => window.api.minimizeWindow();
   const handleMaximize = () => window.api.maximizeWindow();
@@ -17,6 +25,16 @@ export const WindowControls = () => {
   return (
     <Group className={classes.container}>
       <Group className={classes.inner} gap="xs">
+        <Tooltip label={t("windowControls.randomGame")}>
+          <ActionIcon
+            aria-label={t("windowControls.randomGame")}
+            color="gray"
+            onClick={handleRandomGame}
+            variant="subtle"
+          >
+            <IconDice5Filled size={16} />
+          </ActionIcon>
+        </Tooltip>
         <Tooltip label={t("windowControls.gamingMode")}>
           <ActionIcon
             aria-label={t("windowControls.gamingMode")}

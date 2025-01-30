@@ -190,7 +190,8 @@
     "close": "Close",
     "gamingMode": "Gaming mode",
     "maximize": "Maximize",
-    "minimize": "Minimize"
+    "minimize": "Minimize",
+    "randomGame": "Random game"
   },
   "gamesGrid": {
     "noGamesFound": "No games found",
