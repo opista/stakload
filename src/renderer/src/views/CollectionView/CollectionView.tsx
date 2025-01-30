@@ -38,7 +38,7 @@ export const CollectionView = () => {
     } else {
       setGames(collectionGames);
     }
-  }, []);
+  }, [id]);
 
   if (!collection) {
     return <Title order={3}>{t("collection.notFound")}</Title>;
