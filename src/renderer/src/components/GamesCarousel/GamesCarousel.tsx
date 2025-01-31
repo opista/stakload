@@ -23,7 +23,9 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
     if (width >= 1900) return 7;
     if (width >= 1700) return 6;
     if (width >= 1500) return 5;
-    return 4;
+    if (width >= 1200) return 4;
+    if (width >= 900) return 3;
+    return 2;
   }, [width]);
 
   return (
