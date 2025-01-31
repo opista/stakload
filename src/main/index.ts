@@ -52,7 +52,7 @@ function createWindow() {
     closable: true,
     enableLargerThanScreen: false,
     focusable: true,
-    frame: false,
+    frame: true,
     fullscreenable: true,
     hasShadow: true,
     height: 800,
@@ -67,7 +67,6 @@ function createWindow() {
     title: "Trulaunch",
     titleBarOverlay: false,
     titleBarStyle: "hidden",
-    transparent: true,
     vibrancy: "under-window",
     visualEffectState: "active",
     webPreferences: {
