@@ -1,5 +1,5 @@
 import { GameFilters } from "@contracts/database/games";
-import { BrowserWindow, IpcMainInvokeEvent, WebContents } from "electron";
+import { IpcMainInvokeEvent, WebContents } from "electron";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { findCollectionById } from "../database/collections";
@@ -15,10 +15,6 @@ import {
   toggleFavouriteGame,
   toggleQuickLaunchGame,
 } from "../database/games";
-import { installGame, uninstallGame } from "../libraries/launchers";
-import { EnhancedSteamLauncher } from "../libraries/launchers/enhanced-steam";
-
-const steamLauncher = new EnhancedSteamLauncher();
 
 export const getGameFilters = (_event: IpcMainInvokeEvent) => findGameFilters();
 
@@ -67,43 +63,5 @@ export const toggleQuickLaunchGameHandler =
     contents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
     return updated;
   };
-
-export const launchGameHandler = async (id: string, browserWindow: BrowserWindow) => {
-  const game = await findGameById(id);
-  if (!game) return;
-
-  const result = await steamLauncher.launchGame(game);
-
-  if (!result.success) {
-    // browserWindow.webContents.send(EVENT_CHANNELS.GAME_LAUNCH_ERROR, {
-    //   gameId: id,
-    //   error: result.error,
-    // });
-    return;
-  }
-
-  // Minimize when game launches
-  browserWindow.minimize();
-
-  // Set up game exit handler
-  steamLauncher.onGameExit(() => {
-    browserWindow.restore();
-    browserWindow.focus();
-  });
-};
-
-export const installGameHandler = async (id: string) => {
-  const game = await findGameById(id);
-  // TODO - Proper handling
-  if (!game) return;
-  await installGame(game);
-};
-
-export const uninstallGameHandler = async (id: string) => {
-  const game = await findGameById(id);
-  // TODO - Proper handling
-  if (!game) return;
-  await uninstallGame(game);
-};
 
 export const getFilteredGamesHandler = (_event: IpcMainInvokeEvent, filters: GameFilters) => getFilteredGames(filters);

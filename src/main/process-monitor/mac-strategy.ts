@@ -1,9 +1,11 @@
 import { exec } from "child_process";
 import { promisify } from "util";
 
+import { ProcessMonitorStrategy } from "./types";
+
 const execAsync = promisify(exec);
 
-export class MacProcessMonitor {
+export class MacProcessMonitor implements ProcessMonitorStrategy {
   // eslint-disable-next-line no-undef
   private processCheckInterval: NodeJS.Timeout | null = null;
 

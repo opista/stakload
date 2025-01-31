@@ -15,7 +15,6 @@ import {
   WINDOW_CHANNELS,
 } from "../preload/channels";
 import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
-import { GameSyncManager } from "./channels/game-sync-manager";
 import {
   getCollectionGamesHandler,
   getFilteredGamesHandler,
@@ -26,18 +25,17 @@ import {
   getNewGamesHandler,
   getProtondbTier,
   getQuickLaunchGamesHandler,
-  installGameHandler,
-  launchGameHandler,
   removeGame,
   toggleFavouriteGameHandler,
   toggleQuickLaunchGameHandler,
-  uninstallGameHandler,
 } from "./channels/games";
 import { getLocale } from "./channels/get-locale";
 import { authenticateIntegration } from "./channels/integrations";
 import { getOS } from "./channels/os";
 import { restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
+import { GameLaunchManager } from "./launch/game-launch-manager";
+import { GameSyncManager } from "./sync/game-sync-manager";
 import { closeWindow, minimizeWindow, toggleWindowMaximized } from "./window";
 
 const conf = new Conf();
@@ -100,6 +98,7 @@ function createWindow() {
   }
 
   const syncManager = new GameSyncManager(browserWindow.webContents, conf);
+  const launchManager = new GameLaunchManager(browserWindow);
 
   browserWindow.on("ready-to-show", async () => {
     browserWindow.show();
@@ -118,7 +117,7 @@ function createWindow() {
     browserWindow.loadFile(join(__dirname, "../renderer/index.html"));
   }
 
-  return { browserWindow, syncManager };
+  return { browserWindow, launchManager, syncManager };
 }
 
 // Menu.setApplicationMenu(null);
@@ -143,7 +142,7 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  const { browserWindow, syncManager } = createWindow();
+  const { browserWindow, launchManager, syncManager } = createWindow();
 
   // Integration Handlers
   ipcMain.handle(INTEGRATION_CHANNELS.AUTHENTICATE, authenticateIntegration(browserWindow));
@@ -170,9 +169,9 @@ app.whenReady().then(async () => {
   ipcMain.handle(GAME_CHANNELS.GET_NEW, getNewGamesHandler);
   ipcMain.handle(GAME_CHANNELS.TOGGLE_FAVOURITE, toggleFavouriteGameHandler(browserWindow.webContents));
   ipcMain.on(GAME_CHANNELS.SYNC, () => syncManager.sync([Library.EpicGameStore, Library.Steam]));
-  ipcMain.on(GAME_CHANNELS.LAUNCH, (_, id: string) => launchGameHandler(id, browserWindow));
-  ipcMain.on(GAME_CHANNELS.INSTALL, (_, id: string) => installGameHandler(id));
-  ipcMain.on(GAME_CHANNELS.UNINSTALL, (_, id: string) => uninstallGameHandler(id));
+  ipcMain.on(GAME_CHANNELS.LAUNCH, (_, id: string) => launchManager.launchGame(id));
+  ipcMain.on(GAME_CHANNELS.INSTALL, (_, id: string) => launchManager.installGame(id));
+  ipcMain.on(GAME_CHANNELS.UNINSTALL, (_, id: string) => launchManager.uninstallGame(id));
 
   // Quick Access Handlers
   ipcMain.handle(COLLECTION_CHANNELS.GET_GAMES, getCollectionGamesHandler);

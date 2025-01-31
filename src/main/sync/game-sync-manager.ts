@@ -6,16 +6,9 @@ import fastq from "fastq";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { findUnsyncedGames, updateGameById } from "../database/games";
-import { EpicGamesStoreLibrary } from "../libraries/epic-games-store";
-import { SteamLibrary } from "../libraries/steam";
-import { LibraryActions } from "../libraries/types";
-
-interface FailureHistoryEntry {
-  action: "library" | "install" | "metadata";
-  code: "AUTHENTICATION_ERROR" | "UNKNOWN_ERROR" | "UNSUPPORTED_LIBRARY";
-  gameName?: string;
-  library?: LikeLibrary;
-}
+import { EpicGamesStoreLibrary } from "../libraries/epic-games-store/epic-game-store-library";
+import { SteamLibrary } from "../libraries/steam/steam-library";
+import { FailureHistoryEntry, LibraryActions } from "./types";
 
 export class GameSyncManager {
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
@@ -36,6 +29,10 @@ export class GameSyncManager {
     };
   }
 
+  private getLIbraryImplementation(library: LikeLibrary): LibraryActions | undefined {
+    return this.libraries[library];
+  }
+
   private emitSyncEvent(message: GameSyncMessage) {
     this.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
@@ -50,7 +47,7 @@ export class GameSyncManager {
       library,
     });
 
-    const libraryImpl = this.libraries[library];
+    const libraryImpl = this.getLIbraryImplementation(library);
     if (!libraryImpl) {
       this.addFailureEntry({
         action: "library",
@@ -83,12 +80,11 @@ export class GameSyncManager {
       total: this.total,
     });
 
-    const libraryImpl = this.libraries[game.library];
+    const libraryImpl = this.getLIbraryImplementation(game.library);
     if (!libraryImpl) {
       this.addFailureEntry({
-        action: "metadata",
+        action: "library",
         code: "UNSUPPORTED_LIBRARY",
-        gameName: game.name,
         library: game.library,
       });
       return;
@@ -144,10 +140,8 @@ export class GameSyncManager {
   }
 
   isIntegrationValid(library: LikeLibrary) {
-    const libraryImpl = this.libraries[library];
-    if (!libraryImpl) {
-      return false;
-    }
+    const libraryImpl = this.getLIbraryImplementation(library);
+    if (!libraryImpl) return false;
 
     return libraryImpl.isIntegrationValid();
   }

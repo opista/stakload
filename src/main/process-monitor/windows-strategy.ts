@@ -1,6 +1,7 @@
-import { execAsync } from "../../util/exec-async";
+import { execAsync } from "../util/exec-async";
+import { ProcessMonitorStrategy } from "./types";
 
-export class WindowsProcessMonitor {
+export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   private watchedProcesses: Map<number, () => void> = new Map();
   // eslint-disable-next-line no-undef
   private processCheckInterval: NodeJS.Timeout | null = null;
