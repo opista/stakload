@@ -68,10 +68,10 @@ export const useGameStore = create<GameStore>()(
 
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       toggleQuickLaunchGame: async (id: string) => {
-        const { quickLaunch } = await window.api.toggleQuickLaunchGame(id);
+        const { isQuickLaunch } = await window.api.toggleQuickLaunchGame(id);
 
         set((state) => {
-          if (!quickLaunch) {
+          if (!isQuickLaunch) {
             return {
               quickLaunchGamesOrder: state.quickLaunchGamesOrder.filter((gameId) => gameId !== id),
             };

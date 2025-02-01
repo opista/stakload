@@ -1,16 +1,18 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/sync";
-import { WebContents } from "electron";
+import { BrowserWindow } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
+import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
-import { findUnsyncedGames, updateGameById } from "../database/games";
+import { GameStore } from "../game/game.store";
 import { EpicGamesStoreLibrary } from "../libraries/epic-games-store/epic-game-store-library";
 import { SteamLibrary } from "../libraries/steam/steam-library";
 import { FailureHistoryEntry, LibraryActions } from "./types";
 
-export class GameSyncManager {
+@Service()
+export class SyncService {
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
   private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
   private failures: FailureHistoryEntry[] = [];
@@ -20,8 +22,9 @@ export class GameSyncManager {
   private total: number = 0;
 
   constructor(
-    private webContents: WebContents,
     private conf: Conf,
+    private gameStore: GameStore,
+    private window: BrowserWindow,
   ) {
     this.libraries = {
       [Library.EpicGameStore]: new EpicGamesStoreLibrary(),
@@ -34,7 +37,7 @@ export class GameSyncManager {
   }
 
   private emitSyncEvent(message: GameSyncMessage) {
-    this.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
+    this.window.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
 
   private addFailureEntry(entry: FailureHistoryEntry) {
@@ -92,7 +95,7 @@ export class GameSyncManager {
 
     try {
       const metadata = await libraryImpl.getGameMetadata(game);
-      await updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
+      await this.gameStore.updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
     } catch (error) {
       this.addFailureEntry({
         action: "metadata",
@@ -107,7 +110,7 @@ export class GameSyncManager {
     await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
     await this.libraryQueue.drained();
 
-    const unsyncedGames = await findUnsyncedGames();
+    const unsyncedGames = await this.gameStore.findUnsyncedGames();
     await Promise.all(unsyncedGames.map((game) => this.metadataQueue.push(game)));
     await this.metadataQueue.drained();
 

@@ -1,7 +1,6 @@
 import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
-import { useSystemStore } from "@store/system.store";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +12,6 @@ import classes from "./App.module.css";
 export const App = () => {
   const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
   const { i18n } = useTranslation();
-  const setOperatingSystem = useSystemStore(useShallow((state) => state.setOperatingSystem));
 
   const { syncOnStartup } = useIntegrationSettingsStore(
     useShallow((state) => ({
@@ -82,7 +80,6 @@ export const App = () => {
    * user loads the app for the first time.
    */
   useEffect(() => {
-    window.api.getOS().then(setOperatingSystem);
     window.api.getLocale().then((locale) => i18n.changeLanguage(locale));
   }, []);
 

@@ -19,12 +19,6 @@ const GeneralSettings = () => {
     })),
   );
   const { t } = useTranslation();
-  const [lastSync, setLastSync] = useState<Date | null>(null);
-
-  useEffect(() => {
-    window.api.getGamesLastSyncedAt().then(setLastSync);
-  }, []);
-
   /**
    * TODO - this should trigger libraries to
    * re-fetch games and add any new ones to
@@ -48,7 +42,7 @@ const GeneralSettings = () => {
               formatParams: {
                 val: { dateStyle: "short", timeStyle: "short" },
               },
-              val: lastSync,
+              val: "TODO",
             })}
           </span>
         </div>
@@ -93,7 +87,7 @@ const SteamSettings = () => {
     setIsUpdated(false);
     setIsLoading(true);
     setIsIntegrationValid(null);
-    const isValid = await window.api.testLibraryIntegration(steamId, webApiKey);
+    const isValid = await window.api.testLibraryIntegration("steam");
     setIsIntegrationValid(isValid);
     setIsLoading(false);
   };

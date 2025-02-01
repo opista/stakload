@@ -1,124 +1,20 @@
-import { Library } from "@contracts/database/games";
-import { electronApp, is, optimizer } from "@electron-toolkit/utils";
-import { app, BrowserWindow, ipcMain, shell } from "electron";
+import "reflect-metadata";
+
+import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { app, ipcMain } from "electron";
 import { Conf } from "electron-conf/main";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
-import { join } from "path";
+import { Container } from "typedi";
 
-import {
-  COLLECTION_CHANNELS,
-  GAME_CHANNELS,
-  INTEGRATION_CHANNELS,
-  QUICK_ACCESS_CHANNELS,
-  SECURITY_CHANNELS,
-  SYSTEM_CHANNELS,
-  WINDOW_CHANNELS,
-} from "../preload/channels";
-import { createCollection, deleteCollection, getCollections, updateCollection } from "./channels/collections";
-import {
-  getCollectionGamesHandler,
-  getFilteredGamesHandler,
-  getGameById,
-  getGameFilters,
-  getGamesLastSyncedAt,
-  getGamesListHandler,
-  getNewGamesHandler,
-  getProtondbTier,
-  getQuickLaunchGamesHandler,
-  removeGame,
-  toggleFavouriteGameHandler,
-  toggleQuickLaunchGameHandler,
-} from "./channels/games";
-import { getLocale } from "./channels/get-locale";
+import { INTEGRATION_CHANNELS, SECURITY_CHANNELS } from "../preload/channels";
+import { AppModule } from "./app.module";
 import { authenticateIntegration } from "./channels/integrations";
-import { getOS } from "./channels/os";
-import { restartApp, restartDevice, shutdownDevice, sleepDevice } from "./channels/power";
 import { decrypt, encrypt } from "./channels/safe-storage";
-import { GameLaunchManager } from "./launch/game-launch-manager";
-import { GameSyncManager } from "./sync/game-sync-manager";
-import { closeWindow, minimizeWindow, toggleWindowMaximized } from "./window";
+import { ModuleRegistry } from "./util/module/module.registry";
+import { WindowService } from "./window/window.service";
 
 const conf = new Conf();
 conf.registerRendererListener();
-
-function createWindow() {
-  // Create the browser window.
-  const browserWindow = new BrowserWindow({
-    autoHideMenuBar: true,
-    backgroundColor: "#00000000",
-    center: true,
-    closable: true,
-    enableLargerThanScreen: false,
-    focusable: true,
-    frame: false,
-    fullscreenable: true,
-    hasShadow: true,
-    height: 800,
-    maximizable: true,
-    minHeight: 800,
-    minWidth: 800,
-    minimizable: true,
-    movable: true,
-    resizable: true,
-    roundedCorners: true,
-    show: false,
-    title: "Trulaunch",
-    titleBarOverlay: false,
-    titleBarStyle: "hidden",
-    vibrancy: "under-window",
-    visualEffectState: "active",
-    webPreferences: {
-      accessibleTitle: "Trulaunch",
-      allowRunningInsecureContent: false,
-      autoplayPolicy: "document-user-activation-required",
-      contextIsolation: true,
-      devTools: true,
-      enableWebSQL: false,
-      experimentalFeatures: false,
-      imageAnimationPolicy: "animate",
-      images: true,
-      javascript: true,
-      navigateOnDragDrop: false,
-      nodeIntegration: false,
-      nodeIntegrationInWorker: false,
-      plugins: false,
-      preload: join(__dirname, "../preload/index.mjs"),
-      sandbox: false,
-      scrollBounce: false,
-      spellcheck: false,
-      textAreasAreResizable: false,
-      webSecurity: true,
-      zoomFactor: 1.0,
-    },
-    width: 1280,
-  });
-
-  if (process.platform === "darwin") {
-    browserWindow.setWindowButtonVisibility(false);
-  }
-
-  const syncManager = new GameSyncManager(browserWindow.webContents, conf);
-  const launchManager = new GameLaunchManager(browserWindow);
-
-  browserWindow.on("ready-to-show", async () => {
-    browserWindow.show();
-  });
-
-  browserWindow.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: "deny" };
-  });
-
-  // HMR for renderer base on electron-vite cli.
-  // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env["ELECTRON_RENDERER_URL"]) {
-    browserWindow.loadURL(process.env["ELECTRON_RENDERER_URL"]);
-  } else {
-    browserWindow.loadFile(join(__dirname, "../renderer/index.html"));
-  }
-
-  return { browserWindow, launchManager, syncManager };
-}
 
 // Menu.setApplicationMenu(null);
 
@@ -142,60 +38,17 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  const { browserWindow, launchManager, syncManager } = createWindow();
+  await ModuleRegistry.register(AppModule);
+
+  const windowService = Container.get(WindowService);
+  const browserWindow = windowService.createWindow();
 
   // Integration Handlers
   ipcMain.handle(INTEGRATION_CHANNELS.AUTHENTICATE, authenticateIntegration(browserWindow));
-  ipcMain.handle(INTEGRATION_CHANNELS.TEST_STEAM, () => syncManager.isIntegrationValid(Library.Steam));
 
   // Security Handlers
   ipcMain.handle(SECURITY_CHANNELS.DECRYPT, decrypt);
   ipcMain.handle(SECURITY_CHANNELS.ENCRYPT, encrypt);
-
-  // Collection Handlers
-  ipcMain.handle(COLLECTION_CHANNELS.CREATE, createCollection(browserWindow.webContents));
-  ipcMain.handle(COLLECTION_CHANNELS.GET_ALL, getCollections);
-  ipcMain.handle(COLLECTION_CHANNELS.UPDATE, updateCollection(browserWindow.webContents));
-  ipcMain.handle(COLLECTION_CHANNELS.DELETE, deleteCollection(browserWindow.webContents));
-
-  // Game Management Handlers
-  ipcMain.handle(GAME_CHANNELS.GET_FILTERS, getGameFilters);
-  ipcMain.handle(GAME_CHANNELS.GET_BY_ID, getGameById);
-  ipcMain.handle(GAME_CHANNELS.GET_LAST_SYNCED, getGamesLastSyncedAt);
-  ipcMain.handle(GAME_CHANNELS.GET_PROTONDB_TIER, getProtondbTier);
-  ipcMain.handle(GAME_CHANNELS.REMOVE, removeGame(browserWindow.webContents));
-  ipcMain.handle(GAME_CHANNELS.GET_LIST, getGamesListHandler);
-  ipcMain.handle(GAME_CHANNELS.GET_FILTERED, getFilteredGamesHandler);
-  ipcMain.handle(GAME_CHANNELS.GET_NEW, getNewGamesHandler);
-  ipcMain.handle(GAME_CHANNELS.TOGGLE_FAVOURITE, toggleFavouriteGameHandler(browserWindow.webContents));
-  ipcMain.on(GAME_CHANNELS.SYNC, () => syncManager.sync([Library.EpicGameStore, Library.Steam]));
-  ipcMain.on(GAME_CHANNELS.LAUNCH, (_, id: string) => launchManager.launchGame(id));
-  ipcMain.on(GAME_CHANNELS.INSTALL, (_, id: string) => launchManager.installGame(id));
-  ipcMain.on(GAME_CHANNELS.UNINSTALL, (_, id: string) => launchManager.uninstallGame(id));
-
-  // Quick Access Handlers
-  ipcMain.handle(COLLECTION_CHANNELS.GET_GAMES, getCollectionGamesHandler);
-  ipcMain.handle(QUICK_ACCESS_CHANNELS.GET_GAMES, getQuickLaunchGamesHandler);
-  ipcMain.handle(QUICK_ACCESS_CHANNELS.TOGGLE_GAME, toggleQuickLaunchGameHandler(browserWindow.webContents));
-
-  // System Handlers
-  ipcMain.handle(SYSTEM_CHANNELS.GET_LOCALE, getLocale);
-  ipcMain.handle(SYSTEM_CHANNELS.GET_OS, getOS);
-  ipcMain.on(SYSTEM_CHANNELS.RESTART_APP, restartApp);
-  ipcMain.on(SYSTEM_CHANNELS.RESTART_DEVICE, restartDevice);
-  ipcMain.on(SYSTEM_CHANNELS.SHUTDOWN_DEVICE, shutdownDevice);
-  ipcMain.on(SYSTEM_CHANNELS.SLEEP_DEVICE, sleepDevice);
-
-  // Window Management Handlers
-  ipcMain.on(WINDOW_CHANNELS.MINIMIZE, () => minimizeWindow(browserWindow));
-  ipcMain.on(WINDOW_CHANNELS.MAXIMIZE, () => toggleWindowMaximized(browserWindow));
-  ipcMain.on(WINDOW_CHANNELS.CLOSE, () => closeWindow(browserWindow));
-
-  app.on("activate", function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

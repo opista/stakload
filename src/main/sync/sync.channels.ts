@@ -1,0 +1,4 @@
+export const SYNC_CHANNELS = {
+  SYNC: "SYNC_GAMES",
+  TEST_INTEGRATION: "TEST_INTEGRATION",
+} as const;

@@ -1,7 +1,8 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
 import { BrowserWindow } from "electron";
+import { Service } from "typedi";
 
-import { findGameById } from "../database/games";
+import { GameStore } from "../game/game.store";
 import { EpicGameStoreLauncher } from "../libraries/epic-games-store/epic-game-store-launcher";
 import { SteamLauncher } from "../libraries/steam/steam-launcher";
 import { createProcessMonitorStrategy } from "../process-monitor/create-process-monitor-strategy";
@@ -11,11 +12,15 @@ import { LauncherActions, LaunchResult } from "./types";
 const POLLING_INTERVAL = 2000; // 2 seconds
 const MAX_POLLING_TIME = 60000; // 1 minute
 
-export class GameLaunchManager {
+@Service()
+export class LaunchService {
   private libraries: Partial<Record<LikeLibrary, LauncherActions>>;
   private processMonitor: ProcessMonitorStrategy;
 
-  constructor(private readonly browserWindow: BrowserWindow) {
+  constructor(
+    private readonly gameStore: GameStore,
+    private readonly window: BrowserWindow,
+  ) {
     this.processMonitor = createProcessMonitorStrategy();
 
     this.libraries = {
@@ -50,13 +55,13 @@ export class GameLaunchManager {
 
   private watchGameProcess(pid: number) {
     this.processMonitor.watchProcess(pid, () => {
-      this.browserWindow.restore();
-      this.browserWindow.focus();
+      this.window.restore();
+      this.window.focus();
     });
   }
 
   async launchGame(id: string): Promise<LaunchResult> {
-    const game = await findGameById(id);
+    const game = await this.gameStore.findGameById(id);
     if (!game) return { success: false, error: "Game not found" };
 
     try {
@@ -71,7 +76,7 @@ export class GameLaunchManager {
         };
       }
 
-      this.browserWindow.minimize();
+      this.window.minimize();
       this.watchGameProcess(pid);
       return { success: true };
     } catch (error) {
@@ -83,14 +88,14 @@ export class GameLaunchManager {
   }
 
   async installGame(id: string) {
-    const game = await findGameById(id);
+    const game = await this.gameStore.findGameById(id);
     if (!game) return;
 
     return this.getLauncher(game.library).install(game);
   }
 
   async uninstallGame(id: string) {
-    const game = await findGameById(id);
+    const game = await this.gameStore.findGameById(id);
     if (!game) return;
 
     return this.getLauncher(game.library).uninstall(game);

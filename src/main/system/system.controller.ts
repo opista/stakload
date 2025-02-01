@@ -1,0 +1,38 @@
+import { IpcMainInvokeEvent } from "electron";
+
+import { BaseController } from "../util/base.controller";
+import { IpcOn } from "../util/ipc.decorator";
+import { IpcHandle } from "../util/ipc.decorator";
+import { SYSTEM_CHANNELS } from "./system.channels";
+import { SystemService } from "./system.service";
+
+export class SystemController extends BaseController {
+  constructor(private readonly systemService: SystemService) {
+    super();
+  }
+
+  @IpcHandle(SYSTEM_CHANNELS.GET_LOCALE)
+  async getLocale(_event: IpcMainInvokeEvent) {
+    return this.systemService.getLocale();
+  }
+
+  @IpcOn(SYSTEM_CHANNELS.RESTART_APP)
+  async restartApplication() {
+    return this.systemService.restartApplication();
+  }
+
+  @IpcOn(SYSTEM_CHANNELS.RESTART_DEVICE)
+  async restartDevice() {
+    return this.systemService.restart();
+  }
+
+  @IpcOn(SYSTEM_CHANNELS.SHUTDOWN_DEVICE)
+  async shutdownDevice() {
+    return this.systemService.shutdown();
+  }
+
+  @IpcOn(SYSTEM_CHANNELS.SLEEP_DEVICE)
+  async sleepDevice() {
+    return this.systemService.sleep();
+  }
+}

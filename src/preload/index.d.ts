@@ -1,12 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import {
-  FeaturedGameModel,
-  GameFilters,
-  GameListModel,
-  GameStoreModel,
-  LikeLibrary,
-  Platform,
-} from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
@@ -29,11 +22,9 @@ declare global {
       getFilteredGames: (filters?: GameFilters) => Promise<GameListModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
-      getGamesLastSyncedAt: () => Promise<Date>;
       getGamesList: () => Promise<GameListModel[]>;
       getLocale: () => Promise<string>;
       getNewGames: () => Promise<FeaturedGameModel[]>;
-      getOS: () => Promise<Platform>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
       getQuickLaunchGames: () => Promise<GameListModel[]>;
       installGame: (id: string) => void;
@@ -50,7 +41,7 @@ declare global {
       shutdownDevice: () => void;
       sleepDevice: () => void;
       syncGames: () => void;
-      testLibraryIntegration: (steamid: string, webApiKey: string) => Promise<boolean>;
+      testLibraryIntegration: (library: LikeLibrary) => Promise<boolean>;
       toggleFavouriteGame: (id: string) => Promise<GameStoreModel>;
       toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
       uninstallGame: (id: string) => void;

@@ -106,6 +106,7 @@ export type GameStoreModel = {
   installationDetails?: GameInstallationDetails;
   isFavourite?: boolean;
   isInstalled?: boolean;
+  isQuickLaunch?: boolean;
   lastPlayedAt?: Date;
   library: LikeLibrary;
   libraryMeta?: LibraryMeta;
@@ -115,7 +116,6 @@ export type GameStoreModel = {
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
-  quickLaunch?: boolean;
   screenshots?: string[];
   sortableName?: string;
   storyline?: string;
@@ -124,13 +124,32 @@ export type GameStoreModel = {
   websites?: Website[];
 };
 
+export type DateRange =
+  | "ONE_DAY"
+  | "ONE_WEEK"
+  | "ONE_MONTH"
+  | "ONE_YEAR"
+  | "TODAY"
+  | "THIS_WEEK"
+  | "THIS_MONTH"
+  | "THIS_YEAR"
+  | "CUSTOM";
+
+export type DateFilter = {
+  dateRange: DateRange;
+  endDate?: Date;
+  startDate?: Date;
+};
+
 export type GameFilters = {
   ageRatings?: string[];
+  createdAt?: DateFilter;
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
   isFavourite?: boolean;
   isInstalled?: boolean;
+  isQuickLaunch?: boolean;
   libraries?: string[];
   platforms?: string[];
   playerPerspectives?: string[];
