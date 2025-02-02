@@ -19,7 +19,8 @@ export class SyncService {
   private libraries: Partial<Record<Library, LibraryActions>>;
   private processing: number = 0;
   private syncInProgress = false;
-  private total: number = 0;
+  private metadataToProcess: number = 0;
+  private gamesAdded: number = 0;
 
   constructor(
     @Inject("conf") private conf: Conf,
@@ -63,7 +64,7 @@ export class SyncService {
 
     try {
       const numberOfNewGames = await libraryImpl.addNewGames();
-      this.total += numberOfNewGames;
+      this.gamesAdded += numberOfNewGames;
 
       await libraryImpl.updateInstalledGames();
     } catch (error) {
@@ -81,7 +82,7 @@ export class SyncService {
     this.emitSyncEvent({
       action: "metadata",
       processing: this.processing,
-      total: this.total,
+      total: this.metadataToProcess,
     });
 
     const libraryImpl = this.getLIbraryImplementation(game.library);
@@ -112,13 +113,14 @@ export class SyncService {
     await this.libraryQueue.drained();
 
     const unsyncedGames = await this.gameStore.findUnsyncedGames();
+    this.metadataToProcess = unsyncedGames.length;
     await Promise.all(unsyncedGames.map((game) => this.metadataQueue.push(game)));
     await this.metadataQueue.drained();
 
     this.emitSyncEvent({
       action: "complete",
       hasFailures: !!this.failures.length,
-      total: this.total,
+      total: this.gamesAdded,
     });
 
     this.syncInProgress = false;
@@ -140,7 +142,8 @@ export class SyncService {
     this.failures = [];
     this.processing = 0;
     this.syncInProgress = false;
-    this.total = 0;
+    this.metadataToProcess = 0;
+    this.gamesAdded = 0;
   }
 
   isIntegrationValid(library: LikeLibrary) {

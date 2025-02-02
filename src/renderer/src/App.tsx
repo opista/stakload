@@ -1,4 +1,14 @@
-import { Checkbox, ColorSchemeScript, Container, createTheme, MantineProvider, Modal, ScrollArea } from "@mantine/core";
+import {
+  Checkbox,
+  ColorSchemeScript,
+  Container,
+  createTheme,
+  MantineProvider,
+  Modal,
+  Notification,
+  ScrollArea,
+} from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import clsx from "clsx";
@@ -45,6 +55,13 @@ export const App = () => {
           size: "xl",
         },
       }),
+      Notification: Notification.extend({
+        classNames: {
+          icon: classes.notificationIcon,
+          loader: classes.notificationLoader,
+          root: classes.notification,
+        },
+      }),
       ScrollArea: ScrollArea.extend({
         classNames: {
           viewport: classes.viewport,
@@ -87,6 +104,7 @@ export const App = () => {
     <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <Notifications classNames={{ root: classes.notifications }} />
         <Outlet />
       </MantineProvider>
     </>
