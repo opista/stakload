@@ -2,19 +2,13 @@ import "reflect-metadata";
 
 import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, ipcMain } from "electron";
-import { Conf } from "electron-conf/main";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
-import { Container } from "typedi";
 
 import { INTEGRATION_CHANNELS, SECURITY_CHANNELS } from "../preload/channels";
-import { AppModule } from "./app.module";
 import { authenticateIntegration } from "./channels/integrations";
 import { decrypt, encrypt } from "./channels/safe-storage";
-import { ModuleRegistry } from "./util/module/module.registry";
+import { Container } from "./container";
 import { WindowService } from "./window/window.service";
-
-const conf = new Conf();
-conf.registerRendererListener();
 
 // Menu.setApplicationMenu(null);
 
@@ -38,10 +32,10 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window);
   });
 
-  await ModuleRegistry.register(AppModule);
-
   const windowService = Container.get(WindowService);
   const browserWindow = windowService.createWindow();
+
+  // TODO: Migrate these out to controllers
 
   // Integration Handlers
   ipcMain.handle(INTEGRATION_CHANNELS.AUTHENTICATE, authenticateIntegration(browserWindow));

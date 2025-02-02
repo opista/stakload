@@ -1,33 +1,45 @@
-import { CollectionStoreModel } from "@contracts/database/collections";
-import { IpcMainInvokeEvent } from "electron";
+import type { CollectionStoreModel } from "@contracts/database/collections";
+import { Service } from "typedi";
 
-import { BaseController } from "../util/base.controller";
+import { EVENT_CHANNELS } from "../../preload/channels";
 import { IpcHandle } from "../util/ipc.decorator";
+import { IpcEventController } from "../util/ipc-event.controller";
+import { WindowService } from "../window/window.service";
 import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";
 
-export class CollectionController extends BaseController {
-  constructor(private readonly collectionService: CollectionService) {
+@Service()
+export class CollectionController extends IpcEventController {
+  constructor(
+    private readonly collectionService: CollectionService,
+    private readonly windowService: WindowService,
+  ) {
     super();
   }
 
   @IpcHandle(COLLECTION_CHANNELS.CREATE)
-  async createCollection(_event: IpcMainInvokeEvent, collection: CollectionStoreModel) {
-    return this.collectionService.createCollection(collection);
+  async createCollection(collection: CollectionStoreModel) {
+    const created = await this.collectionService.createCollection(collection);
+    this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
+    return created;
   }
 
   @IpcHandle(COLLECTION_CHANNELS.GET_ALL)
-  async getCollections(_event: IpcMainInvokeEvent) {
+  async getCollections() {
     return this.collectionService.getCollections();
   }
 
   @IpcHandle(COLLECTION_CHANNELS.UPDATE)
-  async updateCollection(_event: IpcMainInvokeEvent, id: string, updates: Partial<CollectionStoreModel>) {
-    return this.collectionService.updateCollection(id, updates);
+  async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
+    const updated = await this.collectionService.updateCollection(id, updates);
+    this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
+    return updated;
   }
 
   @IpcHandle(COLLECTION_CHANNELS.DELETE)
-  async deleteCollection(_event: IpcMainInvokeEvent, id: string) {
-    return this.collectionService.deleteCollection(id);
+  async deleteCollection(id: string) {
+    const deleted = await this.collectionService.deleteCollection(id);
+    this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
+    return deleted;
   }
 }

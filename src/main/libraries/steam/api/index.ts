@@ -18,7 +18,7 @@ export const getOwnedGames = async (steamId: string, webApiKey: string) => {
     });
 
     const parsed: OwnedGamesResponse = await response.json();
-    return parsed.response.games;
+    return parsed?.response?.games;
   } catch (err) {
     const message = "Request to Steam API failed";
     console.error(message, { err });

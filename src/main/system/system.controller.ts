@@ -1,18 +1,19 @@
-import { IpcMainInvokeEvent } from "electron";
+import { Service } from "typedi";
 
-import { BaseController } from "../util/base.controller";
+import { IpcEventController } from "../util/ipc-event.controller";
 import { IpcOn } from "../util/ipc.decorator";
 import { IpcHandle } from "../util/ipc.decorator";
 import { SYSTEM_CHANNELS } from "./system.channels";
 import { SystemService } from "./system.service";
 
-export class SystemController extends BaseController {
+@Service()
+export class SystemController extends IpcEventController {
   constructor(private readonly systemService: SystemService) {
     super();
   }
 
   @IpcHandle(SYSTEM_CHANNELS.GET_LOCALE)
-  async getLocale(_event: IpcMainInvokeEvent) {
+  async getLocale() {
     return this.systemService.getLocale();
   }
 

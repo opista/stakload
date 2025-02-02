@@ -1,22 +1,26 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 import { Conf } from "electron-conf/main";
-import isEmpty from "lodash-es";
+import { Inject, Service } from "typedi";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
-import { bulkInsertGames, findGamesByGameIds, getInstalledGames, updateGameByGameId } from "../../database/games";
+import { GameStore } from "../../game/game.store";
+import { LibraryActions } from "../../sync/types";
 import { decryptString } from "../../util/safe-storage";
-import { LibraryActions } from "../types";
 import { getOwnedGames } from "./api";
 import { createInstallationStrategy } from "./installation/create-installation-strategy";
 import type { InstallationStrategy } from "./installation/types";
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 
+@Service()
 export class SteamLibrary implements LibraryActions {
   private library = Library.Steam;
   private installationStrategy: InstallationStrategy;
 
-  constructor(private conf: Conf) {
+  constructor(
+    @Inject("conf") private readonly conf: Conf,
+    private readonly gameStore: GameStore,
+  ) {
     this.installationStrategy = createInstallationStrategy();
   }
 
@@ -28,17 +32,23 @@ export class SteamLibrary implements LibraryActions {
     const installedGames = await this.installationStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
-    const currentlyInstalledGames = await getInstalledGames(this.library);
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames<GameStoreModel>(
+      {
+        isInstalled: true,
+        libraries: [this.library],
+      },
+      "all",
+    );
     const uninstalledGameIds = currentlyInstalledGames
       .map((game) => game.gameId)
       .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
 
     const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
     );
 
     const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
-      updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
@@ -49,7 +59,7 @@ export class SteamLibrary implements LibraryActions {
       const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
       const webApiKey = decryptString(config.webApiKey);
       const ownedGames = await getOwnedGames(config.steamId, webApiKey);
-      const existingGames = await findGamesByGameIds(
+      const existingGames = await this.gameStore.findGamesByGameIds(
         ownedGames.map((game) => String(game.appid)),
         this.library,
       );
@@ -59,7 +69,7 @@ export class SteamLibrary implements LibraryActions {
         .filter((game) => !existingIds.includes(String(game.appid)))
         .map(mapOwnedGameDetailsToGameStoreModel);
 
-      await bulkInsertGames(mappedGames);
+      await this.gameStore.bulkInsertGames(mappedGames);
 
       return mappedGames.length;
     } catch (err) {
@@ -73,7 +83,7 @@ export class SteamLibrary implements LibraryActions {
       const config = this.conf.get("integration_settings.state.steamIntegration") as SteamIntegrationDetails;
       const webApiKey = decryptString(config.webApiKey);
       const response = await getOwnedGames(config.steamId, webApiKey);
-      return !isEmpty(response);
+      return !!response;
     } catch (err) {
       console.error("Failed to validate integration:", err);
       return false;

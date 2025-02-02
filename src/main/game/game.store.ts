@@ -1,4 +1,4 @@
-import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, LikeLibrary } from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameStoreModel, LikeLibrary } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { createDb } from "../util/database/create-db";
@@ -13,19 +13,18 @@ const fieldsMap: Record<FieldsType, Partial<Record<keyof GameStoreModel, number>
   list: { _id: 1, cover: 1, library: 1, name: 1 },
 };
 
+const db = createDb("games");
 @Service()
 export class GameStore {
-  private db = createDb("games");
-
   async bulkInsertGames(games: Partial<GameStoreModel>[]) {
-    return await this.db.insertMany<Partial<GameStoreModel>>(games);
+    return await db.insertMany<Partial<GameStoreModel>>(games);
   }
 
   async insertGame(game: Partial<GameStoreModel>) {
-    return await this.db.insert<Partial<GameStoreModel>>(game);
+    return await db.insert<Partial<GameStoreModel>>(game);
   }
 
-  async findFilteredGames(
+  async findFilteredGames<T>(
     {
       ageRatings,
       createdAt,
@@ -34,6 +33,7 @@ export class GameStore {
       genres,
       isFavourite,
       isInstalled,
+      isQuickLaunch,
       libraries,
       platforms,
       playerPerspectives,
@@ -41,13 +41,14 @@ export class GameStore {
     }: GameFilters = {},
     type: FieldsType = "all",
   ) {
-    return await this.db
-      .find<GameListModel>(
+    return await db
+      .find<T>(
         {
           $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
           ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
           ...(isFavourite != undefined && { isFavourite }),
           ...(isInstalled != undefined && { isInstalled }),
+          ...(isQuickLaunch != undefined && { isQuickLaunch }),
           ...(libraries?.length && { library: { $in: libraries } }),
           ...dateRangeMatcher("createdAt", createdAt),
           ...idMatcher("developers", developers),
@@ -64,11 +65,15 @@ export class GameStore {
   }
 
   async findGameById(id: string) {
-    return await this.db.findOne<GameStoreModel>({ _id: id });
+    return await db.findOne<GameStoreModel>({ _id: id });
+  }
+
+  async findGamesByGameIds(gameIds: string[], library: LikeLibrary) {
+    return await db.find<GameStoreModel>({ gameId: { $in: gameIds }, library });
   }
 
   async findUnsyncedGames() {
-    return await this.db
+    return await db
       .find<GameStoreModel>({
         metadataSyncedAt: { $exists: false },
       })
@@ -76,14 +81,14 @@ export class GameStore {
   }
 
   async findGamesByEpicNamespace(ids: string[]) {
-    return await this.db.find<GameStoreModel>({
+    return await db.find<GameStoreModel>({
       library: "epic-game-store",
       "libraryMeta.namespace": { $in: ids },
     });
   }
 
   async findGamesByEpicAppName(ids: string[], library: LikeLibrary) {
-    return await this.db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
+    return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
   }
 
   // TODO - kill this in favour of using filter games query
@@ -91,7 +96,7 @@ export class GameStore {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-    return await this.db
+    return await db
       .find<FeaturedGameModel>(
         {
           $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
@@ -104,7 +109,7 @@ export class GameStore {
   }
 
   async updateGameByEpicAppName(appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
-    return await this.db.update<GameStoreModel>(
+    return await db.update<GameStoreModel>(
       { "libraryMeta.appName": appName },
       { $set: updates },
       { returnUpdatedDocs: true },
@@ -112,11 +117,11 @@ export class GameStore {
   }
 
   async updateGameById(id: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
-    return await this.db.update<GameStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
+    return await db.update<GameStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
   }
 
   async updateGameByGameId(gameId: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
-    return await this.db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true });
+    return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true });
   }
 
   // TODO - Revisit this. Games should be archived or deleted,
@@ -127,7 +132,7 @@ export class GameStore {
         await this.updateGameById(id, { deletedAt: new Date() });
         return true;
       } else {
-        await this.db.deleteOne({ _id: id }, { multi: false });
+        await db.deleteOne({ _id: id }, { multi: false });
         return true;
       }
     } catch (err) {

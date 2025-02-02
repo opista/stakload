@@ -45,6 +45,7 @@
     "@mantine/modals": "^7.13.4",
     "@mantine/spotlight": "^7.13.4",
     "@noriginmedia/norigin-spatial-navigation": "^2.2.2",
+    "@swc/core": "^1.10.12",
     "@tabler/icons-react": "^3.21.0",
     "@tanstack/react-virtual": "^3.11.2",
     "@types/nedb": "^1.8.16",

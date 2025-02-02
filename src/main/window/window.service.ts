@@ -110,6 +110,18 @@ export class WindowService {
   }
 
   toggleMaximized() {
-    this.browserWindow?.isMaximized() ? this.browserWindow?.restore() : this.browserWindow?.maximize();
+    this.browserWindow?.isMaximized() ? this.restore() : this.maximize();
+  }
+
+  restore() {
+    this.browserWindow?.restore();
+  }
+
+  focus() {
+    this.browserWindow?.focus();
+  }
+
+  sendEvent(channel: string, ...args: unknown[]) {
+    return this.browserWindow?.webContents.send(channel, ...args);
   }
 }

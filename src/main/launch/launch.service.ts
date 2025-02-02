@@ -1,5 +1,4 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
-import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
 import { GameStore } from "../game/game.store";
@@ -7,6 +6,7 @@ import { EpicGameStoreLauncher } from "../libraries/epic-games-store/epic-game-s
 import { SteamLauncher } from "../libraries/steam/steam-launcher";
 import { createProcessMonitorStrategy } from "../process-monitor/create-process-monitor-strategy";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
+import { WindowService } from "../window/window.service";
 import { LauncherActions, LaunchResult } from "./types";
 
 const POLLING_INTERVAL = 2000; // 2 seconds
@@ -19,7 +19,7 @@ export class LaunchService {
 
   constructor(
     private readonly gameStore: GameStore,
-    private readonly window: BrowserWindow,
+    private readonly windowService: WindowService,
   ) {
     this.processMonitor = createProcessMonitorStrategy();
 
@@ -55,8 +55,8 @@ export class LaunchService {
 
   private watchGameProcess(pid: number) {
     this.processMonitor.watchProcess(pid, () => {
-      this.window.restore();
-      this.window.focus();
+      this.windowService.restore();
+      this.windowService.focus();
     });
   }
 
@@ -76,7 +76,7 @@ export class LaunchService {
         };
       }
 
-      this.window.minimize();
+      this.windowService.minimize();
       this.watchGameProcess(pid);
       return { success: true };
     } catch (error) {

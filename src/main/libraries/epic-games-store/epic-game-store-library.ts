@@ -1,14 +1,8 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
-import {
-  bulkInsertGames,
-  findGamesByEpicNamespace,
-  getInstalledGames,
-  updateGameByEpicAppName,
-  updateGameById,
-} from "../../database/games";
-import { LibraryActions } from "../types";
+import { GameStore } from "../../game/game.store";
+import { LibraryActions } from "../../sync/types";
 import { graphqlGetGameId } from "./api";
 import { createInstallationStrategy } from "./installation/create-installation-strategy";
 import type { InstallationStrategy } from "./installation/types";
@@ -19,7 +13,7 @@ export class EpicGamesStoreLibrary implements LibraryActions {
   private library = Library.EpicGameStore;
   private installationStrategy: InstallationStrategy;
 
-  constructor() {
+  constructor(private readonly gameStore: GameStore) {
     this.installationStrategy = createInstallationStrategy();
   }
 
@@ -34,7 +28,7 @@ export class EpicGamesStoreLibrary implements LibraryActions {
       return null;
     }
 
-    await updateGameById(game._id, { gameId });
+    await this.gameStore.updateGameById(game._id, { gameId });
     return await fetchGameMetadata(gameId, this.library);
   }
 
@@ -42,17 +36,23 @@ export class EpicGamesStoreLibrary implements LibraryActions {
     const installedGames = await this.installationStrategy.getInstalledGames();
     const installedGameAppNames = installedGames.map((game) => game.appName);
 
-    const currentlyInstalledGames = await getInstalledGames(this.library);
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames<GameStoreModel>(
+      {
+        isInstalled: true,
+        libraries: [this.library],
+      },
+      "all",
+    );
     const uninstalledAppNames = currentlyInstalledGames
       .map((game) => game.libraryMeta?.appName)
       .filter((appName): appName is string => !!appName && !installedGameAppNames.includes(appName));
 
     const gamesToMarkUninstalled = uninstalledAppNames.map((appName) =>
-      updateGameByEpicAppName(appName, { installationDetails: undefined, isInstalled: false }),
+      this.gameStore.updateGameByEpicAppName(appName, { installationDetails: undefined, isInstalled: false }),
     );
 
     const gamesToMarkInstalled = installedGames.map(({ appName, installationDetails }) =>
-      updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
+      this.gameStore.updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
@@ -64,14 +64,16 @@ export class EpicGamesStoreLibrary implements LibraryActions {
 
   async addNewGames() {
     const ownedGames = await getOwnedGames();
-    const existingGames = await findGamesByEpicNamespace(ownedGames.map(({ metadata: { namespace } }) => namespace));
+    const existingGames = await this.gameStore.findGamesByEpicNamespace(
+      ownedGames.map(({ metadata: { namespace } }) => namespace),
+    );
     const existingIds = existingGames.map(({ libraryMeta }) => libraryMeta?.namespace);
 
     const mappedGames = ownedGames
       .filter((game) => !existingIds.includes(game.metadata.namespace))
       .map((game) => mapOwnedGameToGameStoreModel(game));
 
-    await bulkInsertGames(mappedGames);
+    await this.gameStore.bulkInsertGames(mappedGames);
 
     return mappedGames.length;
   }

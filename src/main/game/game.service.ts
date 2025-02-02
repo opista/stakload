@@ -1,8 +1,6 @@
-import { GameFilters, GameStoreModel } from "@contracts/database/games";
-import { BrowserWindow } from "electron";
+import { GameFilters, GameListModel, GameStoreModel } from "@contracts/database/games";
 import { Service } from "typedi";
 
-import { EVENT_CHANNELS } from "../../preload/channels";
 import { getProtondbTier } from "../api/protondb";
 import { CollectionStore } from "../collection/collection.store";
 import { GameStore } from "./game.store";
@@ -12,7 +10,6 @@ export class GameService {
   constructor(
     private readonly collectionStore: CollectionStore,
     private readonly gameStore: GameStore,
-    private readonly window: BrowserWindow,
   ) {}
 
   async getGameFilters() {
@@ -72,8 +69,6 @@ export class GameService {
       } else {
         await this.gameStore.removeGameById(id);
       }
-      this.window.webContents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-
       // TODO - Better handling here?
       return true;
     } catch (err) {
@@ -87,11 +82,11 @@ export class GameService {
   }
 
   getGamesList() {
-    return this.gameStore.findFilteredGames({}, "list");
+    return this.gameStore.findFilteredGames<GameListModel>({}, "list");
   }
 
   getQuickLaunchGames() {
-    return this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
+    return this.gameStore.findFilteredGames<GameListModel>({ isQuickLaunch: true }, "list");
   }
 
   getNewGames() {
@@ -99,7 +94,7 @@ export class GameService {
   }
 
   getFilteredGames(filters: GameFilters) {
-    return this.gameStore.findFilteredGames(filters, "list");
+    return this.gameStore.findFilteredGames<GameListModel>(filters, "list");
   }
 
   async getGamesByCollectionId(id: string) {
@@ -109,14 +104,10 @@ export class GameService {
   }
 
   async toggleFavouriteGame(id: string) {
-    const updated = await this.gameStore.toggleFavouriteGame(id);
-    this.window.webContents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-    return updated;
+    return await this.gameStore.toggleFavouriteGame(id);
   }
 
   async toggleQuickLaunchGame(id: string) {
-    const updated = await this.gameStore.toggleQuickLaunchGame(id);
-    this.window.webContents.send(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-    return updated;
+    return await this.gameStore.toggleQuickLaunchGame(id);
   }
 }

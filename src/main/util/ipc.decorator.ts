@@ -1,13 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { IpcMainEvent, IpcMainInvokeEvent } from "electron";
-
-type IpcHandler = (event: IpcMainInvokeEvent, ...args: any[]) => Promise<any> | any;
-type IpcListener = (event: IpcMainEvent, ...args: any[]) => void;
-
 export function IpcHandle(channel: string) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value;
     const constructor = target.constructor;
+
+    // Wrap the original method to skip the event parameter
+    descriptor.value = function (...args: any[]) {
+      // Remove the first argument (event) before calling the original method
+      return originalMethod.apply(this, args.slice(1));
+    };
+
     if (!constructor._ipcHandlers) {
       constructor._ipcHandlers = [];
     }
@@ -23,8 +26,16 @@ export function IpcHandle(channel: string) {
 }
 
 export function IpcOn(channel: string) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
+    const originalMethod = descriptor.value;
     const constructor = target.constructor;
+
+    // Wrap the original method to skip the event parameter
+    descriptor.value = function (...args: any[]) {
+      // Remove the first argument (event) before calling the original method
+      return originalMethod.apply(this, args.slice(1));
+    };
+
     if (!constructor._ipcHandlers) {
       constructor._ipcHandlers = [];
     }

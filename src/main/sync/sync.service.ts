@@ -1,14 +1,14 @@
 import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/sync";
-import { BrowserWindow } from "electron";
 import { Conf } from "electron-conf/main";
 import fastq from "fastq";
-import { Service } from "typedi";
+import { Inject, Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { GameStore } from "../game/game.store";
 import { EpicGamesStoreLibrary } from "../libraries/epic-games-store/epic-game-store-library";
 import { SteamLibrary } from "../libraries/steam/steam-library";
+import { WindowService } from "../window/window.service";
 import { FailureHistoryEntry, LibraryActions } from "./types";
 
 @Service()
@@ -22,13 +22,14 @@ export class SyncService {
   private total: number = 0;
 
   constructor(
-    private conf: Conf,
+    @Inject("conf") private conf: Conf,
     private gameStore: GameStore,
-    private window: BrowserWindow,
+    private windowService: WindowService,
   ) {
+    // TODO: This is no good. We should be able to inject the libraries into the sync service.
     this.libraries = {
-      [Library.EpicGameStore]: new EpicGamesStoreLibrary(),
-      [Library.Steam]: new SteamLibrary(this.conf),
+      [Library.EpicGameStore]: new EpicGamesStoreLibrary(this.gameStore),
+      [Library.Steam]: new SteamLibrary(this.conf, this.gameStore),
     };
   }
 
@@ -37,7 +38,7 @@ export class SyncService {
   }
 
   private emitSyncEvent(message: GameSyncMessage) {
-    this.window.webContents.send(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
+    this.windowService.sendEvent(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
 
   private addFailureEntry(entry: FailureHistoryEntry) {

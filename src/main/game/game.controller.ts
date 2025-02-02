@@ -1,87 +1,103 @@
-import { GameFilters } from "@contracts/database/games";
-import { IpcMainInvokeEvent } from "electron";
+import type { GameFilters } from "@contracts/database/games";
+import { Service } from "typedi";
 
+import { EVENT_CHANNELS } from "../../preload/channels";
 import { LaunchService } from "../launch/launch.service";
-import { BaseController } from "../util/base.controller";
 import { IpcHandle, IpcOn } from "../util/ipc.decorator";
+import { IpcEventController } from "../util/ipc-event.controller";
+import { WindowService } from "../window/window.service";
 import { GAME_CHANNELS } from "./game.channels";
 import { GameService } from "./game.service";
 
-export class GameController extends BaseController {
+@Service()
+export class GameController extends IpcEventController {
   constructor(
     private readonly gameService: GameService,
     private readonly launchService: LaunchService,
+    private readonly windowService: WindowService,
   ) {
     super();
   }
 
   @IpcHandle(GAME_CHANNELS.GET_FILTERS)
-  async getGameFilters(_event: IpcMainInvokeEvent) {
+  async getGameFilters() {
     return this.gameService.getGameFilters();
   }
 
   @IpcHandle(GAME_CHANNELS.GET_BY_ID)
-  async getGameById(_event: IpcMainInvokeEvent, id: string) {
+  async getGameById(id: string) {
     return this.gameService.getGameById(id);
   }
 
   @IpcHandle(GAME_CHANNELS.GET_BY_COLLECTION)
-  async getGamesByCollection(_event: IpcMainInvokeEvent, collectionId: string) {
+  async getGamesByCollection(collectionId: string) {
     return this.gameService.getGamesByCollectionId(collectionId);
   }
 
   @IpcHandle(GAME_CHANNELS.GET_PROTONDB_TIER)
-  async getProtondbTier(_event: IpcMainInvokeEvent, id: string) {
+  async getProtondbTier(id: string) {
     return this.gameService.getProtondbTier(id);
   }
 
   @IpcHandle(GAME_CHANNELS.REMOVE)
-  async removeGame(_event: IpcMainInvokeEvent, id: string, preventReadd: boolean) {
-    return this.gameService.removeGame(id, preventReadd);
+  async removeGame(id: string, preventReadd: boolean) {
+    const removed = await this.gameService.removeGame(id, preventReadd);
+    if (removed) {
+      this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+    }
+    return removed;
   }
 
   @IpcHandle(GAME_CHANNELS.GET_LIST)
-  async getGamesList(_event: IpcMainInvokeEvent) {
+  async getGamesList() {
     return this.gameService.getGamesList();
   }
 
   @IpcHandle(GAME_CHANNELS.GET_FILTERED)
-  async getFilteredGames(_event: IpcMainInvokeEvent, filters: GameFilters) {
+  async getFilteredGames(filters: GameFilters) {
     return this.gameService.getFilteredGames(filters);
   }
 
   @IpcHandle(GAME_CHANNELS.GET_NEW)
-  async getNewGames(_event: IpcMainInvokeEvent) {
+  async getNewGames() {
     return this.gameService.getNewGames();
   }
 
   @IpcHandle(GAME_CHANNELS.TOGGLE_FAVOURITE)
-  async toggleFavouriteGame(_event: IpcMainInvokeEvent, id: string) {
-    return this.gameService.toggleFavouriteGame(id);
+  async toggleFavouriteGame(id: string) {
+    const updated = await this.gameService.toggleFavouriteGame(id);
+    if (updated) {
+      this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+    }
+    return updated;
   }
 
   @IpcHandle(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH)
-  async toggleQuickLaunchGame(_event: IpcMainInvokeEvent, id: string) {
-    return this.gameService.toggleQuickLaunchGame(id);
+  async toggleQuickLaunchGame(id: string) {
+    const updated = await this.gameService.toggleQuickLaunchGame(id);
+    if (updated) {
+      this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+    }
+    return updated;
   }
 
   @IpcHandle(GAME_CHANNELS.GET_QUICK_LAUNCH)
-  async getQuickLaunchGames(_event: IpcMainInvokeEvent) {
+  async getQuickLaunchGames() {
     return this.gameService.getQuickLaunchGames();
   }
 
   @IpcOn(GAME_CHANNELS.LAUNCH)
-  async launchGame(_event: IpcMainInvokeEvent, id: string) {
+  async launchGame(id: string) {
     return this.launchService.launchGame(id);
   }
 
   @IpcOn(GAME_CHANNELS.INSTALL)
-  async installGame(_event: IpcMainInvokeEvent, id: string) {
+  async installGame(id: string) {
     return this.launchService.installGame(id);
   }
 
   @IpcOn(GAME_CHANNELS.UNINSTALL)
-  async uninstallGame(_event: IpcMainInvokeEvent, id: string) {
+  async uninstallGame(id: string) {
     return this.launchService.uninstallGame(id);
   }
 }
