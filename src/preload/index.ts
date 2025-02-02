@@ -37,6 +37,8 @@ const api = {
     ipcRenderer.invoke(COLLECTION_CHANNELS.UPDATE, id, updates),
 
   // Game Management
+  archiveGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.ARCHIVE_BY_ID, id),
+  deleteGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.DELETE_BY_ID, id),
   getFilteredGames: (filters: GameFilters) => ipcRenderer.invoke(GAME_CHANNELS.GET_FILTERED, filters),
   getGameById: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.GET_BY_ID, id),
   getGameFilters: () => ipcRenderer.invoke(GAME_CHANNELS.GET_FILTERS),
@@ -46,7 +48,6 @@ const api = {
   getQuickLaunchGames: () => ipcRenderer.invoke(GAME_CHANNELS.GET_QUICK_LAUNCH),
   installGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.INSTALL, id),
   launchGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.LAUNCH, id),
-  removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(GAME_CHANNELS.REMOVE, id, preventReadd),
   syncGames: () => ipcRenderer.send(SYNC_CHANNELS.SYNC),
   toggleFavouriteGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_FAVOURITE, id),
   toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH, id),

@@ -58,23 +58,16 @@ export class GameService {
     return results;
   }
 
-  getGameById(id: string) {
-    return this.gameStore.findGameById(id);
+  async getGameById(id: string) {
+    return await this.gameStore.findGameById(id);
   }
 
-  async removeGame(id: string, preventReadd: boolean) {
-    try {
-      if (preventReadd) {
-        await this.gameStore.updateGameById(id, { deletedAt: new Date() });
-      } else {
-        await this.gameStore.removeGameById(id);
-      }
-      // TODO - Better handling here?
-      return true;
-    } catch (err) {
-      // TODO error logging
-      return false;
-    }
+  async archiveGame(id: string) {
+    return await this.gameStore.updateGameById(id, { archivedAt: new Date() });
+  }
+
+  async deleteGame(id: string) {
+    return await this.gameStore.removeGameById(id);
   }
 
   async getProtondbTier(gameId: string) {

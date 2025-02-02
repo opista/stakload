@@ -39,13 +39,18 @@ export class GameController extends IpcEventController {
     return this.gameService.getProtondbTier(id);
   }
 
-  @IpcHandle(GAME_CHANNELS.REMOVE)
-  async removeGame(id: string, preventReadd: boolean) {
-    const removed = await this.gameService.removeGame(id, preventReadd);
-    if (removed) {
-      this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-    }
-    return removed;
+  @IpcHandle(GAME_CHANNELS.ARCHIVE_BY_ID)
+  async archiveGameById(id: string) {
+    await this.gameService.archiveGame(id);
+    this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+    return true;
+  }
+
+  @IpcHandle(GAME_CHANNELS.DELETE_BY_ID)
+  async deleteGameById(id: string) {
+    await this.gameService.deleteGame(id);
+    this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+    return true;
   }
 
   @IpcHandle(GAME_CHANNELS.GET_LIST)

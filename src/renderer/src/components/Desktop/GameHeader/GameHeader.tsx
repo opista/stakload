@@ -29,7 +29,11 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const toggleFavouriteGame = () => window.api.toggleFavouriteGame(game._id);
 
   const onRemoveConfirm = async (preventReadd: boolean) => {
-    await window.api.removeGame(game._id, preventReadd);
+    if (preventReadd) {
+      await window.api.archiveGame(game._id);
+    } else {
+      await window.api.deleteGame(game._id);
+    }
     navigate("..");
     closeDelete();
   };

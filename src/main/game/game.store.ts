@@ -44,7 +44,7 @@ export class GameStore {
     return await db
       .find<T>(
         {
-          $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+          $or: [{ archivedAt: null }, { archivedAt: { $exists: false } }],
           ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
           ...(isFavourite != undefined && { isFavourite }),
           ...(isInstalled != undefined && { isInstalled }),
@@ -99,7 +99,7 @@ export class GameStore {
     return await db
       .find<FeaturedGameModel>(
         {
-          $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
+          $or: [{ archivedAt: null }, { archivedAt: { $exists: false } }],
           createdAt: { $gte: oneWeekAgo },
         },
         fieldsMap.featured,
@@ -124,21 +124,8 @@ export class GameStore {
     return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true });
   }
 
-  // TODO - Revisit this. Games should be archived or deleted,
-  // let's make this clearer by adding a new button in the UI?
-  async removeGameById(id: string, preventReadd: boolean = false) {
-    try {
-      if (preventReadd) {
-        await this.updateGameById(id, { deletedAt: new Date() });
-        return true;
-      } else {
-        await db.deleteOne({ _id: id }, { multi: false });
-        return true;
-      }
-    } catch (err) {
-      // TODO error logging
-      return false;
-    }
+  async removeGameById(id: string) {
+    return await db.deleteOne({ _id: id }, { multi: false });
   }
 
   async toggleQuickLaunchGame(id: string) {

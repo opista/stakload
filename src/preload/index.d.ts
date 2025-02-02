@@ -8,6 +8,7 @@ import { RemoveListenerFunction } from "./util/listener-handler";
 declare global {
   interface Window {
     api: {
+      archiveGame: (id: string) => Promise<boolean>;
       authenticateIntegration: (library: LikeLibrary) => void;
       closeWindow: () => void;
       createCollection: (
@@ -15,6 +16,7 @@ declare global {
       ) => Promise<CollectionStoreModel>;
       decrypt: (str: string) => Promise<string>;
       deleteCollection: (id: string) => Promise<boolean>;
+      deleteGame: (id: string) => Promise<boolean>;
       encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       getCollectionGames: (id: string) => Promise<GameListModel[]>;
@@ -35,7 +37,6 @@ declare global {
       onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
-      removeGame: (id: string, preventReadd: boolean) => Promise<boolean>;
       restartApp: () => void;
       restartDevice: () => void;
       shutdownDevice: () => void;

@@ -93,9 +93,9 @@ export type GameStoreModel = {
   _id: string;
   // TODO this should be an id and name for filtering
   ageRating?: LikeAgeRatingText;
+  archivedAt?: Date;
   artworks?: Media[];
   cover?: string;
-  deletedAt?: Date;
   description?: string;
   developers?: IdAndName[];
   firstReleaseDate?: string;
