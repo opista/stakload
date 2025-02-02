@@ -13,8 +13,8 @@ import type { InstallationStrategy } from "./installation/types";
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 
 @Service()
-export class SteamLibrary implements LibraryActions {
-  private library = Library.Steam;
+export class SteamLibraryService implements LibraryActions {
+  library: Library = "steam";
   private installationStrategy: InstallationStrategy;
 
   constructor(

@@ -1,13 +1,11 @@
-import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
+import { GameStoreModel, Library } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/sync";
-import { Conf } from "electron-conf/main";
 import fastq from "fastq";
-import { Inject, Service } from "typedi";
+import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { GameStore } from "../game/game.store";
-import { EpicGamesStoreLibrary } from "../libraries/epic-games-store/epic-game-store-library";
-import { SteamLibrary } from "../libraries/steam/steam-library";
+import { LibraryRegistryService } from "../libraries/library-registry.service";
 import { WindowService } from "../window/window.service";
 import { FailureHistoryEntry, LibraryActions } from "./types";
 
@@ -16,26 +14,19 @@ export class SyncService {
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
   private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
   private failures: FailureHistoryEntry[] = [];
-  private libraries: Partial<Record<Library, LibraryActions>>;
   private processing: number = 0;
   private syncInProgress = false;
   private metadataToProcess: number = 0;
   private gamesAdded: number = 0;
 
   constructor(
-    @Inject("conf") private conf: Conf,
     private gameStore: GameStore,
+    private libraryRegistryService: LibraryRegistryService,
     private windowService: WindowService,
-  ) {
-    // TODO: This is no good. We should be able to inject the libraries into the sync service.
-    this.libraries = {
-      [Library.EpicGameStore]: new EpicGamesStoreLibrary(this.gameStore),
-      [Library.Steam]: new SteamLibrary(this.conf, this.gameStore),
-    };
-  }
+  ) {}
 
-  private getLIbraryImplementation(library: LikeLibrary): LibraryActions | undefined {
-    return this.libraries[library];
+  private getLIbraryImplementation(library: Library): LibraryActions | undefined {
+    return this.libraryRegistryService.getLibraryImplementation(library);
   }
 
   private emitSyncEvent(message: GameSyncMessage) {
@@ -46,7 +37,7 @@ export class SyncService {
     this.failures.push(entry);
   }
 
-  private async libraryWorker(library: LikeLibrary) {
+  private async libraryWorker(library: Library) {
     this.emitSyncEvent({
       action: "library",
       library,
@@ -108,7 +99,7 @@ export class SyncService {
     }
   }
 
-  private async syncLibraries(libraries: LikeLibrary[]) {
+  private async syncLibraries(libraries: Library[]) {
     await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
     await this.libraryQueue.drained();
 
@@ -126,7 +117,7 @@ export class SyncService {
     this.syncInProgress = false;
   }
 
-  sync(libraries: LikeLibrary[]) {
+  sync(libraries: Library[]) {
     if (this.syncInProgress) {
       return false;
     }
@@ -146,7 +137,7 @@ export class SyncService {
     this.gamesAdded = 0;
   }
 
-  isIntegrationValid(library: LikeLibrary) {
+  isIntegrationValid(library: Library) {
     const libraryImpl = this.getLIbraryImplementation(library);
     if (!libraryImpl) return false;
 

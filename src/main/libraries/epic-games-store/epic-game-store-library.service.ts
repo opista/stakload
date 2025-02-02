@@ -1,4 +1,5 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { Service } from "typedi";
 
 import { fetchGameMetadata } from "../../api/trulaunch";
 import { GameStore } from "../../game/game.store";
@@ -9,8 +10,9 @@ import type { InstallationStrategy } from "./installation/types";
 import { getOwnedGames } from "./legendary";
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
 
-export class EpicGamesStoreLibrary implements LibraryActions {
-  private library = Library.EpicGameStore;
+@Service()
+export class EpicGamesStoreLibraryService implements LibraryActions {
+  library: Library = "epic-game-store";
   private installationStrategy: InstallationStrategy;
 
   constructor(private readonly gameStore: GameStore) {

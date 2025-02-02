@@ -1,4 +1,4 @@
-import { GameStoreModel, Library, LikeLibrary } from "@contracts/database/games";
+import { GameStoreModel, Library } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { GameStore } from "../game/game.store";
@@ -14,7 +14,7 @@ const MAX_POLLING_TIME = 60000; // 1 minute
 
 @Service()
 export class LaunchService {
-  private libraries: Partial<Record<LikeLibrary, LauncherActions>>;
+  private libraries: Partial<Record<Library, LauncherActions>>;
   private processMonitor: ProcessMonitorStrategy;
 
   constructor(
@@ -25,12 +25,12 @@ export class LaunchService {
     this.processMonitor = this.processMonitorService.getStrategy();
 
     this.libraries = {
-      [Library.Steam]: new SteamLauncher(),
-      [Library.EpicGameStore]: new EpicGameStoreLauncher(),
+      steam: new SteamLauncher(),
+      "epic-game-store": new EpicGameStoreLauncher(),
     };
   }
 
-  private getLauncher(library: LikeLibrary): LauncherActions {
+  private getLauncher(library: Library): LauncherActions {
     const launcher = this.libraries[library];
     if (!launcher) {
       throw new Error(`Unsupported game library: ${library}`);

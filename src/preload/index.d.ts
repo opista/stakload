@@ -1,5 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, LikeLibrary } from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
@@ -9,7 +9,7 @@ declare global {
   interface Window {
     api: {
       archiveGame: (id: string) => Promise<boolean>;
-      authenticateIntegration: (library: LikeLibrary) => void;
+      authenticateIntegration: (library: Library) => void;
       closeWindow: () => void;
       createCollection: (
         collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
@@ -42,7 +42,7 @@ declare global {
       shutdownDevice: () => void;
       sleepDevice: () => void;
       syncGames: () => void;
-      testLibraryIntegration: (library: LikeLibrary) => Promise<boolean>;
+      testLibraryIntegration: (library: Library) => Promise<boolean>;
       toggleFavouriteGame: (id: string) => Promise<GameStoreModel>;
       toggleQuickLaunchGame: (id: string) => Promise<GameStoreModel>;
       uninstallGame: (id: string) => void;

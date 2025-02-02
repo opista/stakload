@@ -1,4 +1,4 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { GameStoreModel } from "@contracts/database/games";
 
 import { mapSortableName } from "../../../util/map-sortable-name";
 import { removeSpecialChars } from "../../../util/remove-special-chars";
@@ -9,7 +9,7 @@ export const mapOwnedGameDetailsToGameStoreModel = (ownedGameDetails: OwnedGameD
   const sortableName = mapSortableName(name);
   return {
     gameId: String(ownedGameDetails.appid),
-    library: Library.Steam,
+    library: "steam",
     name,
     sortableName,
   };

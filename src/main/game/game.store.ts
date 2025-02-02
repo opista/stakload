@@ -1,4 +1,4 @@
-import { FeaturedGameModel, GameFilters, GameStoreModel, LikeLibrary } from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameStoreModel, Library } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { createDb } from "../util/database/create-db";
@@ -68,7 +68,7 @@ export class GameStore {
     return await db.findOne<GameStoreModel>({ _id: id });
   }
 
-  async findGamesByGameIds(gameIds: string[], library: LikeLibrary) {
+  async findGamesByGameIds(gameIds: string[], library: Library) {
     return await db.find<GameStoreModel>({ gameId: { $in: gameIds }, library });
   }
 
@@ -87,7 +87,7 @@ export class GameStore {
     });
   }
 
-  async findGamesByEpicAppName(ids: string[], library: LikeLibrary) {
+  async findGamesByEpicAppName(ids: string[], library: Library) {
     return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
   }
 

@@ -1,5 +1,5 @@
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
-import { GameFilters, LikeAgeRatingText, LikeLibrary } from "@contracts/database/games";
+import { GameFilters, Library, LikeAgeRatingText } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { ActionIcon, Button, Checkbox, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -51,7 +51,7 @@ const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
   },
 ];
 
-const libraryFilters: { label: string; value: LikeLibrary }[] = [
+const libraryFilters: { label: string; value: Library }[] = [
   {
     label: "Epic Game Store",
     value: "epic-game-store",

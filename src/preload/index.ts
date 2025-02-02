@@ -1,5 +1,5 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { GameFilters, LikeLibrary } from "@contracts/database/games";
+import { GameFilters, Library } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/sync";
 import { electronAPI } from "@electron-toolkit/preload";
 import { contextBridge, ipcRenderer } from "electron";
@@ -54,8 +54,8 @@ const api = {
   uninstallGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.UNINSTALL, id),
 
   // Integration Management
-  authenticateIntegration: (library: LikeLibrary) => ipcRenderer.invoke(INTEGRATION_CHANNELS.AUTHENTICATE, library),
-  testLibraryIntegration: (library: LikeLibrary) => ipcRenderer.invoke(SYNC_CHANNELS.TEST_INTEGRATION, library),
+  authenticateIntegration: (library: Library) => ipcRenderer.invoke(INTEGRATION_CHANNELS.AUTHENTICATE, library),
+  testLibraryIntegration: (library: Library) => ipcRenderer.invoke(SYNC_CHANNELS.TEST_INTEGRATION, library),
 
   // Security
   decrypt: (str: string) => ipcRenderer.invoke(SECURITY_CHANNELS.DECRYPT, str),

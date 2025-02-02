@@ -1,13 +1,5 @@
-export enum Library {
-  EpicGameStore = "epic-game-store",
-  Gog = "gog",
-  Microsoft = "microsoft",
-  Steam = "steam",
-  XboxGamePassUltimateCloud = "xbox-game-pass-ultimate-cloud",
-  XboxMarketplate = "xbox-marketplace",
-}
-
-export type LikeLibrary = `${Library}`;
+// These should map to the IGDB library names
+export type Library = "epic-game-store" | "steam";
 
 export type EpicLibraryMeta = {
   appName: string;
@@ -108,7 +100,7 @@ export type GameStoreModel = {
   isInstalled?: boolean;
   isQuickLaunch?: boolean;
   lastPlayedAt?: Date;
-  library: LikeLibrary;
+  library: Library;
   libraryMeta?: LibraryMeta;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];

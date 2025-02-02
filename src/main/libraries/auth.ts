@@ -1,9 +1,9 @@
-import { LikeLibrary } from "@contracts/database/games";
+import { Library } from "@contracts/database/games";
 import { BrowserWindow, session } from "electron";
 
 import { login } from "./epic-games-store/legendary";
 
-export const authenticateLibraryIntegration = async (library: LikeLibrary, parent: BrowserWindow) => {
+export const authenticateLibraryIntegration = async (library: Library, parent: BrowserWindow) => {
   const integrationSession = session.fromPartition("epic-games-auth"); // Isolated session for safety
 
   const integrationWindow = new BrowserWindow({

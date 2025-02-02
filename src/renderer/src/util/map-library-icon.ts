@@ -1,9 +1,9 @@
-import { LikeLibrary } from "@contracts/database/games";
+import { Library } from "@contracts/database/games";
 import { IconBrandEpicGames } from "@icons/IconBrandEpicGames";
 import { IconBrandGog } from "@icons/IconBrandGog";
 import { Icon, IconBrandSteam, IconBrandWindows, IconBrandXbox, IconHelpHexagon } from "@tabler/icons-react";
 
-export const mapLibraryIcon = (library: LikeLibrary): { icon: Icon; name: string | null } => {
+export const mapLibraryIcon = (library: Library): { icon: Icon; name: string | null } => {
   switch (library) {
     case "epic-game-store":
       return { icon: IconBrandEpicGames, name: "Epic Games" };
