@@ -4,7 +4,7 @@ import { Service } from "typedi";
 import { GameStore } from "../game/game.store";
 import { EpicGameStoreLauncher } from "../libraries/epic-games-store/epic-game-store-launcher";
 import { SteamLauncher } from "../libraries/steam/steam-launcher";
-import { createProcessMonitorStrategy } from "../process-monitor/create-process-monitor-strategy";
+import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
 import { WindowService } from "../window/window.service";
 import { LauncherActions, LaunchResult } from "./types";
@@ -19,9 +19,10 @@ export class LaunchService {
 
   constructor(
     private readonly gameStore: GameStore,
+    private readonly processMonitorService: ProcessMonitorService,
     private readonly windowService: WindowService,
   ) {
-    this.processMonitor = createProcessMonitorStrategy();
+    this.processMonitor = this.processMonitorService.getStrategy();
 
     this.libraries = {
       [Library.Steam]: new SteamLauncher(),

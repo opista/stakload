@@ -43,16 +43,14 @@ const api = {
   getGamesList: () => ipcRenderer.invoke(GAME_CHANNELS.GET_LIST),
   getNewGames: () => ipcRenderer.invoke(GAME_CHANNELS.GET_NEW),
   getProtondbTier: (gameId: string) => ipcRenderer.invoke(GAME_CHANNELS.GET_PROTONDB_TIER, gameId),
+  getQuickLaunchGames: () => ipcRenderer.invoke(GAME_CHANNELS.GET_QUICK_LAUNCH),
   installGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.INSTALL, id),
   launchGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.LAUNCH, id),
   removeGame: (id: string, preventReadd: boolean) => ipcRenderer.invoke(GAME_CHANNELS.REMOVE, id, preventReadd),
   syncGames: () => ipcRenderer.send(SYNC_CHANNELS.SYNC),
   toggleFavouriteGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_FAVOURITE, id),
-  uninstallGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.UNINSTALL, id),
-
-  // Quick Access Management
-  getQuickLaunchGames: () => ipcRenderer.invoke(GAME_CHANNELS.GET_QUICK_LAUNCH),
   toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH, id),
+  uninstallGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.UNINSTALL, id),
 
   // Integration Management
   authenticateIntegration: (library: LikeLibrary) => ipcRenderer.invoke(INTEGRATION_CHANNELS.AUTHENTICATE, library),

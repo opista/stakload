@@ -1,5 +1,5 @@
-import { execAsync } from "../util/exec-async";
-import { ProcessMonitorStrategy } from "./types";
+import { execAsync } from "../../util/exec-async";
+import { ProcessMonitorStrategy } from "../types";
 
 export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   private watchedProcesses: Map<number, () => void> = new Map();

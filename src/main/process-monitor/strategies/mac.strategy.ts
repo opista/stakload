@@ -1,7 +1,7 @@
 import { exec } from "child_process";
 import { promisify } from "util";
 
-import { ProcessMonitorStrategy } from "./types";
+import { ProcessMonitorStrategy } from "../types";
 
 const execAsync = promisify(exec);
 
