@@ -7,7 +7,7 @@ import { EVENT_CHANNELS } from "../../preload/channels";
 import { GameStore } from "../game/game.store";
 import { LibraryRegistryService } from "../libraries/library-registry.service";
 import { WindowService } from "../window/window.service";
-import { FailureHistoryEntry, LibraryActions } from "./types";
+import { FailureHistoryEntry } from "./types";
 
 @Service()
 export class SyncService {
@@ -25,10 +25,6 @@ export class SyncService {
     private windowService: WindowService,
   ) {}
 
-  private getLIbraryImplementation(library: Library): LibraryActions | undefined {
-    return this.libraryRegistryService.getLibraryImplementation(library);
-  }
-
   private emitSyncEvent(message: GameSyncMessage) {
     this.windowService.sendEvent(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
@@ -43,7 +39,7 @@ export class SyncService {
       library,
     });
 
-    const libraryImpl = this.getLIbraryImplementation(library);
+    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(library);
     if (!libraryImpl) {
       this.addFailureEntry({
         action: "library",
@@ -76,7 +72,7 @@ export class SyncService {
       total: this.metadataToProcess,
     });
 
-    const libraryImpl = this.getLIbraryImplementation(game.library);
+    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(game.library);
     if (!libraryImpl) {
       this.addFailureEntry({
         action: "library",
@@ -138,7 +134,7 @@ export class SyncService {
   }
 
   isIntegrationValid(library: Library) {
-    const libraryImpl = this.getLIbraryImplementation(library);
+    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(library);
     if (!libraryImpl) return false;
 
     return libraryImpl.isIntegrationValid();
