@@ -1,18 +1,26 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": [
-    "electron.vite.config.*", 
+    "electron.vite.config.*",
     "src/contracts/**/*",
     "src/main/**/*",
     "src/preload/**/*"
   ],
   "compilerOptions": {
     "composite": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
     "paths": {
       "@contracts/*": [
         "./src/contracts/*"
+      ],
+      "@util/*": [
+        "./src/main/util/*"
       ]
     },
-    "types": ["electron-vite/node"]
+    "types": [
+      "electron-vite/node"
+    ]
   }
 }

@@ -1,9 +1,11 @@
-import { LikeLibrary } from "@contracts/database/games";
+import { Library } from "@contracts/database/games";
 import { BrowserWindow, session } from "electron";
 
-import { login } from "./epic-games-store/legendary";
+import { LegendaryService } from "./epic-games-store/legendary/legendary.service";
 
-export const authenticateLibraryIntegration = async (library: LikeLibrary, parent: BrowserWindow) => {
+const service = new LegendaryService();
+
+export const authenticateLibraryIntegration = async (library: Library, parent: BrowserWindow) => {
   const integrationSession = session.fromPartition("epic-games-auth"); // Isolated session for safety
 
   const integrationWindow = new BrowserWindow({
@@ -38,7 +40,7 @@ export const authenticateLibraryIntegration = async (library: LikeLibrary, paren
 
       console.log(parsed);
 
-      const x = await login(authorizationCode);
+      const x = await service.login(authorizationCode);
 
       console.log({ x });
 

@@ -1,0 +1,94 @@
+import { GameStoreModel, Library } from "@contracts/database/games";
+import { Service } from "typedi";
+
+import { GameStore } from "../game/game.store";
+import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
+import { ProcessMonitorStrategy } from "../process-monitor/types";
+import { WindowService } from "../window/window.service";
+import { LibraryClientRegistryService } from "./library-client-registry/library-client-registry.service";
+import { LaunchResult, LibraryClientService } from "./types";
+
+const POLLING_INTERVAL = 2000; // 2 seconds
+const MAX_POLLING_TIME = 60000; // 1 minute
+
+@Service()
+export class GameLifecycleService {
+  private processMonitor: ProcessMonitorStrategy;
+
+  constructor(
+    private readonly gameStore: GameStore,
+    private readonly libraryClientRegistryService: LibraryClientRegistryService,
+    private readonly processMonitorService: ProcessMonitorService,
+    private readonly windowService: WindowService,
+  ) {
+    this.processMonitor = this.processMonitorService.getStrategy();
+  }
+
+  private getLauncher(library: Library): LibraryClientService {
+    return this.libraryClientRegistryService.getLibrary(library);
+  }
+
+  private async pollForGameProcess(game: GameStoreModel): Promise<number | null> {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < MAX_POLLING_TIME) {
+      const pid = await this.processMonitor.findProcessByInstallPath(game.installationDetails?.installLocation || "");
+
+      if (pid) {
+        return pid;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL));
+    }
+
+    return null;
+  }
+
+  private watchGameProcess(pid: number) {
+    this.processMonitor.watchProcess(pid, () => {
+      this.windowService.restore();
+      this.windowService.focus();
+    });
+  }
+
+  async launchGame(id: string): Promise<LaunchResult> {
+    const game = await this.gameStore.findGameById(id);
+    if (!game) return { success: false, error: "Game not found" };
+
+    try {
+      await this.getLauncher(game.library).launch(game);
+
+      const pid = await this.pollForGameProcess(game);
+
+      if (!pid) {
+        return {
+          success: false,
+          error: "Game process not found after 60 seconds. The game may have failed to launch.",
+        };
+      }
+
+      this.windowService.minimize();
+      this.watchGameProcess(pid);
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error occurred",
+      };
+    }
+  }
+
+  async installGame(id: string) {
+    const game = await this.gameStore.findGameById(id);
+    if (!game) return;
+
+    return this.getLauncher(game.library).install(game);
+  }
+
+  async uninstallGame(id: string) {
+    const game = await this.gameStore.findGameById(id);
+    if (!game) return;
+
+    return this.getLauncher(game.library).uninstall(game);
+  }
+}

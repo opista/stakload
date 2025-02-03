@@ -7,3 +7,10 @@ export interface OwnedGame {
 export interface OwnedGameMetadata {
   namespace: string;
 }
+
+export interface AuthResultModel {
+  data?: {
+    username?: string;
+  };
+  success: boolean;
+}

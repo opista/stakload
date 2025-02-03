@@ -1,4 +1,4 @@
-import { LikeLibrary } from "@contracts/database/games";
+import { Library } from "@contracts/database/games";
 
 export type GameSyncAction = "complete" | "library" | "metadata";
 
@@ -13,7 +13,7 @@ export interface CompleteSyncMessage extends BaseSyncMessage {
 
 export interface LibrarySyncMessage extends BaseSyncMessage {
   action: "library";
-  library: LikeLibrary;
+  library: Library;
 }
 
 export interface MetadataSyncMessage extends BaseSyncMessage {
