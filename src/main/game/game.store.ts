@@ -1,10 +1,15 @@
-import { FeaturedGameModel, GameFilters, GameStoreModel, Library } from "@contracts/database/games";
+import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
 import { createDb } from "@util/database/create-db";
 import { dateRangeMatcher } from "@util/database/date-range-matcher";
 import { idMatcher } from "@util/database/id-matcher";
 import { Service } from "typedi";
 
 type FieldsType = "all" | "featured" | "list";
+
+type Sort = {
+  direction: 1 | -1;
+  field: keyof GameStoreModel;
+};
 
 const fieldsMap: Record<FieldsType, Partial<Record<keyof GameStoreModel, number>> | undefined> = {
   all: undefined,
@@ -23,44 +28,35 @@ export class GameStore {
     return await db.insert<Partial<GameStoreModel>>(game);
   }
 
-  async findFilteredGames<T>(
-    {
-      ageRatings,
-      createdAt,
-      developers,
-      gameModes,
-      genres,
-      isFavourite,
-      isInstalled,
-      isQuickLaunch,
-      libraries,
-      platforms,
-      playerPerspectives,
-      publishers,
-    }: GameFilters = {},
-    type: FieldsType = "all",
+  async findFilteredGames<T extends FieldsType = "all">(
+    filters: GameFilters = {},
+    type: T = "all" as T,
+    sort: Sort = { field: "sortableName", direction: 1 },
   ) {
-    return await db
-      .find<T>(
+    return (await db
+      .find(
         {
           $or: [{ archivedAt: null }, { archivedAt: { $exists: false } }],
-          ...(ageRatings?.length && { ageRating: { $in: ageRatings } }),
-          ...(isFavourite != undefined && { isFavourite }),
-          ...(isInstalled != undefined && { isInstalled }),
-          ...(isQuickLaunch != undefined && { isQuickLaunch }),
-          ...(libraries?.length && { library: { $in: libraries } }),
-          ...dateRangeMatcher("createdAt", createdAt),
-          ...idMatcher("developers", developers),
-          ...idMatcher("gameModes", gameModes),
-          ...idMatcher("genres", genres),
-          ...idMatcher("platforms", platforms),
-          ...idMatcher("playerPerspectives", playerPerspectives),
-          ...idMatcher("publishers", publishers),
+          ...(filters.ageRatings?.length && { ageRating: { $in: filters.ageRatings } }),
+          ...(filters.isFavourite != undefined && { isFavourite: filters.isFavourite }),
+          ...(filters.isInstalled != undefined && { isInstalled: filters.isInstalled }),
+          ...(filters.isQuickLaunch != undefined && { isQuickLaunch: filters.isQuickLaunch }),
+          ...(filters.libraries?.length && { library: { $in: filters.libraries } }),
+          ...dateRangeMatcher("createdAt", filters.createdAt),
+          ...idMatcher("developers", filters.developers),
+          ...idMatcher("gameModes", filters.gameModes),
+          ...idMatcher("genres", filters.genres),
+          ...idMatcher("platforms", filters.platforms),
+          ...idMatcher("playerPerspectives", filters.playerPerspectives),
+          ...idMatcher("publishers", filters.publishers),
         },
         fieldsMap[type],
       )
-      // TODO - custom sorting?
-      .sort({ sortableName: 1 });
+      .sort({ [sort.field]: sort.direction })) as { _id: string; name: string }[] as T extends "list"
+      ? GameListModel[]
+      : T extends "featured"
+        ? FeaturedGameModel[]
+        : GameStoreModel[];
   }
 
   async findGameById(id: string) {
@@ -88,23 +84,6 @@ export class GameStore {
 
   async findGamesByEpicAppName(ids: string[], library: Library) {
     return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
-  }
-
-  // TODO - kill this in favour of using filter games query
-  async getNewGames() {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-    return await db
-      .find<FeaturedGameModel>(
-        {
-          $or: [{ archivedAt: null }, { archivedAt: { $exists: false } }],
-          createdAt: { $gte: oneWeekAgo },
-        },
-        fieldsMap.featured,
-      )
-      .sort({ createdAt: -1 })
-      .limit(10);
   }
 
   async updateGameByEpicAppName(appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {

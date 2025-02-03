@@ -88,6 +88,7 @@ export type GameStoreModel = {
   archivedAt?: Date;
   artworks?: Media[];
   cover?: string;
+  createdAt: Date;
   description?: string;
   developers?: IdAndName[];
   firstReleaseDate?: string;

@@ -1,4 +1,4 @@
-import { GameFilters, GameListModel, GameStoreModel } from "@contracts/database/games";
+import { GameFilters, GameStoreModel } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { getProtondbTier } from "../api/protondb";
@@ -22,20 +22,23 @@ export class GameService {
       "publishers",
     ];
 
-    const games = await this.gameStore.findFilteredGames();
+    const games = await this.gameStore.findFilteredGames({}, "all");
 
     const uniqueValuesMap: { [key: string]: Map<string, string> } = filterableFields.reduce((acc, field) => {
       acc[field] = new Map();
       return acc;
     }, {});
 
+    const isIdAndName = (item: unknown): item is { id: string; name: string } => {
+      return typeof item === "object" && item !== null && "id" in item && "name" in item;
+    };
+
     for (const document of games) {
       for (const field of filterableFields) {
         const items = document[field];
         if (Array.isArray(items)) {
           for (const item of items) {
-            if (item.id && item.name) {
-              // Use ID as the key for uniqueness
+            if (isIdAndName(item)) {
               uniqueValuesMap[field].set(item.id, item.name);
             }
           }
@@ -75,19 +78,22 @@ export class GameService {
   }
 
   getGamesList() {
-    return this.gameStore.findFilteredGames<GameListModel>({}, "list");
+    return this.gameStore.findFilteredGames({}, "list");
   }
 
   getQuickLaunchGames() {
-    return this.gameStore.findFilteredGames<GameListModel>({ isQuickLaunch: true }, "list");
+    return this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
   }
 
   getNewGames() {
-    return this.gameStore.getNewGames();
+    return this.gameStore.findFilteredGames({ createdAt: { dateRange: "ONE_WEEK" } }, "featured", {
+      field: "createdAt",
+      direction: -1,
+    });
   }
 
   getFilteredGames(filters: GameFilters) {
-    return this.gameStore.findFilteredGames<GameListModel>(filters, "list");
+    return this.gameStore.findFilteredGames(filters, "list");
   }
 
   async getGamesByCollectionId(id: string) {
