@@ -1,6 +1,6 @@
 import type { GameFilters } from "@contracts/database/games";
-import { IpcHandle, IpcOn } from "@util/ipc.decorator";
-import { IpcEventController } from "@util/ipc-event.controller";
+import { IpcHandle, IpcOn } from "@util/ipc/ipc.decorator";
+import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";

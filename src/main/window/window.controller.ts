@@ -1,5 +1,5 @@
-import { IpcOn } from "@util/ipc.decorator";
-import { IpcEventController } from "@util/ipc-event.controller";
+import { IpcOn } from "@util/ipc/ipc.decorator";
+import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { WINDOW_CHANNELS } from "./window.channels";

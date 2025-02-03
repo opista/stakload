@@ -2,8 +2,8 @@ import { Library } from "@contracts/database/games";
 import { assertNever } from "@util/assert-never";
 import { Service } from "typedi";
 
-import { EpicGameStoreClientService } from "../../libraries/epic-games-store/client/epic-games-store-client.service";
-import { SteamClientService } from "../../libraries/steam/client/steam-client.service";
+import { EpicGameStoreClientService } from "../../integrations/epic-games-store/client/epic-games-store-client.service";
+import { SteamClientService } from "../../integrations/steam/client/steam-client.service";
 import { LibraryClientService } from "./types";
 
 @Service()

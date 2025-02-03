@@ -1,6 +1,6 @@
 import type { CollectionStoreModel } from "@contracts/database/collections";
-import { IpcHandle } from "@util/ipc.decorator";
-import { IpcEventController } from "@util/ipc-event.controller";
+import { IpcHandle } from "@util/ipc/ipc.decorator";
+import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
