@@ -1,6 +1,11 @@
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 
 export type IntegrationSettingsState = {
+  gogIntegration?: {
+    accessToken: string;
+    expiresAt: number;
+    refreshToken: string;
+  };
   steamIntegration?: SteamIntegrationDetails;
   steamIntegrationEnabled: boolean;
   syncOnStartup: boolean;

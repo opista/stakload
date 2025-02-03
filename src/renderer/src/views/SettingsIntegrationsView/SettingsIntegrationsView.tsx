@@ -242,6 +242,54 @@ const EpicGamesSettings = () => {
   );
 };
 
+const GogSettings = () => {
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const removeListener = window.api.onEpicGamesAuthentication((_event: unknown, data: unknown) => {
+      setIsLoading(false);
+      setIsIntegrationValid((data as { success: boolean }).success);
+      console.log("result", (data as { success: boolean }).success);
+    });
+    return () => removeListener();
+  }, []);
+
+  const onAuthenticate = () => {
+    setIsIntegrationValid(null);
+    window.api.authenticateIntegration("gog");
+  };
+
+  return (
+    <>
+      <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "GOG" })} title="GOG" />
+
+      <Flex justify="flex-end">
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedCheckFilled}
+          iconProps={{ className: classes.check }}
+          mounted={isIntegrationValid === true}
+          text={t("common.success")}
+        />
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedXFilled}
+          iconProps={{ className: classes.cross }}
+          mounted={isIntegrationValid === false}
+          text={t("common.failure")}
+        />
+        <Flex gap="xs">
+          <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
+            {t("settings.integration.authenticate")}
+          </Button>
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -261,6 +309,8 @@ export const SettingsIntegrationsView = () => {
       <SteamSettings />
       <Divider className={classes.divider} />
       <EpicGamesSettings />
+      <Divider className={classes.divider} />
+      <GogSettings />
       <Divider className={classes.divider} />
     </div>
   );

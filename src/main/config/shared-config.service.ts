@@ -1,3 +1,4 @@
+import { decryptString } from "@util/safe-storage";
 import { Conf } from "electron-conf/main";
 import { Inject, Service } from "typedi";
 
@@ -23,5 +24,23 @@ export class SharedConfigService {
 
   get<P extends NestedKeyOf<Config>>(path: P): TypeAtPath<Config, P> {
     return this.conf.get(path) as TypeAtPath<Config, P>;
+  }
+
+  decryptGet<P extends NestedKeyOf<Config>>(path: P) {
+    const value = this.get(path);
+
+    if (typeof value === "string") {
+      return decryptString(value);
+    }
+
+    return value;
+  }
+
+  delete<P extends NestedKeyOf<Config>>(path: P) {
+    this.conf.delete(path);
+  }
+
+  set<P extends NestedKeyOf<Config>>(path: P, value: TypeAtPath<Config, P>) {
+    this.conf.set(path, value);
   }
 }
