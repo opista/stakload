@@ -70,10 +70,8 @@ export const Navbar = () => {
             </NavbarLink>
           </Stack>
           <QuickLaunchList className={classes.quickLaunch} />
-          {/* Spacer so that game sync status doesn't cover navbar content */}
-          <div className={classes.bottomSpacer} />
         </ScrollArea>
-        <GameSyncStatus className={classes.gameSyncStatus} />
+        <GameSyncStatus />
       </Card>
     </AppShell.Navbar>
   );

@@ -1,13 +1,5 @@
-export enum Library {
-  EpicGameStore = "epic-game-store",
-  Gog = "gog",
-  Microsoft = "microsoft",
-  Steam = "steam",
-  XboxGamePassUltimateCloud = "xbox-game-pass-ultimate-cloud",
-  XboxMarketplate = "xbox-marketplace",
-}
-
-export type LikeLibrary = `${Library}`;
+// These should map to the IGDB library names
+export type Library = "epic-game-store" | "steam";
 
 export type EpicLibraryMeta = {
   appName: string;
@@ -93,9 +85,9 @@ export type GameStoreModel = {
   _id: string;
   // TODO this should be an id and name for filtering
   ageRating?: LikeAgeRatingText;
+  archivedAt?: Date;
   artworks?: Media[];
   cover?: string;
-  deletedAt?: Date;
   description?: string;
   developers?: IdAndName[];
   firstReleaseDate?: string;
@@ -106,8 +98,9 @@ export type GameStoreModel = {
   installationDetails?: GameInstallationDetails;
   isFavourite?: boolean;
   isInstalled?: boolean;
+  isQuickLaunch?: boolean;
   lastPlayedAt?: Date;
-  library: LikeLibrary;
+  library: Library;
   libraryMeta?: LibraryMeta;
   metadataSyncedAt?: Date;
   multiplayerModes?: MultiplayerMode[];
@@ -115,7 +108,6 @@ export type GameStoreModel = {
   platforms?: IdAndName[];
   playerPerspectives?: IdAndName[];
   publishers?: IdAndName[];
-  quickLaunch?: boolean;
   screenshots?: string[];
   sortableName?: string;
   storyline?: string;
@@ -124,13 +116,32 @@ export type GameStoreModel = {
   websites?: Website[];
 };
 
+export type DateRange =
+  | "ONE_DAY"
+  | "ONE_WEEK"
+  | "ONE_MONTH"
+  | "ONE_YEAR"
+  | "TODAY"
+  | "THIS_WEEK"
+  | "THIS_MONTH"
+  | "THIS_YEAR"
+  | "CUSTOM";
+
+export type DateFilter = {
+  dateRange: DateRange;
+  endDate?: Date;
+  startDate?: Date;
+};
+
 export type GameFilters = {
   ageRatings?: string[];
+  createdAt?: DateFilter;
   developers?: string[];
   gameModes?: string[];
   genres?: string[];
   isFavourite?: boolean;
   isInstalled?: boolean;
+  isQuickLaunch?: boolean;
   libraries?: string[];
   platforms?: string[];
   playerPerspectives?: string[];

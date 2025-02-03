@@ -17,14 +17,8 @@
 
 html,
 body {
-  background: transparent !important;
+  background: #0d171f;
   margin: 0;
   padding: 0;
-}
-
-#root {
-  background: #0d171f;
-  border-radius: var(--mantine-radius-xl);
-  overflow: hidden;
   user-select: none;
 }

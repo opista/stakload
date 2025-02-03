@@ -21,3 +21,22 @@
     max-width: 40em;
   }
 }
+
+.notifications {
+  width: auto;
+  min-width: 300px;
+}
+
+.notification {
+  background-color: var(--color);
+}
+
+.notificationIcon {
+  margin-right: var(--mantine-spacing-sm);
+  margin-left: 4px;
+}
+
+.notificationLoader {
+  margin-right: var(--mantine-spacing-sm);
+  margin-left: 4px;
+}

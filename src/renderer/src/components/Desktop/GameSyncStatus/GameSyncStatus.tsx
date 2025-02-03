@@ -1,124 +1,14 @@
-import { GameSyncAction, GameSyncMessage } from "@contracts/sync";
+import { GameSyncMessage } from "@contracts/sync";
 import { useGameSync } from "@hooks/use-game-sync-status";
-import { ActionIcon, Center, Group, Loader, RingProgress, Text, Title, Transition } from "@mantine/core";
+import { Group, RingProgress, Text } from "@mantine/core";
+import { NotificationData, notifications } from "@mantine/notifications";
 import { useInterfaceSettingsStore } from "@store/interface-settings.store";
-import { IconCheck, IconX } from "@tabler/icons-react";
+import { IconCheck } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
-import clsx from "clsx";
-import { CSSProperties, FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameSyncStatus.module.css";
-
-// TODO: This component is so messy, needs a cleanup
-
-type GameSyncStatusProps = {
-  className?: string;
-};
-
-type MessageProps = {
-  className?: string;
-  message: GameSyncMessage;
-  onClose?: () => void;
-  styles?: CSSProperties;
-};
-
-type ContainerProps = GameSyncStatusProps & {
-  closable?: boolean;
-  description?: ReactNode;
-  leftSection: ReactNode;
-  onClose?: () => void;
-  styles?: CSSProperties;
-  title: ReactNode;
-};
-
-const Container = ({ className, closable, description, leftSection, onClose, styles, title }: ContainerProps) => (
-  <Group className={clsx(classes.container, className)} style={styles}>
-    <Group className={classes.leftSection}>
-      {leftSection}
-      <div>
-        <Title order={5} size="sm">
-          {title}
-        </Title>
-        {description && <Group gap="4px">{description}</Group>}
-      </div>
-    </Group>
-    {closable && (
-      <ActionIcon onClick={onClose} radius="sm" size="xs" style={{ alignSelf: "flex-start" }}>
-        <IconX size={10} />
-      </ActionIcon>
-    )}
-  </Group>
-);
-
-const SyncingLibrary = ({ className, message, styles }: MessageProps) => {
-  if (message.action !== "library") return null;
-  const { icon: Icon, name } = mapLibraryIcon(message.library);
-  return (
-    <Container
-      className={className}
-      description={
-        <>
-          <Icon size={16} />
-          <Text size="sm">{name}</Text>
-        </>
-      }
-      leftSection={<Loader className={classes.loader} size={28} />}
-      styles={styles}
-      title="Syncing library"
-    />
-  );
-};
-
-const SyncingMetadata = ({ className, message, styles }: MessageProps) => {
-  if (message.action !== "metadata") return null;
-  return (
-    <Container
-      className={className}
-      description={
-        <Text size="sm">
-          {message.processing} / {message.total}
-        </Text>
-      }
-      leftSection={<Progress processing={message.processing} total={message.total} />}
-      styles={styles}
-      title="Fetching metadata"
-    />
-  );
-};
-
-const SyncComplete = ({ className, message, onClose, styles }: MessageProps) => {
-  if (message.action !== "complete") return null;
-  const { hasFailures, total } = message;
-
-  // TODO: Decide how to present failures
-  console.log(hasFailures);
-  return (
-    <Container
-      className={className}
-      closable
-      description={<Text size="sm">{total} games added</Text>}
-      leftSection={
-        <RingProgress
-          label={
-            <Center>
-              <ActionIcon color="teal" radius="xl" size="xs" variant="light">
-                <IconCheck size={12} stroke={2} />
-              </ActionIcon>
-            </Center>
-          }
-          sections={[{ color: "teal", value: 100 }]}
-          size={40}
-          thickness={4}
-          transitionDuration={350}
-        />
-      }
-      onClose={onClose}
-      styles={styles}
-      title="Sync complete"
-    />
-  );
-};
 
 const Progress = ({ processing, total }: { processing: number; total: number }) => {
   const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
@@ -135,32 +25,74 @@ const Progress = ({ processing, total }: { processing: number; total: number }) 
   );
 };
 
-const messageActionMap: Record<GameSyncAction, FC<MessageProps> | null> = {
-  complete: SyncComplete,
-  library: SyncingLibrary,
-  metadata: SyncingMetadata,
+const baseProps: Partial<NotificationData> = {
+  autoClose: false,
+  radius: "lg",
+  withCloseButton: false,
 };
 
-export const GameSyncStatus = ({ className }: GameSyncStatusProps) => {
+export const GameSyncStatus = () => {
   const message = useGameSync();
-  const [open, setOpen] = useState(false);
+  const [notificationId, setNotificationId] = useState<string | undefined>(undefined);
 
-  const Component = useMemo(() => message?.action && messageActionMap[message.action], [message]);
+  const handleMessage = (message: GameSyncMessage | null) => {
+    if (!message) return;
 
-  useEffect(() => {
-    if (!Component) return;
-    setOpen(true);
-  }, [Component]);
-
-  return (
-    <Transition duration={400} mounted={open} timingFunction="ease" transition="slide-up">
-      {(styles) =>
-        Component ? (
-          <Component className={className} message={message!} onClose={() => setOpen(false)} styles={styles} />
-        ) : (
-          <></>
-        )
+    const operation = (data: NotificationData) => {
+      if (notificationId) {
+        return notifications.update({ ...baseProps, ...data });
       }
-    </Transition>
-  );
+      const id = notifications.show({ ...baseProps, ...data });
+      setNotificationId(id);
+      return id;
+    };
+
+    switch (message.action) {
+      case "complete": {
+        operation({
+          autoClose: 5000,
+          classNames: undefined,
+          withCloseButton: true,
+          icon: <IconCheck size={16} />,
+          id: notificationId,
+          loading: false,
+          message: `${message.total} games added`,
+          title: "Sync complete",
+        });
+        setNotificationId(undefined);
+        return;
+      }
+      case "library": {
+        const { icon: Icon, name } = mapLibraryIcon(message.library);
+        operation({
+          icon: <Icon size={16} />,
+          id: notificationId,
+          loading: true,
+          message: (
+            <Group gap="xs">
+              <Icon size={16} />
+              <Text size="sm">{name}</Text>
+            </Group>
+          ),
+          title: "Syncing library",
+        });
+        return;
+      }
+      case "metadata": {
+        operation({
+          classNames: { icon: classes.iconMetadata },
+          icon: <Progress processing={message.processing} total={message.total} />,
+          id: notificationId,
+          loading: false,
+          message: `${message.processing} / ${message.total}`,
+          title: "Fetching metadata",
+        });
+        return;
+      }
+    }
+  };
+
+  useEffect(() => handleMessage(message), [message]);
+
+  return null;
 };
