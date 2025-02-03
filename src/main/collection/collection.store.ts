@@ -1,7 +1,6 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
+import { createDb } from "@util/database/create-db";
 import { Service } from "typedi";
-
-import { createDb } from "../util/database/create-db";
 
 const db = createDb("collections");
 

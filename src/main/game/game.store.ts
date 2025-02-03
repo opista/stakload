@@ -1,9 +1,8 @@
 import { FeaturedGameModel, GameFilters, GameStoreModel, Library } from "@contracts/database/games";
+import { createDb } from "@util/database/create-db";
+import { dateRangeMatcher } from "@util/database/date-range-matcher";
+import { idMatcher } from "@util/database/id-matcher";
 import { Service } from "typedi";
-
-import { createDb } from "../util/database/create-db";
-import { dateRangeMatcher } from "../util/database/date-range-matcher";
-import { idMatcher } from "../util/database/id-matcher";
 
 type FieldsType = "all" | "featured" | "list";
 

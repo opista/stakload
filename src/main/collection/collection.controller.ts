@@ -1,9 +1,9 @@
 import type { CollectionStoreModel } from "@contracts/database/collections";
+import { IpcHandle } from "@util/ipc.decorator";
+import { IpcEventController } from "@util/ipc-event.controller";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
-import { IpcHandle } from "../util/ipc.decorator";
-import { IpcEventController } from "../util/ipc-event.controller";
 import { WindowService } from "../window/window.service";
 import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";

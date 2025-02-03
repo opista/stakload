@@ -1,8 +1,8 @@
+import { IpcOn } from "@util/ipc.decorator";
+import { IpcHandle } from "@util/ipc.decorator";
+import { IpcEventController } from "@util/ipc-event.controller";
 import { Service } from "typedi";
 
-import { IpcOn } from "../util/ipc.decorator";
-import { IpcHandle } from "../util/ipc.decorator";
-import { IpcEventController } from "../util/ipc-event.controller";
 import { SYSTEM_CHANNELS } from "./system.channels";
 import { SystemService } from "./system.service";
 

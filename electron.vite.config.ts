@@ -8,9 +8,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin()],
     resolve: {
       alias: {
-        "@api": resolve("src/main/api"),
         "@contracts": resolve("src/contracts"),
-        "@database": resolve("src/main/database"),
         "@util": resolve("src/main/util"),
       },
     },

@@ -1,4 +1,5 @@
-import { execAsync } from "../../util/exec-async";
+import { execAsync } from "@util/exec-async";
+
 import { ProcessMonitorStrategy } from "../types";
 
 export class WindowsProcessMonitor implements ProcessMonitorStrategy {

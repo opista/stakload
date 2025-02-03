@@ -1,7 +1,6 @@
+import { execAsync } from "@util/exec-async";
 import { app } from "electron";
 import { Service } from "typedi";
-
-import { execAsync } from "../util/exec-async";
 
 // TODO - This is windows-only I think, we need to make it work for mac too
 @Service()

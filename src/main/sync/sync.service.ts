@@ -5,8 +5,8 @@ import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { GameStore } from "../game/game.store";
-import { LibraryRegistryService } from "../libraries/library-registry.service";
 import { WindowService } from "../window/window.service";
+import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
 
 @Service()
@@ -21,7 +21,7 @@ export class SyncService {
 
   constructor(
     private gameStore: GameStore,
-    private libraryRegistryService: LibraryRegistryService,
+    private syncRegistryService: SyncRegistryService,
     private windowService: WindowService,
   ) {}
 
@@ -39,10 +39,11 @@ export class SyncService {
       library,
     });
 
-    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(library);
+    const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) {
       this.addFailureEntry({
         action: "library",
+
         code: "UNSUPPORTED_LIBRARY",
         library,
       });
@@ -72,7 +73,7 @@ export class SyncService {
       total: this.metadataToProcess,
     });
 
-    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(game.library);
+    const libraryImpl = this.syncRegistryService.getLibrary(game.library);
     if (!libraryImpl) {
       this.addFailureEntry({
         action: "library",
@@ -134,7 +135,7 @@ export class SyncService {
   }
 
   isIntegrationValid(library: Library) {
-    const libraryImpl = this.libraryRegistryService.getLibraryImplementation(library);
+    const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) return false;
 
     return libraryImpl.isIntegrationValid();

@@ -1,10 +1,10 @@
 import type { GameFilters } from "@contracts/database/games";
+import { IpcHandle, IpcOn } from "@util/ipc.decorator";
+import { IpcEventController } from "@util/ipc-event.controller";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
-import { LaunchService } from "../launch/launch.service";
-import { IpcHandle, IpcOn } from "../util/ipc.decorator";
-import { IpcEventController } from "../util/ipc-event.controller";
+import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
 import { WindowService } from "../window/window.service";
 import { GAME_CHANNELS } from "./game.channels";
 import { GameService } from "./game.service";
@@ -12,8 +12,8 @@ import { GameService } from "./game.service";
 @Service()
 export class GameController extends IpcEventController {
   constructor(
+    private readonly gameLifecycleService: GameLifecycleService,
     private readonly gameService: GameService,
-    private readonly launchService: LaunchService,
     private readonly windowService: WindowService,
   ) {
     super();
@@ -93,16 +93,16 @@ export class GameController extends IpcEventController {
 
   @IpcOn(GAME_CHANNELS.LAUNCH)
   async launchGame(id: string) {
-    return this.launchService.launchGame(id);
+    return this.gameLifecycleService.launchGame(id);
   }
 
   @IpcOn(GAME_CHANNELS.INSTALL)
   async installGame(id: string) {
-    return this.launchService.installGame(id);
+    return this.gameLifecycleService.installGame(id);
   }
 
   @IpcOn(GAME_CHANNELS.UNINSTALL)
   async uninstallGame(id: string) {
-    return this.launchService.uninstallGame(id);
+    return this.gameLifecycleService.uninstallGame(id);
   }
 }
