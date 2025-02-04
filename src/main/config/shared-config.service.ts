@@ -1,4 +1,4 @@
-import { decryptString } from "@util/safe-storage";
+import { decryptString, encryptString } from "@util/safe-storage";
 import { Conf } from "electron-conf/main";
 import { Inject, Service } from "typedi";
 
@@ -22,15 +22,15 @@ type TypeAtPath<T, P extends string> = P extends keyof T
 export class SharedConfigService {
   constructor(@Inject("conf") private readonly conf: Conf<Config>) {}
 
-  get<P extends NestedKeyOf<Config>>(path: P): TypeAtPath<Config, P> {
-    return this.conf.get(path) as TypeAtPath<Config, P>;
-  }
+  get<P extends NestedKeyOf<Config>>(
+    path: P,
+    { decrypt = false }: { decrypt?: boolean } = {},
+  ): TypeAtPath<Config, P> | string {
+    const value = this.conf.get(path) as TypeAtPath<Config, P>;
 
-  decryptGet<P extends NestedKeyOf<Config>>(path: P) {
-    const value = this.get(path);
-
-    if (typeof value === "string") {
-      return decryptString(value);
+    if (decrypt && typeof value === "string") {
+      const decrypted = decryptString(value);
+      return JSON.parse(decrypted);
     }
 
     return value;
@@ -40,7 +40,15 @@ export class SharedConfigService {
     this.conf.delete(path);
   }
 
-  set<P extends NestedKeyOf<Config>>(path: P, value: TypeAtPath<Config, P>) {
-    this.conf.set(path, value);
+  set<P extends NestedKeyOf<Config>>(
+    path: P,
+    value: TypeAtPath<Config, P>,
+    { encrypt = false }: { encrypt?: boolean } = {},
+  ) {
+    if (encrypt) {
+      this.conf.set(path, encryptString(JSON.stringify(value)));
+    } else {
+      this.conf.set(path, value);
+    }
   }
 }

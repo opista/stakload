@@ -4,8 +4,7 @@ import { electronApp, optimizer } from "@electron-toolkit/utils";
 import { app, ipcMain } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
-import { INTEGRATION_CHANNELS, SECURITY_CHANNELS } from "../preload/channels";
-import { authenticateIntegration } from "./channels/integrations";
+import { SECURITY_CHANNELS } from "../preload/channels";
 import { decrypt, encrypt } from "./channels/safe-storage";
 import { Container } from "./container";
 import { WindowService } from "./window/window.service";
@@ -33,12 +32,9 @@ app.whenReady().then(async () => {
   });
 
   const windowService = Container.get(WindowService);
-  const browserWindow = windowService.createWindow();
+  windowService.createWindow();
 
   // TODO: Migrate these out to controllers
-
-  // Integration Handlers
-  ipcMain.handle(INTEGRATION_CHANNELS.AUTHENTICATE, authenticateIntegration(browserWindow));
 
   // Security Handlers
   ipcMain.handle(SECURITY_CHANNELS.DECRYPT, decrypt);

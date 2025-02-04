@@ -1,4 +1,4 @@
-import { decryptString, encryptString } from "@util/safe-storage";
+import { decryptString } from "@util/safe-storage";
 import { Service } from "typedi";
 
 import { SharedConfigService } from "../../config/shared-config.service";
@@ -29,19 +29,19 @@ export class GogService {
     const expiresAt = Date.now() + tokens.expires_in * 1000;
 
     const config: GogTokenConfig = {
-      accessToken: encryptString(tokens.access_token),
-      refreshToken: encryptString(tokens.refresh_token),
+      accessToken: tokens.access_token,
+      refreshToken: tokens.refresh_token,
       expiresAt,
     };
 
     console.log(tokens);
 
     console.log(this.sharedConfigService);
-    await this.sharedConfigService.set("integration_settings.state.gogIntegration", config);
+    await this.sharedConfigService.set("integration_settings.state.gogIntegration", config, { encrypt: true });
   }
 
   private async getValidToken(): Promise<string | null> {
-    const config = this.sharedConfigService.get("integration_settings.state.gogIntegration");
+    const config = this.sharedConfigService.get("integration_settings.state.gogIntegration", { decrypt: true });
 
     if (!config) return null;
 
