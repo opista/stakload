@@ -3,6 +3,7 @@ import { assertNever } from "@util/assert-never";
 import { Service } from "typedi";
 
 import { EpicGamesStoreSyncService } from "../../integrations/epic-games-store/sync/epic-games-store-sync.service";
+import { GogLibraryService } from "../../integrations/gog/sync/gog-sync.service";
 import { SteamLibraryService } from "../../integrations/steam/sync/steam-sync.service";
 import { SyncService } from "./types";
 
@@ -10,6 +11,7 @@ import { SyncService } from "./types";
 export class SyncRegistryService {
   constructor(
     private epicGamesStoreSyncService: EpicGamesStoreSyncService,
+    private gogLibraryService: GogLibraryService,
     private steamLibraryService: SteamLibraryService,
   ) {}
 
@@ -17,6 +19,9 @@ export class SyncRegistryService {
     switch (library) {
       case "epic-game-store": {
         return this.epicGamesStoreSyncService;
+      }
+      case "gog": {
+        return this.gogLibraryService;
       }
       case "steam": {
         return this.steamLibraryService;

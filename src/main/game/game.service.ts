@@ -86,10 +86,15 @@ export class GameService {
   }
 
   getNewGames() {
-    return this.gameStore.findFilteredGames({ createdAt: { dateRange: "ONE_WEEK" } }, "featured", {
-      field: "createdAt",
-      direction: -1,
-    });
+    return this.gameStore.findFilteredGames(
+      { createdAt: { dateRange: "ONE_WEEK" } },
+      "featured",
+      {
+        field: "createdAt",
+        direction: -1,
+      },
+      10,
+    );
   }
 
   getFilteredGames(filters: GameFilters) {

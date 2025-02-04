@@ -15,7 +15,7 @@ export class SyncController extends IpcEventController {
   @IpcOn(SYNC_CHANNELS.SYNC)
   async syncGames() {
     // TODO - Stop hardcoding this at some point
-    return this.syncService.sync(["epic-game-store", "steam"]);
+    return this.syncService.sync(["epic-game-store", "gog", "steam"]);
   }
 
   @IpcHandle(SYNC_CHANNELS.TEST_INTEGRATION)
