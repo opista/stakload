@@ -2,6 +2,20 @@
 
 Always follow these rules to ensure consistency and maintainability of the codebase.
 
+# Instructions
+
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again.
+
+You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+[X] Task 1
+[ ] Task 2
+
+Also update the progress of the task in the Scratchpad when you finish a subtask.
+Especially when you finished a milestone, it will help to improve your depth of task accomplishment to use the scratchpad to reflect and plan.
+The goal is to help you maintain a big picture as well as the progress of the task. Always refer to the Scratchpad when you plan the next step.
+
+# User specified lessons
+
 ## General
 
 - The purpose of this codebase is as a centralised application for users to view and manage their video game library
@@ -144,3 +158,7 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 - Specify testing tools and methodologies
 
 Finally, remember it is very, very important to always follow these rules.
+
+# Cursor learned
+
+# Scratchpad
