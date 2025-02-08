@@ -32,7 +32,7 @@ export class WindowService {
       closable: true,
       enableLargerThanScreen: false,
       focusable: true,
-      frame: false,
+      frame: process.platform !== "win32",
       fullscreenable: true,
       hasShadow: true,
       height: 800,
@@ -46,7 +46,7 @@ export class WindowService {
       show: false,
       title: "Trulaunch",
       titleBarOverlay: false,
-      titleBarStyle: "hidden",
+      titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
       vibrancy: "under-window",
       visualEffectState: "active",
       webPreferences: {
@@ -74,10 +74,6 @@ export class WindowService {
       },
       width: 1280,
     });
-
-    if (process.platform === "darwin") {
-      this.browserWindow.setWindowButtonVisibility(false);
-    }
 
     this.browserWindow.on("ready-to-show", () => {
       this.browserWindow?.show();

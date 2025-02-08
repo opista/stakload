@@ -37,6 +37,7 @@ declare global {
       onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
+      platform: string;
       restartApp: () => void;
       restartDevice: () => void;
       shutdownDevice: () => void;

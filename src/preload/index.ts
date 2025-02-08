@@ -68,6 +68,8 @@ const api = {
   onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.GAMES_LIST_UPDATED, listener),
   onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_CHANNELS.GAME_SYNC_STATUS, listener),
+
+  platform: process.platform,
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to

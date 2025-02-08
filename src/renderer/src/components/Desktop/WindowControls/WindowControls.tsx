@@ -47,33 +47,37 @@ export const WindowControls = () => {
             <IconDeviceGamepad2 size={16} />
           </ActionIcon>
         </Tooltip>
-        <ActionIcon
-          aria-label={t("windowControls.minimize")}
-          className={classes.icon}
-          color="gray"
-          onClick={handleMinimize}
-          variant="subtle"
-        >
-          <IconMinus size={16} />
-        </ActionIcon>
-        <ActionIcon
-          aria-label={t("windowControls.maximize")}
-          className={classes.icon}
-          color="gray"
-          onClick={handleMaximize}
-          variant="subtle"
-        >
-          <IconSquare size={16} />
-        </ActionIcon>
-        <ActionIcon
-          aria-label={t("windowControls.close")}
-          className={classes.icon}
-          color="gray"
-          onClick={handleClose}
-          variant="subtle"
-        >
-          <IconX size={16} />
-        </ActionIcon>
+        {window.api.platform !== "darwin" && (
+          <>
+            <ActionIcon
+              aria-label={t("windowControls.minimize")}
+              className={classes.icon}
+              color="gray"
+              onClick={handleMinimize}
+              variant="subtle"
+            >
+              <IconMinus size={16} />
+            </ActionIcon>
+            <ActionIcon
+              aria-label={t("windowControls.maximize")}
+              className={classes.icon}
+              color="gray"
+              onClick={handleMaximize}
+              variant="subtle"
+            >
+              <IconSquare size={16} />
+            </ActionIcon>
+            <ActionIcon
+              aria-label={t("windowControls.close")}
+              className={classes.icon}
+              color="gray"
+              onClick={handleClose}
+              variant="subtle"
+            >
+              <IconX size={16} />
+            </ActionIcon>
+          </>
+        )}
       </Group>
     </Group>
   );
