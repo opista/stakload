@@ -1,26 +1,8 @@
 import { Service } from "typedi";
 
+import { LibraryData, LibraryProduct } from "./types";
+
 const GOG_API_BASE_URL = "https://www.gog.com/account/getFilteredProducts";
-
-interface LibraryProduct {
-  id: number;
-  slug: string;
-  tags: [];
-  title: string;
-}
-
-interface LibraryData {
-  contentSystemCompatibility: string | null;
-  hiddenUpdatedProductsCount: number;
-  moviesCount: number;
-  page: number;
-  products: LibraryProduct[];
-  productsPerPage: number;
-  sortBy: string;
-  totalPages: number;
-  totalProducts: number;
-  updatedProductsCount: number;
-}
 
 @Service()
 export class GogApiService {
