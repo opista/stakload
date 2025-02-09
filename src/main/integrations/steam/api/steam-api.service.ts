@@ -1,5 +1,4 @@
 import { buildQueryParams } from "@util/build-query-params";
-import { decryptString } from "@util/safe-storage";
 import { Service } from "typedi";
 
 import { SharedConfigService } from "../../../config/shared-config.service";
@@ -13,18 +12,20 @@ export class SteamApiService {
 
   async getOwnedGames() {
     try {
-      const config = this.sharedConfigService.get("integration_settings.state.steamIntegration");
+      const steamId = this.sharedConfigService.get("integration_settings.state.steamIntegration.steamId");
+      const webApiKey = this.sharedConfigService.get("integration_settings.state.steamIntegration.webApiKey", {
+        decrypt: true,
+      });
 
-      if (!config) {
-        throw new Error("missing integration details");
+      if (!steamId || !webApiKey) {
+        throw new Error("Steam ID or web API key not found");
       }
 
-      const webApiKey = decryptString(config.webApiKey);
       const query = buildQueryParams({
         include_appinfo: "true",
         include_played_free_games: "true",
         key: webApiKey,
-        steamid: config.steamId,
+        steamid: steamId,
       });
       const response = await fetch(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`, {
         headers: { accept: "application/json" },

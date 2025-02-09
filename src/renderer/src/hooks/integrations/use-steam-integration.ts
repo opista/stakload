@@ -21,6 +21,10 @@ export const useSteamIntegration = () => {
     /**
      * TODO - Should this happen in the backend?
      * ie. fetch decrypted steam integration details?
+     * We should let the user set this in the frontend,
+     * but once they come back just display an empty
+     * input with dots to indicate that the key is set.
+     * Then, we can kill the encrypt/decrypt methods.
      */
     window.api.decrypt(storeSteamIntegration.webApiKey).then((decrypted) => {
       setDecryptedSteamIntegration({

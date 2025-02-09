@@ -34,9 +34,7 @@ app.whenReady().then(async () => {
   const windowService = Container.get(WindowService);
   windowService.createWindow();
 
-  // TODO: Migrate these out to controllers
-
-  // Security Handlers
+  // TODO: Kill these
   ipcMain.handle(SECURITY_CHANNELS.DECRYPT, decrypt);
   ipcMain.handle(SECURITY_CHANNELS.ENCRYPT, encrypt);
 });

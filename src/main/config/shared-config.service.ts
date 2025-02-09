@@ -5,8 +5,8 @@ import { Inject, Service } from "typedi";
 import { Config } from "./types";
 
 type NestedKeyOf<ObjectType extends object> = {
-  [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object
-    ? `${Key}` | `${Key}.${NestedKeyOf<ObjectType[Key]>}`
+  [Key in keyof ObjectType & (string | number)]: ObjectType[Key] extends object | undefined
+    ? `${Key}` | `${Key}.${NestedKeyOf<Exclude<ObjectType[Key], undefined>>}`
     : `${Key}`;
 }[keyof ObjectType & (string | number)];
 
@@ -14,7 +14,9 @@ type TypeAtPath<T, P extends string> = P extends keyof T
   ? T[P]
   : P extends `${infer K}.${infer R}`
     ? K extends keyof T
-      ? TypeAtPath<T[K], R>
+      ? T[K] extends object | undefined
+        ? TypeAtPath<Exclude<T[K], undefined>, R> | undefined
+        : never
       : never
     : never;
 

@@ -1,4 +1,3 @@
-import { decryptString } from "@util/safe-storage";
 import { Service } from "typedi";
 
 import { SharedConfigService } from "../../config/shared-config.service";
@@ -36,7 +35,6 @@ export class GogService {
 
     console.log(tokens);
 
-    console.log(this.sharedConfigService);
     await this.sharedConfigService.set("integration_settings.state.gogIntegration", config, { encrypt: true });
   }
 
@@ -46,8 +44,7 @@ export class GogService {
     if (!config) return null;
 
     if (Date.now() >= config.expiresAt) {
-      const refreshToken = decryptString(config.refreshToken);
-      const newTokens = await this.refreshAccessToken(refreshToken);
+      const newTokens = await this.refreshAccessToken(config.refreshToken);
 
       // If refresh token is invalid, clear the config and return null
       if (!newTokens || newTokens.error) {
@@ -59,7 +56,7 @@ export class GogService {
       return newTokens.access_token;
     }
 
-    return decryptString(config.accessToken);
+    return config.accessToken;
   }
 
   private async refreshAccessToken(refreshToken: string): Promise<TokenResponse | null> {

@@ -30,7 +30,7 @@ export class SteamLibraryService implements SyncService {
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
-    const currentlyInstalledGames = await this.gameStore.findFilteredGames<GameStoreModel>(
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
       {
         isInstalled: true,
         libraries: [this.library],
