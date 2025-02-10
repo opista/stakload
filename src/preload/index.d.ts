@@ -9,15 +9,13 @@ declare global {
   interface Window {
     api: {
       archiveGame: (id: string) => Promise<boolean>;
-      authenticateIntegration: (library: Library) => void;
+      authenticateIntegration: (library: Library, data?: unknown) => void;
       closeWindow: () => void;
       createCollection: (
         collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
       ) => Promise<CollectionStoreModel>;
-      decrypt: (str: string) => Promise<string>;
       deleteCollection: (id: string) => Promise<boolean>;
       deleteGame: (id: string) => Promise<boolean>;
-      encrypt: (str: string) => Promise<string>;
       fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
       getCollectionGames: (id: string) => Promise<GameListModel[]>;
       getCollections: () => Promise<CollectionStoreModel[]>;
@@ -34,8 +32,10 @@ declare global {
       maximizeWindow: () => void;
       minimizeWindow: () => void;
       onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
-      onEpicGamesAuthentication: (listener: (event, data: unknown) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
+      onIntegrationAuthenticationResult: (
+        listener: (event, { library: Library, success: boolean }) => void,
+      ) => RemoveListenerFunction;
       onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       platform: string;
       restartApp: () => void;

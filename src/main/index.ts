@@ -1,11 +1,9 @@
 import "reflect-metadata";
 
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { app, ipcMain } from "electron";
+import { app } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
-import { SECURITY_CHANNELS } from "../preload/channels";
-import { decrypt, encrypt } from "./channels/safe-storage";
 import { Container } from "./container";
 import { WindowService } from "./window/window.service";
 
@@ -33,10 +31,6 @@ app.whenReady().then(async () => {
 
   const windowService = Container.get(WindowService);
   windowService.createWindow();
-
-  // TODO: Kill these
-  ipcMain.handle(SECURITY_CHANNELS.DECRYPT, decrypt);
-  ipcMain.handle(SECURITY_CHANNELS.ENCRYPT, encrypt);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

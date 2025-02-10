@@ -67,4 +67,16 @@ export class LegendaryService {
       return [];
     }
   }
+
+  async isLoggedIn(): Promise<boolean> {
+    try {
+      console.log("checking if logged in");
+      const result = await runApplicationCommand(APPLICATION_NAME, "status");
+      console.log("result", result);
+      console.log(result.stdout.includes("<not logged in>"));
+      return !result.stdout.includes("<not logged in>");
+    } catch (err) {
+      return false;
+    }
+  }
 }

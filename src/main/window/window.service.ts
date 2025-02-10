@@ -1,7 +1,9 @@
 import { is } from "@electron-toolkit/utils";
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
 import { Service } from "typedi";
+
+import { ChildWindowOptions } from "./types";
 
 @Service()
 export class WindowService {
@@ -119,5 +121,35 @@ export class WindowService {
 
   sendEvent(channel: string, ...args: unknown[]) {
     return this.browserWindow?.webContents.send(channel, ...args);
+  }
+
+  async createChildWindow({ height, networkRequestHandler, sessionId, url, width }: ChildWindowOptions) {
+    const integrationSession = session.fromPartition(sessionId);
+    await integrationSession.clearStorageData({ storages: ["cookies"] });
+
+    const integrationWindow = new BrowserWindow({
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
+      center: true,
+      closable: true,
+      fullscreen: false,
+      fullscreenable: false,
+      height,
+      modal: false,
+      movable: true,
+      parent: this.getBrowserWindow(),
+      resizable: false,
+      show: false,
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        session: integrationSession,
+      },
+      width,
+    });
+
+    integrationWindow.webContents.on("did-navigate", (...args) => networkRequestHandler(integrationWindow, ...args));
+    integrationWindow.loadURL(url);
+    integrationWindow.show();
   }
 }

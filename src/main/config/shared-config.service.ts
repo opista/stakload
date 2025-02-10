@@ -29,14 +29,15 @@ export class SharedConfigService {
 
     if (decrypt && typeof value === "string") {
       const decrypted = decryptString(value);
-      return JSON.parse(decrypted) as TypeAtPath<Config, P>;
+
+      try {
+        return JSON.parse(decrypted) as TypeAtPath<Config, P>;
+      } catch {
+        return decrypted as TypeAtPath<Config, P>;
+      }
     }
 
     return value;
-  }
-
-  delete<P extends NestedKeyOf<Config>>(path: P) {
-    this.conf.delete(path);
   }
 
   set<P extends NestedKeyOf<Config>>(
@@ -49,5 +50,9 @@ export class SharedConfigService {
     } else {
       this.conf.set(path, value);
     }
+  }
+
+  delete<P extends NestedKeyOf<Config>>(path: P) {
+    this.conf.delete(path);
   }
 }

@@ -140,4 +140,13 @@ export class SyncService {
 
     return libraryImpl.isIntegrationValid();
   }
+
+  async authenticate(library: Library, data?: unknown) {
+    const libraryImpl = this.syncRegistryService.getLibrary(library);
+    if (!libraryImpl) return false;
+
+    console.log(library, data);
+
+    return libraryImpl.authenticate(data);
+  }
 }

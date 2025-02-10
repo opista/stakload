@@ -1,25 +1,28 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
+import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { fetchGameMetadata } from "../../../api/trulaunch";
 import { GameStore } from "../../../game/game.store";
 import { SyncService } from "../../../sync/sync-registry/types";
+import { WindowService } from "../../../window/window.service";
 import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
-
 @Service()
 export class EpicGamesStoreSyncService implements SyncService {
   library: Library = "epic-game-store";
   private installedGameStrategy: InstalledGamesStrategy;
 
   constructor(
-    private epicGamesStoreApiService: EpicGamesStoreApiService,
-    private installedGamesRegistryService: InstalledGamesRegistryService,
-    private legendaryService: LegendaryService,
+    private readonly epicGamesStoreApiService: EpicGamesStoreApiService,
     private readonly gameStore: GameStore,
+    private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    private readonly legendaryService: LegendaryService,
+    private readonly windowService: WindowService,
   ) {
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
   }
@@ -43,7 +46,7 @@ export class EpicGamesStoreSyncService implements SyncService {
     const installedGames = await this.installedGameStrategy.getInstalledGames();
     const installedGameAppNames = installedGames.map((game) => game.appName);
 
-    const currentlyInstalledGames = await this.gameStore.findFilteredGames<GameStoreModel>(
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
       {
         isInstalled: true,
         libraries: [this.library],
@@ -66,7 +69,7 @@ export class EpicGamesStoreSyncService implements SyncService {
   }
 
   async isIntegrationValid(): Promise<boolean> {
-    return true;
+    return await this.legendaryService.isLoggedIn();
   }
 
   async addNewGames() {
@@ -83,5 +86,40 @@ export class EpicGamesStoreSyncService implements SyncService {
     await this.gameStore.bulkInsertGames(mappedGames);
 
     return mappedGames.length;
+  }
+
+  private async handleAuthenticationResponse(
+    window: BrowserWindow,
+    _event,
+    url: string,
+    _httpResponseCode: number,
+    _httpStatusText: string,
+  ) {
+    if (url.startsWith("https://www.epicgames.com/id/api/redirect")) {
+      const bodyText = await window.webContents.executeJavaScript("document.body.innerText");
+      const parsed = JSON.parse(bodyText);
+
+      const { authorizationCode } = parsed;
+
+      window.close();
+
+      await this.legendaryService.logout();
+      const result = await this.legendaryService.login(authorizationCode);
+
+      this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+        library: this.library,
+        success: result.success,
+      });
+    }
+  }
+
+  async authenticate() {
+    this.windowService.createChildWindow({
+      height: 520,
+      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
+      sessionId: "epic-games-store-auth",
+      url: "https://www.epicgames.com/id/login?redirectUrl=https%3A//www.epicgames.com/id/api/redirect%3FclientId%3D34a02cf8f4414e29b15921876da36f9a%26responseType%3Dcode",
+      width: 350,
+    });
   }
 }

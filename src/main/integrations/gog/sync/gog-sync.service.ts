@@ -1,11 +1,13 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
+import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { fetchGameMetadata } from "../../../api/trulaunch";
-import { SharedConfigService } from "../../../config/shared-config.service";
 import { GameStore } from "../../../game/game.store";
 import { SyncService } from "../../../sync/sync-registry/types";
-import { GogApiService } from "../api/gog-api.service";
+import { WindowService } from "../../../window/window.service";
+import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
 @Service()
@@ -17,7 +19,7 @@ export class GogLibraryService implements SyncService {
     private readonly gogApiService: GogApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly gameStore: GameStore,
-    private readonly sharedConfigService: SharedConfigService,
+    private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
@@ -54,13 +56,13 @@ export class GogLibraryService implements SyncService {
 
   async addNewGames() {
     try {
-      const config = await this.sharedConfigService.get("integration_settings.state.gogIntegration", { decrypt: true });
+      const token = await this.gogApiService.getValidToken();
 
-      if (!config) {
+      if (!token) {
         throw new Error("GOG Integraion not set up");
       }
 
-      const ownedGames = await this.gogApiService.getOwnedGames(config.accessToken);
+      const ownedGames = await this.gogApiService.getOwnedGames(token);
       const existingGames = await this.gameStore.findGamesByGameIds(
         ownedGames.map((game) => String(game.id)),
         this.library,
@@ -86,6 +88,47 @@ export class GogLibraryService implements SyncService {
   }
 
   async isIntegrationValid(): Promise<boolean> {
-    return true;
+    return this.gogApiService
+      .getValidToken()
+      .then(() => true)
+      .catch(() => false);
+  }
+
+  private async handleAuthenticationResponse(
+    window: BrowserWindow,
+    _event,
+    url: string,
+    _httpResponseCode: number,
+    _httpStatusText: string,
+  ) {
+    if (url.includes("on_login_success")) {
+      const code = new URL(url).searchParams.get("code");
+
+      if (code) {
+        window.close();
+        try {
+          const success = await this.gogApiService
+            .getAuthToken(code)
+            .then(() => true)
+            .catch(() => false);
+          this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+            library: this.library,
+            success,
+          });
+        } catch (error) {
+          console.error("GOG auth error:", error);
+        }
+      }
+    }
+  }
+
+  async authenticate() {
+    this.windowService.createChildWindow({
+      height: 430,
+      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
+      sessionId: "gog-auth",
+      url: `https://auth.gog.com/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&layout=client2`,
+      width: 410,
+    });
   }
 }

@@ -15,12 +15,16 @@ export class SyncController extends IpcEventController {
   @IpcOn(SYNC_CHANNELS.SYNC)
   async syncGames() {
     // TODO - Stop hardcoding this at some point
-    return this.syncService.sync(["epic-game-store", "gog", "steam"]);
+    return this.syncService.sync(["epic-game-store", "gog"]);
   }
 
   @IpcHandle(SYNC_CHANNELS.TEST_INTEGRATION)
   async testIntegration(library: Library) {
-    const res = await this.syncService.isIntegrationValid(library);
-    return res;
+    return await this.syncService.isIntegrationValid(library);
+  }
+
+  @IpcHandle(SYNC_CHANNELS.AUTH_INTEGRATION)
+  async authIntegration(library: Library, data?: unknown) {
+    return await this.syncService.authenticate(library, data);
   }
 }
