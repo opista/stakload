@@ -1,5 +1,5 @@
 // These should map to the IGDB library names
-export type Library = "epic-game-store" | "steam";
+export type Library = "epic-game-store" | "gog" | "steam";
 
 export type EpicLibraryMeta = {
   appName: string;

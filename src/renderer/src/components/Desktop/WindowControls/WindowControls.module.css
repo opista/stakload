@@ -1,6 +1,6 @@
 .container {
   width: 100%;
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  padding: 0;
   -webkit-app-region: drag;
   user-select: none;
   justify-content: flex-end;
@@ -8,4 +8,10 @@
 
 .inner {
   -webkit-app-region: no-drag;
+}
+
+.icon {
+  padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
+  width: auto;
+  height: auto;
 }

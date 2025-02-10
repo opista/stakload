@@ -1,7 +1,9 @@
 import { is } from "@electron-toolkit/utils";
-import { app, BrowserWindow, shell } from "electron";
+import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
 import { Service } from "typedi";
+
+import { ChildWindowOptions } from "./types";
 
 @Service()
 export class WindowService {
@@ -32,7 +34,7 @@ export class WindowService {
       closable: true,
       enableLargerThanScreen: false,
       focusable: true,
-      frame: false,
+      frame: process.platform !== "win32",
       fullscreenable: true,
       hasShadow: true,
       height: 800,
@@ -46,7 +48,7 @@ export class WindowService {
       show: false,
       title: "Trulaunch",
       titleBarOverlay: false,
-      titleBarStyle: "hidden",
+      titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
       vibrancy: "under-window",
       visualEffectState: "active",
       webPreferences: {
@@ -74,10 +76,6 @@ export class WindowService {
       },
       width: 1280,
     });
-
-    if (process.platform === "darwin") {
-      this.browserWindow.setWindowButtonVisibility(false);
-    }
 
     this.browserWindow.on("ready-to-show", () => {
       this.browserWindow?.show();
@@ -123,5 +121,35 @@ export class WindowService {
 
   sendEvent(channel: string, ...args: unknown[]) {
     return this.browserWindow?.webContents.send(channel, ...args);
+  }
+
+  async createChildWindow({ height, networkRequestHandler, sessionId, url, width }: ChildWindowOptions) {
+    const integrationSession = session.fromPartition(sessionId);
+    await integrationSession.clearStorageData({ storages: ["cookies"] });
+
+    const integrationWindow = new BrowserWindow({
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
+      center: true,
+      closable: true,
+      fullscreen: false,
+      fullscreenable: false,
+      height,
+      modal: false,
+      movable: true,
+      parent: this.getBrowserWindow(),
+      resizable: false,
+      show: false,
+      webPreferences: {
+        contextIsolation: true,
+        nodeIntegration: false,
+        session: integrationSession,
+      },
+      width,
+    });
+
+    integrationWindow.webContents.on("did-navigate", (...args) => networkRequestHandler(integrationWindow, ...args));
+    integrationWindow.loadURL(url);
+    integrationWindow.show();
   }
 }

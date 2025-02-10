@@ -124,9 +124,7 @@
   "settings": {
     "integration": {
       "authenticate": "Authenticate",
-      "detailsSaved": "Details saved",
       "failure": "Integration failure",
-      "save": "Save details",
       "success": "Integration successful",
       "test": "Test integration"
     },

@@ -1,14 +1,14 @@
 import { Card, CSSProperties } from "@mantine/core";
 import { FixedSizeGrid } from "react-window";
 
-import { IconBrandEpicGames, IconBrandSteam, IconBrandXbox, IconDeviceGamepad } from "../icons";
+import { IconBrandEpicGames, IconBrandGog, IconBrandSteam, IconBrandXbox, IconDeviceGamepad } from "../icons";
 
 type IconSelectorProps = {
   onSelect: (iconName: string) => void;
   selectedIcon?: string;
 };
 
-const icons = [IconBrandSteam, IconBrandEpicGames, IconBrandXbox, IconDeviceGamepad];
+const icons = [IconBrandSteam, IconBrandEpicGames, IconBrandXbox, IconBrandGog, IconDeviceGamepad];
 
 const IconSelector = ({ onSelect, selectedIcon }: IconSelectorProps) => {
   const COLUMN_COUNT = 3;

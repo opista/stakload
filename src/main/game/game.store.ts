@@ -32,6 +32,7 @@ export class GameStore {
     filters: GameFilters = {},
     type: T = "all" as T,
     sort: Sort = { field: "sortableName", direction: 1 },
+    limit?: number,
   ) {
     return (await db
       .find(
@@ -52,7 +53,8 @@ export class GameStore {
         },
         fieldsMap[type],
       )
-      .sort({ [sort.field]: sort.direction })) as { _id: string; name: string }[] as T extends "list"
+      .sort({ [sort.field]: sort.direction })
+      .limit(limit || 0)) as { _id: string; name: string }[] as T extends "list"
       ? GameListModel[]
       : T extends "featured"
         ? FeaturedGameModel[]

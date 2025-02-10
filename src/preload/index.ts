@@ -10,7 +10,7 @@ import { GAME_CHANNELS } from "../main/game/game.channels";
 import { SYNC_CHANNELS } from "../main/sync/sync.channels";
 import { SYSTEM_CHANNELS } from "../main/system/system.channels";
 import { WINDOW_CHANNELS } from "../main/window/window.channels";
-import { EVENT_CHANNELS, INTEGRATION_CHANNELS, SECURITY_CHANNELS } from "./channels";
+import { EVENT_CHANNELS } from "./channels";
 import { listenerHandler } from "./util/listener-handler";
 
 // Custom APIs for renderer
@@ -48,26 +48,25 @@ const api = {
   getQuickLaunchGames: () => ipcRenderer.invoke(GAME_CHANNELS.GET_QUICK_LAUNCH),
   installGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.INSTALL, id),
   launchGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.LAUNCH, id),
+  authenticateIntegration: (library: Library, data?: unknown) =>
+    ipcRenderer.invoke(SYNC_CHANNELS.AUTH_INTEGRATION, library, data),
   syncGames: () => ipcRenderer.send(SYNC_CHANNELS.SYNC),
   toggleFavouriteGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_FAVOURITE, id),
   toggleQuickLaunchGame: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH, id),
   uninstallGame: (id: string) => ipcRenderer.send(GAME_CHANNELS.UNINSTALL, id),
 
   // Integration Management
-  authenticateIntegration: (library: Library) => ipcRenderer.invoke(INTEGRATION_CHANNELS.AUTHENTICATE, library),
   testLibraryIntegration: (library: Library) => ipcRenderer.invoke(SYNC_CHANNELS.TEST_INTEGRATION, library),
-
-  // Security
-  decrypt: (str: string) => ipcRenderer.invoke(SECURITY_CHANNELS.DECRYPT, str),
-  encrypt: (str: string) => ipcRenderer.invoke(SECURITY_CHANNELS.ENCRYPT, str),
 
   // Event Listeners
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.COLLECTIONS_UPDATED, listener),
-  onEpicGamesAuthentication: (listener: (event, data: unknown) => void) =>
-    listenerHandler(INTEGRATION_CHANNELS.EPIC_GAMES_RESULT, listener),
+  onIntegrationAuthenticationResult: (listener: (event, data: { library: Library; success: boolean }) => void) =>
+    listenerHandler(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, listener),
   onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.GAMES_LIST_UPDATED, listener),
   onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_CHANNELS.GAME_SYNC_STATUS, listener),
+
+  platform: process.platform,
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
