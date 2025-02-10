@@ -52,7 +52,7 @@ export const Navbar = () => {
             <NavbarLink href="/desktop" icon={IconHome} label="Home" />
             <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
             <NavbarLink href="/desktop/favourites" icon={IconStar} label="Favourites" />
-            <NavbarLink icon={IconBooks} label="Collections">
+            <NavbarLink disabled={!collections?.length} icon={IconBooks} label="Collections">
               {collections.map((collection) => (
                 <NavbarLink
                   href={`/desktop/collections/${collection._id}`}
