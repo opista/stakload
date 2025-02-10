@@ -1,8 +1,8 @@
-import { useSteamIntegration } from "@hooks/integrations/use-steam-integration";
+import { Library } from "@contracts/database/games";
 import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
@@ -10,6 +10,32 @@ import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsChec
 import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
 import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
 import classes from "./SettingsIntegrationsView.module.css";
+
+type ValidationState = {
+  [key in Library]: boolean | null;
+};
+
+type ValidationAction = { library: Library; success: boolean; type: "SET_VALIDATION" } | { type: "RESET" };
+
+const initialValidationState: ValidationState = {
+  steam: null,
+  "epic-game-store": null,
+  gog: null,
+};
+
+const validationReducer = (state: ValidationState, action: ValidationAction): ValidationState => {
+  switch (action.type) {
+    case "SET_VALIDATION":
+      return {
+        ...initialValidationState,
+        [action.library]: action.success,
+      };
+    case "RESET":
+      return initialValidationState;
+    default:
+      return state;
+  }
+};
 
 const GeneralSettings = () => {
   const { setSyncOnStartup, syncOnStartup } = useIntegrationSettingsStore(
@@ -65,49 +91,42 @@ const GeneralSettings = () => {
  * I wonder if this can be cleaned up and re-used
  * for each integration with a few props
  */
-const SteamSettings = () => {
+const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
+  const { hasStoredWebApiKey, steamIntegrationEnabled, storeSteamId, toggleSteamIntegration } =
+    useIntegrationSettingsStore(
+      useShallow((state) => ({
+        storeSteamId: state.steamIntegration?.steamId,
+        hasStoredWebApiKey: !!state.steamIntegration?.webApiKey,
+        steamIntegrationEnabled: state.steamIntegrationEnabled,
+        toggleSteamIntegration: state.toggleSteamIntegration,
+      })),
+    );
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [steamId, setSteamId] = useState<string>("");
-  const [isUpdated, setIsUpdated] = useState<boolean>(false);
+  const [steamId, setSteamId] = useState<string>(storeSteamId || "");
   const [webApiKey, setWebApiKey] = useState<string>("");
-  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
-  const { steamIntegration, setSteamIntegration, toggleSteamIntegration, steamIntegrationEnabled } =
-    useSteamIntegration();
   const { t } = useTranslation();
 
-  const onSave = async () => {
+  const onAuthenticate = () => {
     setIsLoading(true);
-    setSteamIntegration({ steamId, webApiKey });
-    setIsIntegrationValid(null);
-    setIsUpdated(true);
-    setIsLoading(false);
+    window.api.authenticateIntegration("steam", { steamId, webApiKey });
   };
 
-  const onClickTestIntegration = async () => {
-    setIsUpdated(false);
+  const onTest = async () => {
     setIsLoading(true);
-    setIsIntegrationValid(null);
-    const isValid = await window.api.testLibraryIntegration("steam");
-    setIsIntegrationValid(isValid);
+    const result = await window.api.testLibraryIntegration("steam");
+
+    console.log("result", result);
     setIsLoading(false);
   };
 
   const onSteamIdChange = (value: string) => {
-    setIsIntegrationValid(null);
     setSteamId(value);
   };
 
   const onWebApiKeyChange = (value: string) => {
-    setIsIntegrationValid(null);
     setWebApiKey(value);
   };
-
-  useEffect(() => {
-    if (steamIntegration) {
-      setSteamId(steamIntegration.steamId);
-      setWebApiKey(steamIntegration.webApiKey);
-    }
-  }, [steamIntegration]);
 
   const Subtitle = (
     <Trans
@@ -130,7 +149,7 @@ const SteamSettings = () => {
 
       <SettingsCheckbox
         checked={steamIntegrationEnabled}
-        disabled={isLoading || !steamIntegration?.steamId || !steamIntegration.webApiKey}
+        disabled={isLoading || !steamId || !webApiKey}
         label={t("common.enabled")}
         onCheckboxChange={toggleSteamIntegration}
       />
@@ -158,35 +177,28 @@ const SteamSettings = () => {
           className={classes.statusIndicator}
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
-          mounted={isUpdated}
-          text={t("settings.integration.detailsSaved")}
-        />
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedCheckFilled}
-          iconProps={{ className: classes.check }}
-          mounted={isIntegrationValid === true}
+          mounted={isValid === true}
           text={t("common.success")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedXFilled}
           iconProps={{ className: classes.cross }}
-          mounted={isIntegrationValid === false}
+          mounted={isValid === false}
           text={t("common.failure")}
         />
         <Flex gap="xs">
           <Button
-            disabled={!steamId || !webApiKey}
+            disabled={!steamId || (!hasStoredWebApiKey && !webApiKey)}
             loading={isLoading}
-            onClick={onClickTestIntegration}
+            onClick={onTest}
             size="xs"
             variant="light"
           >
             {t("settings.integration.test")}
           </Button>
-          <Button disabled={isLoading || !isIntegrationValid} onClick={onSave} size="xs">
-            {t("settings.integration.save")}
+          <Button disabled={isLoading || isValid === false} onClick={onAuthenticate} size="xs">
+            {t("settings.integration.authenticate")}
           </Button>
         </Flex>
       </Flex>
@@ -194,23 +206,21 @@ const SteamSettings = () => {
   );
 };
 
-const EpicGamesSettings = () => {
+const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const removeListener = window.api.onEpicGamesAuthentication((_event: unknown, data: unknown) => {
-      setIsLoading(false);
-      setIsIntegrationValid((data as { success: boolean }).success);
-      console.log("result", (data as { success: boolean }).success);
-    });
-    return () => removeListener();
-  }, []);
 
   const onAuthenticate = () => {
-    setIsIntegrationValid(null);
+    setIsLoading(true);
     window.api.authenticateIntegration("epic-game-store");
+  };
+
+  const onTest = async () => {
+    setIsLoading(true);
+    const result = await window.api.testLibraryIntegration("epic-game-store");
+
+    console.log("result", result);
+    setIsLoading(false);
   };
 
   return (
@@ -222,18 +232,22 @@ const EpicGamesSettings = () => {
           className={classes.statusIndicator}
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
-          mounted={isIntegrationValid === true}
+          mounted={isValid === true}
           text={t("common.success")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedXFilled}
           iconProps={{ className: classes.cross }}
-          mounted={isIntegrationValid === false}
+          mounted={isValid === false}
           text={t("common.failure")}
         />
         <Flex gap="xs">
-          <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
+          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+            {t("settings.integration.test")}
+          </Button>
+
+          <Button disabled={isLoading} loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
             {t("settings.integration.authenticate")}
           </Button>
         </Flex>
@@ -242,23 +256,20 @@ const EpicGamesSettings = () => {
   );
 };
 
-const GogSettings = () => {
+const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isIntegrationValid, setIsIntegrationValid] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const removeListener = window.api.onEpicGamesAuthentication((_event: unknown, data: unknown) => {
-      setIsLoading(false);
-      setIsIntegrationValid((data as { success: boolean }).success);
-      console.log("result", (data as { success: boolean }).success);
-    });
-    return () => removeListener();
-  }, []);
 
   const onAuthenticate = () => {
-    setIsIntegrationValid(null);
+    setIsLoading(true);
     window.api.authenticateIntegration("gog");
+  };
+
+  const onTest = async () => {
+    setIsLoading(true);
+    const result = await window.api.testLibraryIntegration("gog");
+    console.log("result", result);
+    setIsLoading(false);
   };
 
   return (
@@ -270,17 +281,21 @@ const GogSettings = () => {
           className={classes.statusIndicator}
           icon={IconSquareRoundedCheckFilled}
           iconProps={{ className: classes.check }}
-          mounted={isIntegrationValid === true}
+          mounted={isValid === true}
           text={t("common.success")}
         />
         <SettingsStatusIndicator
           className={classes.statusIndicator}
           icon={IconSquareRoundedXFilled}
           iconProps={{ className: classes.cross }}
-          mounted={isIntegrationValid === false}
+          mounted={isValid === false}
           text={t("common.failure")}
         />
         <Flex gap="xs">
+          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+            {t("settings.integration.test")}
+          </Button>
+
           <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
             {t("settings.integration.authenticate")}
           </Button>
@@ -302,15 +317,24 @@ const GogSettings = () => {
  *
  */
 export const SettingsIntegrationsView = () => {
+  const [validationState, dispatch] = useReducer(validationReducer, initialValidationState);
+
+  useEffect(() => {
+    const removeListener = window.api.onIntegrationAuthenticationResult((_event: unknown, { library, success }) => {
+      dispatch({ type: "SET_VALIDATION", library, success });
+    });
+    return () => removeListener();
+  }, []);
+
   return (
     <div className={classes.container}>
       <GeneralSettings />
       <Divider className={classes.divider} />
-      <SteamSettings />
+      <SteamSettings isValid={validationState.steam} />
       <Divider className={classes.divider} />
-      <EpicGamesSettings />
+      <EpicGamesSettings isValid={validationState["epic-game-store"]} />
       <Divider className={classes.divider} />
-      <GogSettings />
+      <GogSettings isValid={validationState.gog} />
       <Divider className={classes.divider} />
     </div>
   );

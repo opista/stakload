@@ -12,9 +12,10 @@ type IntegrationSettingsStore = IntegrationSettingsState & IntegrationSettingsAc
 export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
   persist(
     (set) => ({
-      setSteamIntegration: (steamIntegration) => set({ steamIntegration }),
       setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
       steamIntegrationEnabled: false,
+      epicGamesStoreIntegrationEnabled: false,
+      gogIntegrationEnabled: false,
       syncOnStartup: true,
       toggleSteamIntegration: () =>
         set((state) => ({
