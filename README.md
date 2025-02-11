@@ -48,7 +48,6 @@ $ npm run build:linux
 
 - Frontend
 
-  - Should settings be on their own page rather than crushed into a modal? This may become more useful as we add more integrations to the libraries tab
   - Break down GameDetailsView into components, maybe make into a view? Currently a mess
   - Look at dependency graph, anything we can kill?
   - Refactor any components that are:
@@ -62,12 +61,7 @@ $ npm run build:linux
     - Should be easily navigable with a controller
   - System storage usage screen(?)
     - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
-  - Pick a random game? dice roll?
-  - Favourites separate from collections?
 
 - Backend
   - Set up a logger
-  - Identify running processes
-    - [tasklist](https://github.com/sindresorhus/tasklist/tree/main)?
-    - [pid-cwd](https://github.com/zikaari/pid-cwd/blob/master/lib/win.js) to identify app dir (do we need this?)
   - Add endpoint to manually add external games
