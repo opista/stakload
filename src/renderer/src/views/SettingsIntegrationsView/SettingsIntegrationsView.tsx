@@ -92,13 +92,13 @@ const GeneralSettings = () => {
  * for each integration with a few props
  */
 const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
-  const { hasStoredWebApiKey, steamIntegrationEnabled, storeSteamId, toggleSteamIntegration } =
+  const { hasStoredWebApiKey, steamIntegrationEnabled, storeSteamId, toggleIntegrationEnabled } =
     useIntegrationSettingsStore(
       useShallow((state) => ({
         storeSteamId: state.steamIntegration?.steamId,
         hasStoredWebApiKey: !!state.steamIntegration?.webApiKey,
-        steamIntegrationEnabled: state.steamIntegrationEnabled,
-        toggleSteamIntegration: state.toggleSteamIntegration,
+        steamIntegrationEnabled: state.integrationsEnabled.steam,
+        toggleIntegrationEnabled: state.toggleIntegrationEnabled,
       })),
     );
 
@@ -149,9 +149,9 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
 
       <SettingsCheckbox
         checked={steamIntegrationEnabled}
-        disabled={isLoading || !steamId || !webApiKey}
+        disabled={isLoading}
         label={t("common.enabled")}
-        onCheckboxChange={toggleSteamIntegration}
+        onCheckboxChange={() => toggleIntegrationEnabled("steam")}
       />
       <TextInput
         classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
@@ -207,6 +207,12 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
 };
 
 const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
+  const { epicIntegrationEnabled, toggleIntegrationEnabled } = useIntegrationSettingsStore(
+    useShallow((state) => ({
+      epicIntegrationEnabled: state.integrationsEnabled["epic-game-store"],
+      toggleIntegrationEnabled: state.toggleIntegrationEnabled,
+    })),
+  );
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -226,7 +232,12 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
   return (
     <>
       <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "Epic Games" })} title="Epic Games" />
-
+      <SettingsCheckbox
+        checked={epicIntegrationEnabled}
+        disabled={isLoading}
+        label={t("common.enabled")}
+        onCheckboxChange={() => toggleIntegrationEnabled("epic-game-store")}
+      />
       <Flex justify="flex-end">
         <SettingsStatusIndicator
           className={classes.statusIndicator}
@@ -247,7 +258,7 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
             {t("settings.integration.test")}
           </Button>
 
-          <Button disabled={isLoading} loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
+          <Button disabled={isLoading} loading={isLoading} onClick={onAuthenticate} size="xs">
             {t("settings.integration.authenticate")}
           </Button>
         </Flex>
@@ -257,6 +268,12 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
 };
 
 const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
+  const { gogIntegrationEnabled, toggleIntegrationEnabled } = useIntegrationSettingsStore(
+    useShallow((state) => ({
+      gogIntegrationEnabled: state.integrationsEnabled.gog,
+      toggleIntegrationEnabled: state.toggleIntegrationEnabled,
+    })),
+  );
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -275,7 +292,12 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
   return (
     <>
       <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "GOG" })} title="GOG" />
-
+      <SettingsCheckbox
+        checked={gogIntegrationEnabled}
+        disabled={isLoading}
+        label={t("common.enabled")}
+        onCheckboxChange={() => toggleIntegrationEnabled("gog")}
+      />
       <Flex justify="flex-end">
         <SettingsStatusIndicator
           className={classes.statusIndicator}
@@ -296,7 +318,7 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
             {t("settings.integration.test")}
           </Button>
 
-          <Button loading={isLoading} onClick={onAuthenticate} size="xs" variant="light">
+          <Button loading={isLoading} onClick={onAuthenticate} size="xs">
             {t("settings.integration.authenticate")}
           </Button>
         </Flex>

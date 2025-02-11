@@ -4,6 +4,7 @@ import fastq from "fastq";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
+import { SharedConfigService } from "../config/shared-config.service";
 import { GameStore } from "../game/game.store";
 import { WindowService } from "../window/window.service";
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
@@ -21,6 +22,7 @@ export class SyncService {
 
   constructor(
     private gameStore: GameStore,
+    private sharedConfigService: SharedConfigService,
     private syncRegistryService: SyncRegistryService,
     private windowService: WindowService,
   ) {}
@@ -114,14 +116,23 @@ export class SyncService {
     this.syncInProgress = false;
   }
 
-  sync(libraries: Library[]) {
+  private getEnabledLibraries() {
+    const libraries = this.sharedConfigService.get("integration_settings.state.integrationsEnabled");
+    return Object.entries(libraries || {})
+      .filter(([, enabled]) => enabled)
+      .map(([library]) => library as Library);
+  }
+
+  sync() {
     if (this.syncInProgress) {
       return false;
     }
 
+    const enabledLibraries = this.getEnabledLibraries();
+
     this.reset();
     this.syncInProgress = true;
-    this.syncLibraries(libraries);
+    this.syncLibraries(enabledLibraries);
 
     return true;
   }

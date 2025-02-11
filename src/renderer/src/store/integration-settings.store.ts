@@ -1,3 +1,4 @@
+import { Library } from "@contracts/database/games";
 import { IntegrationSettingsActions } from "@contracts/store/integration-settings";
 import { IntegrationSettingsState } from "@contracts/store/integration-settings";
 import { createConfStorage } from "@util/create-conf-storage";
@@ -12,15 +13,20 @@ type IntegrationSettingsStore = IntegrationSettingsState & IntegrationSettingsAc
 export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
   persist(
     (set) => ({
-      setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
-      steamIntegrationEnabled: false,
-      epicGamesStoreIntegrationEnabled: false,
-      gogIntegrationEnabled: false,
-      syncOnStartup: true,
-      toggleSteamIntegration: () =>
+      integrationsEnabled: {
+        "epic-game-store": false,
+        gog: false,
+        steam: false,
+      },
+      toggleIntegrationEnabled: (library: Library) =>
         set((state) => ({
-          steamIntegrationEnabled: !state.steamIntegrationEnabled,
+          integrationsEnabled: {
+            ...state.integrationsEnabled,
+            [library]: !state.integrationsEnabled[library],
+          },
         })),
+      setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
+      syncOnStartup: true,
     }),
     {
       name: "integration_settings",
