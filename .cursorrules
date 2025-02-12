@@ -4,9 +4,9 @@ Always follow these rules to ensure consistency and maintainability of the codeb
 
 # Instructions
 
-During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in the `.cursorrules` file so you will not make the same mistake again.
+During you interaction with the user, if you find anything reusable in this project (e.g. version of a library, model name), especially about a fix to a mistake you made or a correction you received, you should take note in the `Lessons` section in this file so you will not make the same mistake again.
 
-You should also use the `.cursorrules` file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different task if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
+You should also use this file as a scratchpad to organize your thoughts. Especially when you receive a new task, you should first review the content of the scratchpad, clear old different tasks if necessary, first explain the task, and plan the steps you need to take to complete the task. You can use todo markers to indicate the progress, e.g.
 [X] Task 1
 [ ] Task 2
 
@@ -24,7 +24,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - The UI is built using Mantine and React Router. Documentation for Mantine can be found here: https://mantine.dev/ and for React Router here: https://reactrouter.com/en/main
 - Always follow the conventions of the existing codebase and the rules outlined in this file.
 - Performance is critical. Because this is an Electron application, we need to ensure that all code is as optimised as possible
-- Code should as readable as possible. This repository will be open source, and we want to make it as easy as possible for others to understand and contribute to the codebase.
+- Code should be as readable as possible. This repository will be open source, and we want to make it as easy as possible for others to understand and contribute to the codebase.
 - Define object keys in alphabetical order
 - Define type keys in alphabetical order
 - Always use British English spelling
@@ -48,7 +48,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
   - BaseLayout is a simple layout that just directs the user to the correct layout based on their interface settings.
   - DesktopLayout is for users who want to access their library with a keyboard and mouse.
   - GamingLayout is for users who want to access their library with a controller, or in a more console-like manner.
-- We will likely never need to creat a new layout, but if we do, we should follow the existing convention in this file.
+- We will likely never need to create a new layout, but if we do, we should follow the existing convention in this file.
 - Layouts should have minimal logic and should be used to provide a consistent structure for the application.
 
 ## Views
@@ -82,7 +82,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 ## Media Handling
 
 - Define consistent aspect ratios for images (seen in GameCover component)
-- Use appropriate image formats and optimization
+- Use appropriate image formats and optimisation
 - Handle loading states for media content
 - Provide fallbacks for failed media loads
 
@@ -100,12 +100,12 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Global styles are found in src/renderer/src/styles/styles.css
 - flex/grid-related props on Stack/Group/Flex components should be left as-is.
 
-### Theme and Colors
+### Theme and Colours
 
-- Use CSS variables for colors, especially --mantine-\* variables where possible
-- Never use hardcoded hex colors
-- Define common color variables in styles.css, or overwrite the default Mantine variables in styles.css
-- Follow Mantine's color system for consistency
+- Use CSS variables for colours, especially --mantine-\* variables where possible
+- Never use hardcoded hex colours
+- Define common colour variables in styles.css, or overwrite the default Mantine variables in styles.css
+- Follow Mantine's colour system for consistency
 
 ## i18n
 
@@ -120,7 +120,7 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 
 - Follow Mantine's accessibility guidelines
 - Ensure proper keyboard navigation
-- Maintain appropriate color contrast
+- Maintain appropriate colour contrast
 - Provide proper ARIA labels and roles
 - Support screen readers through meaningful text alternatives
 
@@ -157,7 +157,72 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Define coverage requirements
 - Specify testing tools and methodologies
 
-Finally, remember it is very, very important to always follow these rules.
+## Logging
+
+### General Guidelines
+
+- Use the LoggerService for all logging operations
+- Never use console.log/error/warn directly
+- Logs should be meaningful and actionable
+- Avoid logging sensitive information (tokens, passwords, etc.)
+- Avoid duplicate logging of the same event across layers
+
+### Log Levels
+
+- ERROR: Application errors, exceptions, failed operations
+
+  - Must include error object and relevant context
+  - Used when operation cannot continue
+  - Examples: API failures, database errors, invalid states
+
+- WARN: Unexpected but handled situations
+
+  - Used for recoverable issues
+  - Examples: Retries, fallbacks, deprecated feature usage
+  - Should include context about the warning
+
+- INFO: Important state changes and operations
+
+  - Used for tracking significant events
+  - Examples: Application startup, high-level user actions, integration syncs
+  - **Controllers** should log high-level, user-action-triggered events at info level.
+  - **Services** and **Stores** should log routine and detailed operation information at debug level, with info reserved for major state changes.
+
+- DEBUG: Detailed information for troubleshooting
+  - Only enabled in development
+  - Examples: Function entry/exit, state transitions, low-level operation details
+  - Include relevant context objects
+
+### Where to Log
+
+#### Controllers
+
+- INFO: Start/completion of important operations (e.g. receiving a user action)
+- ERROR: Unhandled exceptions
+- Avoid logging request/response data that might contain sensitive information
+
+#### Services
+
+- DEBUG: Operation details and state transitions
+- ERROR: Business logic errors
+- WARN: Recoverable issues
+- INFO: Important state changes (seldom, for significant events)
+
+#### Stores
+
+- ERROR: Database/query errors
+- WARN: Performance issues
+- Avoid routine CRUD operation logging
+
+### Best Practices
+
+- Use structured logging with context objects
+- Include correlation IDs for tracking related events
+- Sanitize sensitive data before logging
+- Keep log messages in English
+- Use template literals sparingly, prefer context objects
+
+Finally, remember it is very, very important to always follow these rules.
 
 # Cursor learned
 

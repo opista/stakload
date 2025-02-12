@@ -62,7 +62,8 @@ const api = {
   onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.COLLECTIONS_UPDATED, listener),
   onIntegrationAuthenticationResult: (listener: (event, data: { library: Library; success: boolean }) => void) =>
     listenerHandler(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, listener),
-  onGamesListUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.GAMES_LIST_UPDATED, listener),
+  onGamesListUpdated: (listener: (event, data: GameSyncMessage) => void) =>
+    listenerHandler(EVENT_CHANNELS.GAMES_LIST_UPDATED, listener),
   onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_CHANNELS.GAME_SYNC_STATUS, listener),
 

@@ -6,6 +6,7 @@ import { Service } from "typedi";
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { SharedConfigService } from "../config/shared-config.service";
 import { GameStore } from "../game/game.store";
+import { LoggerService } from "../logger/logger.service";
 import { WindowService } from "../window/window.service";
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
@@ -22,6 +23,7 @@ export class SyncService {
 
   constructor(
     private gameStore: GameStore,
+    private logger: LoggerService,
     private sharedConfigService: SharedConfigService,
     private syncRegistryService: SyncRegistryService,
     private windowService: WindowService,
@@ -36,6 +38,7 @@ export class SyncService {
   }
 
   private async libraryWorker(library: Library) {
+    this.logger.info("Initiating library sync", { library });
     this.emitSyncEvent({
       action: "library",
       library,
@@ -43,9 +46,9 @@ export class SyncService {
 
     const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) {
+      this.logger.error("Library integration not supported", { library });
       this.addFailureEntry({
         action: "library",
-
         code: "UNSUPPORTED_LIBRARY",
         library,
       });
@@ -55,9 +58,12 @@ export class SyncService {
     try {
       const numberOfNewGames = await libraryImpl.addNewGames();
       this.gamesAdded += numberOfNewGames;
+      this.logger.info("Added new games", { library, numberOfNewGames });
 
       await libraryImpl.updateInstalledGames();
-    } catch (error) {
+      this.logger.info("Updated installed games", { library });
+    } catch (error: unknown) {
+      this.logger.error("Error synchronising library", { error, library });
       this.addFailureEntry({
         action: "library",
         code: "AUTHENTICATION_ERROR",
@@ -68,15 +74,22 @@ export class SyncService {
 
   private async metadataWorker(game: GameStoreModel) {
     this.processing++;
-
     this.emitSyncEvent({
       action: "metadata",
       processing: this.processing,
       total: this.metadataToProcess,
     });
 
+    this.logger.info("Starting metadata sync", {
+      game: game.name,
+      library: game.library,
+    });
+
     const libraryImpl = this.syncRegistryService.getLibrary(game.library);
     if (!libraryImpl) {
+      this.logger.error("Library integration not supported", {
+        library: game.library,
+      });
       this.addFailureEntry({
         action: "library",
         code: "UNSUPPORTED_LIBRARY",
@@ -87,8 +100,20 @@ export class SyncService {
 
     try {
       const metadata = await libraryImpl.getGameMetadata(game);
-      await this.gameStore.updateGameById(game._id, { ...metadata, metadataSyncedAt: new Date() });
-    } catch (error) {
+      await this.gameStore.updateGameById(game._id, {
+        ...metadata,
+        metadataSyncedAt: new Date(),
+      });
+      this.logger.info("Successfully synchronised metadata", {
+        game: game.name,
+        library: game.library,
+      });
+    } catch (error: unknown) {
+      this.logger.error("Error synchronising metadata", {
+        error,
+        game: game.name,
+        library: game.library,
+      });
       this.addFailureEntry({
         action: "metadata",
         code: "UNKNOWN_ERROR",
@@ -99,11 +124,13 @@ export class SyncService {
   }
 
   private async syncLibraries(libraries: Library[]) {
+    this.logger.info("Starting sync for enabled libraries", { libraries });
     await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
     await this.libraryQueue.drained();
 
     const unsyncedGames = await this.gameStore.findUnsyncedGames();
     this.metadataToProcess = unsyncedGames.length;
+
     await Promise.all(unsyncedGames.map((game) => this.metadataQueue.push(game)));
     await this.metadataQueue.drained();
 
@@ -112,7 +139,11 @@ export class SyncService {
       hasFailures: !!this.failures.length,
       total: this.gamesAdded,
     });
-
+    this.logger.info("Sync operation complete", {
+      failures: this.failures.length,
+      syncFailures: this.failures,
+      totalGamesAdded: this.gamesAdded,
+    });
     this.syncInProgress = false;
   }
 
@@ -125,11 +156,12 @@ export class SyncService {
 
   sync() {
     if (this.syncInProgress) {
+      this.logger.warn("Sync operation already in progress");
       return false;
     }
 
     const enabledLibraries = this.getEnabledLibraries();
-
+    this.logger.info("Initiating sync", { enabledLibraries });
     this.reset();
     this.syncInProgress = true;
     this.syncLibraries(enabledLibraries);
@@ -156,8 +188,7 @@ export class SyncService {
     const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) return false;
 
-    console.log(library, data);
-
+    this.logger.debug("Authenticating integration", { library });
     return libraryImpl.authenticate(data);
   }
 }

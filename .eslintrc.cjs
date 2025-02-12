@@ -14,6 +14,7 @@ module.exports = {
   ],
   globals: {
     JSX: true,
+    NodeJS: "readonly",
   },
   overrides: [
     {

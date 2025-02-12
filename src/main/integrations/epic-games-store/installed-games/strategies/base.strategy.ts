@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import path from "path";
 import { Service } from "typedi";
 
+import { LoggerService } from "../../../../logger/logger.service";
 import { EpicInstallationData, InstalledGameData, InstalledGamesStrategy } from "../types";
 
 @Service()
@@ -10,6 +11,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
 
   abstract getApplicationPath(): Promise<string>;
 
+  constructor(protected readonly logger: LoggerService) {}
+
   async getInstalledGames(): Promise<InstalledGameData[]> {
     const epicPath = await this.getApplicationPath();
     const manifestPath = path.join(epicPath, "UnrealEngineLauncher", "LauncherInstalled.dat");
@@ -17,7 +20,7 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
     try {
       const content = await fs.readFile(manifestPath, "utf-8");
       const parsed = JSON.parse(content) as { InstallationList: EpicInstallationData[] };
-
+      this.logger.info("Fetched installed Epic games", { manifestPath });
       return parsed.InstallationList.map((install) => ({
         appName: install.AppName,
         installationDetails: {
@@ -25,8 +28,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
           installedAt: new Date(),
         },
       }));
-    } catch (err) {
-      console.error("Failed to get installed Epic games", err);
+    } catch (error: unknown) {
+      this.logger.error("Failed to get installed Epic games", { error, manifestPath });
       return [];
     }
   }
