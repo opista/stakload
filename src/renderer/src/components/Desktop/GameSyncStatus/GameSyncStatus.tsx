@@ -2,22 +2,19 @@ import { GameSyncMessage } from "@contracts/sync";
 import { useGameSync } from "@hooks/use-game-sync-status";
 import { Group, RingProgress, Text } from "@mantine/core";
 import { NotificationData, notifications } from "@mantine/notifications";
-import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import { IconCheck } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
 import { useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameSyncStatus.module.css";
 
 const Progress = ({ processing, total }: { processing: number; total: number }) => {
-  const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
   const percentage = (processing / total) * 100;
   const rounded = Math.round(percentage);
   return (
     <RingProgress
       rootColor="transparent"
-      sections={[{ color: primaryColor, value: rounded }]}
+      sections={[{ color: "cyan", value: rounded }]}
       size={40}
       thickness={4}
       transitionDuration={350}

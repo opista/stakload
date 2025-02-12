@@ -20,10 +20,7 @@ import { FavouritesView } from "./views/FavouritesView/FavouritesView";
 import { GameDetailsView } from "./views/GameDetailsView/GameDetailsView";
 import { HomeView } from "./views/HomeView/HomeView";
 import { LibraryView } from "./views/LibraryView/LibraryView";
-import { SettingsAboutView } from "./views/SettingsAboutView/SettingsAboutView";
 import { SettingsIntegrationsView } from "./views/SettingsIntegrationsView/SettingsIntegrationsView";
-import { SettingsInterfaceView } from "./views/SettingsInterfaceView/SettingsInterfaceView";
-import { SettingsShortcutsView } from "./views/SettingsShortcutsView/SettingsShortcutsView";
 import { SettingsView } from "./views/SettingsView/SettingsView";
 
 createRoot(document.getElementById("root")!).render(
@@ -44,10 +41,7 @@ createRoot(document.getElementById("root")!).render(
             </Route>
             <Route path="settings">
               <Route element={<SettingsView />} index />
-              <Route element={<SettingsInterfaceView />} path="interface" />
               <Route element={<SettingsIntegrationsView />} path="integrations" />
-              <Route element={<SettingsAboutView />} path="about" />
-              <Route element={<SettingsShortcutsView />} path="shortcuts" />
             </Route>
           </Route>
           <Route element={<GamingLayout />} path="gaming" />

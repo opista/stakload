@@ -9,14 +9,11 @@ import type { IconProps } from "@tabler/icons-react";
 import {
   IconBooks,
   IconCategory,
-  IconCommand,
   IconDeviceGamepad,
-  IconDeviceImac,
   IconHome,
   IconLayersIntersect,
   IconSettings,
   IconStar,
-  IconUser,
 } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import type { FC } from "react";
@@ -63,10 +60,7 @@ export const Navbar = () => {
               ))}
             </NavbarLink>
             <NavbarLink icon={IconSettings} label="Settings">
-              <NavbarLink href="/desktop/settings/interface" icon={IconDeviceImac} label="Interface" />
               <NavbarLink href="/desktop/settings/integrations" icon={IconLayersIntersect} label="Integrations" />
-              <NavbarLink href="/desktop/settings/shortcuts" icon={IconCommand} label="Shortcuts" />
-              <NavbarLink href="/desktop/settings/about" icon={IconUser} label="About" />
             </NavbarLink>
           </Stack>
           <QuickLaunchList className={classes.quickLaunch} />

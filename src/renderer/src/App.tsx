@@ -10,7 +10,6 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
-import { useInterfaceSettingsStore } from "@store/interface-settings.store";
 import clsx from "clsx";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -20,7 +19,6 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./App.module.css";
 
 export const App = () => {
-  const primaryColor = useInterfaceSettingsStore(useShallow((state) => state.theme));
   const { i18n } = useTranslation();
 
   const { syncOnStartup } = useIntegrationSettingsStore(
@@ -72,7 +70,7 @@ export const App = () => {
     fontFamily: "Inter, sans-serif",
     fontSmoothing: true,
     headings: { fontFamily: "Readex Pro, sans-serif" },
-    primaryColor,
+    primaryColor: "cyan",
     respectReducedMotion: true,
   });
 

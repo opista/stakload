@@ -1,8 +1,0 @@
-.container {
-  padding: 0 var(--mantine-spacing-md) var(--mantine-spacing-md);
-  width: 100%;
-}
-
-.shortcutColumn {
-  text-align: right;
-}
