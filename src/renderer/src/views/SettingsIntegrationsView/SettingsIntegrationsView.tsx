@@ -45,15 +45,8 @@ const GeneralSettings = () => {
     })),
   );
   const { t } = useTranslation();
-  /**
-   * TODO - this should trigger libraries to
-   * re-fetch games and add any new ones to
-   * the DB. After this, we should then trigger
-   * a sync (enrich with data from igdb)
-   */
-  const onSyncClick = async () => {
-    await window.api.syncGames();
-  };
+
+  const onSyncClick = async () => window.api.syncGames();
 
   return (
     <>

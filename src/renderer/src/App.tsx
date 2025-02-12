@@ -76,25 +76,11 @@ export const App = () => {
     respectReducedMotion: true,
   });
 
-  // TODO
-  /**
-   * - Trigger any syncs
-   * - Get device type (can device be charged??)
-   * - Move initialisation work to somewhere else? (disabling context menus etc?)
-   */
-
-  // useEffect(() => {
-  //   getOwnedGames("47D232D3BB9240F67610B1609383FB82", "76561198021450658").then(({ games }) => {
-  //     const mapped = games.map((game) => mapOwnedGameDetailsToGameStoreModel(game, "steam"));
-
-  //     return db.games.bulkAdd(mapped);
-  //   });
-  // }, []);
-
   /**
    * TODO - abstract initial app load actions here.
    * We only need to trigger these actions once when the
-   * user loads the app for the first time.
+   * user loads the app for the first time. Perhaps this
+   * should happen in the backend? Does the frontend care?
    */
   useEffect(() => {
     window.api.getLocale().then((locale) => i18n.changeLanguage(locale));

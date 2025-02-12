@@ -28,39 +28,23 @@ export class GameService {
 
       const games = await this.gameStore.findFilteredGames({}, "all");
 
-      const uniqueValuesMap: { [key: string]: Map<string, string> } = filterableFields.reduce((acc, field) => {
-        acc[field] = new Map();
-        return acc;
-      }, {});
+      const isIdAndName = (item: unknown): item is { id: string; name: string } =>
+        typeof item === "object" && item !== null && "id" in item && "name" in item;
 
-      const isIdAndName = (item: unknown): item is { id: string; name: string } => {
-        return typeof item === "object" && item !== null && "id" in item && "name" in item;
-      };
+      const results = filterableFields.reduce(
+        (acc, field) => {
+          const values = games
+            .flatMap((game) => (Array.isArray(game[field]) ? game[field] : []))
+            .filter(isIdAndName)
+            .reduce((map, { id, name }) => map.set(id, name), new Map<string, string>());
 
-      for (const document of games) {
-        for (const field of filterableFields) {
-          const items = document[field];
-          if (Array.isArray(items)) {
-            for (const item of items) {
-              if (isIdAndName(item)) {
-                uniqueValuesMap[field].set(item.id, item.name);
-              }
-            }
-          }
-        }
-      }
-
-      // TODO fix typing and look at cleaning this up
-
-      const results = filterableFields.reduce((acc, field) => {
-        acc[field] = Array.from(uniqueValuesMap[field].entries())
-          .map(([id, name]) => ({
-            label: name,
-            value: id,
-          }))
-          .sort((a, b) => a.label.localeCompare(b.label));
-        return acc;
-      }, {});
+          acc[field] = Array.from(values.entries())
+            .map(([id, name]) => ({ label: name, value: id }))
+            .sort((a, b) => a.label.localeCompare(b.label));
+          return acc;
+        },
+        {} as { [key in keyof GameStoreModel]?: { label: string; value: string }[] },
+      );
 
       this.logger.debug("Game filters retrieved successfully");
       return results;

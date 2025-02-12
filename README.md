@@ -63,5 +63,4 @@ $ npm run build:linux
     - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
 
 - Backend
-  - Set up a logger
   - Add endpoint to manually add external games

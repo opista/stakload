@@ -22,7 +22,7 @@ export class LoggerService {
     transports: [
       new transports.Console({
         format: format.combine(format.colorize(), ...defaultFormat),
-        level: process.env.NODE_ENV === "development" ? "info" : "info",
+        level: process.env.NODE_ENV === "development" ? "debug" : "info",
       }),
       new DailyRotateFile({
         datePattern: "YYYY-MM-DD",

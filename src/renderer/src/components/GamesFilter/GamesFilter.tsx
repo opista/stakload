@@ -12,10 +12,13 @@ import classes from "./GamesFilter.module.css";
 
 const DEFAULT_FILTERS: Record<keyof GameFilters, undefined> = {
   ageRatings: undefined,
+  createdAt: undefined,
   developers: undefined,
   gameModes: undefined,
   genres: undefined,
+  isFavourite: undefined,
   isInstalled: undefined,
+  isQuickLaunch: undefined,
   libraries: undefined,
   platforms: undefined,
   playerPerspectives: undefined,
@@ -61,20 +64,8 @@ const libraryFilters: { label: string; value: Library }[] = [
     value: "gog",
   },
   {
-    label: "Microsoft",
-    value: "microsoft",
-  },
-  {
     label: "Steam",
     value: "steam",
-  },
-  {
-    label: "Xbox Game Pass Ultimate Cloud",
-    value: "xbox-game-pass-ultimate-cloud",
-  },
-  {
-    label: "Xbox Marketplace",
-    value: "xbox-marketplace",
   },
 ];
 
