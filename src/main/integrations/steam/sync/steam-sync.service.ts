@@ -2,7 +2,7 @@ import { GameStoreModel, Library } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { fetchGameMetadata } from "../../../api/trulaunch";
+import { TrulaunchApiClient } from "../../../api/trulaunch-api.client";
 import { SharedConfigService } from "../../../config/shared-config.service";
 import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
@@ -23,6 +23,7 @@ export class SteamLibraryService implements SyncService {
     private readonly logger: LoggerService,
     private readonly sharedConfigService: SharedConfigService,
     private readonly steamApiService: SteamApiService,
+    private readonly trulaunchApiClient: TrulaunchApiClient,
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
@@ -30,7 +31,7 @@ export class SteamLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata for Steam", { gameId: game.gameId });
-    return await fetchGameMetadata(game.gameId!, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {

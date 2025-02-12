@@ -3,7 +3,7 @@ import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { fetchGameMetadata } from "../../../api/trulaunch";
+import { TrulaunchApiClient } from "../../../api/trulaunch-api.client";
 import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
@@ -21,6 +21,7 @@ export class GogLibraryService implements SyncService {
     private readonly gogApiService: GogApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly logger: LoggerService,
+    private readonly trulaunchApiClient: TrulaunchApiClient,
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
@@ -28,7 +29,7 @@ export class GogLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
-    return await fetchGameMetadata(game.gameId!, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {

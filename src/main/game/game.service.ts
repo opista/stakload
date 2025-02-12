@@ -1,7 +1,7 @@
 import { GameFilters, GameStoreModel } from "@contracts/database/games";
 import { Service } from "typedi";
 
-import { getProtondbTier } from "../api/protondb";
+import { ProtondbApiClient } from "../api/protondb-api.client";
 import { CollectionStore } from "../collection/collection.store";
 import { LoggerService } from "../logger/logger.service";
 import { GameStore } from "./game.store";
@@ -12,6 +12,7 @@ export class GameService {
     private readonly collectionStore: CollectionStore,
     private readonly gameStore: GameStore,
     private readonly logger: LoggerService,
+    private readonly protondbApiClient: ProtondbApiClient,
   ) {}
 
   async getGameFilters() {
@@ -99,7 +100,8 @@ export class GameService {
   }
 
   async getProtondbTier(gameId: string) {
-    return getProtondbTier(gameId);
+    this.logger.debug("Processing Protondb tier request", { gameId });
+    return this.protondbApiClient.getTier(gameId);
   }
 
   async getGamesList() {

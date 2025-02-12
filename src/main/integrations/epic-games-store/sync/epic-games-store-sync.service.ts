@@ -3,7 +3,7 @@ import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { fetchGameMetadata } from "../../../api/trulaunch";
+import { TrulaunchApiClient } from "../../../api/trulaunch-api.client";
 import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
@@ -13,7 +13,6 @@ import { InstalledGamesRegistryService } from "../installed-games/installed-game
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
-
 @Service()
 export class EpicGamesStoreSyncService implements SyncService {
   library: Library = "epic-game-store";
@@ -24,8 +23,9 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly legendaryService: LegendaryService,
-    private readonly windowService: WindowService,
     private readonly logger: LoggerService,
+    private readonly trulaunchApiClient: TrulaunchApiClient,
+    private readonly windowService: WindowService,
   ) {
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
   }
@@ -36,7 +36,7 @@ export class EpicGamesStoreSyncService implements SyncService {
         gameId: game.gameId,
         name: game.name,
       });
-      return await fetchGameMetadata(game.gameId, this.library);
+      return await this.trulaunchApiClient.getGameMetadata(game.gameId, this.library);
     }
     this.logger.debug("No gameId found, fetching gameId from EpicGamesStore API", {
       name: game.name,
@@ -56,7 +56,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       namespace: game.libraryMeta!.namespace,
     });
     await this.gameStore.updateGameById(game._id, { gameId });
-    return await fetchGameMetadata(gameId, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(gameId, this.library);
   }
 
   async updateInstalledGames() {
