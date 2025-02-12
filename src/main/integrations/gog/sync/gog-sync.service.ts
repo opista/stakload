@@ -16,9 +16,9 @@ export class GogLibraryService implements SyncService {
   private installedGamesStrategy: InstalledGamesStrategy;
 
   constructor(
+    private readonly gameStore: GameStore,
     private readonly gogApiService: GogApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly gameStore: GameStore,
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();

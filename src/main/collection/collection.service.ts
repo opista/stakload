@@ -2,24 +2,64 @@ import { CollectionStoreModel } from "@contracts/database/collections";
 import { Service } from "typedi";
 
 import { CollectionStore } from "../collection/collection.store";
+import { LoggerService } from "../logger/logger.service";
 
 @Service()
 export class CollectionService {
-  constructor(private readonly collectionStore: CollectionStore) {}
+  constructor(
+    private readonly collectionStore: CollectionStore,
+    private readonly logger: LoggerService,
+  ) {}
 
-  async createCollection(collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) {
-    return await this.collectionStore.createCollection(collection);
+  async createCollection(collection: Pick<CollectionStoreModel, "filters" | "icon" | "name">) {
+    this.logger.debug("Processing collection creation", collection);
+    try {
+      const created = await this.collectionStore.createCollection(collection);
+      this.logger.info("Collection created successfully", { id: created._id, name: created.name });
+      return created;
+    } catch (error) {
+      this.logger.error("Failed to create collection", error, collection);
+      throw error;
+    }
   }
 
   async getCollections() {
-    return await this.collectionStore.getCollections();
+    this.logger.debug("Fetching all collections");
+    try {
+      const collections = await this.collectionStore.getCollections();
+      this.logger.info("Collections fetched successfully", { count: collections.length });
+      return collections;
+    } catch (error) {
+      this.logger.error("Failed to fetch collections", error);
+      throw error;
+    }
   }
 
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
-    return await this.collectionStore.updateCollectionById(id, updates);
+    this.logger.debug("Processing collection update", { id, updates });
+    try {
+      const updated = await this.collectionStore.updateCollectionById(id, updates);
+      if (updated) {
+        this.logger.info("Collection updated successfully", { id, name: updated.name });
+      }
+      return updated;
+    } catch (error) {
+      this.logger.error("Failed to update collection", error, { id });
+      throw error;
+    }
   }
 
   async deleteCollection(id: string) {
-    return await this.collectionStore.deleteCollectionById(id);
+    this.logger.debug("Processing collection deletion", { id });
+    try {
+      const deleted = await this.collectionStore.deleteCollectionById(id);
+      if (deleted) {
+        this.logger.info("Collection deleted successfully", { id });
+      }
+      return deleted;
+    } catch (error) {
+      this.logger.error("Failed to delete collection", error, { id });
+      throw error;
+    }
   }
 }

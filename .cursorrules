@@ -157,7 +157,71 @@ The goal is to help you maintain a big picture as well as the progress of the ta
 - Define coverage requirements
 - Specify testing tools and methodologies
 
-Finally, remember it is very, very important to always follow these rules.
+## Logging
+
+### General Guidelines
+
+- Use the LoggerService for all logging operations
+- Never use console.log/error/warn directly
+- Logs should be meaningful and actionable
+- Avoid logging sensitive information (tokens, passwords, etc.)
+- Avoid duplicate logging of the same event across layers
+
+### Log Levels
+
+- ERROR: Application errors, exceptions, failed operations
+
+  - Must include error object and relevant context
+  - Used when operation cannot continue
+  - Examples: API failures, database errors, invalid states
+
+- WARN: Unexpected but handled situations
+
+  - Used for recoverable issues
+  - Examples: Retries, fallbacks, deprecated feature usage
+  - Should include context about the warning
+
+- INFO: Important state changes and operations
+
+  - Used for tracking significant events
+  - Examples: Application startup, user actions, integration syncs
+  - Keep concise and meaningful
+
+- DEBUG: Detailed information for troubleshooting
+  - Only enabled in development
+  - Examples: Function entry/exit, state transitions
+  - Include relevant context objects
+
+### Where to Log
+
+#### Controllers
+
+- INFO: Start/completion of important operations
+- ERROR: Unhandled exceptions
+- Avoid logging request/response data that might contain sensitive information
+
+#### Services
+
+- DEBUG: Operation details and state transitions
+- ERROR: Business logic errors
+- WARN: Recoverable issues
+- INFO: Important state changes
+
+#### Stores
+
+- ERROR: Database/query errors
+- WARN: Performance issues
+- Avoid routine CRUD operation logging
+
+### Best Practices
+
+- Use structured logging with context objects
+- Include correlation IDs for tracking related events
+- Sanitize sensitive data before logging
+- Keep log messages in English
+- Use template literals sparingly, prefer context objects
+
+Finally, remember it is very, very important to always follow these rules.
 
 # Cursor learned
 
