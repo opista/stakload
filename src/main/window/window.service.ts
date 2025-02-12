@@ -106,37 +106,37 @@ export class WindowService {
   }
 
   minimize() {
-    this.logger.info("Minimising main window");
+    this.logger.debug("Minimising main window");
     this.browserWindow?.minimize();
   }
 
   maximize() {
-    this.logger.info("Maximising main window");
+    this.logger.debug("Maximising main window");
     this.browserWindow?.maximize();
   }
 
   close() {
-    this.logger.info("Closing main window");
+    this.logger.debug("Closing main window");
     this.browserWindow?.close();
   }
 
   toggleMaximized() {
     if (this.browserWindow?.isMaximized()) {
-      this.logger.info("Restoring main window from maximised state");
+      this.logger.debug("Restoring main window from maximised state");
       this.restore();
     } else {
-      this.logger.info("Maximising main window via toggle");
+      this.logger.debug("Maximising main window via toggle");
       this.maximize();
     }
   }
 
   restore() {
-    this.logger.info("Restoring main window");
+    this.logger.debug("Restoring main window");
     this.browserWindow?.restore();
   }
 
   focus() {
-    this.logger.info("Focusing main window");
+    this.logger.debug("Focusing main window");
     this.browserWindow?.focus();
   }
 
@@ -147,7 +147,7 @@ export class WindowService {
 
   async createChildWindow({ height, networkRequestHandler, sessionId, url, width }: ChildWindowOptions) {
     try {
-      this.logger.info("Creating child window", { height, sessionId, url, width });
+      this.logger.debug("Creating child window", { height, sessionId, url, width });
       const integrationSession = session.fromPartition(sessionId);
       await integrationSession.clearStorageData({ storages: ["cookies"] });
 
