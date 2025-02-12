@@ -7,7 +7,6 @@ import { ProcessMonitorStrategy } from "../types";
 @Service()
 export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   private watchedProcesses: Map<number, () => void> = new Map();
-  // eslint-disable-next-line no-undef
   private processCheckInterval: NodeJS.Timeout | null = null;
 
   constructor(private readonly logger: LoggerService) {}

@@ -59,7 +59,7 @@ export class GogLibraryService implements SyncService {
       const token = await this.gogApiService.getValidToken();
 
       if (!token) {
-        throw new Error("GOG Integraion not set up");
+        throw new Error("GOG Integration not set up");
       }
 
       const ownedGames = await this.gogApiService.getOwnedGames(token);

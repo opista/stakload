@@ -9,7 +9,6 @@ const execAsync = promisify(exec);
 
 @Service()
 export class MacProcessMonitor implements ProcessMonitorStrategy {
-  // eslint-disable-next-line no-undef
   private processCheckInterval: NodeJS.Timeout | null = null;
 
   constructor(private readonly logger: LoggerService) {}
