@@ -3,20 +3,43 @@ import { shell } from "electron";
 import { Service } from "typedi";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
+import { LoggerService } from "../../../logger/logger.service";
 
 const EPIC_LAUNCHER_BASE_URL = "com.epicgames.launcher://";
 
 @Service()
 export class EpicGameStoreClientService implements LibraryClientService {
+  constructor(private readonly logger: LoggerService) {}
+
   async install(game: GameStoreModel): Promise<void> {
-    await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${game.libraryMeta?.appName}?action=install`);
+    const appName = game.libraryMeta?.appName;
+    this.logger.info("Installing game via EpicGameStore", { appName });
+    try {
+      await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=install`);
+    } catch (error: unknown) {
+      this.logger.error("Failed to install game via EpicGameStore", { appName, error });
+      throw error;
+    }
   }
 
   async launch(game: GameStoreModel): Promise<void> {
-    await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${game.libraryMeta?.appName}?action=launch&silent=true`);
+    const appName = game.libraryMeta?.appName;
+    this.logger.info("Launching game via EpicGameStore", { appName });
+    try {
+      await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=launch&silent=true`);
+    } catch (error: unknown) {
+      this.logger.error("Failed to launch game via EpicGameStore", { appName, error });
+      throw error;
+    }
   }
 
   async uninstall(): Promise<void> {
-    await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}store/library`);
+    this.logger.info("Uninstalling game via EpicGameStore");
+    try {
+      await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}store/library`);
+    } catch (error: unknown) {
+      this.logger.error("Failed to uninstall game via EpicGameStore", { error });
+      throw error;
+    }
   }
 }

@@ -14,7 +14,7 @@ export class CollectionStore {
     this.logger.debug("Attempting to create collection in database", collection);
     try {
       const created = await db.insert<Omit<CollectionStoreModel, "_id">>(collection);
-      this.logger.info("Collection created in database", { id: created._id, name: created.name });
+      this.logger.debug("Collection created in database", { id: created._id, name: created.name });
       return created;
     } catch (error) {
       this.logger.error("Database error while creating collection", error, collection);
@@ -26,7 +26,7 @@ export class CollectionStore {
     this.logger.debug("Fetching all collections from database");
     try {
       const collections = await db.find<CollectionStoreModel>({}).sort({ name: 1 });
-      this.logger.info("Collections fetched from database", { count: collections.length });
+      this.logger.debug("Collections fetched from database", { count: collections.length });
       return collections;
     } catch (error) {
       this.logger.error("Database error while fetching collections", error);
@@ -57,7 +57,7 @@ export class CollectionStore {
         { returnUpdatedDocs: true },
       );
       if (updated) {
-        this.logger.info("Collection updated in database", { id });
+        this.logger.debug("Collection updated in database", { id });
       }
       return updated;
     } catch (error) {
@@ -70,7 +70,7 @@ export class CollectionStore {
     this.logger.debug("Deleting collection from database", { id });
     try {
       await db.deleteOne({ _id: id }, { multi: false });
-      this.logger.info("Collection deleted from database", { id });
+      this.logger.debug("Collection deleted from database", { id });
       return true;
     } catch (error) {
       this.logger.error("Database error while deleting collection", error, { id });

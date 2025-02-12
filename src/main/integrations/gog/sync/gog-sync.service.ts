@@ -5,6 +5,7 @@ import { Service } from "typedi";
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { fetchGameMetadata } from "../../../api/trulaunch";
 import { GameStore } from "../../../game/game.store";
+import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
@@ -19,16 +20,19 @@ export class GogLibraryService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly gogApiService: GogApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    private readonly logger: LoggerService,
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+    this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
     return await fetchGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {
+    this.logger.info("Updating installed GOG games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
@@ -52,13 +56,16 @@ export class GogLibraryService implements SyncService {
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
+    this.logger.info("Installed games updated");
   }
 
   async addNewGames() {
+    this.logger.info("Adding new GOG games to library");
     try {
       const token = await this.gogApiService.getValidToken();
 
       if (!token) {
+        this.logger.error("GOG Integration not set up: no valid token");
         throw new Error("GOG Integration not set up");
       }
 
@@ -79,28 +86,33 @@ export class GogLibraryService implements SyncService {
         }));
 
       await this.gameStore.bulkInsertGames(mappedGames);
-
+      this.logger.info("New GOG games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
-      console.error("Failed to get new games:", err);
+      this.logger.error("Failed to add new GOG games", err);
       return 0;
     }
   }
 
   async isIntegrationValid(): Promise<boolean> {
+    this.logger.debug("Validating GOG integration");
     return this.gogApiService
       .getValidToken()
       .then(() => true)
-      .catch(() => false);
+      .catch((error) => {
+        this.logger.error("GOG integration validation failed", error);
+        return false;
+      });
   }
 
   private async handleAuthenticationResponse(
     window: BrowserWindow,
-    _event,
+    _event: unknown,
     url: string,
     _httpResponseCode: number,
     _httpStatusText: string,
   ) {
+    this.logger.debug("Handling GOG authentication response", { url });
     if (url.includes("on_login_success")) {
       const code = new URL(url).searchParams.get("code");
 
@@ -115,14 +127,16 @@ export class GogLibraryService implements SyncService {
             library: this.library,
             success,
           });
+          this.logger.info("GOG authentication completed", { success });
         } catch (error) {
-          console.error("GOG auth error:", error);
+          this.logger.error("GOG authentication error", error);
         }
       }
     }
   }
 
   async authenticate() {
+    this.logger.info("Starting GOG authentication flow");
     this.windowService.createChildWindow({
       height: 430,
       networkRequestHandler: this.handleAuthenticationResponse.bind(this),

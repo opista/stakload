@@ -62,7 +62,7 @@ export class GameService {
         return acc;
       }, {});
 
-      this.logger.info("Game filters retrieved successfully");
+      this.logger.debug("Game filters retrieved successfully");
       return results;
     } catch (error) {
       this.logger.error("Failed to get game filters", error);
@@ -77,7 +77,7 @@ export class GameService {
       if (!game) {
         this.logger.warn("Game not found", { id });
       } else {
-        this.logger.info("Game retrieved successfully", { id });
+        this.logger.debug("Game retrieved successfully", { id });
       }
       return game;
     } catch (error) {
@@ -122,7 +122,7 @@ export class GameService {
     this.logger.debug("Processing games list request");
     try {
       const games = await this.gameStore.findFilteredGames({}, "list");
-      this.logger.info("Games list retrieved successfully", { count: games.length });
+      this.logger.debug("Games list retrieved successfully", { count: games.length });
       return games;
     } catch (error) {
       this.logger.error("Failed to get games list", error);
@@ -134,7 +134,7 @@ export class GameService {
     this.logger.debug("Processing quick launch games request");
     try {
       const games = await this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
-      this.logger.info("Quick launch games retrieved successfully", { count: games.length });
+      this.logger.debug("Quick launch games retrieved successfully", { count: games.length });
       return games;
     } catch (error) {
       this.logger.error("Failed to get quick launch games", error);
@@ -154,7 +154,7 @@ export class GameService {
         },
         10,
       );
-      this.logger.info("New games retrieved successfully", { count: games.length });
+      this.logger.debug("New games retrieved successfully", { count: games.length });
       return games;
     } catch (error) {
       this.logger.error("Failed to get new games", error);
@@ -166,7 +166,7 @@ export class GameService {
     this.logger.debug("Processing filtered games request", { filters });
     try {
       const games = await this.gameStore.findFilteredGames(filters, "list");
-      this.logger.info("Filtered games retrieved successfully", { count: games.length, filters });
+      this.logger.debug("Filtered games retrieved successfully", { count: games.length, filters });
       return games;
     } catch (error) {
       this.logger.error("Failed to get filtered games", error, { filters });
@@ -183,7 +183,7 @@ export class GameService {
         return [];
       }
       const games = await this.gameStore.findFilteredGames(collection.filters, "list");
-      this.logger.info("Games retrieved for collection", { id, count: games.length });
+      this.logger.debug("Games retrieved for collection", { id, count: games.length });
       return games;
     } catch (error) {
       this.logger.error("Failed to get games by collection", error, { id });

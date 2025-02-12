@@ -3,6 +3,7 @@ import path from "path";
 import { Service } from "typedi";
 import vdf from "vdf";
 
+import { LoggerService } from "../../../../logger/logger.service";
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
 import {
   InstalledGameData,
@@ -18,6 +19,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
 
   abstract getApplicationPath(): Promise<string>;
 
+  constructor(protected readonly logger: LoggerService) {}
+
   async getLibraryFolders(): Promise<string[]> {
     const steamPath = await this.getApplicationPath();
     const libraryFoldersPath = path.join(steamPath, "steamapps", "libraryfolders.vdf");
@@ -27,7 +30,7 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
       const parsed: SteamLibraryFolders = vdf.parse(content);
       return Object.values(parsed.libraryfolders).map((folder) => folder.path);
     } catch (err) {
-      console.error("Failed to parse Steam library folders", err);
+      this.logger.error("Failed to parse Steam library folders", err);
       return [steamPath];
     }
   }
@@ -48,7 +51,7 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
         lastUpdated: new Date(state.LastUpdated * 1000),
       };
     } catch (err) {
-      console.error(`Failed to parse manifest file: ${manifestPath}`, err);
+      this.logger.error(`Failed to parse manifest file: ${manifestPath}`, err);
       return null;
     }
   }
@@ -69,7 +72,7 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
           const manifests = await Promise.all(manifestPromises);
           return manifests.filter((manifest): manifest is SteamAppManifest => manifest !== null);
         } catch (err) {
-          console.error(`Failed to read library path: ${libraryPath}`, err);
+          this.logger.error(`Failed to read library path: ${libraryPath}`, err);
           return [];
         }
       }),

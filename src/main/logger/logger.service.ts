@@ -9,7 +9,8 @@ const defaultFormat = [
   format.timestamp(),
   format.errors({ stack: true }),
   format.printf(({ timestamp, level, message, constructor, ...metadata }) => {
-    const metadataStr = Object.keys(metadata).length ? ` | ${JSON.stringify(metadata)}` : "";
+    const stringifiedMetadata = JSON.stringify(metadata);
+    const metadataStr = stringifiedMetadata !== "{}" ? ` | ${stringifiedMetadata}` : "";
     return `${timestamp} [${level}] [${constructor}] ${message}${metadataStr}`;
   }),
 ];
@@ -21,7 +22,7 @@ export class LoggerService {
     transports: [
       new transports.Console({
         format: format.combine(format.colorize(), ...defaultFormat),
-        level: process.env.NODE_ENV === "development" ? "debug" : "info",
+        level: process.env.NODE_ENV === "development" ? "info" : "info",
       }),
       new DailyRotateFile({
         datePattern: "YYYY-MM-DD",
@@ -53,7 +54,7 @@ export class LoggerService {
     return match?.[1] || "Unknown";
   }
 
-  error(message: string, error: unknown, context?: Record<string, unknown>) {
+  error(message: string, error?: unknown, context?: Record<string, unknown>) {
     this.logger.error(message, {
       correlationId: this.getCorrelationId(),
       constructor: this.getCallerInfo(),

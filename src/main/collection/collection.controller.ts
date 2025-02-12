@@ -8,19 +8,20 @@ import { LoggerService } from "../logger/logger.service";
 import { WindowService } from "../window/window.service";
 import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";
+
 @Service()
 export class CollectionController extends IpcEventController {
   constructor(
     private readonly collectionService: CollectionService,
     private readonly windowService: WindowService,
-    private readonly logger: LoggerService,
+    readonly logger: LoggerService,
   ) {
-    super();
+    super(logger);
   }
 
   @IpcHandle(COLLECTION_CHANNELS.CREATE)
   async createCollection(collection: CollectionStoreModel) {
-    this.logger.debug("Creating collection", { name: collection.name });
+    this.logHandler(COLLECTION_CHANNELS.CREATE, { name: collection.name });
     try {
       const created = await this.collectionService.createCollection(collection);
       this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
@@ -34,13 +35,13 @@ export class CollectionController extends IpcEventController {
 
   @IpcHandle(COLLECTION_CHANNELS.GET_ALL)
   async getCollections() {
-    this.logger.debug("Fetching all collections");
+    this.logHandler(COLLECTION_CHANNELS.GET_ALL);
     return this.collectionService.getCollections();
   }
 
   @IpcHandle(COLLECTION_CHANNELS.UPDATE)
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
-    this.logger.debug("Updating collection", { id, updates });
+    this.logHandler(COLLECTION_CHANNELS.UPDATE, { id, updates });
     try {
       const updated = await this.collectionService.updateCollection(id, updates);
 
@@ -58,7 +59,7 @@ export class CollectionController extends IpcEventController {
 
   @IpcHandle(COLLECTION_CHANNELS.DELETE)
   async deleteCollection(id: string) {
-    this.logger.debug("Deleting collection", { id });
+    this.logHandler(COLLECTION_CHANNELS.DELETE, { id });
     try {
       const deleted = await this.collectionService.deleteCollection(id);
 

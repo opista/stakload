@@ -28,7 +28,7 @@ export class GameStore {
     this.logger.debug("Attempting bulk insert of games", { count: games.length });
     try {
       const result = await db.insertMany<Partial<GameStoreModel>>(games);
-      this.logger.info("Successfully bulk inserted games", { count: result.length });
+      this.logger.debug("Successfully bulk inserted games", { count: result.length });
       return result;
     } catch (error) {
       this.logger.error("Database error while bulk inserting games", error, { count: games.length });
@@ -70,7 +70,7 @@ export class GameStore {
         .sort({ [sort.field]: sort.direction })
         .limit(limit || 0);
 
-      this.logger.info("Successfully retrieved filtered games", { count: results.length });
+      this.logger.debug("Successfully retrieved filtered games", { count: results.length });
       return results as unknown as T extends "list"
         ? GameListModel[]
         : T extends "featured"

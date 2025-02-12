@@ -10,7 +10,6 @@ export class WindowsInstalledGamesStrategy extends BaseInstalledGamesStrategy {
 
   async getApplicationPath(): Promise<string> {
     if (this.applicationPath) return this.applicationPath;
-
     try {
       const result = await checkRegistry({
         hive: Registry.HKLM,
@@ -19,12 +18,12 @@ export class WindowsInstalledGamesStrategy extends BaseInstalledGamesStrategy {
       });
       if (result) {
         this.applicationPath = result;
+        this.logger.debug("Determined Windows Steam installation path", { applicationPath: result });
         return result;
       }
     } catch (err) {
-      console.log("steam", err);
+      this.logger.error("Error checking registry for Steam installation", err);
     }
-
     throw new Error("Steam installation not found");
   }
 }

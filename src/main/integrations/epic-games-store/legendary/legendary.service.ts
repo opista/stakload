@@ -1,6 +1,7 @@
 import { runApplicationCommand } from "@util/run-application-command";
 import { Service } from "typedi";
 
+import { LoggerService } from "../../../logger/logger.service";
 import { AuthResultModel, OwnedGame } from "./types";
 
 /**
@@ -15,44 +16,44 @@ const APPLICATION_NAME = "legendary";
 
 @Service()
 export class LegendaryService {
+  constructor(private readonly logger: LoggerService) {}
+
   async login(authorizationCode: string): Promise<AuthResultModel> {
+    this.logger.debug("Attempting Legendary login", { authorizationCode });
     try {
       const result = await runApplicationCommand(APPLICATION_NAME, "auth", [`--code ${authorizationCode}`]);
-
       const match = /Successfully logged in as "(.*?)"/.exec(result.stderr);
       if (match) {
+        this.logger.info("Legendary login successful", { username: match[1] });
         return {
-          data: {
-            username: match[1],
-          },
+          data: { username: match[1] },
           success: true,
         };
       }
-
-      return {
-        success: false,
-      };
-    } catch (err) {
-      // TODO - logging
-      return {
-        success: false,
-      };
+      this.logger.warn("Legendary login did not match expected output", {
+        stderr: result.stderr,
+      });
+      return { success: false };
+    } catch (error: unknown) {
+      this.logger.error("Legendary login failed", { error });
+      return { success: false };
     }
   }
 
   async logout() {
+    this.logger.debug("Attempting Legendary logout");
     try {
       await runApplicationCommand(APPLICATION_NAME, "auth", ["--delete"]);
+      this.logger.info("Legendary logout successful");
       return { success: true };
-    } catch (err) {
-      // TODO - logging
-      return {
-        success: false,
-      };
+    } catch (error: unknown) {
+      this.logger.error("Legendary logout failed", { error });
+      return { success: false };
     }
   }
 
   async getOwnedGames(): Promise<OwnedGame[]> {
+    this.logger.debug("Fetching owned games using Legendary");
     try {
       const result = await runApplicationCommand(APPLICATION_NAME, "list", [
         "--force-refresh",
@@ -60,22 +61,24 @@ export class LegendaryService {
         "--json",
         "--platform Windows",
       ]);
-
-      return JSON.parse(result.stdout);
-    } catch (err) {
-      console.log("something went wrong", err);
+      const ownedGames: OwnedGame[] = JSON.parse(result.stdout);
+      this.logger.info("Fetched owned games", { count: ownedGames.length });
+      return ownedGames;
+    } catch (error: unknown) {
+      this.logger.error("Failed to fetch owned games using Legendary", { error });
       return [];
     }
   }
 
   async isLoggedIn(): Promise<boolean> {
+    this.logger.debug("Checking Legendary login status");
     try {
-      console.log("checking if logged in");
       const result = await runApplicationCommand(APPLICATION_NAME, "status");
-      console.log("result", result);
-      console.log(result.stdout.includes("<not logged in>"));
-      return !result.stdout.includes("<not logged in>");
-    } catch (err) {
+      const isLoggedIn = !result.stdout.includes("<not logged in>");
+      this.logger.info("Legendary login status determined", { isLoggedIn });
+      return isLoggedIn;
+    } catch (error: unknown) {
+      this.logger.error("Failed to check Legendary login status", { error });
       return false;
     }
   }

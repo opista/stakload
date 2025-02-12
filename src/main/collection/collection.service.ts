@@ -27,7 +27,7 @@ export class CollectionService {
     this.logger.debug("Fetching all collections");
     try {
       const collections = await this.collectionStore.getCollections();
-      this.logger.info("Collections fetched successfully", { count: collections.length });
+      this.logger.debug("Collections fetched successfully", { count: collections.length });
       return collections;
     } catch (error) {
       this.logger.error("Failed to fetch collections", error);

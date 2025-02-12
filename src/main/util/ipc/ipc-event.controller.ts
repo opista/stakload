@@ -1,6 +1,8 @@
 import { ipcMain } from "electron";
 import { Service } from "typedi";
 
+import { LoggerService } from "../../logger/logger.service";
+
 interface IpcHandler {
   channel: string;
   handler: Function;
@@ -9,7 +11,7 @@ interface IpcHandler {
 
 @Service()
 export abstract class IpcEventController {
-  constructor() {
+  constructor(readonly logger: LoggerService) {
     this.registerIpcHandlers();
   }
 
@@ -26,5 +28,9 @@ export abstract class IpcEventController {
         ipcMain.on(channel, boundHandler);
       }
     }
+  }
+
+  logHandler(channel: string, context?: Record<string, unknown>) {
+    this.logger.info("Handling IPC message", { channel, ...context });
   }
 }
