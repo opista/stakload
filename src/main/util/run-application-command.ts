@@ -1,6 +1,7 @@
+import { platform } from "@electron-toolkit/utils";
 import { spawn } from "child_process";
 
-import { BIN_DIR, IS_WINDOWS } from "../constants";
+import { BIN_DIR } from "../constants";
 
 export const runApplicationCommand = async (
   application: string,
@@ -11,7 +12,7 @@ export const runApplicationCommand = async (
     const stdout: string[] = [];
     const stderr: string[] = [];
 
-    const applicationPath = [!IS_WINDOWS && "./", application].filter(Boolean).join("");
+    const applicationPath = [!platform.isWindows && "./", application].filter(Boolean).join("");
 
     const process = spawn(`${applicationPath} ${command}`, args, { cwd: BIN_DIR, shell: true });
 

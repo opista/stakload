@@ -11,7 +11,6 @@ import {
 import { Notifications } from "@mantine/notifications";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import clsx from "clsx";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -73,16 +72,6 @@ export const App = () => {
     primaryColor: "cyan",
     respectReducedMotion: true,
   });
-
-  /**
-   * TODO - abstract initial app load actions here.
-   * We only need to trigger these actions once when the
-   * user loads the app for the first time. Perhaps this
-   * should happen in the backend? Does the frontend care?
-   */
-  useEffect(() => {
-    window.api.getLocale().then((locale) => i18n.changeLanguage(locale));
-  }, []);
 
   return (
     <>

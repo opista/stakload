@@ -15,13 +15,6 @@ export class SystemService {
     app.exit(0);
   }
 
-  getLocale() {
-    this.logger.debug("Getting system locale");
-    const locale = app.getSystemLocale();
-    this.logger.debug("System locale retrieved", { locale });
-    return locale;
-  }
-
   async restart() {
     this.logger.info("Initiating system restart");
     try {

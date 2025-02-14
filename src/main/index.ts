@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { electronApp, optimizer, platform } from "@electron-toolkit/utils";
 import { app } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
@@ -37,7 +37,7 @@ app.whenReady().then(async () => {
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  if (platform.isMacOS) {
     app.quit();
   }
 });

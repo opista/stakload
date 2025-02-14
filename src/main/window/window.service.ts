@@ -1,4 +1,4 @@
-import { is } from "@electron-toolkit/utils";
+import { is, platform } from "@electron-toolkit/utils";
 import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
 import { Service } from "typedi";
@@ -37,7 +37,7 @@ export class WindowService {
       closable: true,
       enableLargerThanScreen: false,
       focusable: true,
-      frame: process.platform !== "win32",
+      frame: platform.isWindows,
       fullscreenable: true,
       hasShadow: true,
       height: 800,
@@ -51,7 +51,7 @@ export class WindowService {
       show: false,
       title: "Trulaunch",
       titleBarOverlay: false,
-      titleBarStyle: process.platform === "darwin" ? "hiddenInset" : "hidden",
+      titleBarStyle: platform.isMacOS ? "hiddenInset" : "hidden",
       vibrancy: "under-window",
       visualEffectState: "active",
       webPreferences: {

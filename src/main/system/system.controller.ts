@@ -1,5 +1,4 @@
 import { IpcOn } from "@util/ipc/ipc.decorator";
-import { IpcHandle } from "@util/ipc/ipc.decorator";
 import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
@@ -14,14 +13,6 @@ export class SystemController extends IpcEventController {
     private readonly systemService: SystemService,
   ) {
     super(logger);
-  }
-
-  @IpcHandle(SYSTEM_CHANNELS.GET_LOCALE)
-  async getLocale() {
-    this.logHandler(SYSTEM_CHANNELS.GET_LOCALE);
-    const locale = await this.systemService.getLocale();
-    this.logger.debug("System locale retrieved", { locale });
-    return locale;
   }
 
   @IpcOn(SYSTEM_CHANNELS.RESTART_APP)

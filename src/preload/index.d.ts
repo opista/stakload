@@ -23,7 +23,6 @@ declare global {
       getGameById: (id: string) => Promise<GameStoreModel>;
       getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
       getGamesList: () => Promise<GameListModel[]>;
-      getLocale: () => Promise<string>;
       getNewGames: () => Promise<FeaturedGameModel[]>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
       getQuickLaunchGames: () => Promise<GameListModel[]>;

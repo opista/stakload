@@ -16,7 +16,6 @@ import { listenerHandler } from "./util/listener-handler";
 // Custom APIs for renderer
 const api = {
   // System Operations
-  getLocale: (): Promise<string> => ipcRenderer.invoke(SYSTEM_CHANNELS.GET_LOCALE),
   restartApp: (): void => ipcRenderer.send(SYSTEM_CHANNELS.RESTART_APP),
   restartDevice: (): void => ipcRenderer.send(SYSTEM_CHANNELS.RESTART_DEVICE),
   shutdownDevice: (): void => ipcRenderer.send(SYSTEM_CHANNELS.SHUTDOWN_DEVICE),
