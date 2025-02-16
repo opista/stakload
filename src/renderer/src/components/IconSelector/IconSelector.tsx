@@ -464,7 +464,8 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
           shadow="sm"
           style={{
             alignItems: "center",
-            backgroundColor: selectedIcon === Icon.displayName ? "var(--mantine-color-blue-1)" : undefined,
+            backgroundColor:
+              selectedIcon === Icon.displayName ? "var(--mantine-primary-color-filled-hover)" : undefined,
             cursor: "pointer",
             display: "flex",
             height: ITEM_SIZE,
@@ -488,7 +489,7 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
           height={400}
           rowCount={ROW_COUNT}
           rowHeight={ITEM_SIZE}
-          width={COLUMN_COUNT * ITEM_SIZE}
+          width={COLUMN_COUNT * ITEM_SIZE + 6}
         >
           {Cell}
         </FixedSizeGrid>

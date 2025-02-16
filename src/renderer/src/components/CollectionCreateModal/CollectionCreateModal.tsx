@@ -1,7 +1,8 @@
-import { Button, Flex, Modal, ScrollArea, TextInput } from "@mantine/core";
-import { useState } from "react";
-
-import IconSelector from "../IconSelector";
+import { IconSelector } from "@components/IconSelector/IconSelector";
+import { ActionIcon, Button, Flex, Modal, ScrollArea, TextInput } from "@mantine/core";
+import { IconDeviceGamepad } from "@tabler/icons-react";
+import { importDynamicIcon } from "@util/import-dynamic-icon";
+import { useMemo, useState } from "react";
 
 type CollectionCreateModalProps = {
   onClose: () => void;
@@ -11,9 +12,13 @@ type CollectionCreateModalProps = {
 
 export const CollectionCreateModal = ({ onConfirm, onClose, opened }: CollectionCreateModalProps) => {
   const [value, setValue] = useState<string>("");
-  const [selectedIcon, setSelectedIcon] = useState<string | undefined>();
+  const [selectedIcon, setSelectedIcon] = useState<string>("IconDeviceGamepad");
 
   const onClickConfirm = () => onConfirm(value, selectedIcon);
+
+  const Icon = useMemo(() => {
+    return importDynamicIcon(selectedIcon, IconDeviceGamepad);
+  }, [selectedIcon]);
 
   return (
     <Modal centered onClose={onClose} opened={opened} size="lg" title="Save collection">
@@ -25,7 +30,11 @@ export const CollectionCreateModal = ({ onConfirm, onClose, opened }: Collection
       />
 
       <ScrollArea h={400} mb="md">
-        <IconSelector onSelect={setSelectedIcon} selectedIcon={selectedIcon} />
+        <IconSelector onSelect={setSelectedIcon} selectedIcon={selectedIcon}>
+          <ActionIcon variant="default">
+            <Icon size={40} />
+          </ActionIcon>
+        </IconSelector>
       </ScrollArea>
 
       <Flex gap="xs" justify="flex-end">
