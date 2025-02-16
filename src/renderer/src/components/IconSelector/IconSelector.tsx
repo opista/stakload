@@ -475,7 +475,7 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
   };
 
   return (
-    <Popover position="bottom" shadow="md" withArrow>
+    <Popover closeOnEscape position="bottom" shadow="md" withArrow>
       <Popover.Target>{children}</Popover.Target>
       <Popover.Dropdown>
         <FixedSizeGrid
