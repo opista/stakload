@@ -1,3 +1,4 @@
+import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters } from "@contracts/database/games";
 import { GameActions, GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
@@ -96,6 +97,9 @@ export const useGameStore = create<GameStore>()(
             quickLaunchGamesOrder: [...state.quickLaunchGamesOrder, id],
           };
         });
+      },
+      updateCollection: async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters" | "icon">) => {
+        await window.api.updateCollection(id, updates);
       },
     }),
     {

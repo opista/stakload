@@ -14,7 +14,8 @@ export class CollectionService {
   async createCollection(collection: Pick<CollectionStoreModel, "filters" | "icon" | "name">) {
     this.logger.debug("Processing collection creation", collection);
     try {
-      const created = await this.collectionStore.createCollection(collection);
+      const formattedName = collection.name.trim();
+      const created = await this.collectionStore.createCollection({ ...collection, name: formattedName });
       this.logger.info("Collection created successfully", { id: created._id, name: created.name });
       return created;
     } catch (error) {
@@ -38,7 +39,11 @@ export class CollectionService {
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
     this.logger.debug("Processing collection update", { id, updates });
     try {
-      const updated = await this.collectionStore.updateCollectionById(id, updates);
+      const formattedName = updates.name?.trim();
+      const updated = await this.collectionStore.updateCollectionById(id, {
+        ...updates,
+        ...(formattedName && { name: formattedName }),
+      });
       if (updated) {
         this.logger.info("Collection updated successfully", { id, name: updated.name });
       }

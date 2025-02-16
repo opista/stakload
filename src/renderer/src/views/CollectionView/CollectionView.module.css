@@ -16,3 +16,19 @@
   width: auto;
   height: auto;
 }
+
+.title {
+  border-bottom: 2px dashed rgba(255, 255, 255, 0.25);
+  cursor: text;
+  font-size: var(--mantine-h1-font-size);
+  font-weight: var(--mantine-h1-font-weight);
+  line-height: var(--mantine-h1-line-height);
+  margin: 0;
+  outline: none;
+  user-select: none;
+
+  &.active,
+  &:hover {
+    border-color: currentColor;
+  }
+}
