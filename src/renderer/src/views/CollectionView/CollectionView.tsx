@@ -1,7 +1,8 @@
 import { EditableField } from "@components/EditableField/EditableField";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
+import { IconSelector } from "@components/IconSelector/IconSelector";
 import { GameListModel } from "@contracts/database/games";
-import { ActionIcon, Flex, Group, Pill, Text, Title, TitleProps } from "@mantine/core";
+import { ActionIcon, Flex, Group, Pill, Text, Title, TitleProps, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { IconDeviceGamepad, IconTrash } from "@tabler/icons-react";
@@ -14,7 +15,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import classes from "./CollectionView.module.css";
 
-// TODO: Refactor this isn't it's own component.
+// TODO: Refactor this into it's own component.
 const CollectionTitle = forwardRef<HTMLHeadingElement, TitleProps>((props, ref) => (
   <Title {...props} className={clsx(classes.title, { [classes.active]: props["data-active"] })} order={1} ref={ref} />
 ));
@@ -41,6 +42,16 @@ export const CollectionView = () => {
     if (!collection || !value) return;
 
     updateCollection(collection._id, { name: value, filters: collection?.filters });
+  };
+
+  const onIconSelect = (iconName: string) => {
+    if (!collection || !iconName) return;
+
+    updateCollection(collection._id, {
+      name: collection.name,
+      icon: iconName,
+      filters: collection.filters,
+    });
   };
 
   const Icon = useMemo(() => {
@@ -80,7 +91,11 @@ export const CollectionView = () => {
     <div className={classes.container}>
       <Flex className={classes.header} justify="space-between">
         <Group align="center" gap="sm">
-          <Icon size={40} />
+          <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
+            <Tooltip arrowSize={8} label="Change icon" offset={10} position="right" withArrow>
+              <Icon size={40} />
+            </Tooltip>
+          </IconSelector>
           <EditableField
             as={CollectionTitle}
             label="Edit collection name"
