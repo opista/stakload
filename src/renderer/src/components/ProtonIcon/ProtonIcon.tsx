@@ -5,7 +5,7 @@ import { ParseKeys } from "i18next";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconBrandProtonDB } from "../../icons/IconBrandProtonDB";
+import { IconBrandProtonDb } from "../../icons/IconBrandProtonDb";
 
 type ProtonIndicatorProps = {
   gameId?: string;
@@ -64,7 +64,7 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
   return (
     <UnstyledButton component="a" href={`https://www.protondb.com/app/${gameId}`} rel="noreferrer" target="_blank">
       <TooltipIcon
-        icon={IconBrandProtonDB}
+        icon={IconBrandProtonDb}
         iconProps={{ style: { color: metadata.color } }}
         loading={isLoading}
         themeIconProps={{ size, style: { background: metadata.background, color: metadata.color } }}

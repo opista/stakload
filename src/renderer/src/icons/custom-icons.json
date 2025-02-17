@@ -1,0 +1,57 @@
+[
+  {
+    "name": "brand-epic-games",
+    "category": "Brand",
+    "styles": {
+      "outline": {
+        "version": "1",
+        "unicode": "1"
+      }
+    },
+    "tags": ["technology", "video", "game", "digital", "distribution", "software", "player", "pc"]
+  },
+  {
+    "name": "brand-fandom",
+    "category": "Brand",
+    "styles": {
+      "outline": {
+        "version": "1",
+        "unicode": "1"
+      }
+    },
+    "tags": [
+      "encyclopedia",
+      "information",
+      "knowledge",
+      "online",
+      "resource",
+      "articles",
+      "community",
+      "edit",
+      "content",
+      "support"
+    ]
+  },
+  {
+    "name": "brand-gog",
+    "category": "Brand",
+    "styles": {
+      "outline": {
+        "version": "1",
+        "unicode": "1"
+      }
+    },
+    "tags": ["technology", "video", "game", "digital", "distribution", "software", "player", "pc"]
+  },
+  {
+    "name": "brand-proton-db",
+    "category": "Brand",
+    "styles": {
+      "outline": {
+        "version": "1",
+        "unicode": "1"
+      }
+    },
+    "tags": ["technology", "video", "game", "digital", "software", "steam"]
+  }
+]
