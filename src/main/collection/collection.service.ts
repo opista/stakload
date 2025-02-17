@@ -15,8 +15,27 @@ export class CollectionService {
     this.logger.debug("Processing collection creation", collection);
     try {
       const formattedName = collection.name.trim();
-      const created = await this.collectionStore.createCollection({ ...collection, name: formattedName });
-      this.logger.info("Collection created successfully", { id: created._id, name: created.name });
+
+      const cleanFilters = Object.entries(collection.filters).reduce(
+        (acc, [key, value]) => {
+          if (value !== undefined && value !== null && !(Array.isArray(value) && value.length === 0)) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {} as Record<string, unknown>,
+      );
+
+      const created = await this.collectionStore.createCollection({
+        ...collection,
+        filters: cleanFilters,
+        name: formattedName,
+      });
+      this.logger.info("Collection created successfully", {
+        filters: created.filters,
+        id: created._id,
+        name: created.name,
+      });
       return created;
     } catch (error) {
       this.logger.error("Failed to create collection", error, collection);
