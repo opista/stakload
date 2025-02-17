@@ -4,6 +4,7 @@ import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel } from "@
 export type GameState = {
   collections: CollectionStoreModel[];
   collectionsCache: Record<string, GameListModel[]>;
+  gameFilters: { [key in keyof GameStoreModel]?: { label: string; value: string }[] };
   gamesDetails: Record<string, GameStoreModel>;
   gamesList: GameListModel[];
   newGames: FeaturedGameModel[];
@@ -16,6 +17,7 @@ export type GameActions = {
   fetchCollections: () => Promise<void>;
   fetchFilteredGames: (filters: GameFilters) => Promise<GameListModel[]>;
   fetchGameDetails: (id: string) => Promise<GameStoreModel>;
+  fetchGameFilters: () => Promise<void>;
   fetchGamesList: () => Promise<void>;
   fetchNewGames: () => Promise<void>;
   fetchQuickLaunchGames: () => Promise<void>;

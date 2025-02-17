@@ -2,6 +2,7 @@ import { EditableField } from "@components/EditableField/EditableField";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { IconSelector } from "@components/IconSelector/IconSelector";
 import { GameListModel } from "@contracts/database/games";
+import { useLibraryFilters } from "@hooks/use-game-filters";
 import { ActionIcon, Flex, Group, Pill, Text, Title, TitleProps, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
@@ -36,7 +37,7 @@ export const CollectionView = () => {
     })),
   );
 
-  console.log(collection?.filters);
+  const { formattedFilters } = useLibraryFilters(collection?.filters);
 
   const onTitleUpdate = (value: string) => {
     if (!collection || !value) return;
@@ -87,6 +88,10 @@ export const CollectionView = () => {
       title: `Delete ${collection.name} collection`,
     });
 
+  const onRemoveFilter = (key: string, value: string) => {
+    console.log({ key, value });
+  };
+
   return (
     <div className={classes.container}>
       <Flex className={classes.header} justify="space-between">
@@ -115,12 +120,22 @@ export const CollectionView = () => {
           </ActionIcon>
         </Flex>
       </Flex>
-      <Flex>
+      <Flex gap="sm" px="md" wrap="wrap">
         {/* TODO: We need to get the "pretty" tags for these,
         they're just a bunch of IDs right now. Maybe we can store
         the pretty tags in the collection object? */}
-        {Object.values(collection.filters).flatMap((value) => (
-          <Pill key={value.toString()}>{value.toString()}</Pill>
+        {formattedFilters.map(({ key, label, value }) => (
+          <Pill
+            bg="cyan"
+            key={value}
+            onRemove={() => onRemoveFilter(key, value)}
+            pl={12}
+            pr={2}
+            size="md"
+            withRemoveButton
+          >
+            {label}
+          </Pill>
         ))}
       </Flex>
       <GamesGrid games={games} />

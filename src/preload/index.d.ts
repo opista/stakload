@@ -21,7 +21,7 @@ declare global {
       getCollections: () => Promise<CollectionStoreModel[]>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameListModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
-      getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
+      getGameFilters: () => Promise<{ [key in keyof GameStoreModel]?: { label: string; value: string }[] }>;
       getGamesList: () => Promise<GameListModel[]>;
       getNewGames: () => Promise<FeaturedGameModel[]>;
       getProtondbTier: (gameId: string) => Promise<string | null>;

@@ -47,13 +47,17 @@ export const useGameStore = create<GameStore>()(
         }));
         return details;
       },
+      fetchGameFilters: async () => {
+        const gameFilters = await window.api.getGameFilters();
+        set({ gameFilters });
+      },
       fetchGamesList: async () => {
-        const games = await window.api.getGamesList();
-        set({ gamesList: games });
+        const gamesList = await window.api.getGamesList();
+        set({ gamesList });
       },
       fetchNewGames: async () => {
-        const games = await window.api.getNewGames();
-        set({ newGames: games });
+        const newGames = await window.api.getNewGames();
+        set({ newGames });
       },
       fetchQuickLaunchGames: async () => {
         const quickLaunchGames = await window.api.getQuickLaunchGames();
@@ -61,6 +65,7 @@ export const useGameStore = create<GameStore>()(
       },
       gamesDetails: {},
       gamesList: [],
+      gameFilters: {},
 
       invalidateCollectionCache: () => set({ collectionsCache: {} }),
       newGames: [],

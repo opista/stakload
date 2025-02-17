@@ -1,12 +1,13 @@
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
 import { GameFilters, Library, LikeAgeRatingText } from "@contracts/database/games";
-import { useGamesQuery } from "@hooks/use-games-query";
 import { ActionIcon, Button, Checkbox, Grid, Group, Indicator, MultiSelect, Popover, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsHorizontal, IconPlaylistAdd } from "@tabler/icons-react";
 import { ParseKeys } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GamesFilter.module.css";
 
@@ -74,6 +75,8 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
   const [opened, setOpened] = useState(false);
   const { t } = useTranslation();
 
+  const { gameFilters } = useGameStore(useShallow((state) => ({ gameFilters: state.gameFilters })));
+
   const hasFilterSet = filters ? Object.values(filters).some((values) => values?.length) : false;
   const resetFilters = () => onChange(DEFAULT_FILTERS);
   const selectedFilterCount = filters ? Object.values(filters).filter((values) => values?.length).length : 0;
@@ -85,8 +88,6 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
       ...filters,
       [key]: value,
     });
-
-  const { data: filterOptions } = useGamesQuery(window.api.getGameFilters);
 
   const onSaveFilters = () => {
     setOpened(false);
@@ -168,7 +169,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.["developers"]}
+                data={gameFilters?.["developers"]}
                 label={t("filters.developers")}
                 onChange={onFilterChange("developers")}
                 searchable
@@ -178,7 +179,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.["publishers"]}
+                data={gameFilters?.["publishers"]}
                 label={t("filters.publishers")}
                 onChange={onFilterChange("publishers")}
                 searchable
@@ -188,7 +189,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.["playerPerspectives"]}
+                data={gameFilters?.["playerPerspectives"]}
                 label={t("filters.playerPerspectives")}
                 onChange={onFilterChange("playerPerspectives")}
                 searchable
@@ -200,7 +201,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.platforms}
+                data={gameFilters?.platforms}
                 label={t("filters.platforms")}
                 onChange={onFilterChange("platforms")}
                 searchable
@@ -220,7 +221,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.["gameModes"]}
+                data={gameFilters?.["gameModes"]}
                 label={t("filters.gameModes")}
                 onChange={onFilterChange("gameModes")}
                 searchable
@@ -230,7 +231,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
                 className={classes.select}
                 clearable
                 comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-                data={filterOptions?.["genres"]}
+                data={gameFilters?.["genres"]}
                 label={t("filters.genres")}
                 onChange={onFilterChange("genres")}
                 searchable

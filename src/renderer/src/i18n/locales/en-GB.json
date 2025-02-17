@@ -40,6 +40,7 @@
     "enabled": "Enabled",
     "gameModes": "Game modes",
     "genres": "Genres",
+    "isInstalled": "Installed",
     "libraries": "Libraries",
     "platforms": "Platforms",
     "playerPerspectives": "Player perspectives",
