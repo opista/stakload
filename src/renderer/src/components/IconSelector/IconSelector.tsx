@@ -55,7 +55,15 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
   };
 
   return (
-    <Popover closeOnEscape onClose={() => setSearch("")} position="bottom" shadow="md" trapFocus withArrow>
+    <Popover
+      arrowPosition="center"
+      closeOnEscape
+      onClose={() => setSearch("")}
+      position="bottom-start"
+      shadow="md"
+      trapFocus
+      withArrow
+    >
       <Popover.Target>{children}</Popover.Target>
       <Popover.Dropdown>
         <TextInput
