@@ -1,3 +1,4 @@
+import { useGamesQuery } from "@hooks/use-games-query";
 import {
   Checkbox,
   ColorSchemeScript,
@@ -10,6 +11,7 @@ import {
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useCollectionStore } from "@store/collection.store";
+import { useGameStore } from "@store/game.store";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import clsx from "clsx";
 import { useEffect } from "react";
@@ -20,11 +22,14 @@ import classes from "./App.module.css";
 
 export const App = () => {
   const fetchCollections = useCollectionStore(useShallow((state) => state.fetchCollections));
+  const refreshGameData = useGameStore(useShallow((state) => state.refreshGameData));
   const { syncOnStartup } = useIntegrationSettingsStore(
     useShallow((state) => ({
       syncOnStartup: state.syncOnStartup,
     })),
   );
+
+  useGamesQuery(refreshGameData, []);
 
   if (syncOnStartup) {
     window.api.syncGames();

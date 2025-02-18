@@ -12,23 +12,20 @@ type GameStore = GameState & GameActions;
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
+      gamesDetails: {},
+      gamesList: [],
+      gameFilters: {},
+      newGames: [],
+      quickLaunchGames: [],
+      quickLaunchGamesOrder: [],
+
       archiveGame: async (id: string) => {
         await window.api.archiveGame(id);
-        await Promise.all([
-          get().fetchQuickLaunchGames(),
-          get().fetchNewGames(),
-          get().fetchGamesList(),
-          get().fetchGameFilters(),
-        ]);
+        await get().refreshGameData();
       },
       deleteGame: async (id: string) => {
         await window.api.deleteGame(id);
-        await Promise.all([
-          get().fetchQuickLaunchGames(),
-          get().fetchNewGames(),
-          get().fetchGamesList(),
-          get().fetchGameFilters(),
-        ]);
+        await get().refreshGameData();
       },
       fetchFilteredGames: async (filters: GameFilters) => {
         return await window.api.getFilteredGames(filters);
@@ -59,14 +56,14 @@ export const useGameStore = create<GameStore>()(
         const quickLaunchGames = await window.api.getQuickLaunchGames();
         set({ quickLaunchGames });
       },
-      gamesDetails: {},
-      gamesList: [],
-      gameFilters: {},
-
-      newGames: [],
-      quickLaunchGames: [],
-      quickLaunchGamesOrder: [],
-
+      refreshGameData: async () => {
+        await Promise.all([
+          get().fetchQuickLaunchGames(),
+          get().fetchNewGames(),
+          get().fetchGamesList(),
+          get().fetchGameFilters(),
+        ]);
+      },
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       toggleFavouriteGame: async (id: string) => {
         const game = await window.api.toggleFavouriteGame(id);
