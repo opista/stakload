@@ -1,4 +1,4 @@
-import { IconSelector } from "@components/IconSelector/IconSelector";
+import { IconSelector } from "@components/Desktop/IconSelector/IconSelector";
 import { ActionIcon, Button, Flex, Modal, ScrollArea, TextInput } from "@mantine/core";
 import { IconDeviceGamepad } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
