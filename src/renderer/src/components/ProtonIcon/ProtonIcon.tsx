@@ -40,7 +40,7 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
 
     setIsLoading(true);
 
-    const isNative = platforms?.find(({ name }) => name.toLowerCase() === "linux");
+    const isNative = platforms?.find(({ name }) => name.toLocaleLowerCase() === "linux");
 
     if (isNative) {
       setMetadata(TIER_MAP.native);
