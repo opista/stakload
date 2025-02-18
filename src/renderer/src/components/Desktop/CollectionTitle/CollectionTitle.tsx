@@ -1,5 +1,4 @@
 import { EditableField } from "@components/EditableField/EditableField";
-import { IconSelector } from "@components/IconSelector/IconSelector";
 import { CollectionStoreModel } from "@contracts/database/collections";
 import { Group, Title, TitleProps, Tooltip } from "@mantine/core";
 import { useCollectionStore } from "@store/collection.store";
@@ -9,6 +8,7 @@ import clsx from "clsx";
 import { forwardRef, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { IconSelector } from "../IconSelector/IconSelector";
 import classes from "./CollectionTitle.module.css";
 
 type CollectionTitleProps = {

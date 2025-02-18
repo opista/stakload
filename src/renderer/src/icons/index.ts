@@ -12,10 +12,14 @@ export const fullIconsList = [...Object.values(tablerIconsJson), ...customIconsJ
 );
 
 export const filterIcons = (query: string) => {
+  const formattedQuery = query.toLocaleLowerCase().trim();
+
+  if (!formattedQuery) return fullIconsList;
+
   return fullIconsList.filter(
     (icon) =>
-      icon.name.toLowerCase().includes(query.toLowerCase()) ||
-      icon.category.toLowerCase().includes(query.toLowerCase()) ||
-      icon.tags?.some((tag: string | number | null) => tag?.toString().toLowerCase().includes(query.toLowerCase())),
+      icon.name.toLocaleLowerCase().split("-").join(" ").includes(formattedQuery) ||
+      icon.category.toLocaleLowerCase().includes(formattedQuery) ||
+      icon.tags?.some((tag: string | number | null) => tag?.toString().toLocaleLowerCase().includes(formattedQuery)),
   );
 };

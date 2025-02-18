@@ -1,10 +1,10 @@
+import * as icons from "@icons/index";
+import { filterIcons, IconSearch } from "@icons/index";
 import { Card, Popover, TextInput } from "@mantine/core";
 import { upperFirst } from "lodash-es";
 import { CSSProperties, ReactNode, useMemo, useState } from "react";
 import { FixedSizeGrid } from "react-window";
 
-import { filterIcons, IconSearch } from "../../icons";
-import * as icons from "../../icons";
 import classes from "./IconSelector.module.css";
 
 type IconSelectorProps = {
