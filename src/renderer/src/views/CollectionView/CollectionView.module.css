@@ -12,27 +12,3 @@
   width: auto;
   height: auto;
 }
-
-.title {
-  cursor: text;
-  font-size: var(--mantine-h1-font-size);
-  font-weight: var(--mantine-h1-font-weight);
-  line-height: var(--mantine-h1-line-height);
-  outline: none;
-  position: relative;
-  user-select: none;
-
-  &::after {
-    border-bottom: 2px dashed rgba(255, 255, 255, 0.25);
-    bottom: -2px;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-  }
-
-  &.active::after,
-  &:hover::after {
-    border-color: currentColor;
-  }
-}
