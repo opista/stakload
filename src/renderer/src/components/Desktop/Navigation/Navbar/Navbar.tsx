@@ -18,11 +18,13 @@ import {
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import type { FC } from "react";
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./Navbar.module.css";
 
 export const Navbar = () => {
+  const { t } = useTranslation();
   const collections = useCollectionStore(useShallow((state) => state.collections));
 
   const iconCache = useMemo(() => {
@@ -46,10 +48,10 @@ export const Navbar = () => {
         <SearchButton className={classes.search} />
         <ScrollArea>
           <Stack gap="xs">
-            <NavbarLink href="/desktop" icon={IconHome} label="Home" />
-            <NavbarLink href="/desktop/library" icon={IconCategory} label="Library" />
-            <NavbarLink href="/desktop/favourites" icon={IconStar} label="Favourites" />
-            <NavbarLink disabled={!collections?.length} icon={IconBooks} label="Collections">
+            <NavbarLink href="/desktop" icon={IconHome} label={t("navigation.home")} />
+            <NavbarLink href="/desktop/library" icon={IconCategory} label={t("navigation.library")} />
+            <NavbarLink href="/desktop/favourites" icon={IconStar} label={t("navigation.favourites")} />
+            <NavbarLink disabled={!collections?.length} icon={IconBooks} label={t("navigation.collections")}>
               {collections.map((collection) => (
                 <NavbarLink
                   href={`/desktop/collections/${collection._id}`}
@@ -59,8 +61,12 @@ export const Navbar = () => {
                 />
               ))}
             </NavbarLink>
-            <NavbarLink icon={IconSettings} label="Settings">
-              <NavbarLink href="/desktop/settings/integrations" icon={IconLayersIntersect} label="Integrations" />
+            <NavbarLink icon={IconSettings} label={t("navigation.settings")}>
+              <NavbarLink
+                href="/desktop/settings/integrations"
+                icon={IconLayersIntersect}
+                label={t("navigation.integrations")}
+              />
             </NavbarLink>
           </Stack>
           <QuickLaunchList className={classes.quickLaunch} />

@@ -4,3 +4,8 @@
   gap: var(--mantine-spacing-md);
   width: 100%;
 }
+
+.notFoundContainer {
+  height: 100%;
+  text-align: center;
+}

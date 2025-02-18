@@ -5,8 +5,5 @@
 }
 
 .emptyContainer {
-  gap: var(--mantine-spacing-xs);
-  align-items: center;
   height: 100%;
-  justify-content: center;
 }

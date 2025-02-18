@@ -43,7 +43,7 @@ export const GamingLayout = () => {
         <Group h="100%" justify="space-between" px="md">
           <Logo />
           <HeaderButtons />
-          <Button onClick={() => navigate("/desktop")}>{t("navigation.toDesktop")}</Button>
+          <Button onClick={() => navigate("/desktop")}>Back to desktop</Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar className={classes.navbar}>

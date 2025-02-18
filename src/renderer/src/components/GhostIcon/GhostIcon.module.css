@@ -1,0 +1,31 @@
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8%);
+  }
+}
+
+@keyframes shadow {
+  0%,
+  100% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+
+.icon {
+  animation: float 2s infinite ease-in-out;
+}
+
+.shadow {
+  animation: shadow 2s infinite ease-in-out;
+  background-color: var(--mantine-color-text);
+  border-radius: 50%;
+  height: 6%;
+  width: 60%;
+}

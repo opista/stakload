@@ -4,7 +4,7 @@ import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeadin
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GameFilters } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { ActionIcon, Group, Text, Title } from "@mantine/core";
+import { ActionIcon, Group, Stack, Text, Title } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
@@ -57,7 +57,7 @@ export const CollectionView = () => {
     });
 
   return (
-    <div className={classes.container} ref={containerRef}>
+    <Stack className={classes.container} gap="md" ref={containerRef}>
       <SectionHeading direction="column" gap="md">
         <Group align="center" gap="sm" justify="space-between">
           {collection && <CollectionTitle collection={collection} />}
@@ -75,6 +75,6 @@ export const CollectionView = () => {
         <FilterControl collection={collection} onChange={setFilters} />
       </SectionHeading>
       <GamesGrid games={games} />
-    </div>
+    </Stack>
   );
 };
