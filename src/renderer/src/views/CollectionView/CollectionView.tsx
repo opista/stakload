@@ -1,15 +1,18 @@
+import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
+import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { EditableField } from "@components/EditableField/EditableField";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { IconSelector } from "@components/IconSelector/IconSelector";
-import { GameListModel } from "@contracts/database/games";
-import { useLibraryFilters } from "@hooks/use-game-filters";
-import { ActionIcon, Flex, Group, Pill, Text, Title, TitleProps, Tooltip } from "@mantine/core";
+import { GameFilters } from "@contracts/database/games";
+import { useGamesQuery } from "@hooks/use-games-query";
+import { ActionIcon, Group, Text, Title, TitleProps, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
+import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
 import { IconDeviceGamepad, IconTrash } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import clsx from "clsx";
-import { forwardRef, useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -25,19 +28,21 @@ CollectionTitle.displayName = "CollectionTitle";
 
 export const CollectionView = () => {
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { id } = useParams();
   const { t } = useTranslation();
-  const [games, setGames] = useState<GameListModel[]>([]);
-  const { collection, fetchCollectionGames, collectionGames, updateCollection } = useGameStore(
+  const { collection, deleteCollection, updateCollection } = useCollectionStore(
     useShallow((state) => ({
       collection: state.collections.find((c) => c._id === id),
-      collectionGames: state.collectionsCache[id!],
-      fetchCollectionGames: state.fetchCollectionGames,
+      deleteCollection: state.deleteCollection,
       updateCollection: state.updateCollection,
     })),
   );
+  const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
 
-  const { formattedFilters } = useLibraryFilters(collection?.filters);
+  const [filters, setFilters] = useState<GameFilters>({ ...collection?.filters });
+
+  const { data: games = [] } = useGamesQuery(() => fetchFilteredGames(filters), [filters]);
 
   const onTitleUpdate = (value: string) => {
     if (!collection || !value) return;
@@ -62,12 +67,8 @@ export const CollectionView = () => {
   }, [collection?.icon]);
 
   useEffect(() => {
-    // TODO: Add loading state.
-    if (!collectionGames) {
-      fetchCollectionGames(id!).then(setGames);
-    } else {
-      setGames(collectionGames);
-    }
+    containerRef.current?.scrollTo({ top: 0 });
+    setFilters({ ...collection?.filters });
   }, [id]);
 
   if (!collection) {
@@ -75,7 +76,7 @@ export const CollectionView = () => {
   }
 
   const onDeleteConfirm = async () => {
-    await window.api.deleteCollection(collection._id);
+    await deleteCollection(collection._id);
     navigate("/desktop/library");
   };
 
@@ -88,56 +89,37 @@ export const CollectionView = () => {
       title: `Delete ${collection.name} collection`,
     });
 
-  const onRemoveFilter = (key: string, value: string) => {
-    console.log({ key, value });
-  };
-
   return (
-    <div className={classes.container}>
-      <Flex className={classes.header} justify="space-between">
-        <Group align="center" gap="sm">
-          <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
-            <Tooltip arrowSize={8} label="Change icon" offset={10} position="right" withArrow>
-              <Icon size={40} />
-            </Tooltip>
-          </IconSelector>
-          <EditableField
-            as={CollectionTitle}
-            label="Edit collection name"
-            maxLength={30}
-            onBlur={onTitleUpdate}
-            value={collection.name}
-          />
+    <div className={classes.container} ref={containerRef}>
+      <SectionHeading direction="column" gap="md">
+        <Group align="center" gap="sm" justify="space-between">
+          <Group>
+            <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
+              <Tooltip arrowSize={8} label="Change icon" offset={10} position="right" withArrow>
+                <Icon size={40} />
+              </Tooltip>
+            </IconSelector>
+            <EditableField
+              as={CollectionTitle}
+              label="Edit collection name"
+              maxLength={30}
+              onBlur={onTitleUpdate}
+              value={collection.name}
+            />
+          </Group>
+          <Group align="center" gap="sm" wrap="wrap">
+            <ActionIcon
+              aria-label={t("settingsButton.title")}
+              className={classes.actionIcon}
+              onClick={() => openDeleteModal()}
+              title={"delete"}
+            >
+              <IconTrash size={20} stroke={1} />
+            </ActionIcon>
+          </Group>
         </Group>
-        <Flex gap="4px">
-          <ActionIcon
-            aria-label={t("settingsButton.title")}
-            className={classes.actionIcon}
-            onClick={() => openDeleteModal()}
-            title={"delete"}
-          >
-            <IconTrash size={20} stroke={1} />
-          </ActionIcon>
-        </Flex>
-      </Flex>
-      <Flex gap="sm" px="md" wrap="wrap">
-        {/* TODO: We need to get the "pretty" tags for these,
-        they're just a bunch of IDs right now. Maybe we can store
-        the pretty tags in the collection object? */}
-        {formattedFilters.map(({ key, label, value }) => (
-          <Pill
-            bg="cyan"
-            key={value}
-            onRemove={() => onRemoveFilter(key, value)}
-            pl={12}
-            pr={2}
-            size="md"
-            withRemoveButton
-          >
-            {label}
-          </Pill>
-        ))}
-      </Flex>
+        <FilterControl collection={collection} />
+      </SectionHeading>
       <GamesGrid games={games} />
     </div>
   );

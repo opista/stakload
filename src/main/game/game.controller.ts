@@ -3,10 +3,8 @@ import { IpcHandle, IpcOn } from "@util/ipc/ipc.decorator";
 import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
-import { EVENT_CHANNELS } from "../../preload/channels";
 import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
 import { LoggerService } from "../logger/logger.service";
-import { WindowService } from "../window/window.service";
 import { GAME_CHANNELS } from "./game.channels";
 import { GameService } from "./game.service";
 
@@ -16,7 +14,6 @@ export class GameController extends IpcEventController {
     private readonly gameLifecycleService: GameLifecycleService,
     private readonly gameService: GameService,
     readonly logger: LoggerService,
-    private readonly windowService: WindowService,
   ) {
     super(logger);
   }
@@ -49,12 +46,7 @@ export class GameController extends IpcEventController {
   async archiveGameById(id: string) {
     this.logHandler(GAME_CHANNELS.ARCHIVE_BY_ID, { id });
     try {
-      const archived = await this.gameService.archiveGame(id);
-      if (archived) {
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-        this.logger.info("Game archived", { id });
-      }
-      return archived;
+      return await this.gameService.archiveGame(id);
     } catch (error) {
       this.logger.error("Failed to archive game", error, { id });
       throw error;
@@ -65,12 +57,7 @@ export class GameController extends IpcEventController {
   async deleteGameById(id: string) {
     this.logHandler(GAME_CHANNELS.DELETE_BY_ID, { id });
     try {
-      const deleted = await this.gameService.deleteGame(id);
-      if (deleted) {
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-        this.logger.info("Game deleted", { id });
-      }
-      return deleted;
+      return await this.gameService.deleteGame(id);
     } catch (error) {
       this.logger.error("Failed to delete game", error, { id });
       throw error;
@@ -99,12 +86,7 @@ export class GameController extends IpcEventController {
   async toggleFavouriteGame(id: string) {
     this.logHandler(GAME_CHANNELS.TOGGLE_FAVOURITE, { id });
     try {
-      const updated = await this.gameService.toggleFavouriteGame(id);
-      if (updated) {
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-        this.logger.info("Game favourite status updated", { id, isFavourite: updated.isFavourite });
-      }
-      return updated;
+      return await this.gameService.toggleFavouriteGame(id);
     } catch (error) {
       this.logger.error("Failed to toggle game favourite status", error, { id });
       throw error;
@@ -115,12 +97,7 @@ export class GameController extends IpcEventController {
   async toggleQuickLaunchGame(id: string) {
     this.logHandler(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH, { id });
     try {
-      const updated = await this.gameService.toggleQuickLaunchGame(id);
-      if (updated) {
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-        this.logger.info("Game quick launch status updated", { id, isQuickLaunch: updated.isQuickLaunch });
-      }
-      return updated;
+      return await this.gameService.toggleQuickLaunchGame(id);
     } catch (error) {
       this.logger.error("Failed to toggle game quick launch status", error, { id });
       throw error;

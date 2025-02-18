@@ -30,7 +30,6 @@ const api = {
   createCollection: (collection: Pick<CollectionStoreModel, "name" | "filters">) =>
     ipcRenderer.invoke(COLLECTION_CHANNELS.CREATE, collection),
   deleteCollection: (id: string) => ipcRenderer.invoke(COLLECTION_CHANNELS.DELETE, id),
-  getCollectionGames: (id: string) => ipcRenderer.invoke(GAME_CHANNELS.GET_BY_COLLECTION, id),
   getCollections: () => ipcRenderer.invoke(COLLECTION_CHANNELS.GET_ALL),
   updateCollection: (id: string, updates: Pick<CollectionStoreModel, "icon" | "name" | "filters">) =>
     ipcRenderer.invoke(COLLECTION_CHANNELS.UPDATE, id, updates),
@@ -58,7 +57,6 @@ const api = {
   testLibraryIntegration: (library: Library) => ipcRenderer.invoke(SYNC_CHANNELS.TEST_INTEGRATION, library),
 
   // Event Listeners
-  onCollectionsUpdated: (listener: (event) => void) => listenerHandler(EVENT_CHANNELS.COLLECTIONS_UPDATED, listener),
   onIntegrationAuthenticationResult: (listener: (event, data: { library: Library; success: boolean }) => void) =>
     listenerHandler(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, listener),
   onGamesListUpdated: (listener: (event, data: GameSyncMessage) => void) =>

@@ -20,8 +20,10 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  const { toggleQuickLaunchGame } = useGameStore(
+  const { archiveGame, deleteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
+      archiveGame: state.archiveGame,
+      deleteGame: state.deleteGame,
       toggleQuickLaunchGame: state.toggleQuickLaunchGame,
     })),
   );
@@ -30,9 +32,9 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
 
   const onRemoveConfirm = async (preventReadd: boolean) => {
     if (preventReadd) {
-      await window.api.archiveGame(game._id);
+      await archiveGame(game._id);
     } else {
-      await window.api.deleteGame(game._id);
+      await deleteGame(game._id);
     }
     navigate("..");
     closeDelete();

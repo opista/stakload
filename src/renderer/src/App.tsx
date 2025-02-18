@@ -9,17 +9,17 @@ import {
   ScrollArea,
 } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
+import { useCollectionStore } from "@store/collection.store";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import clsx from "clsx";
-import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./App.module.css";
 
 export const App = () => {
-  const { i18n } = useTranslation();
-
+  const fetchCollections = useCollectionStore(useShallow((state) => state.fetchCollections));
   const { syncOnStartup } = useIntegrationSettingsStore(
     useShallow((state) => ({
       syncOnStartup: state.syncOnStartup,
@@ -29,6 +29,10 @@ export const App = () => {
   if (syncOnStartup) {
     window.api.syncGames();
   }
+
+  useEffect(() => {
+    fetchCollections();
+  }, []);
 
   const theme = createTheme({
     components: {

@@ -34,7 +34,6 @@
   },
   "filters": {
     "ageRatings": "Age ratings",
-    "clearFilters": "Clear filters",
     "createCollection": "Create collection",
     "developers": "Developers",
     "enabled": "Enabled",

@@ -1,4 +1,3 @@
-import { CollectionsHandler } from "@components/CollectionsHandler/CollectionsHandler";
 import { Header } from "@components/Desktop/Header/Header";
 import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
 import { GamesHandler } from "@components/GamesHandler/GamesHandler";
@@ -12,7 +11,6 @@ import classes from "./DesktopLayout.module.css";
 export const DesktopLayout = () => (
   <ModalsProvider>
     <GamesHandler />
-    <CollectionsHandler />
     <AppShell header={{ height: 48 }} navbar={{ breakpoint: "xs", width: 300 }} withBorder={false}>
       <Header />
       <Spotlight />

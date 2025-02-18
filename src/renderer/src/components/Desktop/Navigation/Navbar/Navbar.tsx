@@ -4,7 +4,7 @@ import { QuickLaunchList } from "@components/Desktop/QuickLaunch/QuickLaunchList
 import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
 import Logo from "@components/Logo/Logo";
 import { AppShell, Card, Flex, ScrollArea, Stack } from "@mantine/core";
-import { useGameStore } from "@store/game.store";
+import { useCollectionStore } from "@store/collection.store";
 import type { IconProps } from "@tabler/icons-react";
 import {
   IconBooks,
@@ -23,7 +23,7 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./Navbar.module.css";
 
 export const Navbar = () => {
-  const collections = useGameStore(useShallow((state) => state.collections));
+  const collections = useCollectionStore(useShallow((state) => state.collections));
 
   const iconCache = useMemo(() => {
     const cache = new Map<string, FC<IconProps>>();
