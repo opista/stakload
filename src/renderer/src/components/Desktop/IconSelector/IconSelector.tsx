@@ -1,10 +1,10 @@
+import * as icons from "@icons/index";
+import { filterIcons, IconSearch } from "@icons/index";
 import { Card, Popover, TextInput } from "@mantine/core";
 import { upperFirst } from "lodash-es";
 import { CSSProperties, ReactNode, useMemo, useState } from "react";
 import { FixedSizeGrid } from "react-window";
 
-import { filterIcons, IconSearch } from "../../icons";
-import * as icons from "../../icons";
 import classes from "./IconSelector.module.css";
 
 type IconSelectorProps = {
@@ -36,7 +36,6 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
         <Card
           onClick={() => onSelect?.(Icon.displayName!)}
           padding="xs"
-          shadow="sm"
           style={{
             alignItems: "center",
             backgroundColor:
@@ -56,7 +55,15 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
   };
 
   return (
-    <Popover closeOnEscape onClose={() => setSearch("")} position="bottom" shadow="md" trapFocus withArrow>
+    <Popover
+      arrowPosition="center"
+      closeOnEscape
+      onClose={() => setSearch("")}
+      position="bottom-start"
+      shadow="md"
+      trapFocus
+      withArrow
+    >
       <Popover.Target>{children}</Popover.Target>
       <Popover.Dropdown>
         <TextInput

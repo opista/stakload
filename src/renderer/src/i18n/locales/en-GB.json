@@ -21,6 +21,16 @@
   "collection": {
     "notFound": "Collection not found"
   },
+  "favourites": {
+    "title": "Favourites",
+    "notFoundTitle": "There's nothing here.",
+    "notFoundDescription": "Why not add some favourites?",
+    "libraryButton": "Go to Library"
+  },
+  "library": {
+    "noGamesFound": "No games found",
+    "importGames": "Import games"
+  },
   "common": {
     "delete": "Delete",
     "edit": "Edit",
@@ -34,12 +44,12 @@
   },
   "filters": {
     "ageRatings": "Age ratings",
-    "clearFilters": "Clear filters",
     "createCollection": "Create collection",
     "developers": "Developers",
     "enabled": "Enabled",
     "gameModes": "Game modes",
     "genres": "Genres",
+    "isInstalled": "Installed",
     "libraries": "Libraries",
     "platforms": "Platforms",
     "playerPerspectives": "Player perspectives",
@@ -147,17 +157,19 @@
       "syncOnStartup": "Sync on startup",
       "syncOnStartupInfo": "Fetch game library data when you first open the app. Disabling this option means you will need to manually trigger a sync to update your library"
     },
-    "navigation": {
-      "about": "About",
-      "interface": "Interface",
-      "library": "Library",
-      "shortcuts": "Shortcuts"
-    },
     "notification": {
       "lowBattery": "Notify on low battery",
       "networkDisconnect": "Notify on network disconnect",
       "system": "System"
     }
+  },
+  "navigation": {
+    "home": "Home",
+    "library": "Library",
+    "favourites": "Favourites",
+    "collections": "Collections",
+    "settings": "Settings",
+    "integrations": "Integrations"
   },
   "settingsButton": {
     "shortcut": "Shortcut: {{value}}",
@@ -192,8 +204,7 @@
     "randomGame": "Random game"
   },
   "gamesGrid": {
-    "noGamesFound": "No games found",
-    "importLibrary": "Import library",
+    "noGamesFound": "No games found matching your filters",
     "settings": "Settings"
   }
 }

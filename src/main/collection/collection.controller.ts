@@ -3,9 +3,7 @@ import { IpcHandle } from "@util/ipc/ipc.decorator";
 import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
-import { EVENT_CHANNELS } from "../../preload/channels";
 import { LoggerService } from "../logger/logger.service";
-import { WindowService } from "../window/window.service";
 import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";
 
@@ -13,7 +11,6 @@ import { CollectionService } from "./collection.service";
 export class CollectionController extends IpcEventController {
   constructor(
     private readonly collectionService: CollectionService,
-    private readonly windowService: WindowService,
     readonly logger: LoggerService,
   ) {
     super(logger);
@@ -23,10 +20,7 @@ export class CollectionController extends IpcEventController {
   async createCollection(collection: CollectionStoreModel) {
     this.logHandler(COLLECTION_CHANNELS.CREATE, { name: collection.name });
     try {
-      const created = await this.collectionService.createCollection(collection);
-      this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
-      this.logger.info("Collection created", { id: created._id, name: created.name });
-      return created;
+      return await this.collectionService.createCollection(collection);
     } catch (error) {
       this.logger.error("Failed to create collection", error, { name: collection.name });
       throw error;
@@ -43,14 +37,7 @@ export class CollectionController extends IpcEventController {
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
     this.logHandler(COLLECTION_CHANNELS.UPDATE, { id, updates });
     try {
-      const updated = await this.collectionService.updateCollection(id, updates);
-
-      if (updated) {
-        this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
-        this.logger.info("Collection updated", { id, name: updated?.name });
-      }
-
-      return updated;
+      return await this.collectionService.updateCollection(id, updates);
     } catch (error) {
       this.logger.error("Failed to update collection", error, { id });
       throw error;
@@ -61,14 +48,7 @@ export class CollectionController extends IpcEventController {
   async deleteCollection(id: string) {
     this.logHandler(COLLECTION_CHANNELS.DELETE, { id });
     try {
-      const deleted = await this.collectionService.deleteCollection(id);
-
-      if (deleted) {
-        this.windowService.sendEvent(EVENT_CHANNELS.COLLECTIONS_UPDATED);
-        this.logger.info("Collection deleted", { id });
-      }
-
-      return deleted;
+      return await this.collectionService.deleteCollection(id);
     } catch (error) {
       this.logger.error("Failed to delete collection", error, { id });
       throw error;

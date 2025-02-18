@@ -1,4 +1,3 @@
-import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters } from "@contracts/database/games";
 import { GameActions, GameState } from "@contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
@@ -13,26 +12,20 @@ type GameStore = GameState & GameActions;
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
-      collections: [],
-      collectionsCache: {},
+      gamesDetails: {},
+      gamesList: [],
+      gameFilters: {},
+      newGames: [],
+      quickLaunchGames: [],
+      quickLaunchGamesOrder: [],
 
-      fetchCollectionGames: async (id: string, { forceFetch = false }: { forceFetch?: boolean } = {}) => {
-        if (!forceFetch) {
-          const cachedList = get().collectionsCache[id];
-
-          if (cachedList) {
-            return cachedList;
-          }
-        }
-
-        const list = await window.api.getCollectionGames(id);
-        set({ collectionsCache: { ...get().collectionsCache, [id]: list } });
-
-        return list;
+      archiveGame: async (id: string) => {
+        await window.api.archiveGame(id);
+        await get().refreshGameData();
       },
-      fetchCollections: async () => {
-        const collections = await window.api.getCollections();
-        set({ collections });
+      deleteGame: async (id: string) => {
+        await window.api.deleteGame(id);
+        await get().refreshGameData();
       },
       fetchFilteredGames: async (filters: GameFilters) => {
         return await window.api.getFilteredGames(filters);
@@ -47,26 +40,30 @@ export const useGameStore = create<GameStore>()(
         }));
         return details;
       },
+      fetchGameFilters: async () => {
+        const gameFilters = await window.api.getGameFilters();
+        set({ gameFilters });
+      },
       fetchGamesList: async () => {
-        const games = await window.api.getGamesList();
-        set({ gamesList: games });
+        const gamesList = await window.api.getGamesList();
+        set({ gamesList });
       },
       fetchNewGames: async () => {
-        const games = await window.api.getNewGames();
-        set({ newGames: games });
+        const newGames = await window.api.getNewGames();
+        set({ newGames });
       },
       fetchQuickLaunchGames: async () => {
         const quickLaunchGames = await window.api.getQuickLaunchGames();
         set({ quickLaunchGames });
       },
-      gamesDetails: {},
-      gamesList: [],
-
-      invalidateCollectionCache: () => set({ collectionsCache: {} }),
-      newGames: [],
-      quickLaunchGames: [],
-      quickLaunchGamesOrder: [],
-
+      refreshGameData: async () => {
+        await Promise.all([
+          get().fetchQuickLaunchGames(),
+          get().fetchNewGames(),
+          get().fetchGamesList(),
+          get().fetchGameFilters(),
+        ]);
+      },
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       toggleFavouriteGame: async (id: string) => {
         const game = await window.api.toggleFavouriteGame(id);
@@ -97,9 +94,8 @@ export const useGameStore = create<GameStore>()(
             quickLaunchGamesOrder: [...state.quickLaunchGamesOrder, id],
           };
         });
-      },
-      updateCollection: async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters" | "icon">) => {
-        await window.api.updateCollection(id, updates);
+
+        await get().fetchQuickLaunchGames();
       },
     }),
     {

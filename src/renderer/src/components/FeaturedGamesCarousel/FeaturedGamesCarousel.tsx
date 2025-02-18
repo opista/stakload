@@ -13,7 +13,7 @@ type FeaturedGamesCarouselProps = {
 
 export const FeaturedGamesCarousel = ({ games, title }: FeaturedGamesCarouselProps) => (
   <Stack>
-    <Title order={2}>{title}</Title>
+    <Title order={1}>{title}</Title>
     <Carousel
       align="start"
       classNames={{

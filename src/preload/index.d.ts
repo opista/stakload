@@ -14,14 +14,13 @@ declare global {
       createCollection: (
         collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">,
       ) => Promise<CollectionStoreModel>;
+
       deleteCollection: (id: string) => Promise<boolean>;
       deleteGame: (id: string) => Promise<boolean>;
-      fetch: <T>(...args: Parameters<typeof fetch>) => Promise<T>;
-      getCollectionGames: (id: string) => Promise<GameListModel[]>;
       getCollections: () => Promise<CollectionStoreModel[]>;
       getFilteredGames: (filters?: GameFilters) => Promise<GameListModel[]>;
       getGameById: (id: string) => Promise<GameStoreModel>;
-      getGameFilters: () => Promise<Record<string, { label: string; value: string }>>;
+      getGameFilters: () => Promise<{ [key in keyof GameStoreModel]?: { label: string; value: string }[] }>;
       getGamesList: () => Promise<GameListModel[]>;
       getNewGames: () => Promise<FeaturedGameModel[]>;
       getProtondbTier: (gameId: string) => Promise<string | null>;
@@ -30,7 +29,6 @@ declare global {
       launchGame: (id: string) => void;
       maximizeWindow: () => void;
       minimizeWindow: () => void;
-      onCollectionsUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onIntegrationAuthenticationResult: (
         listener: (event, { library: Library, success: boolean }) => void,

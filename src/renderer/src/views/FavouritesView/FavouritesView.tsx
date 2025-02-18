@@ -1,27 +1,48 @@
+import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
+import { GhostIcon } from "@components/GhostIcon/GhostIcon";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Flex, Group, Title } from "@mantine/core";
+import { Button, Stack, Text, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconStar } from "@tabler/icons-react";
+import { IconCategory, IconStar } from "@tabler/icons-react";
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./FavouritesView.module.css";
 
+const EmptyView = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const onLibraryClick = () => navigate("/desktop/library");
+
+  return (
+    <Stack align="center" className={classes.notFoundContainer} justify="center">
+      <GhostIcon />
+      <div>
+        <Text c="dimmed">{t("favourites.notFoundTitle")}</Text>
+        <Text c="dimmed">{t("favourites.notFoundDescription")}</Text>
+      </div>
+      <Button leftSection={<IconCategory />} onClick={onLibraryClick}>
+        {t("favourites.libraryButton")}
+      </Button>
+    </Stack>
+  );
+};
+
 export const FavouritesView = () => {
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
-  const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }), []);
-
-  if (!games) return null;
+  const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }));
 
   return (
     <div className={classes.container}>
-      <Flex className={classes.header} justify="space-between">
-        <Group align="center" gap="sm">
-          <IconStar size={40} />
-          <Title order={1}>Favourites</Title>
-        </Group>
-      </Flex>
-      <GamesGrid games={games} />
+      <SectionHeading gap="md">
+        <IconStar size={40} />
+        <Title order={1}>{t("favourites.title")}</Title>
+      </SectionHeading>
+      {games?.length ? <GamesGrid games={games} /> : <EmptyView />}
     </div>
   );
 };

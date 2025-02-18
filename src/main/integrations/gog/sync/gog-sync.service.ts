@@ -83,7 +83,7 @@ export class GogLibraryService implements SyncService {
           gameId: String(game.id),
           library: this.library,
           name: game.title,
-          sortableName: game.title.toLowerCase(),
+          sortableName: game.title.toLocaleLowerCase(),
         }));
 
       await this.gameStore.bulkInsertGames(mappedGames);

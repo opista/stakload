@@ -20,19 +20,20 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
   const navigate = useNavigate();
 
-  const { toggleQuickLaunchGame } = useGameStore(
+  const { archiveGame, deleteGame, toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
+      archiveGame: state.archiveGame,
+      deleteGame: state.deleteGame,
+      toggleFavouriteGame: state.toggleFavouriteGame,
       toggleQuickLaunchGame: state.toggleQuickLaunchGame,
     })),
   );
 
-  const toggleFavouriteGame = () => window.api.toggleFavouriteGame(game._id);
-
   const onRemoveConfirm = async (preventReadd: boolean) => {
     if (preventReadd) {
-      await window.api.archiveGame(game._id);
+      await archiveGame(game._id);
     } else {
-      await window.api.deleteGame(game._id);
+      await deleteGame(game._id);
     }
     navigate("..");
     closeDelete();
@@ -55,7 +56,7 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
             <ActionIcon
               aria-label="Favourite"
               icon={game.isFavourite ? IconStarFilled : IconStar}
-              onClick={() => toggleFavouriteGame()}
+              onClick={() => toggleFavouriteGame(game._id)}
             />
             <ActionIcon
               aria-label="Quick access"
