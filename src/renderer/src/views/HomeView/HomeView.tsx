@@ -23,7 +23,7 @@ export const HomeView = () => {
         <GamesCarousel games={quickLaunchGames} title="Continue Playing" />
         <FeaturedGamesCarousel games={newGames} title="Recently Added" />
         <Stack className={classes.contained}>
-          <Title order={2}>Launchers</Title>
+          <Title order={1}>Launchers</Title>
         </Stack>
       </Stack>
     </ScrollArea>

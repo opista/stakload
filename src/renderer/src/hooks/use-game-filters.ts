@@ -52,65 +52,65 @@ export const useLibraryFilters = (currentFilters?: GameFilters) => {
   const { t } = useTranslation();
 
   const formattedFilters = useMemo(() => {
-    if (!currentFilters) return {};
+    if (!currentFilters) return [];
 
-    console.log({ currentFilters, gameFilters });
+    return Object.entries(currentFilters).flatMap<{ key: keyof GameFilters; label: string; value: string }>(
+      ([key, value]) => {
+        switch (key) {
+          case "ageRatings":
+            return (value as string[])
+              ?.map((value) => {
+                const match = ageRatingFilters.find((filter) => filter.value === value);
 
-    return Object.entries(currentFilters).flatMap(([key, value]) => {
-      switch (key) {
-        case "ageRatings":
-          return (value as string[])
-            ?.map((value) => {
-              const match = ageRatingFilters.find((filter) => filter.value === value);
+                if (!match) return null;
 
-              if (!match) return null;
+                return {
+                  key,
+                  label: t(match.label),
+                  value: match.value,
+                };
+              })
+              .filter(Boolean);
+          case "isInstalled":
+            return value ? [{ key, label: t("filters.isInstalled"), value: true }] : [];
+          case "libraries":
+            return (value as string[])
+              ?.map((value) => {
+                const match = libraryFilters.find((filter) => filter.value === value);
 
-              return {
-                key,
-                label: t(match.label),
-                value: match.value,
-              };
-            })
-            .filter(Boolean);
-        case "isInstalled":
-          return value ? [{ key, label: t("filters.isInstalled"), value: true }] : [];
-        case "libraries":
-          return (value as string[])
-            ?.map((value) => {
-              const match = libraryFilters.find((filter) => filter.value === value);
+                if (!match) return null;
 
-              if (!match) return null;
+                return {
+                  key,
+                  label: match.label,
+                  value: match.value,
+                };
+              })
+              .filter(Boolean);
+          case "developers":
+          case "gameModes":
+          case "genres":
+          case "platforms":
+          case "playerPerspectives":
+          case "publishers":
+            return (value as string[])
+              ?.map((value) => {
+                const match = gameFilters?.[key]?.find((filter) => filter.value === value);
 
-              return {
-                key,
-                label: match.label,
-                value: match.value,
-              };
-            })
-            .filter(Boolean);
-        case "developers":
-        case "gameModes":
-        case "genres":
-        case "platforms":
-        case "playerPerspectives":
-        case "publishers":
-          return (value as string[])
-            ?.map((value) => {
-              const match = gameFilters?.[key]?.find((filter) => filter.value === value);
+                if (!match) return null;
 
-              if (!match) return null;
-
-              return {
-                key,
-                label: match.label,
-                value: match.value,
-              };
-            })
-            .filter(Boolean);
-        default:
-          return [];
-      }
-    }) as any[];
+                return {
+                  key,
+                  label: match.label,
+                  value: match.value,
+                };
+              })
+              .filter(Boolean);
+          default:
+            return [];
+        }
+      },
+    );
   }, [currentFilters, gameFilters]);
 
   return {

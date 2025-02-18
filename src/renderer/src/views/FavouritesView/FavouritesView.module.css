@@ -4,6 +4,3 @@
   gap: var(--mantine-spacing-md);
   width: 100%;
 }
-.header {
-  padding: 0 var(--mantine-spacing-md);
-}

@@ -1,0 +1,14 @@
+.divider {
+  --divider-color: var(--mantine-color-text);
+}
+
+.pillContainer {
+  flex: 1;
+}
+
+.pill {
+  padding-left: 12px;
+  padding-right: 2px;
+  color: var(--mantine-primary-color-contrast);
+  background-color: var(--mantine-primary-color-filled);
+}

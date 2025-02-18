@@ -30,7 +30,7 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
 
   return (
     <Stack>
-      <Title order={2}>{title}</Title>
+      <Title order={1}>{title}</Title>
       <Carousel
         align="start"
         classNames={{

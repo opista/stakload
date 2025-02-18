@@ -1,6 +1,7 @@
+import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Flex, Group, Title } from "@mantine/core";
+import { Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconStar } from "@tabler/icons-react";
 import { useShallow } from "zustand/react/shallow";
@@ -15,12 +16,10 @@ export const FavouritesView = () => {
 
   return (
     <div className={classes.container}>
-      <Flex className={classes.header} justify="space-between">
-        <Group align="center" gap="sm">
-          <IconStar size={40} />
-          <Title order={1}>Favourites</Title>
-        </Group>
-      </Flex>
+      <SectionHeading gap="md">
+        <IconStar size={40} />
+        <Title order={1}>Favourites</Title>
+      </SectionHeading>
       <GamesGrid games={games} />
     </div>
   );

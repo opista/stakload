@@ -2,6 +2,7 @@ import { GameCover } from "@components/GameCover/GameCover";
 import { GameListModel } from "@contracts/database/games";
 import { Box, Button, Stack, Text } from "@mantine/core";
 import { IconPacman, IconSquareRoundedPlus } from "@tabler/icons-react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
@@ -23,6 +24,7 @@ type GamesGridProps = {
 export const GamesGrid = ({ games }: GamesGridProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const gridRef = useRef<FixedSizeGrid>(null);
 
   const calculateCellSize = (width: number, columnCount: number) => {
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
@@ -43,6 +45,10 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
   };
 
   const onImportClick = () => navigate("/desktop/settings/integrations");
+
+  useEffect(() => {
+    gridRef.current?.scrollToItem({ columnIndex: 0, rowIndex: 0 });
+  }, [games]);
 
   if (!games?.length) {
     return (
@@ -102,6 +108,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
               height={height}
               itemData={games}
               itemKey={(args) => itemKey(args, columnCount)}
+              ref={gridRef}
               rowCount={rowCount}
               rowHeight={rowHeight}
               width={width}
