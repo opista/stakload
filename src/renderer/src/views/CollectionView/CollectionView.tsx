@@ -118,7 +118,7 @@ export const CollectionView = () => {
             </ActionIcon>
           </Group>
         </Group>
-        <FilterControl collection={collection} />
+        <FilterControl collection={collection} onChange={setFilters} />
       </SectionHeading>
       <GamesGrid games={games} />
     </div>

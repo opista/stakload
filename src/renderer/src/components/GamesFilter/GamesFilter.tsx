@@ -97,12 +97,14 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
           {t("filters.title")}
         </Title>
         <Grid>
-          <Grid.Col span={6}>
+          <Grid.Col span={12}>
             <Checkbox
               checked={filters.isInstalled || false}
               label={t("filters.isInstalled")}
               onChange={(event) => onFilterChange("isInstalled")(event.target.checked ? true : null)}
             />
+          </Grid.Col>
+          <Grid.Col span={6}>
             <MultiSelect
               className={classes.select}
               clearable

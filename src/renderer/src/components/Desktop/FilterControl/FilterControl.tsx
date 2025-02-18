@@ -29,11 +29,14 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
 
   const onRemove = (key: string, value: string) => {
     setHasUnsavedChanges(true);
-    setFilters((prev) => ({
-      ...prev,
-      [key]: key === "isInstalled" ? undefined : prev?.[key]?.filter((v) => v !== value),
-    }));
-    onChange?.(filters);
+    setFilters((prev) => {
+      const updatedFilters = {
+        ...prev,
+        [key]: key === "isInstalled" ? undefined : prev?.[key]?.filter((v) => v !== value),
+      };
+      onChange?.(updatedFilters);
+      return updatedFilters;
+    });
   };
 
   const onUpdate = (filters: GameFilters) => {
