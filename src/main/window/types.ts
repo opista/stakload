@@ -11,7 +11,7 @@ export type NetworkRequestHandler = (
 export type ChildWindowOptions = {
   clearCookies?: boolean;
   height: number;
-  networkRequestHandler: NetworkRequestHandler;
+  networkRequestHandler?: NetworkRequestHandler;
   sessionId: string;
   url: string;
   width: number;

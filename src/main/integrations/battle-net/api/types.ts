@@ -11,3 +11,12 @@ export interface BattleNetTokenConfig {
   expiresAt: number;
   refreshToken: string;
 }
+
+export type BattleNetGame = {
+  localizedGameName: string;
+  titleId: number;
+};
+
+export type GameAccounts = {
+  gameAccounts: BattleNetGame[];
+};

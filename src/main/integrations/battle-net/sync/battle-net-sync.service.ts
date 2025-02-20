@@ -1,5 +1,4 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
-import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
@@ -30,7 +29,8 @@ export class BattleNetLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
-    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
+    return null;
+    // return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {
@@ -64,88 +64,46 @@ export class BattleNetLibraryService implements SyncService {
   async addNewGames() {
     this.logger.info("Adding new Battle.net games to library");
     try {
-      const token = await this.battleNetApiService.getValidToken();
+      const ownedGames = await this.battleNetApiService.getOwnedGames();
 
-      if (!token) {
-        this.logger.error("Battle.net Integration not set up: no valid token");
-        throw new Error("Battle.net Integration not set up");
-      }
+      console.log({ ownedGames });
 
-      const ownedGames = await this.battleNetApiService.getOwnedGames(token);
       const existingGames = await this.gameStore.findGamesByGameIds(
-        ownedGames.map((game) => String(game.id)),
+        ownedGames.map((game) => String(game.titleId)),
         this.library,
       );
       const existingIds = existingGames.map((game) => game.gameId);
 
       const mappedGames = ownedGames
-        .filter((game) => !existingIds.includes(String(game.id)))
+        .filter((game) => !existingIds.includes(String(game.titleId)))
         .map((game) => ({
-          gameId: String(game.id),
+          gameId: String(game.titleId),
           library: this.library,
-          name: game.title,
-          sortableName: game.title.toLocaleLowerCase(),
+          name: game.localizedGameName,
+          sortableName: game.localizedGameName.toLocaleLowerCase(),
         }));
 
       await this.gameStore.bulkInsertGames(mappedGames);
       this.logger.info("New Battle.net games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
+      console.log({ err });
       this.logger.error("Failed to add new Battle.net games", err);
       return 0;
     }
   }
 
-  async isIntegrationValid(): Promise<boolean> {
-    this.logger.debug("Validating Battle.net integration");
-    return this.battleNetApiService
-      .getValidToken()
-      .then(() => true)
-      .catch((error) => {
-        this.logger.error("Battle.net integration validation failed", error);
-        return false;
-      });
-  }
-
-  private async handleAuthenticationResponse(
-    window: BrowserWindow,
-    _event: unknown,
-    url: string,
-    _httpResponseCode: number,
-    _httpStatusText: string,
-  ) {
-    this.logger.debug("Handling Battle.net authentication response", { url });
-    const code = new URL(url).searchParams.get("code");
-
-    if (code) {
-      window.close();
-      try {
-        const success = await this.battleNetApiService
-          .getAuthToken(code)
-          .then(() => true)
-          .catch(() => false);
-        this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
-          library: this.library,
-          success,
-        });
-        this.logger.info("Battle.net authentication completed", { success });
-      } catch (error) {
-        this.logger.error("Battle.net authentication error", error);
-      }
-    }
-  }
-
   async authenticate() {
-    this.logger.info("Starting Battle.net authentication flow");
-    const window = await this.windowService.createChildWindow({
-      clearCookies: false,
-      height: 670,
-      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
-      sessionId: "battle-net-auth",
-      url: "https://account.battle.net:443/oauth2/authorization/account-settings",
-      width: 400,
+    this.logger.info("Starting Battle.net authentication");
+    const success = await this.battleNetApiService.authenticate();
+
+    this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+      library: this.library,
+      success,
     });
-    await window.loadURL("https://account.battle.net/api/");
-    window.show();
+  }
+
+  async isIntegrationValid(): Promise<boolean> {
+    return this.battleNetApiService.isAuthenticated();
   }
 }

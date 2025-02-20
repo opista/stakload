@@ -182,10 +182,10 @@ export class WindowService {
       });
 
       integrationWindow.webContents.on("did-navigate", (...args) => {
-        this.logger.debug("Child window navigated", { url: args[2] });
-        networkRequestHandler(integrationWindow, ...args);
+        this.logger.debug("Child window navigated", { url: args[1] });
+        networkRequestHandler?.(integrationWindow, ...args);
       });
-      integrationWindow.loadURL(url);
+      await integrationWindow.loadURL(url);
 
       this.logger.info("Child window created", { url });
 
