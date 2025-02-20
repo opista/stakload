@@ -61,6 +61,7 @@ $ npm run build:linux
     - Should be easily navigable with a controller
   - System storage usage screen(?)
     - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
+  - Fix bug with full window scrolling rather than just the main contents
 
 - Backend
   - Add endpoint to manually add external games
