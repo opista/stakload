@@ -9,6 +9,7 @@ export type NetworkRequestHandler = (
 ) => void;
 
 export type ChildWindowOptions = {
+  clearCookies?: boolean;
   height: number;
   networkRequestHandler: NetworkRequestHandler;
   sessionId: string;

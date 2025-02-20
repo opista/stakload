@@ -2,6 +2,11 @@ import { Library } from "@contracts/database/games";
 import { SteamIntegrationDetails } from "@contracts/integrations/steam";
 
 export type IntegrationSettingsState = {
+  battleNetIntegration?: {
+    accessToken: string;
+    expiresAt: number;
+    refreshToken: string;
+  };
   gogIntegration?: {
     accessToken: string;
     expiresAt: number;

@@ -8,17 +8,18 @@ import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
-import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
+import { BattleNetApiService } from "../api/battle-net-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
+
 @Service()
-export class GogLibraryService implements SyncService {
-  library: Library = "gog";
+export class BattleNetLibraryService implements SyncService {
+  library: Library = "battle-net";
   private installedGamesStrategy: InstalledGamesStrategy;
 
   constructor(
     private readonly gameStore: GameStore,
-    private readonly gogApiService: GogApiService,
+    private readonly battleNetApiService: BattleNetApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly logger: LoggerService,
     private readonly trulaunchApiClient: TrulaunchApiClient,
@@ -28,12 +29,12 @@ export class GogLibraryService implements SyncService {
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
+    this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
     return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {
-    this.logger.info("Updating installed GOG games");
+    this.logger.info("Updating installed Battle.net games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
@@ -61,16 +62,16 @@ export class GogLibraryService implements SyncService {
   }
 
   async addNewGames() {
-    this.logger.info("Adding new GOG games to library");
+    this.logger.info("Adding new Battle.net games to library");
     try {
-      const token = await this.gogApiService.getValidToken();
+      const token = await this.battleNetApiService.getValidToken();
 
       if (!token) {
-        this.logger.error("GOG Integration not set up: no valid token");
-        throw new Error("GOG Integration not set up");
+        this.logger.error("Battle.net Integration not set up: no valid token");
+        throw new Error("Battle.net Integration not set up");
       }
 
-      const ownedGames = await this.gogApiService.getOwnedGames(token);
+      const ownedGames = await this.battleNetApiService.getOwnedGames(token);
       const existingGames = await this.gameStore.findGamesByGameIds(
         ownedGames.map((game) => String(game.id)),
         this.library,
@@ -87,21 +88,21 @@ export class GogLibraryService implements SyncService {
         }));
 
       await this.gameStore.bulkInsertGames(mappedGames);
-      this.logger.info("New GOG games added", { count: mappedGames.length });
+      this.logger.info("New Battle.net games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
-      this.logger.error("Failed to add new GOG games", err);
+      this.logger.error("Failed to add new Battle.net games", err);
       return 0;
     }
   }
 
   async isIntegrationValid(): Promise<boolean> {
-    this.logger.debug("Validating GOG integration");
-    return this.gogApiService
+    this.logger.debug("Validating Battle.net integration");
+    return this.battleNetApiService
       .getValidToken()
       .then(() => true)
       .catch((error) => {
-        this.logger.error("GOG integration validation failed", error);
+        this.logger.error("Battle.net integration validation failed", error);
         return false;
       });
   }
@@ -113,38 +114,38 @@ export class GogLibraryService implements SyncService {
     _httpResponseCode: number,
     _httpStatusText: string,
   ) {
-    this.logger.debug("Handling GOG authentication response", { url });
-    if (url.includes("on_login_success")) {
-      const code = new URL(url).searchParams.get("code");
+    this.logger.debug("Handling Battle.net authentication response", { url });
+    const code = new URL(url).searchParams.get("code");
 
-      if (code) {
-        window.close();
-        try {
-          const success = await this.gogApiService
-            .getAuthToken(code)
-            .then(() => true)
-            .catch(() => false);
-          this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
-            library: this.library,
-            success,
-          });
-          this.logger.info("GOG authentication completed", { success });
-        } catch (error) {
-          this.logger.error("GOG authentication error", error);
-        }
+    if (code) {
+      window.close();
+      try {
+        const success = await this.battleNetApiService
+          .getAuthToken(code)
+          .then(() => true)
+          .catch(() => false);
+        this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+          library: this.library,
+          success,
+        });
+        this.logger.info("Battle.net authentication completed", { success });
+      } catch (error) {
+        this.logger.error("Battle.net authentication error", error);
       }
     }
   }
 
   async authenticate() {
-    this.logger.info("Starting GOG authentication flow");
+    this.logger.info("Starting Battle.net authentication flow");
     const window = await this.windowService.createChildWindow({
-      height: 430,
+      clearCookies: false,
+      height: 670,
       networkRequestHandler: this.handleAuthenticationResponse.bind(this),
-      sessionId: "gog-auth",
-      url: `https://auth.gog.com/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&layout=client2`,
-      width: 410,
+      sessionId: "battle-net-auth",
+      url: "https://account.battle.net:443/oauth2/authorization/account-settings",
+      width: 400,
     });
+    await window.loadURL("https://account.battle.net/api/");
     window.show();
   }
 }
