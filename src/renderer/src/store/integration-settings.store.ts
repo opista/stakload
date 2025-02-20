@@ -14,6 +14,7 @@ export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
   persist(
     (set) => ({
       integrationsEnabled: {
+        "battle-net": false,
         "epic-game-store": false,
         gog: false,
         steam: false,
