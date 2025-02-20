@@ -1,5 +1,27 @@
 [
   {
+    "name": "brand-battle-net",
+    "category": "Brand",
+    "styles": {
+      "outline": {
+        "version": "1",
+        "unicode": "1"
+      }
+    },
+    "tags": [
+      "technology",
+      "video",
+      "game",
+      "digital",
+      "distribution",
+      "software",
+      "player",
+      "pc",
+      "battle.net",
+      "blizzard"
+    ]
+  },
+  {
     "name": "brand-epic-games",
     "category": "Brand",
     "styles": {
@@ -52,6 +74,6 @@
         "unicode": "1"
       }
     },
-    "tags": ["technology", "video", "game", "digital", "software", "steam"]
+    "tags": ["technology", "video", "game", "digital", "software", "steam", "steamdeck"]
   }
 ]

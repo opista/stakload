@@ -30,6 +30,10 @@ const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
 
 const libraryFilters: { label: string; value: Library }[] = [
   {
+    label: "Battle.net",
+    value: "battle-net",
+  },
+  {
     label: "Epic Game Store",
     value: "epic-game-store",
   },

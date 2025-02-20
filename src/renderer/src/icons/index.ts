@@ -1,3 +1,4 @@
+export { IconBrandBattleNet } from "./IconBrandBattleNet";
 export { IconBrandEpicGames } from "./IconBrandEpicGames";
 export { IconBrandFandom } from "./IconBrandFandom";
 export { IconBrandGog } from "./IconBrandGog";

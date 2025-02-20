@@ -1,5 +1,7 @@
 // These should map to the IGDB library names
-export type Library = "epic-game-store" | "gog" | "steam";
+// TODO - With the addition of battle-net, this now doesn't. I don't know what
+// the impact of this will be
+export type Library = "battle-net" | "epic-game-store" | "gog" | "steam";
 
 export type EpicLibraryMeta = {
   appName: string;
