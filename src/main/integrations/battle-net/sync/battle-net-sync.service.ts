@@ -1,4 +1,6 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { mapSortableName } from "@util/map-sortable-name";
+import { removeSpecialChars } from "@util/remove-special-chars";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
@@ -29,6 +31,7 @@ export class BattleNetLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
+    // TODO: Implement this when IGDB support Battle.net games
     return null;
     // return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
   }
@@ -37,6 +40,8 @@ export class BattleNetLibraryService implements SyncService {
     this.logger.info("Updating installed Battle.net games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
+
+    console.dir({ installedGames }, { depth: Infinity });
 
     const currentlyInstalledGames = await this.gameStore.findFilteredGames(
       {
@@ -53,8 +58,19 @@ export class BattleNetLibraryService implements SyncService {
       this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
     );
 
-    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+    // TODO: Maybe rather than upsert, we should check if the game already exists and update it if it does. If it doesn't, we should insert it.
+    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails, name }) =>
+      this.gameStore.updateGameByGameId(
+        gameId,
+        {
+          installationDetails,
+          isInstalled: true,
+          library: this.library,
+          name,
+          sortableName: mapSortableName(name),
+        },
+        { upsert: true },
+      ),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
@@ -66,8 +82,6 @@ export class BattleNetLibraryService implements SyncService {
     try {
       const ownedGames = await this.battleNetApiService.getOwnedGames();
 
-      console.log({ ownedGames });
-
       const existingGames = await this.gameStore.findGamesByGameIds(
         ownedGames.map((game) => String(game.titleId)),
         this.library,
@@ -76,12 +90,16 @@ export class BattleNetLibraryService implements SyncService {
 
       const mappedGames = ownedGames
         .filter((game) => !existingIds.includes(String(game.titleId)))
-        .map((game) => ({
-          gameId: String(game.titleId),
-          library: this.library,
-          name: game.localizedGameName,
-          sortableName: game.localizedGameName.toLocaleLowerCase(),
-        }));
+        .map((game) => {
+          const name = removeSpecialChars(game.localizedGameName);
+          const sortableName = mapSortableName(name);
+          return {
+            gameId: String(game.titleId),
+            library: this.library,
+            name,
+            sortableName,
+          };
+        });
 
       await this.gameStore.bulkInsertGames(mappedGames);
       this.logger.info("New Battle.net games added", { count: mappedGames.length });

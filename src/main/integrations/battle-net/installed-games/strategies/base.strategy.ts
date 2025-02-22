@@ -1,9 +1,13 @@
+import { mapSortableName } from "@util/map-sortable-name";
 import fs from "fs/promises";
 import path from "path";
+import protobuf from "protobufjs";
 import { Service } from "typedi";
 
 import { LoggerService } from "../../../../logger/logger.service";
-import { BattleNetInstallationData, InstalledGameData, InstalledGamesStrategy } from "../types";
+import { databaseSchema } from "../../data/database-schema";
+import { getBattleNetGameByProductId } from "../../data/games";
+import { InstalledGameData, InstalledGamesStrategy } from "../types";
 
 @Service()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
@@ -13,36 +17,47 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
   constructor(protected readonly logger: LoggerService) {}
 
   async getInstalledGames(): Promise<InstalledGameData[]> {
-    const battleNetPath = await this.getApplicationPath();
-
     try {
-      // Battle.net stores game info in Product.db
-      const productDbPath = path.join(battleNetPath, "Product.db");
-      const content = await fs.readFile(productDbPath, "utf-8");
-      const installations = this.parseProductDb(content);
+      const battleNetPath = await this.getApplicationPath();
+      const dbPath = path.join(battleNetPath, "product.db");
 
-      this.logger.info("Fetched installed Battle.net games", { productDbPath });
+      const buffer = await fs.readFile(dbPath);
+      const root = protobuf.Root.fromJSON(databaseSchema);
+      const decoder = root.lookupType("Database");
 
-      return installations.map((install) => ({
-        gameId: install.productId,
-        installationDetails: {
-          installLocation: install.installLocation,
-          installedAt: install.lastPlayed ? new Date(install.lastPlayed) : new Date(),
-        },
-      }));
-    } catch (error: unknown) {
-      this.logger.error("Failed to get installed Battle.net games", { error });
-      return [];
-    }
-  }
+      const data = decoder.decode(buffer);
+      const message = decoder.toObject(data, {
+        longs: Number,
+        defaults: true,
+      });
 
-  private parseProductDb(content: string): BattleNetInstallationData[] {
-    try {
-      // Battle.net's Product.db is SQLite, we'll need to parse it
-      // This is a placeholder - actual implementation would use better-sqlite3 or similar
-      return [];
-    } catch (error) {
-      this.logger.error("Failed to parse Battle.net Product.db", error);
+      this.logger.debug("Found Battle.net installations", { installations: message.productInstall.length });
+
+      return message.productInstall
+        .filter((product) => !["agent", "bna"].includes(product.productCode))
+        .map((product) => {
+          const game = getBattleNetGameByProductId(product.productCode);
+
+          if (!game) {
+            this.logger.warn("Game not found for product code", { productCode: product.productCode });
+            return null;
+          }
+
+          return {
+            gameId: product.productCode,
+            installationDetails: {
+              installLocation: product.settings.installPath,
+              installedAt: new Date(),
+            },
+            library: "battle-net",
+            name: game?.name,
+            sortableName: mapSortableName(game?.name),
+          };
+        })
+        .filter(Boolean);
+    } catch (err: unknown) {
+      console.error(err);
+      this.logger.error("Failed to get installed Battle.net games", { err });
       return [];
     }
   }

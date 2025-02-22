@@ -12,6 +12,7 @@ export interface BattleNetInstallationData {
 export interface InstalledGameData {
   gameId: string;
   installationDetails: GameInstallationDetails;
+  name: string;
 }
 
 export interface InstalledGamesStrategy {

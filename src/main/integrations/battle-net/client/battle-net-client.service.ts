@@ -6,7 +6,6 @@ import { LibraryClientService } from "../../../game-lifecycle/types";
 import { LoggerService } from "../../../logger/logger.service";
 
 const BATTLE_NET_LAUNCHER_BASE_URL = "battlenet://";
-const BATTLE_NET_LAUNCH_URL = "battlenet:://"; // Note the double colon for launching
 
 @Service()
 export class BattleNetClientService implements LibraryClientService {
@@ -16,7 +15,7 @@ export class BattleNetClientService implements LibraryClientService {
     this.logger.info("Initiating Battle.net installation", { gameId: game.gameId });
     try {
       // TODO: Battle.net uses a different format for game IDs: "pro" for Overwatch 2, "wow" for World of Warcraft, etc.
-      await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}install=s2`);
+      await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}install=${game.gameId}`);
       this.logger.debug("Battle.net installation launched successfully", { gameId: game.gameId });
     } catch (error) {
       this.logger.error("Failed to open Battle.net installer", error, { gameId: game.gameId });
@@ -27,7 +26,7 @@ export class BattleNetClientService implements LibraryClientService {
   async launch(game: GameStoreModel): Promise<void> {
     this.logger.info("Launching game via Battle.net", { gameId: game.gameId });
     try {
-      await shell.openExternal(`${BATTLE_NET_LAUNCH_URL}${game.gameId}`);
+      await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}${game.gameId}`);
       this.logger.debug("Game launched successfully via Battle.net", { gameId: game.gameId });
     } catch (error) {
       this.logger.error("Failed to launch game via Battle.net", error, { gameId: game.gameId });
