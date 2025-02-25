@@ -145,11 +145,20 @@ export class WindowService {
     return this.browserWindow?.webContents.send(channel, ...args);
   }
 
-  async createChildWindow({ height, networkRequestHandler, sessionId, url, width }: ChildWindowOptions) {
+  async createChildWindow({
+    clearCookies = true,
+    height,
+    networkRequestHandler,
+    sessionId,
+    url,
+    width,
+  }: ChildWindowOptions) {
     try {
       this.logger.debug("Creating child window", { height, sessionId, url, width });
       const integrationSession = session.fromPartition(sessionId);
-      await integrationSession.clearStorageData({ storages: ["cookies"] });
+      if (clearCookies) {
+        await integrationSession.clearStorageData({ storages: ["cookies"] });
+      }
 
       const integrationWindow = new BrowserWindow({
         alwaysOnTop: true,
@@ -173,12 +182,14 @@ export class WindowService {
       });
 
       integrationWindow.webContents.on("did-navigate", (...args) => {
-        this.logger.debug("Child window navigated", { url: args[2] });
-        networkRequestHandler(integrationWindow, ...args);
+        this.logger.debug("Child window navigated", { url: args[1] });
+        networkRequestHandler?.(integrationWindow, ...args);
       });
-      integrationWindow.loadURL(url);
-      integrationWindow.show();
-      this.logger.info("Child window created and displayed", { url });
+      await integrationWindow.loadURL(url);
+
+      this.logger.info("Child window created", { url });
+
+      return integrationWindow;
     } catch (error: unknown) {
       this.logger.error("Error creating child window", { error, sessionId, url });
       throw error;

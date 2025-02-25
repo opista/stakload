@@ -6,7 +6,6 @@ import { OwnedGame } from "../../legendary/types";
 
 export const mapOwnedGameToGameStoreModel = (game: OwnedGame): Partial<GameStoreModel> => {
   const name = removeSpecialChars(game.app_title);
-  const sortableName = mapSortableName(name);
   return {
     library: "epic-game-store",
     libraryMeta: {
@@ -14,6 +13,6 @@ export const mapOwnedGameToGameStoreModel = (game: OwnedGame): Partial<GameStore
       namespace: game.metadata.namespace,
     },
     name,
-    sortableName,
+    sortableName: mapSortableName(name),
   };
 };

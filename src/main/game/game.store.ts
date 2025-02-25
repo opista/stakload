@@ -136,9 +136,13 @@ export class GameStore {
     }
   }
 
-  async updateGameByGameId(gameId: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
+  async updateGameByGameId(
+    gameId: string,
+    updates: Partial<Omit<GameStoreModel, "createdAt">>,
+    { upsert = false }: { upsert?: boolean } = {},
+  ) {
     try {
-      return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true });
+      return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true, upsert });
     } catch (error) {
       this.logger.error("Database error while updating game by game id", error, { gameId });
       throw error;

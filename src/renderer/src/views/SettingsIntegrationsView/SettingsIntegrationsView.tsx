@@ -18,6 +18,7 @@ type ValidationState = {
 type ValidationAction = { library: Library; success: boolean; type: "SET_VALIDATION" } | { type: "RESET" };
 
 const initialValidationState: ValidationState = {
+  "battle-net": null,
   steam: null,
   "epic-game-store": null,
   gog: null,
@@ -320,6 +321,66 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
   );
 };
 
+const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
+  const { battleNetIntegrationEnabled, toggleIntegrationEnabled } = useIntegrationSettingsStore(
+    useShallow((state) => ({
+      battleNetIntegrationEnabled: state.integrationsEnabled["battle-net"],
+      toggleIntegrationEnabled: state.toggleIntegrationEnabled,
+    })),
+  );
+  const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onAuthenticate = () => {
+    setIsLoading(true);
+    window.api.authenticateIntegration("battle-net");
+  };
+
+  const onTest = async () => {
+    setIsLoading(true);
+    const result = await window.api.testLibraryIntegration("battle-net");
+    console.log("result", result);
+    setIsLoading(false);
+  };
+
+  return (
+    <>
+      <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "Battle.net" })} title="Battle.net" />
+      <SettingsCheckbox
+        checked={battleNetIntegrationEnabled}
+        disabled={isLoading}
+        label={t("common.enabled")}
+        onCheckboxChange={() => toggleIntegrationEnabled("battle-net")}
+      />
+      <Flex justify="flex-end">
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedCheckFilled}
+          iconProps={{ className: classes.check }}
+          mounted={isValid === true}
+          text={t("common.success")}
+        />
+        <SettingsStatusIndicator
+          className={classes.statusIndicator}
+          icon={IconSquareRoundedXFilled}
+          iconProps={{ className: classes.cross }}
+          mounted={isValid === false}
+          text={t("common.failure")}
+        />
+        <Flex gap="xs">
+          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+            {t("settings.integration.test")}
+          </Button>
+
+          <Button loading={isLoading} onClick={onAuthenticate} size="xs">
+            {t("settings.integration.authenticate")}
+          </Button>
+        </Flex>
+      </Flex>
+    </>
+  );
+};
+
 /**
  * TODO - Should have a section per
  * integration. We'll start with Steam which
@@ -351,6 +412,7 @@ export const SettingsIntegrationsView = () => {
       <Divider className={classes.divider} />
       <GogSettings isValid={validationState.gog} />
       <Divider className={classes.divider} />
+      <BattleNetSettings isValid={validationState["battle-net"]} />
     </div>
   );
 };

@@ -1,4 +1,6 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { mapSortableName } from "@util/map-sortable-name";
+import { removeSpecialChars } from "@util/remove-special-chars";
 import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
@@ -11,6 +13,7 @@ import { WindowService } from "../../../window/window.service";
 import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
+
 @Service()
 export class GogLibraryService implements SyncService {
   library: Library = "gog";
@@ -76,15 +79,17 @@ export class GogLibraryService implements SyncService {
         this.library,
       );
       const existingIds = existingGames.map((game) => game.gameId);
-
       const mappedGames = ownedGames
         .filter((game) => !existingIds.includes(String(game.id)))
-        .map((game) => ({
-          gameId: String(game.id),
-          library: this.library,
-          name: game.title,
-          sortableName: game.title.toLocaleLowerCase(),
-        }));
+        .map((game) => {
+          const name = removeSpecialChars(game.title);
+          return {
+            gameId: String(game.id),
+            library: this.library,
+            name,
+            sortableName: mapSortableName(name),
+          };
+        });
 
       await this.gameStore.bulkInsertGames(mappedGames);
       this.logger.info("New GOG games added", { count: mappedGames.length });
@@ -138,12 +143,13 @@ export class GogLibraryService implements SyncService {
 
   async authenticate() {
     this.logger.info("Starting GOG authentication flow");
-    this.windowService.createChildWindow({
+    const window = await this.windowService.createChildWindow({
       height: 430,
       networkRequestHandler: this.handleAuthenticationResponse.bind(this),
       sessionId: "gog-auth",
       url: `https://auth.gog.com/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&layout=client2`,
       width: 410,
     });
+    window.show();
   }
 }
