@@ -206,5 +206,9 @@
   "gamesGrid": {
     "noGamesFound": "No games found matching your filters",
     "settings": "Settings"
+  },
+  "quickLaunch": {
+    "install": "Install",
+    "launch": "Launch"
   }
 }

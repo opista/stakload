@@ -5,6 +5,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { Flex, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 import classes from "./QuickLaunchItem.module.css";
 
@@ -14,6 +15,7 @@ type QuickLaunchItemProps = {
 };
 
 export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
+  const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
 
   const style = {
@@ -26,7 +28,11 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   const onClick = () => {
     if (editMode) return;
 
-    window.api.launchGame(game._id);
+    if (game.isInstalled) {
+      return window.api.launchGame(game._id);
+    }
+
+    return window.api.installGame(game._id);
   };
 
   return (
@@ -46,7 +52,7 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
           <Group className={classes.launchGroup} gap={4}>
             <IconPlayerPlayFilled size={12} />
             <Text className={classes.launchText} size="xs">
-              Launch
+              {game.isInstalled ? t("quickLaunch.launch") : t("quickLaunch.install")}
             </Text>
           </Group>
         </Stack>
