@@ -1,4 +1,4 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { Library } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { GameStore } from "../game/game.store";
@@ -9,8 +9,8 @@ import { WindowService } from "../window/window.service";
 import { LibraryClientRegistryService } from "./library-client-registry/library-client-registry.service";
 import { LaunchResult, LibraryClientService } from "./types";
 
-const POLLING_INTERVAL = 2000; // 2 seconds
-const MAX_POLLING_TIME = 60000; // 1 minute
+const POLLING_INTERVAL = 2000;
+const MAX_POLLING_TIME = 60000;
 
 @Service()
 export class GameLifecycleService {
@@ -29,31 +29,6 @@ export class GameLifecycleService {
   private getLauncher(library: Library): LibraryClientService {
     this.logger.debug("Getting launcher for library", { library });
     return this.libraryClientRegistryService.getLibrary(library);
-  }
-
-  private async pollForGameProcess(game: GameStoreModel): Promise<number | null> {
-    const startTime = Date.now();
-    this.logger.debug("Starting to poll for game process", {
-      gameId: game._id,
-      installPath: game.installationDetails?.installLocation,
-    });
-
-    while (Date.now() - startTime < MAX_POLLING_TIME) {
-      const pid = await this.processMonitor.findProcessByInstallPath(game.installationDetails?.installLocation || "");
-
-      if (pid) {
-        this.logger.info("Game process found", { gameId: game._id, pid });
-        return pid;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL));
-    }
-
-    this.logger.warn("Game process not found after timeout", {
-      gameId: game._id,
-      timeoutMs: MAX_POLLING_TIME,
-    });
-    return null;
   }
 
   private watchGameProcess(pid: number, gameName: string) {
@@ -78,12 +53,24 @@ export class GameLifecycleService {
       this.logger.info("Launching game", { id, name: game.name, library: game.library });
       await this.getLauncher(game.library).launch(game);
 
-      const pid = await this.pollForGameProcess(game);
+      if (!game.installationDetails?.installLocation) {
+        this.logger.error("Game launch failed - game doesn't have installation data", { id, name: game.name });
+        return {
+          error: "Game installation details not found",
+          success: false,
+        };
+      }
+
+      const pid = await this.processMonitor.waitForProcess(game.installationDetails?.installLocation, {
+        maxPollingTime: MAX_POLLING_TIME,
+        pollingInterval: POLLING_INTERVAL,
+      });
+
       if (!pid) {
         this.logger.error("Game launch failed - process not found", { id, name: game.name });
         return {
-          success: false,
           error: "Game process not found after 60 seconds. The game may have failed to launch.",
+          success: false,
         };
       }
 

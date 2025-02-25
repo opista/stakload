@@ -9,6 +9,7 @@ const execAsync = promisify(exec);
 
 @Service()
 export class MacProcessMonitor implements ProcessMonitorStrategy {
+  private watchedProcesses: Map<number, () => void> = new Map();
   private processCheckInterval: NodeJS.Timeout | null = null;
 
   constructor(private readonly logger: LoggerService) {}
@@ -26,57 +27,99 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
     }
   }
 
-  async findProcessByInstallPath(installPath: string): Promise<number | null> {
-    this.logger.debug("Finding process by install path", { installPath });
+  async findProcessByParentDirectory(directory: string): Promise<number | null> {
+    this.logger.debug("Finding process by directory", { directory });
     try {
-      // List all processes and their working directories
       const { stdout } = await execAsync("ps -eo pid,command");
       const lines = stdout.split("\n");
 
-      // Find process that matches install path
       for (const line of lines) {
         const [pidStr, ...cmdParts] = line.trim().split(/\s+/);
         const cmd = cmdParts.join(" ");
 
-        if (cmd.includes(installPath)) {
+        if (cmd.includes(directory)) {
           const pid = parseInt(pidStr, 10);
-          this.logger.info("Process found for install path", { installPath, pid });
+          this.logger.info("Process found for directory", { directory, pid });
           return pid;
         }
       }
 
-      this.logger.debug("No process found for install path", { installPath });
+      this.logger.debug("No process found for directory", { directory });
       return null;
     } catch (error) {
-      this.logger.error("Failed to find process by install path", error, { installPath });
+      this.logger.error("Failed to find process by directory", error, { directory });
       return null;
     }
   }
 
   async watchProcess(pid: number, onExit: () => void) {
-    this.logger.debug("Setting up process watch", { pid });
+    this.logger.debug("Setting up process watch", { pid, watchedCount: this.watchedProcesses.size });
+    this.watchedProcesses.set(pid, onExit);
 
-    if (this.processCheckInterval) {
-      this.logger.debug("Clearing existing process watch interval");
-      clearInterval(this.processCheckInterval);
-    }
+    if (this.processCheckInterval) return;
 
-    this.processCheckInterval = setInterval(async () => {
-      const isRunning = await this.isProcessRunning(pid);
-      if (!isRunning) {
-        this.logger.info("Process terminated", { pid });
-        clearInterval(this.processCheckInterval!);
-        this.processCheckInterval = null;
-        onExit();
+    const checkProcesses = async () => {
+      try {
+        const pids = Array.from(this.watchedProcesses.keys());
+        if (pids.length === 0) {
+          this.logger.debug("No more processes to watch, stopping monitor");
+          this.processCheckInterval = null;
+          return;
+        }
+
+        const { stdout } = await execAsync(`ps -p ${pids.join(",")}`);
+
+        for (const [pid, callback] of this.watchedProcesses.entries()) {
+          if (!stdout.includes(String(pid))) {
+            this.logger.info("Process terminated", { pid });
+            this.watchedProcesses.delete(pid);
+            callback();
+          }
+        }
+
+        if (this.watchedProcesses.size > 0) {
+          this.processCheckInterval = setTimeout(checkProcesses, 5000);
+        } else {
+          this.logger.debug("No more processes to watch, stopping monitor");
+          this.processCheckInterval = null;
+        }
+      } catch (error) {
+        this.logger.error("Error checking processes", error);
+        this.processCheckInterval = setTimeout(checkProcesses, 5000);
       }
-    }, 5000);
+    };
+
+    this.processCheckInterval = setTimeout(checkProcesses, 5000);
   }
 
   stopWatching() {
-    this.logger.debug("Stopping process monitor");
+    this.logger.debug("Stopping process monitor", { watchedCount: this.watchedProcesses.size });
     if (this.processCheckInterval) {
-      clearInterval(this.processCheckInterval);
+      clearTimeout(this.processCheckInterval);
       this.processCheckInterval = null;
     }
+    this.watchedProcesses.clear();
+  }
+
+  async waitForProcess(
+    directory: string,
+    options: { maxPollingTime: number; pollingInterval: number },
+  ): Promise<number | null> {
+    const startTime = Date.now();
+    this.logger.debug("Starting to poll for process", { directory });
+
+    while (Date.now() - startTime < options.maxPollingTime) {
+      const pid = await this.findProcessByParentDirectory(directory);
+
+      if (pid) {
+        this.logger.info("Process found", { directory, pid });
+        return pid;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
+    }
+
+    this.logger.warn("Process not found after timeout", { directory, timeoutMs: options.maxPollingTime });
+    return null;
   }
 }
