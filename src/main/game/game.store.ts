@@ -16,7 +16,7 @@ type Sort = {
 const fieldsMap: Record<FieldsType, Partial<Record<keyof GameStoreModel, number>> | undefined> = {
   all: undefined,
   featured: { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
-  list: { _id: 1, cover: 1, library: 1, name: 1 },
+  list: { _id: 1, cover: 1, isInstalled: 1, library: 1, name: 1 },
 };
 
 const db = createDb("games");

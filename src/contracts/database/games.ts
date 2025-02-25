@@ -151,7 +151,7 @@ export type GameFilters = {
   publishers?: string[];
 };
 
-export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "library" | "name">;
+export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "isInstalled" | "library" | "name">;
 
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
 
