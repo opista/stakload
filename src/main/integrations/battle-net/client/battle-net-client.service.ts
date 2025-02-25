@@ -7,6 +7,8 @@ import { LoggerService } from "../../../logger/logger.service";
 
 const BATTLE_NET_LAUNCHER_BASE_URL = "battlenet://";
 
+// TODO: None of this is working, we need to figure out how to install and launch games via Battle.net
+
 @Service()
 export class BattleNetClientService implements LibraryClientService {
   constructor(private readonly logger: LoggerService) {}
@@ -14,7 +16,6 @@ export class BattleNetClientService implements LibraryClientService {
   async install(game: GameStoreModel): Promise<void> {
     this.logger.info("Initiating Battle.net installation", { gameId: game.gameId });
     try {
-      // TODO: Battle.net uses a different format for game IDs: "pro" for Overwatch 2, "wow" for World of Warcraft, etc.
       await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}install=${game.gameId}`);
       this.logger.debug("Battle.net installation launched successfully", { gameId: game.gameId });
     } catch (error) {
