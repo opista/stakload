@@ -4,7 +4,7 @@ import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
 
-// TODO - This is windows-only I think, we need to make it work for mac too
+// TODO - This is windows-only right now, we need to make it work for mac too when we build gaming mode
 @Service()
 export class SystemService {
   constructor(private readonly logger: LoggerService) {}

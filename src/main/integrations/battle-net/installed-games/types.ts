@@ -1,10 +1,8 @@
 import { GameInstallationDetails } from "@contracts/database/games";
 
 export interface BattleNetInstallationData {
-  // e.g., "wow", "d3", "ow"
   installLocation: string;
   lastPlayed?: number;
-  // Battle.net's unique game identifier
   productId: string;
   uid: string;
 }

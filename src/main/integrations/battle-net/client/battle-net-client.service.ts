@@ -38,8 +38,6 @@ export class BattleNetClientService implements LibraryClientService {
   async uninstall(game: GameStoreModel): Promise<void> {
     this.logger.info("Initiating Battle.net uninstallation", { gameId: game.gameId });
     try {
-      // TODO: Battle.net doesn't have a direct uninstall protocol handler
-      // Opening the main Battle.net window instead
       await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}games`);
       this.logger.debug("Battle.net uninstallation window opened", { gameId: game.gameId });
     } catch (error) {

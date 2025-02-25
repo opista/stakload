@@ -16,7 +16,6 @@ Container.set("conf", conf);
 
 const controllers = [CollectionController, GameController, SyncController, SystemController, WindowController];
 
-// Initialize all controllers (which will set up IPC handlers)
 controllers.forEach((controller) => {
   Container.get(controller as Token<typeof controller>);
 });
