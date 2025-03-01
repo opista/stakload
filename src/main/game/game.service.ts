@@ -19,6 +19,7 @@ export class GameService {
     this.logger.debug("Processing game filters request");
     try {
       const filterableFields: (keyof GameStoreModel)[] = [
+        "ageRatings",
         "developers",
         "gameModes",
         "genres",

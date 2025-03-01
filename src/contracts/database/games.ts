@@ -3,6 +3,13 @@
 // the impact of this will be
 export type Library = "battle-net" | "epic-game-store" | "gog" | "steam";
 
+export enum ExternalGameSource {
+  BattleNet = 99,
+  EpicGames = 26,
+  Gog = 5,
+  Steam = 1,
+}
+
 export type EpicLibraryMeta = {
   appName: string;
   namespace: string;
@@ -15,15 +22,12 @@ export type LibraryMeta = EpicLibraryMeta;
  * once we have moved the API into this repo
  */
 
-export enum AgeRatingText {
-  Eighteen = "EIGHTEEN",
-  Seven = "SEVEN",
-  Sixteen = "SIXTEEN",
-  Three = "THREE",
-  Twelve = "TWELVE",
-}
-
-export type LikeAgeRatingText = `${AgeRatingText}`;
+export type AgeRating = {
+  descriptions: string[];
+  id: string;
+  name: string;
+  organization: string;
+};
 
 export type Media = {
   height: number;
@@ -58,35 +62,35 @@ export type Website = {
   id: string;
   igdbId: number;
   url: string;
-  website: LikeWebsiteCategoryText;
+  websiteType: LikeWebsiteType;
 };
 
-export enum WebsiteCategoryText {
-  Android = "ANDROID",
-  Discord = "DISCORD",
-  EpicGames = "EPIC_GAMES",
-  Facebook = "FACEBOOK",
-  Gog = "GOG",
-  Instagram = "INSTAGRAM",
-  Ipad = "IPAD",
-  Iphone = "IPHONE",
-  Itch = "ITCH",
-  Official = "OFFICIAL",
-  Reddit = "REDDIT",
-  Steam = "STEAM",
-  Twitch = "TWITCH",
-  Twitter = "TWITTER",
-  Wikia = "WIKIA",
-  Wikipedia = "WIKIPEDIA",
-  Youtube = "YOUTUBE",
+export enum WebsiteType {
+  Android = "android",
+  Discord = "discord",
+  EpicGames = "epicgames",
+  Facebook = "facebook",
+  Gog = "gog",
+  Instagram = "instagram",
+  Ipad = "ipad",
+  Iphone = "iphone",
+  Itch = "itch",
+  Official = "official",
+  Reddit = "reddit",
+  Steam = "steam",
+  Twitch = "twitch",
+  Twitter = "twitter",
+  Wikia = "wikia",
+  Wikipedia = "wikipedia",
+  Youtube = "youtube",
 }
 
-export type LikeWebsiteCategoryText = `${WebsiteCategoryText}`;
+export type LikeWebsiteType = `${WebsiteType}`;
 
 export type GameStoreModel = {
   _id: string;
   // TODO this should be an id and name for filtering
-  ageRating?: LikeAgeRatingText;
+  ageRatings: AgeRating[];
   archivedAt?: Date;
   artworks?: Media[];
   cover?: string;

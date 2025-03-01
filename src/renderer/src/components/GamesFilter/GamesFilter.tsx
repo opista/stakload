@@ -1,9 +1,8 @@
-import { GameFilters, Library, LikeAgeRatingText } from "@contracts/database/games";
+import { GameFilters, Library } from "@contracts/database/games";
 import { Checkbox, Flex, Grid, MultiSelect, Pill, Popover, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt } from "@tabler/icons-react";
 import clsx from "clsx";
-import { ParseKeys } from "i18next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
@@ -15,29 +14,6 @@ type GamesFilterProps = {
   filters: GameFilters;
   onChange: (filters: GameFilters) => void;
 };
-
-const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
-  {
-    label: "ageRating.THREE",
-    value: "THREE",
-  },
-  {
-    label: "ageRating.SEVEN",
-    value: "SEVEN",
-  },
-  {
-    label: "ageRating.TWELVE",
-    value: "TWELVE",
-  },
-  {
-    label: "ageRating.SIXTEEN",
-    value: "SIXTEEN",
-  },
-  {
-    label: "ageRating.EIGHTEEN",
-    value: "EIGHTEEN",
-  },
-];
 
 const libraryFilters: { label: string; value: Library }[] = [
   {
@@ -165,7 +141,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
               className={classes.select}
               clearable
               comboboxProps={{ position: "bottom-start", width: "auto", withinPortal: false }}
-              data={ageRatingFilters.map(({ label, value }) => ({ label: t(label), value }))}
+              data={gameFilters.ageRatings}
               label={t("filters.ageRatings")}
               onChange={onFilterChange("ageRatings")}
               searchable

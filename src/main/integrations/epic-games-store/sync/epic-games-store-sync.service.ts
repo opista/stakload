@@ -1,4 +1,4 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
 import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
@@ -36,7 +36,7 @@ export class EpicGamesStoreSyncService implements SyncService {
         gameId: game.gameId,
         name: game.name,
       });
-      return await this.trulaunchApiClient.getGameMetadata(game.gameId, this.library);
+      return await this.trulaunchApiClient.getGameMetadata(game.gameId, ExternalGameSource.EpicGames);
     }
     this.logger.debug("No gameId found, fetching gameId from EpicGamesStore API", {
       name: game.name,
@@ -56,7 +56,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       namespace: game.libraryMeta!.namespace,
     });
     await this.gameStore.updateGameById(game._id, { gameId });
-    return await this.trulaunchApiClient.getGameMetadata(gameId, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(gameId, ExternalGameSource.EpicGames);
   }
 
   async updateInstalledGames() {

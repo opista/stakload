@@ -43,7 +43,7 @@ export class WindowService {
       height: 800,
       maximizable: true,
       minHeight: 800,
-      minWidth: 800,
+      minWidth: 1200,
       minimizable: true,
       movable: true,
       resizable: true,

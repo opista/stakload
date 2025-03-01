@@ -1,4 +1,4 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
 import { BrowserWindow } from "electron";
@@ -32,7 +32,7 @@ export class GogLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
-    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Gog);
   }
 
   async updateInstalledGames() {

@@ -24,9 +24,9 @@ const firstColumn: Column[] = [
     label: "gameDetails.releaseDate",
   },
   {
-    formatter: ({ ageRating }: GameStoreModel, t: TFunction) => {
-      if (!ageRating) return;
-      return t(`ageRating.${ageRating}`);
+    formatter: ({ ageRatings }: GameStoreModel) => {
+      if (!ageRatings) return;
+      return ageRatings.map(({ name }) => name).join(", ");
     },
     label: "gameDetails.ageRating",
   },

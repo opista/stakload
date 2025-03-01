@@ -1,6 +1,6 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
-import { LikeWebsiteCategoryText, Website, WebsiteCategoryText } from "@contracts/database/games";
+import { LikeWebsiteType, Website } from "@contracts/database/games";
 import { Flex, Menu, MenuDropdown, MenuItem, MenuTarget, UnstyledButton } from "@mantine/core";
 import {
   IconApps,
@@ -29,24 +29,24 @@ import { IconBrandEpicGames } from "../../icons/IconBrandEpicGames";
 import { IconBrandFandom } from "../../icons/IconBrandFandom";
 import { IconBrandGog } from "../../icons/IconBrandGog";
 
-const WEBSITE_ORDER: LikeWebsiteCategoryText[] = [
-  "OFFICIAL",
-  "STEAM",
-  "EPIC_GAMES",
-  "GOG",
-  "DISCORD",
-  "TWITCH",
-  "YOUTUBE",
-  "REDDIT",
-  "TWITTER",
-  "WIKIA",
-  "FACEBOOK",
-  "INSTAGRAM",
-  "WIKIPEDIA",
-  "ITCH",
-  "ANDROID",
-  "IPHONE",
-  "IPAD",
+const WEBSITE_ORDER: LikeWebsiteType[] = [
+  "official",
+  "steam",
+  "epicgames",
+  "gog",
+  "discord",
+  "twitch",
+  "youtube",
+  "reddit",
+  "twitter",
+  "wikia",
+  "facebook",
+  "instagram",
+  "wikipedia",
+  "itch",
+  "android",
+  "iphone",
+  "ipad",
 ];
 
 type DropdownProps = WebsiteIconProps & {
@@ -112,12 +112,12 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
     label: t("links.unknown"),
   };
 
-  const websiteIconPropsMap: Record<WebsiteCategoryText, IconPropsMap> = {
-    ANDROID: {
+  const websiteIconPropsMap: Record<LikeWebsiteType, IconPropsMap> = {
+    android: {
       icon: IconBrandAndroid,
       label: "Android",
     },
-    DISCORD: {
+    discord: {
       deepLinkFormatter: (url: string) => {
         const [, id] = url.split("/invite/");
 
@@ -128,7 +128,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       icon: IconBrandDiscord,
       label: "Discord",
     },
-    EPIC_GAMES: {
+    epicgames: {
       deepLinkFormatter: (url: string) => {
         const [, slug] = url.match(/(?:product\/|p\/)([\w-]+)/) || [];
 
@@ -139,80 +139,80 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       icon: IconBrandEpicGames,
       label: "Epic Games",
     },
-    FACEBOOK: {
+    facebook: {
       icon: IconBrandFacebook,
       label: "Facebook",
     },
-    GOG: {
+    gog: {
       icon: IconBrandGog,
       label: "GOG",
     },
-    INSTAGRAM: {
+    instagram: {
       icon: IconBrandInstagram,
       label: "Instagram",
     },
-    IPAD: {
+    ipad: {
       icon: IconDeviceTablet,
       label: "iPad",
     },
-    IPHONE: {
+    iphone: {
       icon: IconBrandApple,
       label: "iPhone",
     },
-    ITCH: {
+    itch: {
       icon: IconBrandItch,
       label: "Itch",
     },
-    OFFICIAL: {
+    official: {
       icon: IconWorldWww,
       label: t("links.officialWebsite"),
     },
-    REDDIT: {
+    reddit: {
       icon: IconBrandReddit,
       label: "Reddit",
     },
-    STEAM: {
+    steam: {
       deepLinkFormatter: (url: string) => `steam://openurl/${url}`,
       icon: IconBrandSteam,
       label: "Steam",
     },
-    TWITCH: {
+    twitch: {
       icon: IconBrandTwitch,
       label: "Twitch",
     },
-    TWITTER: {
+    twitter: {
       icon: IconBrandX,
       label: "Twitter",
     },
-    WIKIA: {
+    wikia: {
       icon: IconBrandFandom,
       label: "Fandom",
     },
-    WIKIPEDIA: {
+    wikipedia: {
       icon: IconBrandWikipedia,
       label: "Wikipedia",
     },
-    YOUTUBE: {
+    youtube: {
       icon: IconBrandYoutube,
       label: "YouTube",
     },
   };
 
   const buttons = websites
-    ?.filter(({ website }) => websiteIconPropsMap[website] || defaultIcon)
+    ?.filter(({ websiteType }) => websiteIconPropsMap[websiteType] || defaultIcon)
     .sort((a, b) => {
-      const indexA = WEBSITE_ORDER.indexOf(a.website);
-      const indexB = WEBSITE_ORDER.indexOf(b.website);
+      const indexA = WEBSITE_ORDER.indexOf(a.websiteType);
+      const indexB = WEBSITE_ORDER.indexOf(b.websiteType);
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
-    .map(({ url, website }) => {
-      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[website];
+    .map(({ url, websiteType }) => {
+      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[websiteType];
       const deepLink = deepLinkFormatter?.(url);
 
       return deepLink ? (
-        <Dropdown deepLink={deepLink} icon={icon} key={website} label={label} url={url} />
+        <Dropdown deepLink={deepLink} icon={icon} key={websiteType} label={label} url={url} />
       ) : (
-        <WebsiteIcon icon={icon} key={website} label={label} url={url} />
+        <WebsiteIcon icon={icon} key={websiteType} label={label} url={url} />
       );
     });
 

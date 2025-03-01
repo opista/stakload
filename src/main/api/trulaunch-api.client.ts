@@ -1,4 +1,4 @@
-import { Library } from "@contracts/database/games";
+import { ExternalGameSource } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
@@ -9,9 +9,9 @@ const BASE_URL = import.meta.env.MAIN_VITE_TRULAUNCH_API_URL;
 export class TrulaunchApiClient {
   constructor(private readonly logger: LoggerService) {}
 
-  async getGameMetadata(gameId: string, library: Library) {
-    this.logger.debug("Processing game metadata request", { gameId, library });
-    const response = await fetch(`${BASE_URL}/games/${gameId}?library=${library}`);
+  async getGameMetadata(gameId: string, source: ExternalGameSource) {
+    this.logger.debug("Processing game metadata request", { gameId, source });
+    const response = await fetch(`${BASE_URL}/games/${gameId}?source=${source}`);
 
     if (response.status === 200) {
       /**
@@ -25,13 +25,13 @@ export class TrulaunchApiClient {
     }
 
     if (response.status === 404) {
-      this.logger.warn("Game metadata not found", { gameId, library });
+      this.logger.warn("Game metadata not found", { gameId, source });
       return null;
     }
 
     this.logger.error("Failed to get game metadata", {
       gameId,
-      library,
+      source,
       status: response.status,
       statusText: response.statusText,
     });

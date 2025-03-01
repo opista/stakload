@@ -1,4 +1,4 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
@@ -31,7 +31,7 @@ export class SteamLibraryService implements SyncService {
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
     this.logger.debug("Fetching game metadata for Steam", { gameId: game.gameId });
-    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
+    return await this.trulaunchApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Steam);
   }
 
   async updateInstalledGames() {
