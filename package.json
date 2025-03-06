@@ -52,7 +52,6 @@
     "@types/better-sqlite3": "^7.6.12",
     "@types/nedb": "^1.8.16",
     "@types/winreg": "^1.2.36",
-    "allotment": "^1.20.2",
     "better-sqlite3": "^11.8.1",
     "clsx": "^2.1.1",
     "electron-conf": "^1.2.1",

@@ -3,7 +3,6 @@ import "@mantine/dates/styles.css";
 import "@mantine/spotlight/styles.css";
 import "@mantine/carousel/styles.css";
 import "@mantine/notifications/styles.css";
-import "allotment/dist/style.css";
 import "./styles/styles.css";
 import "./i18n";
 
