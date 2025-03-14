@@ -17,14 +17,22 @@ export const HomeView = () => {
     })),
   );
 
+  const hasQuickLaunchGames = quickLaunchGames.length > 0;
+  const hasNewGames = newGames.length > 0;
+
+  if (!hasQuickLaunchGames && !hasNewGames) {
+    return (
+      <Stack className={classes.container}>
+        <Title order={1}>TODO: Something here when you have no games</Title>
+      </Stack>
+    );
+  }
+
   return (
-    <ScrollArea>
+    <ScrollArea className={classes.scrollArea}>
       <Stack className={classes.container} gap={50}>
-        <GamesCarousel games={quickLaunchGames} title="Continue Playing" />
-        <FeaturedGamesCarousel games={newGames} title="Recently Added" />
-        <Stack className={classes.contained}>
-          <Title order={1}>Launchers</Title>
-        </Stack>
+        {hasQuickLaunchGames && <GamesCarousel games={quickLaunchGames} title="Continue Playing" />}
+        {hasNewGames && <FeaturedGamesCarousel games={newGames} title="Recently Added" />}
       </Stack>
     </ScrollArea>
   );
