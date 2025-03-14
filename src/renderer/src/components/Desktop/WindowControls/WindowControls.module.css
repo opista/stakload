@@ -14,4 +14,9 @@
   padding: var(--mantine-spacing-xs) var(--mantine-spacing-md);
   width: auto;
   height: auto;
+  border-radius: 0;
+
+  &.closed:hover {
+    background: var(--mantine-color-red-filled);
+  }
 }

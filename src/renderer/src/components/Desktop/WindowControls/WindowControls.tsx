@@ -1,6 +1,7 @@
 import { ActionIcon, Group, Tooltip } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconDeviceGamepad2, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
+import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -48,7 +49,7 @@ export const WindowControls = () => {
           </ActionIcon>
         </Tooltip>
         {window.api.platform !== "darwin" && (
-          <>
+          <Group gap={0}>
             <ActionIcon
               aria-label={t("windowControls.minimize")}
               className={classes.icon}
@@ -69,14 +70,14 @@ export const WindowControls = () => {
             </ActionIcon>
             <ActionIcon
               aria-label={t("windowControls.close")}
-              className={classes.icon}
+              className={clsx(classes.icon, classes.closed)}
               color="gray"
               onClick={handleClose}
               variant="subtle"
             >
               <IconX size={16} />
             </ActionIcon>
-          </>
+          </Group>
         )}
       </Group>
     </Group>
