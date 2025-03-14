@@ -67,6 +67,7 @@ export type Website = {
 
 export enum WebsiteType {
   Android = "android",
+  Bluesky = "bluesky",
   Discord = "discord",
   EpicGames = "epicgames",
   Facebook = "facebook",

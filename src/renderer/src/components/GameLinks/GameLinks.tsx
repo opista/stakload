@@ -6,6 +6,7 @@ import {
   IconApps,
   IconBrandAndroid,
   IconBrandApple,
+  IconBrandBluesky,
   IconBrandDiscord,
   IconBrandFacebook,
   IconBrandInstagram,
@@ -13,8 +14,8 @@ import {
   IconBrandReddit,
   IconBrandSteam,
   IconBrandTwitch,
+  IconBrandTwitter,
   IconBrandWikipedia,
-  IconBrandX,
   IconBrandYoutube,
   IconDeviceTablet,
   IconExternalLink,
@@ -38,7 +39,7 @@ const WEBSITE_ORDER: LikeWebsiteType[] = [
   "twitch",
   "youtube",
   "reddit",
-  "twitter",
+  "bluesky",
   "wikia",
   "facebook",
   "instagram",
@@ -47,6 +48,7 @@ const WEBSITE_ORDER: LikeWebsiteType[] = [
   "android",
   "iphone",
   "ipad",
+  "twitter",
 ];
 
 type DropdownProps = WebsiteIconProps & {
@@ -117,6 +119,10 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       icon: IconBrandAndroid,
       label: "Android",
     },
+    bluesky: {
+      icon: IconBrandBluesky,
+      label: "Bluesky",
+    },
     discord: {
       deepLinkFormatter: (url: string) => {
         const [, id] = url.split("/invite/");
@@ -181,7 +187,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       label: "Twitch",
     },
     twitter: {
-      icon: IconBrandX,
+      icon: IconBrandTwitter,
       label: "Twitter",
     },
     wikia: {
@@ -206,7 +212,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
     .map(({ url, websiteType }) => {
-      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[websiteType];
+      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[websiteType] || defaultIcon;
       const deepLink = deepLinkFormatter?.(url);
 
       return deepLink ? (
