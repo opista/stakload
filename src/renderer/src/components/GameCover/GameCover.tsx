@@ -1,8 +1,11 @@
 import { GameListModel } from "@contracts/database/games";
 import { AspectRatio, Image, Stack, Text } from "@mantine/core";
-import { IconDeviceGamepad2 } from "@tabler/icons-react";
+import { useGameStore } from "@store/game.store";
+import { IconBolt, IconDeviceGamepad2, IconDownload, IconPlayerPlay, IconStar, IconTrash } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
 import clsx from "clsx";
+import { useContextMenu } from "mantine-contextmenu";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameCover.module.css";
 
@@ -49,16 +52,80 @@ export const GameCover = ({
   onClick,
   showGameTitle = true,
   showLibraryIcon = true,
-}: GameCoverProps) => (
-  <AspectRatio
-    className={clsx(classes.aspectRatio, className, {
-      [classes.hoverEffect]: hoverEffect,
-      [classes.clickable]: !!onClick,
-    })}
-    onClick={() => onClick?.(game)}
-    ratio={GAME_COVER_ART_RATIO}
-  >
-    {showLibraryIcon && <LibraryIcon game={game} />}
-    {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} showGameTitle={showGameTitle} />}
-  </AspectRatio>
-);
+}: GameCoverProps) => {
+  const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
+    useShallow((state) => ({
+      toggleFavouriteGame: state.toggleFavouriteGame,
+      toggleQuickLaunchGame: state.toggleQuickLaunchGame,
+    })),
+  );
+  const { showContextMenu } = useContextMenu();
+
+  return (
+    <AspectRatio
+      className={clsx(classes.aspectRatio, className, {
+        [classes.hoverEffect]: hoverEffect,
+        [classes.clickable]: !!onClick,
+      })}
+      onClick={() => onClick?.(game)}
+      onContextMenu={showContextMenu([
+        {
+          key: "launch",
+          hidden: !game.isInstalled,
+          icon: <IconPlayerPlay size={16} />,
+          title: "Launch",
+          color: "green",
+          onClick: () => {
+            console.log("launch");
+          },
+        },
+        {
+          key: "install",
+          hidden: game.isInstalled,
+          icon: <IconDownload size={16} />,
+          title: "Install",
+          onClick: () => {
+            console.log("install");
+          },
+        },
+        {
+          key: "uninstall",
+          hidden: !game.isInstalled,
+          color: "red",
+          icon: <IconTrash size={16} />,
+          title: "Uninstall",
+          onClick: () => {
+            console.log("uninstall");
+          },
+        },
+        { key: "divider-1" },
+        {
+          key: "favourite",
+          icon: <IconStar size={16} />,
+          title: game.isFavourite ? "Remove from Favourites" : "Add to Favourites",
+          onClick: () => toggleFavouriteGame(game._id),
+        },
+        {
+          key: "quick-launch",
+          icon: <IconBolt size={16} />,
+          title: game.isQuickLaunch ? "Remove from Quick Launch" : "Add to Quick Launch",
+          onClick: () => toggleQuickLaunchGame(game._id),
+        },
+        { key: "divider-2" },
+        {
+          key: "delete",
+          icon: <IconTrash size={16} />,
+          color: "red",
+          title: "Remove from library",
+          onClick: () => {
+            console.log("delete");
+          },
+        },
+      ])}
+      ratio={GAME_COVER_ART_RATIO}
+    >
+      {showLibraryIcon && <LibraryIcon game={game} />}
+      {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} showGameTitle={showGameTitle} />}
+    </AspectRatio>
+  );
+};

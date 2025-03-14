@@ -14,6 +14,7 @@ import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import clsx from "clsx";
+import { ContextMenuProvider } from "mantine-contextmenu";
 import { useEffect } from "react";
 import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -86,8 +87,10 @@ export const App = () => {
     <>
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
-        <Notifications classNames={{ root: classes.notifications }} />
-        <Outlet />
+        <ContextMenuProvider borderRadius="md" shadow="md">
+          <Notifications classNames={{ root: classes.notifications }} />
+          <Outlet />
+        </ContextMenuProvider>
       </MantineProvider>
     </>
   );
