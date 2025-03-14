@@ -5,7 +5,7 @@ import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useGameStore } from "@store/game.store";
-import { IconBolt, IconBoltFilled, IconPencil, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
+import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -63,7 +63,6 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
               icon={game.isQuickLaunch ? IconBoltFilled : IconBolt}
               onClick={() => toggleQuickLaunchGame(game._id)}
             />
-            <ActionIcon aria-label={t("common.edit")} disabled icon={IconPencil} onClick={() => console.log("edit")} />
             <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />
           </Group>
         </Flex>
