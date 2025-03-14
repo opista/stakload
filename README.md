@@ -46,22 +46,42 @@ $ npm run build:linux
 
 ## TODO
 
-- Frontend
+- Features
 
-  - Break down GameDetailsView into components, maybe make into a view? Currently a mess
+  - Notification panel
+  - Context menu on games. install/play/uninstall, re-sync data, add to favourites/quick launch, archive, delete etc.
+  - Search for game metadata. Some games don't return a result, we should offer the ability to manually map a game
+  - Data backup/sync. Not sure how useful installation data will be, but the rest should be backed up
+  - HLTB. Look at [hltb-for-deck](https://github.com/hulkrelax/hltb-for-deck/blob/main/src/hooks/useHltb.ts) for inspiration
+  - Fullscreen "Gaming" mode. Controller-friendly UI
+    - Intro movie
+  - Manual addition of games. Need to consider manually setting installation directory and other important fields etc.
+  - Logo
+  - System storage usage screen. Not sure how necessary this is, but could be a nice to have
+  - Add launcher icons to homescreen. Potentially should be managed independently of configured integrations?
+  - Configurability of default view (ie. desktop vs. "gaming")
+  - Introduce last played timestamp functionality - currently this is just pulling quick launch games
+  - Build home view when there are no games
+
+- Chores
+  - Update grey styling across the board, should use CSS variables (with possibility of later theming)
+  - Revisit game controls (launch/install/uninstall etc.)
+  - Revisit quick launch. Look at removing button to toggle moveability, determine based on click or hold
+  - Accessibility across entire app. Look at Mantine docs for accessibility info
+  - If app crashes, window controls disappear (windows/linux). We should mitigate this
+  - Fix bug with full window scrolling rather than just the main contents (behaviour seen on integrations page, but may happen everywhere)
+  - Last sync timestamp
   - Look at dependency graph, anything we can kill?
+  - Ensure that all strings are stored in i18n and there is no static text
+  - Optimise app build
+  - Migrate Epic games integration away from Legendary. Not sure this is necessary as we rely on the launcher for other libraries and it should be consistent
+  - Filtering UI looks clunky, it needs to match the theme
+  - "Save collection" modal needs to not look like crap
+  - Break down GameDetailsView into components, maybe make into a view? Currently a mess
   - Refactor any components that are:
     - Using prop styling, move it to CSS Modules
     - Too big and should be broken down
-  - Ensure that all strings are stored in i18n and there is no static text
-  - Is there anything we can do to optimise the build? The app needs to be as least resource-hungry as possible
-  - Run through accessibility section of every component in mantine
-  - Build "fullscreen" mode, a-la Steam Big Picture
-    - Intro movie (later)
-    - Should be easily navigable with a controller
-  - System storage usage screen(?)
-    - Do we need this? It might be nice to know how much space you have used on your games and how much you have left
-  - Fix bug with full window scrolling rather than just the main contents (behaviour seen on integrations page, but may happen everywhere)
-
-- Backend
-  - Add endpoint to manually add external games
+  - Identify issue with BattleNetClientService not performing actions in launcher. Perhaps look at alternative methods
+  - Update SystemService to work cross-platform
+  - Update IncompatibilityIcon functionality so that it identifies platform support
+  - Total refactor of integration settings view

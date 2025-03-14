@@ -55,7 +55,6 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
         setMetadata(tierMetadata);
       })
       .catch((err) => {
-        // TODO - log error
         console.error(err);
       })
       .finally(() => setIsLoading(false));

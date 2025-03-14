@@ -90,7 +90,6 @@ export type LikeWebsiteType = `${WebsiteType}`;
 
 export type GameStoreModel = {
   _id: string;
-  // TODO this should be an id and name for filtering
   ageRatings: AgeRating[];
   archivedAt?: Date;
   artworks?: Media[];
