@@ -4,7 +4,7 @@ import { removeSpecialChars } from "@util/remove-special-chars";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { TrulaunchApiClient } from "../../../api/trulaunch-api.client";
+import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
@@ -23,7 +23,7 @@ export class BattleNetLibraryService implements SyncService {
     private readonly battleNetApiService: BattleNetApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly logger: LoggerService,
-    private readonly trulaunchApiClient: TrulaunchApiClient,
+    private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
@@ -33,7 +33,7 @@ export class BattleNetLibraryService implements SyncService {
     this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
     // TODO: Implement this when IGDB support Battle.net games
     return null;
-    // return await this.trulaunchApiClient.getGameMetadata(game.gameId!, this.library);
+    // return await this.StakloadApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async updateInstalledGames() {

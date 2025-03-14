@@ -27,7 +27,7 @@ export class LoggerService {
       new DailyRotateFile({
         datePattern: "YYYY-MM-DD",
         dirname: path.join(app.getPath("userData"), "logs"),
-        filename: "trulaunch-%DATE%.log",
+        filename: "stakload-%DATE%.log",
         frequency: "1d",
         format: format.combine(...defaultFormat),
         level: "debug",

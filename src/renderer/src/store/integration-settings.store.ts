@@ -27,7 +27,7 @@ export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
           },
         })),
       setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
-      syncOnStartup: true,
+      syncOnStartup: false,
     }),
     {
       name: "integration_settings",

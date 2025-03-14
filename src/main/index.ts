@@ -14,7 +14,7 @@ import { WindowService } from "./window/window.service";
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(async () => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId("com.opista.trulaunch");
+  electronApp.setAppUserModelId("com.opista.stakload");
 
   if (import.meta.env.DEV) {
     installExtension(REACT_DEVELOPER_TOOLS)

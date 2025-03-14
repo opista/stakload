@@ -12,7 +12,7 @@ type LogoProps = {
 const Logo = memo(({ size = "xl", useGradient = true }: LogoProps) => (
   <Box className={classes.container}>
     <Text className={clsx(classes.logo, useGradient && classes.gradient)} size={size}>
-      Trulaunch
+      Stakload
     </Text>
   </Box>
 ));

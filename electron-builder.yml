@@ -1,5 +1,5 @@
-appId: com.opista.trulaunch
-productName: trulaunch
+appId: com.opista.stakload
+productName: stakload
 directories:
   buildResources: build
 files:
@@ -12,7 +12,7 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: trulaunch
+  executableName: stakload
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

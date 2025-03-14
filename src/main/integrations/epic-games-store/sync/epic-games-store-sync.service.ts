@@ -3,7 +3,7 @@ import { BrowserWindow } from "electron";
 import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { TrulaunchApiClient } from "../../../api/trulaunch-api.client";
+import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { GameStore } from "../../../game/game.store";
 import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
@@ -24,7 +24,7 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly legendaryService: LegendaryService,
     private readonly logger: LoggerService,
-    private readonly trulaunchApiClient: TrulaunchApiClient,
+    private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
@@ -36,7 +36,7 @@ export class EpicGamesStoreSyncService implements SyncService {
         gameId: game.gameId,
         name: game.name,
       });
-      return await this.trulaunchApiClient.getGameMetadata(game.gameId, ExternalGameSource.EpicGames);
+      return await this.StakloadApiClient.getGameMetadata(game.gameId, ExternalGameSource.EpicGames);
     }
     this.logger.debug("No gameId found, fetching gameId from EpicGamesStore API", {
       name: game.name,
@@ -56,7 +56,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       namespace: game.libraryMeta!.namespace,
     });
     await this.gameStore.updateGameById(game._id, { gameId });
-    return await this.trulaunchApiClient.getGameMetadata(gameId, ExternalGameSource.EpicGames);
+    return await this.StakloadApiClient.getGameMetadata(gameId, ExternalGameSource.EpicGames);
   }
 
   async updateInstalledGames() {

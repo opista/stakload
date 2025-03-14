@@ -1,4 +1,4 @@
-# trulaunch
+# stakload
 
 An AIO games library manager.
 
