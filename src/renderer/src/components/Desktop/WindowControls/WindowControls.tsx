@@ -9,13 +9,12 @@ import { useShallow } from "zustand/react/shallow";
 import classes from "./WindowControls.module.css";
 
 export const WindowControls = () => {
-  const gamesList = useGameStore(useShallow((state) => state.gamesList));
+  const { getRandomGame } = useGameStore(useShallow((state) => ({ getRandomGame: state.getRandomGame })));
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const handleRandomGame = () => {
-    const index = Math.floor(Math.random() * gamesList.length);
-    const randomGame = gamesList[index];
+    const randomGame = getRandomGame();
     navigate(`/desktop/library/${randomGame._id}`);
   };
   const handleGamingMode = () => navigate("/gaming");

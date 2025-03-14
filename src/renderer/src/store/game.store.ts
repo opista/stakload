@@ -40,6 +40,11 @@ export const useGameStore = create<GameStore>()(
         }));
         return details;
       },
+      getRandomGame: () => {
+        const gamesList = get().gamesList;
+        const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+        return randomGame;
+      },
       fetchGameFilters: async () => {
         const gameFilters = await window.api.getGameFilters();
         set({ gameFilters });
@@ -73,11 +78,14 @@ export const useGameStore = create<GameStore>()(
             [id]: game,
           },
         }));
+        await get().refreshGameData();
 
         return game;
       },
       toggleQuickLaunchGame: async (id: string) => {
         const { isQuickLaunch } = await window.api.toggleQuickLaunchGame(id);
+
+        await get().refreshGameData();
 
         set((state) => {
           if (!isQuickLaunch) {
@@ -94,8 +102,6 @@ export const useGameStore = create<GameStore>()(
             quickLaunchGamesOrder: [...state.quickLaunchGamesOrder, id],
           };
         });
-
-        await get().fetchQuickLaunchGames();
       },
     }),
     {
