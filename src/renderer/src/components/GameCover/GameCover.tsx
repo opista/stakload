@@ -1,10 +1,20 @@
 import { GameListModel } from "@contracts/database/games";
 import { AspectRatio, Image, Stack, Text } from "@mantine/core";
+import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
-import { IconBolt, IconDeviceGamepad2, IconDownload, IconPlayerPlay, IconStar, IconTrash } from "@tabler/icons-react";
+import {
+  IconBolt,
+  IconDeviceGamepad2,
+  IconDownload,
+  IconPlayerPlay,
+  IconSquareRoundedMinus,
+  IconStar,
+  IconTrash,
+} from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
 import clsx from "clsx";
 import { useContextMenu } from "mantine-contextmenu";
+import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameCover.module.css";
@@ -60,6 +70,7 @@ export const GameCover = ({
     })),
   );
   const { showContextMenu } = useContextMenu();
+  const { t } = useTranslation();
 
   return (
     <AspectRatio
@@ -114,11 +125,19 @@ export const GameCover = ({
         { key: "divider-2" },
         {
           key: "delete",
-          icon: <IconTrash size={16} />,
+          icon: <IconSquareRoundedMinus size={16} />,
           color: "red",
           title: "Remove from library",
           onClick: () => {
-            console.log("delete");
+            modals.openContextModal({
+              innerProps: {
+                id: game._id,
+                name: game.name,
+              },
+              modal: "removeGame",
+              size: "sm",
+              title: t("removeGameModal.title"),
+            });
           },
         },
       ])}

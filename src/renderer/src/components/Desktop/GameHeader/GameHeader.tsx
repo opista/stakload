@@ -1,13 +1,11 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { GameControls } from "@components/Desktop/GameControls/GameControls";
-import { RemoveGameModal } from "@components/RemoveGameModal/RemoveGameModal";
 import { GameStoreModel } from "@contracts/database/games";
 import { Container, Flex, Group } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 import { t } from "i18next";
-import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 import classes from "./GameHeader.module.css";
@@ -17,38 +15,30 @@ type GameHeaderProps = {
 };
 
 export const GameHeader = ({ game }: GameHeaderProps) => {
-  const [openedDelete, { open: openDelete, close: closeDelete }] = useDisclosure(false);
-  const navigate = useNavigate();
-
-  const { archiveGame, deleteGame, toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
+  const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
-      archiveGame: state.archiveGame,
-      deleteGame: state.deleteGame,
       toggleFavouriteGame: state.toggleFavouriteGame,
       toggleQuickLaunchGame: state.toggleQuickLaunchGame,
     })),
   );
 
-  const onRemoveConfirm = async (preventReadd: boolean) => {
-    if (preventReadd) {
-      await archiveGame(game._id);
-    } else {
-      await deleteGame(game._id);
-    }
-    navigate("..");
-    closeDelete();
+  const onDelete = () => {
+    modals.openContextModal({
+      innerProps: {
+        id: game._id,
+        name: game.name,
+        navigateTo: "..",
+      },
+      modal: "removeGame",
+      size: "sm",
+      title: t("removeGameModal.title"),
+    });
   };
 
   return (
     <div className={classes.container}>
       <Container size="responsive">
         <Flex className={classes.header} justify="space-between">
-          <RemoveGameModal
-            gameTitle={game.name}
-            onClose={closeDelete}
-            onConfirm={onRemoveConfirm}
-            opened={openedDelete}
-          />
           <Group>
             <GameControls game={game} />
           </Group>
@@ -63,7 +53,7 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
               icon={game.isQuickLaunch ? IconBoltFilled : IconBolt}
               onClick={() => toggleQuickLaunchGame(game._id)}
             />
-            <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={openDelete} />
+            <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={onDelete} />
           </Group>
         </Flex>
       </Container>

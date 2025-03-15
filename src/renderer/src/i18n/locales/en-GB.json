@@ -121,7 +121,8 @@
     "unknown": "Unknown"
   },
   "removeGameModal": {
-    "areYouSure": "Are you sure you want to remove <strong>{{gameTitle}}</strong> from your library?",
+    "title": "Remove game from library",
+    "areYouSure": "Are you sure you want to remove <strong>{{name}}</strong> from your library?",
     "cancel": "Cancel",
     "installedInfo": "If installed, this game will remain on your system.",
     "preventReadd": "Prevent game from being automaticaly re-added in future",
