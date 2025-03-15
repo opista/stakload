@@ -1,11 +1,12 @@
 import { GameFilters, GameStoreModel } from "@contracts/database/games";
 import { Service } from "typedi";
 
+import { EVENT_CHANNELS } from "../../preload/channels";
 import { ProtondbApiClient } from "../api/protondb-api.client";
 import { CollectionStore } from "../collection/collection.store";
 import { LoggerService } from "../logger/logger.service";
+import { WindowService } from "../window/window.service";
 import { GameStore } from "./game.store";
-
 @Service()
 export class GameService {
   constructor(
@@ -13,6 +14,7 @@ export class GameService {
     private readonly gameStore: GameStore,
     private readonly logger: LoggerService,
     private readonly protondbApiClient: ProtondbApiClient,
+    private readonly windowService: WindowService,
   ) {}
 
   async getGameFilters() {
@@ -78,6 +80,7 @@ export class GameService {
       const result = await this.gameStore.updateGameById(id, { archivedAt: new Date() });
       if (result) {
         this.logger.info("Game archived successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
     } catch (error) {
@@ -92,6 +95,7 @@ export class GameService {
       const result = await this.gameStore.removeGameById(id);
       if (result) {
         this.logger.info("Game deleted successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
     } catch (error) {
@@ -184,6 +188,7 @@ export class GameService {
       const result = await this.gameStore.toggleFavouriteGame(id);
       if (result) {
         this.logger.info("Game favourite status toggled successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
     } catch (error) {
@@ -198,6 +203,7 @@ export class GameService {
       const result = await this.gameStore.toggleQuickLaunchGame(id);
       if (result) {
         this.logger.info("Game quick launch status toggled successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
     } catch (error) {
