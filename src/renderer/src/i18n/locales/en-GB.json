@@ -211,5 +211,15 @@
   "quickLaunch": {
     "install": "Install",
     "launch": "Launch"
+  },
+  "gameCover": {
+    "launch": "Launch",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "removeFromLibrary": "Remove from library",
+    "addToFavourites": "Add to favourites",
+    "removeFromFavourites": "Remove from favourites",
+    "addToQuickLaunch": "Add to quick launch",
+    "removeFromQuickLaunch": "Remove from quick launch"
   }
 }

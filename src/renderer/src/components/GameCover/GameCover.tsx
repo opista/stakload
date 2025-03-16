@@ -84,42 +84,36 @@ export const GameCover = ({
           key: "launch",
           hidden: !game.isInstalled,
           icon: <IconPlayerPlay size={16} />,
-          title: "Launch",
+          title: t("gameCover.launch"),
           color: "green",
-          onClick: () => {
-            console.log("launch");
-          },
+          onClick: () => window.api.launchGame(game._id),
         },
         {
           key: "install",
           hidden: game.isInstalled,
           icon: <IconDownload size={16} />,
-          title: "Install",
-          onClick: () => {
-            console.log("install");
-          },
+          title: t("gameCover.install"),
+          onClick: () => window.api.installGame(game._id),
         },
         {
           key: "uninstall",
           hidden: !game.isInstalled,
           color: "red",
           icon: <IconTrash size={16} />,
-          title: "Uninstall",
-          onClick: () => {
-            console.log("uninstall");
-          },
+          title: t("gameCover.uninstall"),
+          onClick: () => window.api.uninstallGame(game._id),
         },
         { key: "divider-1" },
         {
           key: "favourite",
           icon: <IconStar size={16} />,
-          title: game.isFavourite ? "Remove from Favourites" : "Add to Favourites",
+          title: game.isFavourite ? t("gameCover.removeFromFavourites") : t("gameCover.addToFavourites"),
           onClick: () => toggleFavouriteGame(game._id),
         },
         {
           key: "quick-launch",
           icon: <IconBolt size={16} />,
-          title: game.isQuickLaunch ? "Remove from Quick Launch" : "Add to Quick Launch",
+          title: game.isQuickLaunch ? t("gameCover.removeFromQuickLaunch") : t("gameCover.addToQuickLaunch"),
           onClick: () => toggleQuickLaunchGame(game._id),
         },
         { key: "divider-2" },
@@ -127,7 +121,7 @@ export const GameCover = ({
           key: "delete",
           icon: <IconSquareRoundedMinus size={16} />,
           color: "red",
-          title: "Remove from library",
+          title: t("gameCover.removeFromLibrary"),
           onClick: () => {
             modals.openContextModal({
               innerProps: {

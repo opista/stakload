@@ -49,7 +49,6 @@ $ npm run build:linux
 - Features
 
   - Notification panel
-  - Context menu on games. install/play/uninstall, re-sync data, add to favourites/quick launch, archive, delete etc.
   - Search for game metadata. Some games don't return a result, we should offer the ability to manually map a game
   - Data backup/sync. Not sure how useful installation data will be, but the rest should be backed up
   - HLTB. Look at [hltb-for-deck](https://github.com/hulkrelax/hltb-for-deck/blob/main/src/hooks/useHltb.ts) for inspiration
@@ -85,3 +84,4 @@ $ npm run build:linux
   - Update SystemService to work cross-platform
   - Update IncompatibilityIcon functionality so that it identifies platform support
   - Total refactor of integration settings view
+  - Add option to re-sync/refresh metadata to context menu
