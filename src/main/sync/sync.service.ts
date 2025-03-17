@@ -177,11 +177,30 @@ export class SyncService {
     this.gamesAdded = 0;
   }
 
-  isIntegrationValid(library: Library) {
+  async isIntegrationValid(library: Library) {
     const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) return false;
 
-    return libraryImpl.isIntegrationValid();
+    const isValid = await libraryImpl.isIntegrationValid();
+
+    // TODO: This is temporary, we can clean this up later
+    if (isValid) {
+      this.windowService.sendEvent(EVENT_CHANNELS.NOTIFICATION, {
+        id: crypto.randomUUID(),
+        message: "You can sync your games",
+        title: `${library} integration successful`,
+        type: "success",
+      });
+    } else {
+      this.windowService.sendEvent(EVENT_CHANNELS.NOTIFICATION, {
+        id: crypto.randomUUID(),
+        message: "Check authentication details",
+        title: `${library} integration failed`,
+        type: "error",
+      });
+    }
+
+    return isValid;
   }
 
   async authenticate(library: Library, data?: unknown) {
