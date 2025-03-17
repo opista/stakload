@@ -16,9 +16,7 @@ export const CollectionCreateModal = ({ onConfirm, onClose, opened }: Collection
 
   const onClickConfirm = () => onConfirm(value, selectedIcon);
 
-  const Icon = useMemo(() => {
-    return importDynamicIcon(selectedIcon, IconDeviceGamepad);
-  }, [selectedIcon]);
+  const Icon = useMemo(() => importDynamicIcon(selectedIcon) || IconDeviceGamepad, [selectedIcon]);
 
   return (
     <Modal centered onClose={onClose} opened={opened} size="lg" title="Save collection">
