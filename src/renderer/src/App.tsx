@@ -4,6 +4,7 @@ import {
   ColorSchemeScript,
   Container,
   createTheme,
+  Drawer,
   MantineProvider,
   Modal,
   Notification,
@@ -52,6 +53,14 @@ export const App = () => {
           root: clsx({ [classes.responsiveContainer]: size === "responsive" }),
         }),
       }),
+      Drawer: Drawer.extend({
+        defaultProps: {
+          overlayProps: {
+            backgroundOpacity: 0.5,
+            blur: 3,
+          },
+        },
+      }),
       Modal: Modal.extend({
         defaultProps: {
           overlayProps: {
@@ -64,6 +73,7 @@ export const App = () => {
       }),
       Notification: Notification.extend({
         classNames: {
+          body: classes.notificationBody,
           icon: classes.notificationIcon,
           loader: classes.notificationLoader,
           root: classes.notification,
@@ -88,7 +98,7 @@ export const App = () => {
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <ContextMenuProvider borderRadius="md" shadow="md">
-          <Notifications classNames={{ root: classes.notifications }} />
+          <Notifications classNames={{ root: classes.notifications }} limit={5} />
           <Outlet />
         </ContextMenuProvider>
       </MantineProvider>

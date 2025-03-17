@@ -202,7 +202,8 @@
     "gamingMode": "Gaming mode",
     "maximize": "Maximize",
     "minimize": "Minimize",
-    "randomGame": "Random game"
+    "randomGame": "Random game",
+    "notifications": "Notifications"
   },
   "gamesGrid": {
     "noGamesFound": "No games found matching your filters",

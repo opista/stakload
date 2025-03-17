@@ -1,0 +1,14 @@
+.stack {
+  flex: 1;
+  margin-right: var(--mantine-spacing-xs);
+}
+
+.title {
+  color: var(--mantine-color-white);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.message {
+  color: var(--mantine-color-dark-2);
+  font-size: var(--mantine-font-size-sm);
+}

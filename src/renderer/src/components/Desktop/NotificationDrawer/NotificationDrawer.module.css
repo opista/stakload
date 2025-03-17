@@ -1,0 +1,7 @@
+.drawer {
+  top: 32px;
+}
+
+.content > div {
+  height: 100% !important;
+}

@@ -1,5 +1,5 @@
 .viewport {
-  >div {
+  > div {
     display: flex !important;
     flex-direction: column;
   }
@@ -16,7 +16,6 @@
   }
 }
 
-
 .notifications {
   width: auto;
   min-width: 300px;
@@ -24,6 +23,10 @@
 
 .notification {
   background-color: var(--color);
+}
+
+.notificationBody:has(:global(.custom-notification-body)) {
+  margin-right: 0;
 }
 
 .notificationIcon {

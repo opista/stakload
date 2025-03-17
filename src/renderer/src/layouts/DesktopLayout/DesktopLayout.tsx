@@ -1,6 +1,7 @@
 import { Header } from "@components/Desktop/Header/Header";
 import { modals } from "@components/Desktop/Modals/modals";
 import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
+import { NotificationDrawer } from "@components/Desktop/NotificationDrawer/NotificationDrawer";
 import { AppShell } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Outlet } from "react-router";
@@ -14,6 +15,7 @@ export const DesktopLayout = () => (
       <Header />
       <Spotlight />
       <Navbar />
+      <NotificationDrawer />
       <AppShell.Main className={classes.main}>
         <Outlet />
       </AppShell.Main>
