@@ -1,0 +1,49 @@
+.container {
+  background: #1b2c3b;
+  margin-bottom: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-sm);
+}
+
+.heading {
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.body {
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  position: relative;
+  gap: var(--mantine-spacing-xs);
+  padding-left: var(--mantine-spacing-md);
+}
+
+.textContainer {
+  gap: 0;
+  flex-grow: 1;
+}
+
+.icon {
+  flex-shrink: 0;
+  height: 44px;
+}
+
+.title {
+  color: var(--mantine-color-white);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.message {
+  color: var(--mantine-color-dark-2);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  flex-grow: 1;
+  height: 44px;
+  border-radius: var(--mantine-radius-xl);
+}

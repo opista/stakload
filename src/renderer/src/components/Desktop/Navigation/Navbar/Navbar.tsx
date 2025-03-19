@@ -32,7 +32,7 @@ export const Navbar = () => {
 
     collections.forEach((collection) => {
       if (collection.icon && !cache.has(collection.icon)) {
-        cache.set(collection.icon, importDynamicIcon(collection.icon, IconDeviceGamepad));
+        cache.set(collection.icon, importDynamicIcon(collection.icon) || IconDeviceGamepad);
       }
     });
 

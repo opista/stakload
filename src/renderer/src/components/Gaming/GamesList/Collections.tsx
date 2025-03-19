@@ -1,6 +1,6 @@
 import { Stack } from "@mantine/core";
 import { FocusContext, useFocusable } from "@noriginmedia/norigin-spatial-navigation";
-import { useGameStore } from "@store/game.store";
+import { useCollectionStore } from "@store/collection.store";
 import { IconDeviceGamepad, IconProps } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import { FC, useMemo } from "react";
@@ -23,14 +23,14 @@ export const Collections = () => {
     trackChildren: true,
   });
 
-  const collections = useGameStore(useShallow((state) => state.collections));
+  const collections = useCollectionStore(useShallow((state) => state.collections));
 
   const iconCache = useMemo(() => {
     const cache = new Map<string, FC<IconProps>>();
 
     collections.forEach((collection) => {
       if (collection.icon && !cache.has(collection.icon)) {
-        cache.set(collection.icon, importDynamicIcon(collection.icon, IconDeviceGamepad));
+        cache.set(collection.icon, importDynamicIcon(collection.icon) || IconDeviceGamepad);
       }
     });
 

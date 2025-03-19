@@ -1,6 +1,7 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
 import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
 import { GameSyncMessage } from "@contracts/store/game";
+import { Notification } from "@contracts/store/notification";
 import { ElectronAPI } from "@electron-toolkit/preload";
 
 import { RemoveListenerFunction } from "./util/listener-handler";
@@ -33,6 +34,7 @@ declare global {
       onIntegrationAuthenticationResult: (
         listener: (event, { library: Library, success: boolean }) => void,
       ) => RemoveListenerFunction;
+      onNotification: (listener: (event, data: Notification) => void) => RemoveListenerFunction;
       onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;
       platform: string;
       restartApp: () => void;

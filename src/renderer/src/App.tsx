@@ -64,6 +64,7 @@ export const App = () => {
       }),
       Notification: Notification.extend({
         classNames: {
+          body: classes.notificationBody,
           icon: classes.notificationIcon,
           loader: classes.notificationLoader,
           root: classes.notification,
@@ -88,7 +89,7 @@ export const App = () => {
       <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <ContextMenuProvider borderRadius="md" shadow="md">
-          <Notifications classNames={{ root: classes.notifications }} />
+          <Notifications classNames={{ root: classes.notifications }} limit={5} />
           <Outlet />
         </ContextMenuProvider>
       </MantineProvider>

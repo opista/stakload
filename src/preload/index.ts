@@ -63,6 +63,7 @@ const api = {
     listenerHandler(EVENT_CHANNELS.GAMES_LIST_UPDATED, listener),
   onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) =>
     listenerHandler(EVENT_CHANNELS.GAME_SYNC_STATUS, listener),
+  onNotification: (listener: (event, data: unknown) => void) => listenerHandler(EVENT_CHANNELS.NOTIFICATION, listener),
 
   platform: process.platform,
 };

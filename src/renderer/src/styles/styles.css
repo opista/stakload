@@ -1,11 +1,12 @@
 :root {
-  --scrollbar-width: 6px;
+  --scrollbar-size: 6px;
   --color: #15202c;
 }
 
 * {
   ::-webkit-scrollbar {
-    width: var(--scrollbar-width);
+    height: var(--scrollbar-size);
+    width: var(--scrollbar-size);
   }
 
   ::-webkit-scrollbar-thumb {
@@ -13,7 +14,6 @@
     background: var(--mantine-color-gray-0);
   }
 }
-
 
 html,
 body {

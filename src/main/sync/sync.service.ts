@@ -1,4 +1,5 @@
-import { GameStoreModel, Library } from "@contracts/database/games";
+import { GAME_ICONS, GameStoreModel, Library } from "@contracts/database/games";
+import { NOTIFICATION_KEYS } from "@contracts/store/notification";
 import { GameSyncMessage } from "@contracts/sync";
 import fastq from "fastq";
 import { Service } from "typedi";
@@ -7,6 +8,7 @@ import { EVENT_CHANNELS } from "../../preload/channels";
 import { SharedConfigService } from "../config/shared-config.service";
 import { GameStore } from "../game/game.store";
 import { LoggerService } from "../logger/logger.service";
+import { NotificationService } from "../notification/notification.service";
 import { WindowService } from "../window/window.service";
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
@@ -24,6 +26,7 @@ export class SyncService {
   constructor(
     private gameStore: GameStore,
     private logger: LoggerService,
+    private notificationService: NotificationService,
     private sharedConfigService: SharedConfigService,
     private syncRegistryService: SyncRegistryService,
     private windowService: WindowService,
@@ -177,11 +180,27 @@ export class SyncService {
     this.gamesAdded = 0;
   }
 
-  isIntegrationValid(library: Library) {
+  async isIntegrationValid(library: Library) {
     const libraryImpl = this.syncRegistryService.getLibrary(library);
     if (!libraryImpl) return false;
 
-    return libraryImpl.isIntegrationValid();
+    const isValid = await libraryImpl.isIntegrationValid();
+
+    if (isValid) {
+      this.notificationService.success({
+        icon: GAME_ICONS[library],
+        message: NOTIFICATION_KEYS.INTEGRATION_SUCCESS_MESSAGE,
+        title: NOTIFICATION_KEYS.INTEGRATION_SUCCESS_TITLE,
+      });
+    } else {
+      this.notificationService.error({
+        icon: GAME_ICONS[library],
+        message: NOTIFICATION_KEYS.INTEGRATION_FAILED_MESSAGE,
+        title: NOTIFICATION_KEYS.INTEGRATION_FAILED_TITLE,
+      });
+    }
+
+    return isValid;
   }
 
   async authenticate(library: Library, data?: unknown) {

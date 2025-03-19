@@ -40,7 +40,7 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
     await updateCollection(collection._id, { filters: collection.filters, name: value });
   };
 
-  const Icon = useMemo(() => importDynamicIcon(collection.icon, IconDeviceGamepad), [collection.icon]);
+  const Icon = useMemo(() => importDynamicIcon(collection.icon) || IconDeviceGamepad, [collection.icon]);
 
   return (
     <Group>
