@@ -4,7 +4,6 @@ import {
   ColorSchemeScript,
   Container,
   createTheme,
-  Drawer,
   MantineProvider,
   Modal,
   Notification,
@@ -52,14 +51,6 @@ export const App = () => {
         classNames: (_, { size }) => ({
           root: clsx({ [classes.responsiveContainer]: size === "responsive" }),
         }),
-      }),
-      Drawer: Drawer.extend({
-        defaultProps: {
-          overlayProps: {
-            backgroundOpacity: 0.5,
-            blur: 3,
-          },
-        },
       }),
       Modal: Modal.extend({
         defaultProps: {
