@@ -1,4 +1,21 @@
+.container {
+  gap: var(--mantine-spacing-xs);
+  align-items: flex-start;
+  flex-wrap: nowrap;
+}
+
+.body {
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.icon {
+  flex-shrink: 0;
+  height: 44px;
+}
+
 .stack {
+  gap: 0;
   flex: 1;
   margin-right: var(--mantine-spacing-xs);
 }

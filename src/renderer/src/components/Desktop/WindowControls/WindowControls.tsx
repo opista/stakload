@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Tooltip } from "@mantine/core";
+import { ActionIcon, Group, Indicator, Tooltip } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { useNotificationStore } from "@store/notification.store";
 import { IconBell, IconDeviceGamepad2, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
@@ -11,7 +11,12 @@ import classes from "./WindowControls.module.css";
 
 export const WindowControls = () => {
   const { getRandomGame } = useGameStore(useShallow((state) => ({ getRandomGame: state.getRandomGame })));
-  const toggleDrawer = useNotificationStore(useShallow((state) => state.toggleDrawer));
+  const { hasNotifications, toggleDrawer } = useNotificationStore(
+    useShallow((state) => ({
+      hasNotifications: !!state.notifications.length,
+      toggleDrawer: state.toggleDrawer,
+    })),
+  );
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -57,7 +62,9 @@ export const WindowControls = () => {
             onClick={toggleDrawer}
             variant="subtle"
           >
-            <IconBell size={16} />
+            <Indicator color="red" disabled={!hasNotifications} position="bottom-end" processing size={10} withBorder>
+              <IconBell size={16} />
+            </Indicator>
           </ActionIcon>
         </Tooltip>
         {window.api.platform !== "darwin" && (

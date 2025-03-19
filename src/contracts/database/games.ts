@@ -166,3 +166,10 @@ export type GameInstallationDetails = {
   installLocation: string;
   installedAt: Date;
 };
+
+export const GAME_ICONS: Record<Library, string> = {
+  "battle-net": "IconBrandBattleNet",
+  "epic-game-store": "IconBrandEpicGames",
+  gog: "IconBrandGog",
+  steam: "IconBrandSteam",
+};

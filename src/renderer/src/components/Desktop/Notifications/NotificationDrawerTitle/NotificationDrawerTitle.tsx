@@ -1,11 +1,12 @@
-import { useNotifications } from "@hooks/use-notifications";
 import { Button, Drawer, Group, Stack, Title } from "@mantine/core";
+import { useNotificationStore } from "@store/notification.store";
 import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
 
 import classes from "./NotificationDrawerTitle.module.css";
 
 export const NotificationDrawerTitle = () => {
-  const { clearAllNotifications } = useNotifications();
+  const clearAllNotifications = useNotificationStore(useShallow((state) => state.clearAllNotifications));
   const { t } = useTranslation();
 
   return (

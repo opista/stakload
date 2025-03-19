@@ -1,5 +1,4 @@
 import { NotificationBody } from "@components/Desktop/Notifications/NotificationBody/NotificationBody";
-import { DynamicIcon } from "@components/DynamicIcon/DynamicIcon";
 import { Notification } from "@contracts/store/notification";
 import { notifications } from "@mantine/notifications";
 import { useNotificationStore } from "@store/notification.store";
@@ -17,10 +16,9 @@ const mapNotificationTypeToColor = (type: Notification["type"]) =>
   notificationColorMap[type] || notificationColorMap.info;
 
 export const useNotifications = () => {
-  const { addNotification, clearAllNotifications, notificationsList, removeNotification } = useNotificationStore(
+  const { addNotification, notificationsList, removeNotification } = useNotificationStore(
     useShallow((state) => ({
       addNotification: state.addNotification,
-      clearAllNotifications: state.clearAllNotifications,
       notificationsList: state.notifications,
       removeNotification: state.removeNotification,
     })),
@@ -36,7 +34,6 @@ export const useNotifications = () => {
       autoClose: 5000,
       color: mapNotificationTypeToColor(notification.type),
       id: notification.id,
-      icon: notification.icon ? <DynamicIcon icon={notification.icon} size={32} /> : undefined,
       message: <NotificationBody notification={notification} onClose={onNotificationHide} />,
       radius: "lg",
       withCloseButton: false,
@@ -45,12 +42,12 @@ export const useNotifications = () => {
     addNotification(notification);
   };
 
-  const listener = (event: string, notification: Notification) => createNotification(notification);
+  const listener = (_event: string, notification: Notification) => createNotification(notification);
 
   useEffect(() => {
     const removeListener = window.api.onNotification(listener);
     return () => removeListener();
   }, []);
 
-  return { clearAllNotifications, createNotification, notifications: notificationsList, removeNotification };
+  return { notifications: notificationsList, removeNotification };
 };

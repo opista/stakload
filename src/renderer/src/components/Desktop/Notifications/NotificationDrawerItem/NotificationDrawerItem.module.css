@@ -5,16 +5,37 @@
   padding: var(--mantine-spacing-sm);
 }
 
-.group {
+.heading {
   margin-bottom: 4px;
   width: 100%;
 }
 
-.stack {
-  gap: 0;
+.body {
+  align-items: flex-start;
+  flex-wrap: nowrap;
   position: relative;
+  gap: var(--mantine-spacing-xs);
   padding-left: var(--mantine-spacing-md);
-  width: 100%;
+}
+
+.textContainer {
+  gap: 0;
+  flex-grow: 1;
+}
+
+.icon {
+  flex-shrink: 0;
+  height: 44px;
+}
+
+.title {
+  color: var(--mantine-color-white);
+  font-size: var(--mantine-font-size-sm);
+}
+
+.message {
+  color: var(--mantine-color-dark-2);
+  font-size: var(--mantine-font-size-sm);
 }
 
 .indicator {
@@ -23,6 +44,6 @@
   top: 0;
   width: 6px;
   flex-grow: 1;
-  height: 100%;
+  height: 44px;
   border-radius: var(--mantine-radius-xl);
 }

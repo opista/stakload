@@ -1,6 +1,8 @@
+import { DynamicIcon } from "@components/DynamicIcon/DynamicIcon";
 import { Notification } from "@contracts/store/notification";
 import { ActionIcon, Group, Paper, Stack, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
 
 import classes from "./NotificationDrawerItem.module.css";
 
@@ -17,9 +19,11 @@ const indiciatorColorMap: Record<Notification["type"], string> = {
 };
 
 export const NotificationDrawerItem = ({ notification, onClose }: NotificationDrawerItemProps) => {
+  const { t } = useTranslation();
+
   return (
     <Paper className={classes.container}>
-      <Group align="center" className={classes.group} justify="space-between">
+      <Group align="center" className={classes.heading} justify="space-between">
         <Text c="dimmed" size="xs">
           {new Date(notification.timestamp).toLocaleString()}
         </Text>
@@ -27,11 +31,15 @@ export const NotificationDrawerItem = ({ notification, onClose }: NotificationDr
           <IconX size={16} />
         </ActionIcon>
       </Group>
-      <Stack className={classes.stack}>
+      <Group className={classes.body}>
         <div className={classes.indicator} style={{ backgroundColor: indiciatorColorMap[notification.type] }}></div>
-        <Text c="white">{notification.title}</Text>
-        <Text size="sm">{notification.message}</Text>
-      </Stack>
+        {notification.icon && <DynamicIcon className={classes.icon} icon={notification.icon} size={32} />}
+
+        <Stack className={classes.textContainer}>
+          <Text className={classes.title}>{t(notification.title)}</Text>
+          <Text className={classes.message}>{t(notification.message)}</Text>
+        </Stack>
+      </Group>
     </Paper>
   );
 };

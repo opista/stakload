@@ -226,5 +226,13 @@
   "notificationDrawer": {
     "title": "Notifications",
     "clearAll": "Clear all"
+  },
+  "notifications": {
+    "integration": {
+      "successTitle": "Integration successful",
+      "successMessage": "You can now use this library to sync your games",
+      "failedTitle": "Integration failed",
+      "failedMessage": "Please check your integration details and try again"
+    }
   }
 }
