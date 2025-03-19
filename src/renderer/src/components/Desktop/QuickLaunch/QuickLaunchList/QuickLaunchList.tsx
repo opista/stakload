@@ -13,9 +13,9 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { ActionIcon, Group, Stack, Text } from "@mantine/core";
+import { Group, Stack, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconBolt, IconEdit } from "@tabler/icons-react";
+import { IconBolt } from "@tabler/icons-react";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -27,7 +27,7 @@ type QuickLaunchListProps = {
 };
 
 export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
-  const [editMode, setEditMode] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const { quickLaunchGames, quickLaunchGamesOrder, setQuickLaunchGameOrder } = useGameStore(
     useShallow((state) => ({
       quickLaunchGames: state.quickLaunchGames,
@@ -37,13 +37,22 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
   );
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 
+  const handleDragStart = () => {
+    setIsDragging(true);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setIsDragging(false);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -61,7 +70,7 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
   const gameStack = (
     <Stack gap={0}>
       {sortedGames.map((game) => (
-        <QuickLaunchItem editMode={editMode} game={game} key={game._id} />
+        <QuickLaunchItem editMode={isDragging} game={game} key={game._id} />
       ))}
     </Stack>
   );
@@ -75,20 +84,18 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
             Quick Launch
           </Text>
         </Group>
-        <ActionIcon onClick={() => setEditMode(!editMode)} size="sm" variant={editMode ? "filled" : "subtle"}>
-          <IconEdit size={16} />
-        </ActionIcon>
       </Group>
 
-      {editMode ? (
-        <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd} sensors={sensors}>
-          <SortableContext items={sortedGames.map((game) => game._id)} strategy={verticalListSortingStrategy}>
-            {gameStack}
-          </SortableContext>
-        </DndContext>
-      ) : (
-        gameStack
-      )}
+      <DndContext
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+        onDragStart={handleDragStart}
+        sensors={sensors}
+      >
+        <SortableContext items={sortedGames.map((game) => game._id)} strategy={verticalListSortingStrategy}>
+          {gameStack}
+        </SortableContext>
+      </DndContext>
     </Stack>
   );
 };

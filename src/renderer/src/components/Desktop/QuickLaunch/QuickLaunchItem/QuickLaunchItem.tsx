@@ -19,10 +19,10 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
 
   const style = {
-    cursor: editMode ? "grab" : "default",
-    opacity: isDragging ? 0.5 : 1,
     transform: CSS.Transform.toString(transform),
     transition,
+    cursor: isDragging ? "grabbing" : "default",
+    opacity: isDragging ? 0.5 : 1,
   };
 
   const onClick = () => {
@@ -36,8 +36,19 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   };
 
   return (
-    <div ref={setNodeRef} style={style} {...(editMode ? { ...attributes, ...listeners } : {})}>
-      <Flex className={clsx(classes.container, { [classes.clickable]: !editMode })} onClick={onClick}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={clsx({ [classes.dragging]: isDragging })}
+    >
+      <Flex
+        className={clsx(classes.container, {
+          [classes.clickable]: !editMode,
+        })}
+        onClick={onClick}
+      >
         <GameCover
           className={classes.gameCover}
           game={game}
