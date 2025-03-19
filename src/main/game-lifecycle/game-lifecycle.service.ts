@@ -1,8 +1,10 @@
 import { Library } from "@contracts/database/games";
+import { NOTIFICATION_KEYS } from "@contracts/store/notification";
 import { Service } from "typedi";
 
 import { GameStore } from "../game/game.store";
 import { LoggerService } from "../logger/logger.service";
+import { NotificationService } from "../notification/notification.service";
 import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
 import { WindowService } from "../window/window.service";
@@ -20,6 +22,7 @@ export class GameLifecycleService {
     private readonly gameStore: GameStore,
     private readonly libraryClientRegistryService: LibraryClientRegistryService,
     private readonly logger: LoggerService,
+    private readonly notificationService: NotificationService,
     private readonly processMonitorService: ProcessMonitorService,
     private readonly windowService: WindowService,
   ) {
@@ -80,6 +83,10 @@ export class GameLifecycleService {
       return { success: true };
     } catch (error) {
       this.logger.error("Game launch failed", error, { id, name: game.name });
+      this.notificationService.error({
+        title: NOTIFICATION_KEYS.GAME_LAUNCH_FAILED_TITLE,
+        message: NOTIFICATION_KEYS.GAME_LAUNCH_FAILED_MESSAGE,
+      });
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error occurred",
@@ -102,6 +109,10 @@ export class GameLifecycleService {
       this.logger.info("Game installation initiated", { id, name: game.name });
     } catch (error) {
       this.logger.error("Game installation failed", error, { id, name: game.name });
+      this.notificationService.error({
+        title: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_TITLE,
+        message: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_MESSAGE,
+      });
       throw error;
     }
   }
@@ -121,6 +132,10 @@ export class GameLifecycleService {
       this.logger.info("Game uninstallation initiated", { id, name: game.name });
     } catch (error) {
       this.logger.error("Game uninstallation failed", error, { id, name: game.name });
+      this.notificationService.error({
+        title: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_TITLE,
+        message: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_MESSAGE,
+      });
       throw error;
     }
   }

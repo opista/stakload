@@ -233,6 +233,18 @@
       "successMessage": "You can now use this library to sync your games",
       "failedTitle": "Integration failed",
       "failedMessage": "Please check your integration details and try again"
+    },
+    "gameInstallation": {
+      "failedTitle": "Game installation failed",
+      "failedMessage": "Please check that the launcher is installed"
+    },
+    "gameUninstallation": {
+      "failedTitle": "Game uninstallation failed",
+      "failedMessage": "Please check that the launcher is installed"
+    },
+    "gameLaunch": {
+      "failedTitle": "Game launch failed",
+      "failedMessage": "Please check that the game is installed and try again"
     }
   }
 }
