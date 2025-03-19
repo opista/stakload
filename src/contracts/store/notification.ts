@@ -20,7 +20,7 @@ export type NotificationStoreState = {
 };
 
 export type NotificationStoreActions = {
-  addNotification: (notification: Omit<Notification, "timestamp">) => void;
+  addNotification: (notification: Notification) => void;
   clearAllNotifications: () => void;
   closeDrawer: () => void;
   openDrawer: () => void;
