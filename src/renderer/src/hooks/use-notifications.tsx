@@ -1,8 +1,8 @@
-import { NotificationBody } from "@components/NotificationBody/NotificationBody";
+import { NotificationBody } from "@components/Desktop/Notifications/NotificationBody/NotificationBody";
+import { DynamicIcon } from "@components/DynamicIcon/DynamicIcon";
 import { Notification } from "@contracts/store/notification";
 import { notifications } from "@mantine/notifications";
 import { useNotificationStore } from "@store/notification.store";
-import { importDynamicIcon } from "@util/import-dynamic-icon";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -16,16 +16,11 @@ const notificationColorMap: Record<Notification["type"], string> = {
 const mapNotificationTypeToColor = (type: Notification["type"]) =>
   notificationColorMap[type] || notificationColorMap.info;
 
-const Icon = ({ icon }: { icon: string }) => {
-  const IconComponent = importDynamicIcon(icon);
-  if (!IconComponent) return null;
-  return <IconComponent size={32} />;
-};
-
 export const useNotifications = () => {
-  const { addNotification, notificationsList, removeNotification } = useNotificationStore(
+  const { addNotification, clearAllNotifications, notificationsList, removeNotification } = useNotificationStore(
     useShallow((state) => ({
       addNotification: state.addNotification,
+      clearAllNotifications: state.clearAllNotifications,
       notificationsList: state.notifications,
       removeNotification: state.removeNotification,
     })),
@@ -41,8 +36,8 @@ export const useNotifications = () => {
       autoClose: 5000,
       color: mapNotificationTypeToColor(notification.type),
       id: notification.id,
-      icon: notification.icon ? <Icon icon={notification.icon} /> : undefined,
-      message: <NotificationBody notification={notification} onNotificationHide={onNotificationHide} />,
+      icon: notification.icon ? <DynamicIcon icon={notification.icon} size={32} /> : undefined,
+      message: <NotificationBody notification={notification} onClose={onNotificationHide} />,
       radius: "lg",
       withCloseButton: false,
     });
@@ -57,5 +52,5 @@ export const useNotifications = () => {
     return () => removeListener();
   }, []);
 
-  return { createNotification, notifications: notificationsList };
+  return { clearAllNotifications, createNotification, notifications: notificationsList, removeNotification };
 };

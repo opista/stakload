@@ -1,0 +1,11 @@
+.inner {
+  top: 32px;
+}
+
+.content {
+  background: var(--color);
+
+  >div {
+    height: 100% !important;
+  }
+}

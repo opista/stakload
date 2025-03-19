@@ -222,5 +222,9 @@
     "removeFromFavourites": "Remove from favourites",
     "addToQuickLaunch": "Add to quick launch",
     "removeFromQuickLaunch": "Remove from quick launch"
+  },
+  "notificationDrawer": {
+    "title": "Notifications",
+    "clearAll": "Clear all"
   }
 }

@@ -1,0 +1,28 @@
+.container {
+  background: #1b2c3b;
+  margin-bottom: var(--mantine-spacing-xs);
+  border-radius: var(--mantine-radius-lg);
+  padding: var(--mantine-spacing-sm);
+}
+
+.group {
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.stack {
+  gap: 0;
+  position: relative;
+  padding-left: var(--mantine-spacing-md);
+  width: 100%;
+}
+
+.indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  flex-grow: 1;
+  height: 100%;
+  border-radius: var(--mantine-radius-xl);
+}
