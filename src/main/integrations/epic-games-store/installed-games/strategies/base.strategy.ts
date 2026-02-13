@@ -9,9 +9,9 @@ import { EpicInstallationData, InstalledGameData, InstalledGamesStrategy } from 
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  abstract getApplicationPath(): Promise<string>;
-
   constructor(protected readonly logger: LoggerService) {}
+
+  abstract getApplicationPath(): Promise<string>;
 
   async getInstalledGames(): Promise<InstalledGameData[]> {
     const epicPath = await this.getApplicationPath();
@@ -24,8 +24,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
       return parsed.InstallationList.map((install) => ({
         appName: install.AppName,
         installationDetails: {
-          installLocation: install.InstallLocation,
           installedAt: new Date(),
+          installLocation: install.InstallLocation,
         },
       }));
     } catch (error: unknown) {

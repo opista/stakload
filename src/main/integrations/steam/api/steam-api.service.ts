@@ -2,6 +2,7 @@ import { buildQueryParams } from "@util/build-query-params";
 import { Service } from "typedi";
 
 import { LoggerService } from "../../../logger/logger.service";
+
 import { OwnedGamesResponse } from "./types";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";

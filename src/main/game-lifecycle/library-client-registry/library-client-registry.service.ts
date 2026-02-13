@@ -6,6 +6,7 @@ import { BattleNetClientService } from "../../integrations/battle-net/client/bat
 import { EpicGameStoreClientService } from "../../integrations/epic-games-store/client/epic-games-store-client.service";
 import { GogClientService } from "../../integrations/gog/client/gog-client.service";
 import { SteamClientService } from "../../integrations/steam/client/steam-client.service";
+
 import { LibraryClientService } from "./types";
 
 @Service()

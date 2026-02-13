@@ -12,13 +12,6 @@ type GameStore = GameState & GameActions;
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
-      gamesDetails: {},
-      gamesList: [],
-      gameFilters: {},
-      newGames: [],
-      quickLaunchGames: [],
-      quickLaunchGamesOrder: [],
-
       archiveGame: async (id: string) => {
         await window.api.archiveGame(id);
         await get().refreshGameData();
@@ -40,11 +33,6 @@ export const useGameStore = create<GameStore>()(
         }));
         return details;
       },
-      getRandomGame: () => {
-        const gamesList = get().gamesList;
-        const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
-        return randomGame;
-      },
       fetchGameFilters: async () => {
         const gameFilters = await window.api.getGameFilters();
         set({ gameFilters });
@@ -53,6 +41,7 @@ export const useGameStore = create<GameStore>()(
         const gamesList = await window.api.getGamesList();
         set({ gamesList });
       },
+
       fetchNewGames: async () => {
         const newGames = await window.api.getNewGames();
         set({ newGames });
@@ -61,6 +50,17 @@ export const useGameStore = create<GameStore>()(
         const quickLaunchGames = await window.api.getQuickLaunchGames();
         set({ quickLaunchGames });
       },
+      gameFilters: {},
+      gamesDetails: {},
+      gamesList: [],
+      getRandomGame: () => {
+        const gamesList = get().gamesList;
+        const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+        return randomGame;
+      },
+      newGames: [],
+      quickLaunchGames: [],
+      quickLaunchGamesOrder: [],
       refreshGameData: async () => {
         await Promise.all([
           get().fetchQuickLaunchGames(),

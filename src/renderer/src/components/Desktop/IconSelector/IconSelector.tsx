@@ -34,7 +34,7 @@ export const IconSelector = ({ children, onSelect, selectedIcon }: IconSelectorP
     return (
       <div style={style}>
         <Card
-          onClick={() => onSelect?.(Icon.displayName!)}
+          onClick={() => onSelect?.(Icon.displayName)}
           padding="xs"
           style={{
             alignItems: "center",

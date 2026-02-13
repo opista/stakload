@@ -11,11 +11,11 @@ import { CollectionButton } from "./CollectionButton";
 const FOCUS_KEY = "COLLECTION_BUTTONS";
 
 export const Collections = () => {
-  const { ref, focusKey } = useFocusable({
+  const { focusKey, ref } = useFocusable({
     autoRestoreFocus: true,
+    focusable: true,
     focusBoundaryDirections: ["up", "down"],
     focusKey: FOCUS_KEY,
-    focusable: true,
     isFocusBoundary: true,
     onArrowPress: () => true,
     preferredChildFocusKey: undefined,

@@ -10,9 +10,9 @@ import { GogInstalledBaseProduct, InstalledGameData, InstalledGamesStrategy } fr
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  abstract getApplicationPath(): Promise<string>;
-
   constructor(protected readonly logger: LoggerService) {}
+
+  abstract getApplicationPath(): Promise<string>;
 
   async getInstalledGames(): Promise<InstalledGameData[]> {
     const gogPath = await this.getApplicationPath();
@@ -29,7 +29,7 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
         .all();
 
       db.close();
-      this.logger.debug("Fetched installed GOG games from database", { dbPath, count: installedGames.length });
+      this.logger.debug("Fetched installed GOG games from database", { count: installedGames.length, dbPath });
       return installedGames.map(mapAppManifestToGameInstallationDetails);
     } catch (err) {
       this.logger.error("Failed to read GOG Galaxy database", err, { dbPath });

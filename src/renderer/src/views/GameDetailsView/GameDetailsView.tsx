@@ -52,7 +52,7 @@ export const GameDetailsView = () => {
     if (!params.id) return;
     if (gameDetails) return;
 
-    fetchGameDetails(params.id!);
+    fetchGameDetails(params.id);
   }, [params.id, gameDetails, fetchGameDetails]);
 
   if (!params.id) {

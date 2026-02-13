@@ -6,6 +6,7 @@ import { BattleNetLibraryService } from "../../integrations/battle-net/sync/batt
 import { EpicGamesStoreSyncService } from "../../integrations/epic-games-store/sync/epic-games-store-sync.service";
 import { GogLibraryService } from "../../integrations/gog/sync/gog-sync.service";
 import { SteamLibraryService } from "../../integrations/steam/sync/steam-sync.service";
+
 import { SyncService } from "./types";
 
 @Service()

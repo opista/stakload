@@ -4,18 +4,20 @@ import { create } from "zustand";
 type NotificationStore = NotificationStoreState & NotificationStoreActions;
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
-  isDrawerOpen: false,
-  notifications: [],
-
-  closeDrawer: () => set({ isDrawerOpen: false }),
-  openDrawer: () => set({ isDrawerOpen: true }),
-  toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
-
   addNotification: (notification) => {
     set((state) => ({
       notifications: [notification, ...state.notifications],
     }));
   },
+  clearAllNotifications: () => {
+    set({ notifications: [] });
+  },
+
+  closeDrawer: () => set({ isDrawerOpen: false }),
+  isDrawerOpen: false,
+  notifications: [],
+
+  openDrawer: () => set({ isDrawerOpen: true }),
 
   removeNotification: (id) => {
     set((state) => ({
@@ -23,7 +25,5 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     }));
   },
 
-  clearAllNotifications: () => {
-    set({ notifications: [] });
-  },
+  toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
 }));

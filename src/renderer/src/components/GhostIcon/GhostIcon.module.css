@@ -1,5 +1,4 @@
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -11,7 +10,6 @@
 }
 
 @keyframes shadow {
-
   0%,
   100% {
     transform: scale(0.8);

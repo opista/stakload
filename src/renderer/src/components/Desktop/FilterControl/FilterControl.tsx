@@ -49,9 +49,9 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
     if (!collection) return;
 
     await updateCollection(collection._id, {
-      name: collection.name,
-      icon: collection.icon,
       filters,
+      icon: collection.icon,
+      name: collection.name,
     });
 
     setHasUnsavedChanges(false);

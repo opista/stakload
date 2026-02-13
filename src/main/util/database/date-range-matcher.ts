@@ -49,7 +49,7 @@ const mapCustomDateRangeFilter = (dateRange: DateRange) => {
 export const dateRangeMatcher = (field: string, input?: DateFilter) => {
   if (!input) return {};
 
-  const { dateRange, startDate, endDate } = input;
+  const { dateRange, endDate, startDate } = input;
 
   if (dateRange === "CUSTOM") {
     return {

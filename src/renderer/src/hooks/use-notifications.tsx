@@ -6,10 +6,10 @@ import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 const notificationColorMap: Record<Notification["type"], string> = {
+  error: "red",
   info: "blue",
   success: "green",
   warning: "yellow",
-  error: "red",
 };
 
 const mapNotificationTypeToColor = (type: Notification["type"]) =>

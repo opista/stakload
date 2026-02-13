@@ -9,7 +9,7 @@ type SettingsTitleProps = {
   title: string;
 };
 
-export const SettingsTitle = ({ title, subtitle }: SettingsTitleProps) => {
+export const SettingsTitle = ({ subtitle, title }: SettingsTitleProps) => {
   return (
     <>
       <Title className={clsx({ [classes.bottomMargin]: !subtitle })} order={2} size="h3">

@@ -12,11 +12,12 @@ import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
+
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
 @Service()
 export class EpicGamesStoreSyncService implements SyncService {
-  library: Library = "epic-game-store";
   private installedGameStrategy: InstalledGamesStrategy;
+  library: Library = "epic-game-store";
 
   constructor(
     private readonly epicGamesStoreApiService: EpicGamesStoreApiService,
@@ -28,6 +29,64 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly windowService: WindowService,
   ) {
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
+  }
+
+  private async handleAuthenticationResponse(
+    window: BrowserWindow,
+    _event: unknown,
+    url: string,
+    _httpResponseCode: number,
+    _httpStatusText: string,
+  ) {
+    if (url.startsWith("https://www.epicgames.com/id/api/redirect")) {
+      this.logger.debug("Handling EpicGamesStore authentication response", { url });
+      const bodyText = await window.webContents.executeJavaScript("document.body.innerText");
+      const parsed = JSON.parse(bodyText);
+      const { authorizationCode } = parsed;
+
+      window.close();
+      this.logger.info("Authentication window closed", { url });
+      await this.legendaryService.logout();
+      this.logger.debug("Logged out from LegendaryService for authentication refresh");
+      const result = await this.legendaryService.login(authorizationCode);
+      this.logger.info("LegendaryService authentication result", { success: result.success });
+      this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+        library: this.library,
+        success: result.success,
+      });
+    }
+  }
+
+  async addNewGames() {
+    this.logger.debug("Adding new games from EpicGamesStore integration");
+    const ownedGames = await this.legendaryService.getOwnedGames();
+    this.logger.info("Fetched owned games from LegendaryService", { count: ownedGames.length });
+    const existingGames = await this.gameStore.findGamesByEpicNamespace(
+      ownedGames.map(({ metadata: { namespace } }) => namespace),
+    );
+    const existingIds = existingGames.map(({ libraryMeta }) => libraryMeta?.namespace);
+
+    const mappedGames = ownedGames
+      .filter((game) => !existingIds.includes(game.metadata.namespace))
+      .map((game) => mapOwnedGameToGameStoreModel(game));
+
+    await this.gameStore.bulkInsertGames(mappedGames);
+    this.logger.info("New games added from EpicGamesStore integration", {
+      count: mappedGames.length,
+    });
+    return mappedGames.length;
+  }
+
+  async authenticate() {
+    this.logger.debug("Initiating EpicGamesStore authentication");
+    const window = await this.windowService.createChildWindow({
+      height: 520,
+      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
+      sessionId: "epic-games-store-auth",
+      url: "https://www.epicgames.com/id/login?redirectUrl=https%3A//www.epicgames.com/id/api/redirect%3FclientId%3D34a02cf8f4414e29b15921876da36f9a%26responseType%3Dcode",
+      width: 350,
+    });
+    window.show();
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
@@ -59,6 +118,13 @@ export class EpicGamesStoreSyncService implements SyncService {
     return await this.StakloadApiClient.getGameMetadata(gameId, ExternalGameSource.EpicGames);
   }
 
+  async isIntegrationValid(): Promise<boolean> {
+    this.logger.debug("Validating EpicGamesStore integration via LegendaryService");
+    const valid = await this.legendaryService.isLoggedIn();
+    this.logger.info("EpicGamesStore integration valid status", { valid });
+    return valid;
+  }
+
   async updateInstalledGames() {
     this.logger.debug("Updating installed games status", { library: this.library });
     const installedGames = await this.installedGameStrategy.getInstalledGames();
@@ -88,70 +154,5 @@ export class EpicGamesStoreSyncService implements SyncService {
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
     this.logger.info("Installed games status update complete");
-  }
-
-  async isIntegrationValid(): Promise<boolean> {
-    this.logger.debug("Validating EpicGamesStore integration via LegendaryService");
-    const valid = await this.legendaryService.isLoggedIn();
-    this.logger.info("EpicGamesStore integration valid status", { valid });
-    return valid;
-  }
-
-  async addNewGames() {
-    this.logger.debug("Adding new games from EpicGamesStore integration");
-    const ownedGames = await this.legendaryService.getOwnedGames();
-    this.logger.info("Fetched owned games from LegendaryService", { count: ownedGames.length });
-    const existingGames = await this.gameStore.findGamesByEpicNamespace(
-      ownedGames.map(({ metadata: { namespace } }) => namespace),
-    );
-    const existingIds = existingGames.map(({ libraryMeta }) => libraryMeta?.namespace);
-
-    const mappedGames = ownedGames
-      .filter((game) => !existingIds.includes(game.metadata.namespace))
-      .map((game) => mapOwnedGameToGameStoreModel(game));
-
-    await this.gameStore.bulkInsertGames(mappedGames);
-    this.logger.info("New games added from EpicGamesStore integration", {
-      count: mappedGames.length,
-    });
-    return mappedGames.length;
-  }
-
-  private async handleAuthenticationResponse(
-    window: BrowserWindow,
-    _event: unknown,
-    url: string,
-    _httpResponseCode: number,
-    _httpStatusText: string,
-  ) {
-    if (url.startsWith("https://www.epicgames.com/id/api/redirect")) {
-      this.logger.debug("Handling EpicGamesStore authentication response", { url });
-      const bodyText = await window.webContents.executeJavaScript("document.body.innerText");
-      const parsed = JSON.parse(bodyText);
-      const { authorizationCode } = parsed;
-
-      window.close();
-      this.logger.info("Authentication window closed", { url });
-      await this.legendaryService.logout();
-      this.logger.debug("Logged out from LegendaryService for authentication refresh");
-      const result = await this.legendaryService.login(authorizationCode);
-      this.logger.info("LegendaryService authentication result", { success: result.success });
-      this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
-        library: this.library,
-        success: result.success,
-      });
-    }
-  }
-
-  async authenticate() {
-    this.logger.debug("Initiating EpicGamesStore authentication");
-    const window = await this.windowService.createChildWindow({
-      height: 520,
-      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
-      sessionId: "epic-games-store-auth",
-      url: "https://www.epicgames.com/id/login?redirectUrl=https%3A//www.epicgames.com/id/api/redirect%3FclientId%3D34a02cf8f4414e29b15921876da36f9a%26responseType%3Dcode",
-      width: 350,
-    });
-    window.show();
   }
 }

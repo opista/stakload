@@ -26,13 +26,6 @@ export class NotificationService {
     this.windowService.sendEvent(EVENT_CHANNELS.NOTIFICATION, notificationWithId);
   }
 
-  success(notification: NotificationOptions) {
-    this.send({
-      ...notification,
-      type: "success",
-    });
-  }
-
   error(notification: NotificationOptions) {
     this.send({
       ...notification,
@@ -40,17 +33,24 @@ export class NotificationService {
     });
   }
 
-  warning(notification: NotificationOptions) {
-    this.send({
-      ...notification,
-      type: "warning",
-    });
-  }
-
   info(notification: NotificationOptions) {
     this.send({
       ...notification,
       type: "info",
+    });
+  }
+
+  success(notification: NotificationOptions) {
+    this.send({
+      ...notification,
+      type: "success",
+    });
+  }
+
+  warning(notification: NotificationOptions) {
+    this.send({
+      ...notification,
+      type: "warning",
     });
   }
 }

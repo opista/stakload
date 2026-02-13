@@ -75,53 +75,52 @@ export const GameCover = ({
   return (
     <AspectRatio
       className={clsx(classes.aspectRatio, className, {
-        [classes.hoverEffect]: hoverEffect,
         [classes.clickable]: !!onClick,
+        [classes.hoverEffect]: hoverEffect,
       })}
       onClick={() => onClick?.(game)}
       onContextMenu={showContextMenu([
         {
-          key: "launch",
+          color: "green",
           hidden: !game.isInstalled,
           icon: <IconPlayerPlay size={16} />,
-          title: t("gameCover.launch"),
-          color: "green",
+          key: "launch",
           onClick: () => window.api.launchGame(game._id),
+          title: t("gameCover.launch"),
         },
         {
-          key: "install",
           hidden: game.isInstalled,
           icon: <IconDownload size={16} />,
-          title: t("gameCover.install"),
+          key: "install",
           onClick: () => window.api.installGame(game._id),
+          title: t("gameCover.install"),
         },
         {
-          key: "uninstall",
-          hidden: !game.isInstalled,
           color: "red",
+          hidden: !game.isInstalled,
           icon: <IconTrash size={16} />,
-          title: t("gameCover.uninstall"),
+          key: "uninstall",
           onClick: () => window.api.uninstallGame(game._id),
+          title: t("gameCover.uninstall"),
         },
         { key: "divider-1" },
         {
-          key: "favourite",
           icon: <IconStar size={16} />,
-          title: game.isFavourite ? t("gameCover.removeFromFavourites") : t("gameCover.addToFavourites"),
+          key: "favourite",
           onClick: () => toggleFavouriteGame(game._id),
+          title: game.isFavourite ? t("gameCover.removeFromFavourites") : t("gameCover.addToFavourites"),
         },
         {
-          key: "quick-launch",
           icon: <IconBolt size={16} />,
-          title: game.isQuickLaunch ? t("gameCover.removeFromQuickLaunch") : t("gameCover.addToQuickLaunch"),
+          key: "quick-launch",
           onClick: () => toggleQuickLaunchGame(game._id),
+          title: game.isQuickLaunch ? t("gameCover.removeFromQuickLaunch") : t("gameCover.addToQuickLaunch"),
         },
         { key: "divider-2" },
         {
-          key: "delete",
-          icon: <IconSquareRoundedMinus size={16} />,
           color: "red",
-          title: t("gameCover.removeFromLibrary"),
+          icon: <IconSquareRoundedMinus size={16} />,
+          key: "delete",
           onClick: () => {
             modals.openContextModal({
               innerProps: {
@@ -133,6 +132,7 @@ export const GameCover = ({
               title: t("removeGameModal.title"),
             });
           },
+          title: t("gameCover.removeFromLibrary"),
         },
       ])}
       ratio={GAME_COVER_ART_RATIO}

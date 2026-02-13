@@ -43,6 +43,20 @@ export class CollectionService {
     }
   }
 
+  async deleteCollection(id: string) {
+    this.logger.debug("Processing collection deletion", { id });
+    try {
+      const deleted = await this.collectionStore.deleteCollectionById(id);
+      if (deleted) {
+        this.logger.info("Collection deleted successfully", { id });
+      }
+      return deleted;
+    } catch (error) {
+      this.logger.error("Failed to delete collection", error, { id });
+      throw error;
+    }
+  }
+
   async getCollections() {
     this.logger.debug("Fetching all collections");
     try {
@@ -69,20 +83,6 @@ export class CollectionService {
       return updated;
     } catch (error) {
       this.logger.error("Failed to update collection", error, { id });
-      throw error;
-    }
-  }
-
-  async deleteCollection(id: string) {
-    this.logger.debug("Processing collection deletion", { id });
-    try {
-      const deleted = await this.collectionStore.deleteCollectionById(id);
-      if (deleted) {
-        this.logger.info("Collection deleted successfully", { id });
-      }
-      return deleted;
-    } catch (error) {
-      this.logger.error("Failed to delete collection", error, { id });
       throw error;
     }
   }

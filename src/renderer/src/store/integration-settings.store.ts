@@ -19,6 +19,8 @@ export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
         gog: false,
         steam: false,
       },
+      setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
+      syncOnStartup: false,
       toggleIntegrationEnabled: (library: Library) =>
         set((state) => ({
           integrationsEnabled: {
@@ -26,8 +28,6 @@ export const useIntegrationSettingsStore = create<IntegrationSettingsStore>()(
             [library]: !state.integrationsEnabled[library],
           },
         })),
-      setSyncOnStartup: (syncOnStartup) => set({ syncOnStartup }),
-      syncOnStartup: false,
     }),
     {
       name: "integration_settings",

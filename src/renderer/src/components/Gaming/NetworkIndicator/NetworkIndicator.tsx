@@ -30,7 +30,7 @@ export const NetworkIndicator = () => {
   const { online } = useNetwork();
 
   const config = online ? NETWORK_CONFIG_MAP.online : NETWORK_CONFIG_MAP.offline;
-  const { label, icon: Icon, iconColor } = config;
+  const { icon: Icon, iconColor, label } = config;
 
   return (
     <Tooltip events={{ focus: true, hover: true, touch: false }} label={t(label)} withArrow>

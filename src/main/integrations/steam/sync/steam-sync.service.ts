@@ -11,11 +11,12 @@ import { WindowService } from "../../../window/window.service";
 import { SteamApiService } from "../api/steam-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
+
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 @Service()
 export class SteamLibraryService implements SyncService {
-  library: Library = "steam";
   private installedGamesStrategy: InstalledGamesStrategy;
+  library: Library = "steam";
 
   constructor(
     private readonly gameStore: GameStore,
@@ -27,51 +28,6 @@ export class SteamLibraryService implements SyncService {
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
-  }
-
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata for Steam", { gameId: game.gameId });
-    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Steam);
-  }
-
-  async updateInstalledGames() {
-    this.logger.debug("Updating installed Steam games");
-    const installedGames = await this.installedGamesStrategy.getInstalledGames();
-    this.logger.debug("Installed games fetched", { count: installedGames.length });
-    const installedGameIds = installedGames.map((game) => game.gameId);
-
-    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
-      { isInstalled: true, libraries: [this.library] },
-      "all",
-    );
-    const uninstalledGameIds = currentlyInstalledGames
-      .map((game) => game.gameId)
-      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
-
-    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
-    );
-
-    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
-    );
-
-    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed Steam games updated");
-  }
-
-  getSteamCredentials() {
-    const steamId = this.sharedConfigService.get("integration_settings.state.steamIntegration.steamId");
-    const webApiKey = this.sharedConfigService.get("integration_settings.state.steamIntegration.webApiKey", {
-      decrypt: true,
-    });
-
-    if (!steamId || !webApiKey) {
-      this.logger.error("Steam credentials not found");
-      throw new Error("Steam ID or web API key not found");
-    }
-
-    return { steamId, webApiKey };
   }
 
   async addNewGames() {
@@ -96,17 +52,6 @@ export class SteamLibraryService implements SyncService {
     } catch (err) {
       this.logger.error("Failed to add new Steam games", err);
       return 0;
-    }
-  }
-
-  async isIntegrationValid(): Promise<boolean> {
-    try {
-      const { steamId, webApiKey } = this.getSteamCredentials();
-      const response = await this.steamApiService.getOwnedGames(webApiKey, steamId);
-      return !!response;
-    } catch (err) {
-      this.logger.error("Failed to validate Steam integration", err);
-      return false;
     }
   }
 
@@ -143,5 +88,61 @@ export class SteamLibraryService implements SyncService {
       library: this.library,
       success,
     });
+  }
+
+  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+    this.logger.debug("Fetching game metadata for Steam", { gameId: game.gameId });
+    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Steam);
+  }
+
+  getSteamCredentials() {
+    const steamId = this.sharedConfigService.get("integration_settings.state.steamIntegration.steamId");
+    const webApiKey = this.sharedConfigService.get("integration_settings.state.steamIntegration.webApiKey", {
+      decrypt: true,
+    });
+
+    if (!steamId || !webApiKey) {
+      this.logger.error("Steam credentials not found");
+      throw new Error("Steam ID or web API key not found");
+    }
+
+    return { steamId, webApiKey };
+  }
+
+  async isIntegrationValid(): Promise<boolean> {
+    try {
+      const { steamId, webApiKey } = this.getSteamCredentials();
+      const response = await this.steamApiService.getOwnedGames(webApiKey, steamId);
+      return !!response;
+    } catch (err) {
+      this.logger.error("Failed to validate Steam integration", err);
+      return false;
+    }
+  }
+
+  async updateInstalledGames() {
+    this.logger.debug("Updating installed Steam games");
+    const installedGames = await this.installedGamesStrategy.getInstalledGames();
+    this.logger.debug("Installed games fetched", { count: installedGames.length });
+    const installedGameIds = installedGames.map((game) => game.gameId);
+
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
+      { isInstalled: true, libraries: [this.library] },
+      "all",
+    );
+    const uninstalledGameIds = currentlyInstalledGames
+      .map((game) => game.gameId)
+      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
+
+    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
+      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+    );
+
+    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
+      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+    );
+
+    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
+    this.logger.info("Installed Steam games updated");
   }
 }

@@ -10,18 +10,19 @@ import { GameStore } from "../game/game.store";
 import { LoggerService } from "../logger/logger.service";
 import { NotificationService } from "../notification/notification.service";
 import { WindowService } from "../window/window.service";
+
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
 
 @Service()
 export class SyncService {
+  private failures: FailureHistoryEntry[] = [];
+  private gamesAdded: number = 0;
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
   private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
-  private failures: FailureHistoryEntry[] = [];
+  private metadataToProcess: number = 0;
   private processing: number = 0;
   private syncInProgress = false;
-  private metadataToProcess: number = 0;
-  private gamesAdded: number = 0;
 
   constructor(
     private gameStore: GameStore,
@@ -32,12 +33,19 @@ export class SyncService {
     private windowService: WindowService,
   ) {}
 
+  private addFailureEntry(entry: FailureHistoryEntry) {
+    this.failures.push(entry);
+  }
+
   private emitSyncEvent(message: GameSyncMessage) {
     this.windowService.sendEvent(EVENT_CHANNELS.GAME_SYNC_STATUS, message);
   }
 
-  private addFailureEntry(entry: FailureHistoryEntry) {
-    this.failures.push(entry);
+  private getEnabledLibraries() {
+    const libraries = this.sharedConfigService.get("integration_settings.state.integrationsEnabled");
+    return Object.entries(libraries || {})
+      .filter(([, enabled]) => enabled)
+      .map(([library]) => library as Library);
   }
 
   private async libraryWorker(library: Library) {
@@ -126,6 +134,14 @@ export class SyncService {
     }
   }
 
+  private reset() {
+    this.failures = [];
+    this.processing = 0;
+    this.syncInProgress = false;
+    this.metadataToProcess = 0;
+    this.gamesAdded = 0;
+  }
+
   private async syncLibraries(libraries: Library[]) {
     this.logger.info("Starting sync for enabled libraries", { libraries });
     await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
@@ -150,34 +166,12 @@ export class SyncService {
     this.syncInProgress = false;
   }
 
-  private getEnabledLibraries() {
-    const libraries = this.sharedConfigService.get("integration_settings.state.integrationsEnabled");
-    return Object.entries(libraries || {})
-      .filter(([, enabled]) => enabled)
-      .map(([library]) => library as Library);
-  }
+  async authenticate(library: Library, data?: unknown) {
+    const libraryImpl = this.syncRegistryService.getLibrary(library);
+    if (!libraryImpl) return false;
 
-  sync() {
-    if (this.syncInProgress) {
-      this.logger.warn("Sync operation already in progress");
-      return false;
-    }
-
-    const enabledLibraries = this.getEnabledLibraries();
-    this.logger.info("Initiating sync", { enabledLibraries });
-    this.reset();
-    this.syncInProgress = true;
-    this.syncLibraries(enabledLibraries);
-
-    return true;
-  }
-
-  private reset() {
-    this.failures = [];
-    this.processing = 0;
-    this.syncInProgress = false;
-    this.metadataToProcess = 0;
-    this.gamesAdded = 0;
+    this.logger.debug("Authenticating integration", { library });
+    return libraryImpl.authenticate(data);
   }
 
   async isIntegrationValid(library: Library) {
@@ -203,11 +197,18 @@ export class SyncService {
     return isValid;
   }
 
-  async authenticate(library: Library, data?: unknown) {
-    const libraryImpl = this.syncRegistryService.getLibrary(library);
-    if (!libraryImpl) return false;
+  sync() {
+    if (this.syncInProgress) {
+      this.logger.warn("Sync operation already in progress");
+      return false;
+    }
 
-    this.logger.debug("Authenticating integration", { library });
-    return libraryImpl.authenticate(data);
+    const enabledLibraries = this.getEnabledLibraries();
+    this.logger.info("Initiating sync", { enabledLibraries });
+    this.reset();
+    this.syncInProgress = true;
+    this.syncLibraries(enabledLibraries);
+
+    return true;
   }
 }

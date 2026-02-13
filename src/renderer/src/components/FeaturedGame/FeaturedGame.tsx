@@ -20,7 +20,7 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const { hovered, ref: hoverRef } = useHover();
-  const { ref: inViewportRef, inViewport } = useInViewport();
+  const { inViewport, ref: inViewportRef } = useInViewport();
 
   const interval = useInterval(() => {
     setCurrentIndex((current) => (current + 1) % screenshots.length);

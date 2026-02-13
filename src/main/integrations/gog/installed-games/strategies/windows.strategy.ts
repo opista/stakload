@@ -2,6 +2,7 @@ import path from "path";
 import { Service } from "typedi";
 
 import { LoggerService } from "../../../../logger/logger.service";
+
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Service()

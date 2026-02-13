@@ -1,366 +1,366 @@
 export const databaseSchema = {
   nested: {
-    LanguageSetting: {
+    ActiveProcess: {
       fields: {
-        language: {
-          type: "string",
-          id: 1,
-        },
-        option: {
-          type: "LanguageOption",
+        pid: {
           id: 2,
+          type: "int32",
+        },
+        processName: {
+          id: 1,
+          type: "string",
+        },
+        uri: {
+          id: 3,
+          rule: "repeated",
+          type: "string",
         },
       },
     },
-    UserSettings: {
+    BackfillProgress: {
       fields: {
-        installPath: {
-          type: "string",
-          id: 1,
-        },
-        playRegion: {
-          type: "string",
+        backgrounddownload: {
           id: 2,
+          type: "bool",
         },
-        desktopShortcut: {
-          type: "ShortcutOption",
-          id: 3,
-        },
-        startmenuShortcut: {
-          type: "ShortcutOption",
+        downloadLimit: {
           id: 4,
+          type: "uint64",
         },
-        languageSettings: {
-          type: "LanguageSettingType",
-          id: 5,
+        paused: {
+          id: 3,
+          type: "bool",
         },
-        selectedTextLanguage: {
-          type: "string",
-          id: 6,
+        progress: {
+          id: 1,
+          type: "double",
         },
-        selectedSpeechLanguage: {
-          type: "string",
-          id: 7,
+      },
+    },
+    BaseProductState: {
+      fields: {
+        backgroundDownloadAvailable: {
+          id: 4,
+          type: "bool",
         },
-        languages: {
-          rule: "repeated",
-          type: "LanguageSetting",
-          id: 8,
-        },
-        gfxOverrideTags: {
-          type: "string",
+        backgroundDownloadBuildConfig: {
           id: 9,
+          rule: "repeated",
+          type: "BuildConfig",
         },
-        versionbranch: {
+        backgroundDownloadComplete: {
+          id: 5,
+          type: "bool",
+        },
+        completedInstallActions: {
+          id: 11,
+          rule: "repeated",
           type: "string",
+        },
+        currentVersion: {
+          id: 6,
+          type: "string",
+        },
+        currentVersionStr: {
+          id: 7,
+          type: "string",
+        },
+        decryptionKey: {
           id: 10,
+          type: "string",
+        },
+        installed: {
+          id: 1,
+          type: "bool",
+        },
+        installedBuildConfig: {
+          id: 8,
+          rule: "repeated",
+          type: "BuildConfig",
+        },
+        playable: {
+          id: 2,
+          type: "bool",
+        },
+        updateComplete: {
+          id: 3,
+          type: "bool",
+        },
+      },
+    },
+    BuildConfig: {
+      fields: {
+        buildConfig: {
+          id: 2,
+          type: "string",
+        },
+        region: {
+          id: 1,
+          type: "string",
+        },
+      },
+    },
+    CachedProductState: {
+      fields: {
+        backfillProgress: {
+          id: 2,
+          type: "BackfillProgress",
+        },
+        baseProductState: {
+          id: 1,
+          type: "BaseProductState",
+        },
+        repairProgress: {
+          id: 3,
+          type: "RepairProgress",
+        },
+        updateProgress: {
+          id: 4,
+          type: "UpdateProgress",
+        },
+      },
+    },
+    Database: {
+      fields: {
+        activeInstalls: {
+          id: 2,
+          rule: "repeated",
+          type: "InstallHandshake",
+        },
+        activeProcesses: {
+          id: 3,
+          rule: "repeated",
+          type: "ActiveProcess",
+        },
+        downloadSettings: {
+          id: 5,
+          type: "DownloadSettings",
+        },
+        productConfigs: {
+          id: 4,
+          rule: "repeated",
+          type: "ProductConfig",
+        },
+        productInstall: {
+          id: 1,
+          rule: "repeated",
+          type: "ProductInstall",
+        },
+      },
+    },
+    DownloadSettings: {
+      fields: {
+        backfillLimit: {
+          id: 2,
+          options: {
+            default: -1,
+          },
+          type: "int32",
+        },
+        downloadLimit: {
+          id: 1,
+          options: {
+            default: -1,
+          },
+          type: "int32",
         },
       },
     },
     InstallHandshake: {
       fields: {
         product: {
-          type: "string",
           id: 1,
-        },
-        uid: {
           type: "string",
-          id: 2,
         },
         settings: {
+          id: 3,
           type: "UserSettings",
-          id: 3,
         },
-      },
-    },
-    BuildConfig: {
-      fields: {
-        region: {
-          type: "string",
-          id: 1,
-        },
-        buildConfig: {
-          type: "string",
-          id: 2,
-        },
-      },
-    },
-    BaseProductState: {
-      fields: {
-        installed: {
-          type: "bool",
-          id: 1,
-        },
-        playable: {
-          type: "bool",
-          id: 2,
-        },
-        updateComplete: {
-          type: "bool",
-          id: 3,
-        },
-        backgroundDownloadAvailable: {
-          type: "bool",
-          id: 4,
-        },
-        backgroundDownloadComplete: {
-          type: "bool",
-          id: 5,
-        },
-        currentVersion: {
-          type: "string",
-          id: 6,
-        },
-        currentVersionStr: {
-          type: "string",
-          id: 7,
-        },
-        installedBuildConfig: {
-          rule: "repeated",
-          type: "BuildConfig",
-          id: 8,
-        },
-        backgroundDownloadBuildConfig: {
-          rule: "repeated",
-          type: "BuildConfig",
-          id: 9,
-        },
-        decryptionKey: {
-          type: "string",
-          id: 10,
-        },
-        completedInstallActions: {
-          rule: "repeated",
-          type: "string",
-          id: 11,
-        },
-      },
-    },
-    BackfillProgress: {
-      fields: {
-        progress: {
-          type: "double",
-          id: 1,
-        },
-        backgrounddownload: {
-          type: "bool",
-          id: 2,
-        },
-        paused: {
-          type: "bool",
-          id: 3,
-        },
-        downloadLimit: {
-          type: "uint64",
-          id: 4,
-        },
-      },
-    },
-    RepairProgress: {
-      fields: {
-        progress: {
-          type: "double",
-          id: 1,
-        },
-      },
-    },
-    UpdateProgress: {
-      fields: {
-        lastDiscSetUsed: {
-          type: "string",
-          id: 1,
-        },
-        progress: {
-          type: "double",
-          id: 2,
-        },
-        discIgnored: {
-          type: "bool",
-          id: 3,
-        },
-        totalToDownload: {
-          type: "uint64",
-          id: 4,
-          options: {
-            default: 0,
-          },
-        },
-        downloadRemaining: {
-          type: "uint64",
-          id: 5,
-          options: {
-            default: 0,
-          },
-        },
-      },
-    },
-    CachedProductState: {
-      fields: {
-        baseProductState: {
-          type: "BaseProductState",
-          id: 1,
-        },
-        backfillProgress: {
-          type: "BackfillProgress",
-          id: 2,
-        },
-        repairProgress: {
-          type: "RepairProgress",
-          id: 3,
-        },
-        updateProgress: {
-          type: "UpdateProgress",
-          id: 4,
-        },
-      },
-    },
-    ProductOperations: {
-      fields: {
-        activeOperation: {
-          type: "Operation",
-          id: 1,
-          options: {
-            default: "OP_NONE",
-          },
-        },
-        priority: {
-          type: "uint64",
-          id: 2,
-        },
-      },
-    },
-    ProductInstall: {
-      fields: {
         uid: {
-          type: "string",
-          id: 1,
-        },
-        productCode: {
-          type: "string",
           id: 2,
-        },
-        settings: {
-          type: "UserSettings",
-          id: 3,
-        },
-        cachedProductState: {
-          type: "CachedProductState",
-          id: 4,
-        },
-        productOperations: {
-          type: "ProductOperations",
-          id: 5,
-        },
-      },
-    },
-    ProductConfig: {
-      fields: {
-        productCode: {
           type: "string",
-          id: 1,
-        },
-        metadataHash: {
-          type: "string",
-          id: 2,
-        },
-        timestamp: {
-          type: "string",
-          id: 3,
-        },
-      },
-    },
-    ActiveProcess: {
-      fields: {
-        processName: {
-          type: "string",
-          id: 1,
-        },
-        pid: {
-          type: "int32",
-          id: 2,
-        },
-        uri: {
-          rule: "repeated",
-          type: "string",
-          id: 3,
-        },
-      },
-    },
-    DownloadSettings: {
-      fields: {
-        downloadLimit: {
-          type: "int32",
-          id: 1,
-          options: {
-            default: -1,
-          },
-        },
-        backfillLimit: {
-          type: "int32",
-          id: 2,
-          options: {
-            default: -1,
-          },
-        },
-      },
-    },
-    Database: {
-      fields: {
-        productInstall: {
-          rule: "repeated",
-          type: "ProductInstall",
-          id: 1,
-        },
-        activeInstalls: {
-          rule: "repeated",
-          type: "InstallHandshake",
-          id: 2,
-        },
-        activeProcesses: {
-          rule: "repeated",
-          type: "ActiveProcess",
-          id: 3,
-        },
-        productConfigs: {
-          rule: "repeated",
-          type: "ProductConfig",
-          id: 4,
-        },
-        downloadSettings: {
-          type: "DownloadSettings",
-          id: 5,
         },
       },
     },
     LanguageOption: {
       values: {
         LANGOPTION_NONE: 0,
-        LANGOPTION_TEXT: 1,
         LANGOPTION_SPEECH: 2,
+        LANGOPTION_TEXT: 1,
         LANGOPTION_TEXT_AND_SPEECH: 3,
+      },
+    },
+    LanguageSetting: {
+      fields: {
+        language: {
+          id: 1,
+          type: "string",
+        },
+        option: {
+          id: 2,
+          type: "LanguageOption",
+        },
       },
     },
     LanguageSettingType: {
       values: {
-        LANGSETTING_NONE: 0,
-        LANGSETTING_SINGLE: 1,
-        LANGSETTING_SIMPLE: 2,
         LANGSETTING_ADVANCED: 3,
-      },
-    },
-    ShortcutOption: {
-      values: {
-        SHORTCUT_NONE: 0,
-        SHORTCUT_USER: 1,
-        SHORTCUT_ALL_USERS: 2,
+        LANGSETTING_NONE: 0,
+        LANGSETTING_SIMPLE: 2,
+        LANGSETTING_SINGLE: 1,
       },
     },
     Operation: {
       values: {
-        OP_NONE: -1,
-        OP_UPDATE: 0,
         OP_BACKFILL: 1,
+        OP_NONE: -1,
         OP_REPAIR: 2,
+        OP_UPDATE: 0,
+      },
+    },
+    ProductConfig: {
+      fields: {
+        metadataHash: {
+          id: 2,
+          type: "string",
+        },
+        productCode: {
+          id: 1,
+          type: "string",
+        },
+        timestamp: {
+          id: 3,
+          type: "string",
+        },
+      },
+    },
+    ProductInstall: {
+      fields: {
+        cachedProductState: {
+          id: 4,
+          type: "CachedProductState",
+        },
+        productCode: {
+          id: 2,
+          type: "string",
+        },
+        productOperations: {
+          id: 5,
+          type: "ProductOperations",
+        },
+        settings: {
+          id: 3,
+          type: "UserSettings",
+        },
+        uid: {
+          id: 1,
+          type: "string",
+        },
+      },
+    },
+    ProductOperations: {
+      fields: {
+        activeOperation: {
+          id: 1,
+          options: {
+            default: "OP_NONE",
+          },
+          type: "Operation",
+        },
+        priority: {
+          id: 2,
+          type: "uint64",
+        },
+      },
+    },
+    RepairProgress: {
+      fields: {
+        progress: {
+          id: 1,
+          type: "double",
+        },
+      },
+    },
+    ShortcutOption: {
+      values: {
+        SHORTCUT_ALL_USERS: 2,
+        SHORTCUT_NONE: 0,
+        SHORTCUT_USER: 1,
+      },
+    },
+    UpdateProgress: {
+      fields: {
+        discIgnored: {
+          id: 3,
+          type: "bool",
+        },
+        downloadRemaining: {
+          id: 5,
+          options: {
+            default: 0,
+          },
+          type: "uint64",
+        },
+        lastDiscSetUsed: {
+          id: 1,
+          type: "string",
+        },
+        progress: {
+          id: 2,
+          type: "double",
+        },
+        totalToDownload: {
+          id: 4,
+          options: {
+            default: 0,
+          },
+          type: "uint64",
+        },
+      },
+    },
+    UserSettings: {
+      fields: {
+        desktopShortcut: {
+          id: 3,
+          type: "ShortcutOption",
+        },
+        gfxOverrideTags: {
+          id: 9,
+          type: "string",
+        },
+        installPath: {
+          id: 1,
+          type: "string",
+        },
+        languages: {
+          id: 8,
+          rule: "repeated",
+          type: "LanguageSetting",
+        },
+        languageSettings: {
+          id: 5,
+          type: "LanguageSettingType",
+        },
+        playRegion: {
+          id: 2,
+          type: "string",
+        },
+        selectedSpeechLanguage: {
+          id: 7,
+          type: "string",
+        },
+        selectedTextLanguage: {
+          id: 6,
+          type: "string",
+        },
+        startmenuShortcut: {
+          id: 4,
+          type: "ShortcutOption",
+        },
+        versionbranch: {
+          id: 10,
+          type: "string",
+        },
       },
     },
   },

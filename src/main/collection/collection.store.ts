@@ -22,14 +22,14 @@ export class CollectionStore {
     }
   }
 
-  async getCollections() {
-    this.logger.debug("Fetching all collections from database");
+  async deleteCollectionById(id: string) {
+    this.logger.debug("Deleting collection from database", { id });
     try {
-      const collections = await db.find<CollectionStoreModel>({}).sort({ name: 1 });
-      this.logger.debug("Collections fetched from database", { count: collections.length });
-      return collections;
+      await db.deleteOne({ _id: id }, { multi: false });
+      this.logger.debug("Collection deleted from database", { id });
+      return true;
     } catch (error) {
-      this.logger.error("Database error while fetching collections", error);
+      this.logger.error("Database error while deleting collection", error, { id });
       throw error;
     }
   }
@@ -48,6 +48,18 @@ export class CollectionStore {
     }
   }
 
+  async getCollections() {
+    this.logger.debug("Fetching all collections from database");
+    try {
+      const collections = await db.find<CollectionStoreModel>({}).sort({ name: 1 });
+      this.logger.debug("Collections fetched from database", { count: collections.length });
+      return collections;
+    } catch (error) {
+      this.logger.error("Database error while fetching collections", error);
+      throw error;
+    }
+  }
+
   async updateCollectionById(id: string, updates: Partial<CollectionStoreModel>) {
     this.logger.debug("Updating collection in database", { id, updates });
     try {
@@ -62,18 +74,6 @@ export class CollectionStore {
       return updated;
     } catch (error) {
       this.logger.error("Database error while updating collection", error, { id });
-      throw error;
-    }
-  }
-
-  async deleteCollectionById(id: string) {
-    this.logger.debug("Deleting collection from database", { id });
-    try {
-      await db.deleteOne({ _id: id }, { multi: false });
-      this.logger.debug("Collection deleted from database", { id });
-      return true;
-    } catch (error) {
-      this.logger.error("Database error while deleting collection", error, { id });
       throw error;
     }
   }

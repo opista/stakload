@@ -5,6 +5,7 @@ import { useRef } from "react";
 
 import { MediaImage } from "../MediaImage/MediaImage";
 import { MediaVideo } from "../MediaVideo/MediaVideo";
+
 import classes from "./MediaCarousel.module.css";
 
 type MediaCarouselProps = {

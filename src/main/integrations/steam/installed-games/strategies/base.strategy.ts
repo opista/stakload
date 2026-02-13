@@ -17,9 +17,34 @@ import {
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
+  constructor(protected readonly logger: LoggerService) {}
+
   abstract getApplicationPath(): Promise<string>;
 
-  constructor(protected readonly logger: LoggerService) {}
+  async getInstalledGames(): Promise<InstalledGameData[]> {
+    const libraries = await this.getLibraryFolders();
+
+    const libraryManifests = await Promise.all(
+      libraries.map(async (libraryPath) => {
+        const manifestPath = path.join(libraryPath, "steamapps");
+
+        try {
+          const files = await fs.readdir(manifestPath);
+          const manifestPromises = files
+            .filter((file) => file.startsWith("appmanifest_") && file.endsWith(".acf"))
+            .map((file) => this.parseManifestFile(path.join(manifestPath, file)));
+
+          const manifests = await Promise.all(manifestPromises);
+          return manifests.filter((manifest): manifest is SteamAppManifest => manifest !== null);
+        } catch (err) {
+          this.logger.error(`Failed to read library path: ${libraryPath}`, err);
+          return [];
+        }
+      }),
+    );
+
+    return libraryManifests.flat().map(mapAppManifestToGameInstallationDetails);
+  }
 
   async getLibraryFolders(): Promise<string[]> {
     const steamPath = await this.getApplicationPath();
@@ -46,38 +71,13 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
 
       return {
         gameId: state.appid,
-        installLocation: path.join(path.dirname(manifestPath), "common", state.installdir),
         installedAt: new Date(state.LastUpdated * 1000),
+        installLocation: path.join(path.dirname(manifestPath), "common", state.installdir),
         lastUpdated: new Date(state.LastUpdated * 1000),
       };
     } catch (err) {
       this.logger.error(`Failed to parse manifest file: ${manifestPath}`, err);
       return null;
     }
-  }
-
-  async getInstalledGames(): Promise<InstalledGameData[]> {
-    const libraries = await this.getLibraryFolders();
-
-    const libraryManifests = await Promise.all(
-      libraries.map(async (libraryPath) => {
-        const manifestPath = path.join(libraryPath, "steamapps");
-
-        try {
-          const files = await fs.readdir(manifestPath);
-          const manifestPromises = files
-            .filter((file) => file.startsWith("appmanifest_") && file.endsWith(".acf"))
-            .map((file) => this.parseManifestFile(path.join(manifestPath, file)));
-
-          const manifests = await Promise.all(manifestPromises);
-          return manifests.filter((manifest): manifest is SteamAppManifest => manifest !== null);
-        } catch (err) {
-          this.logger.error(`Failed to read library path: ${libraryPath}`, err);
-          return [];
-        }
-      }),
-    );
-
-    return libraryManifests.flat().map(mapAppManifestToGameInstallationDetails);
   }
 }

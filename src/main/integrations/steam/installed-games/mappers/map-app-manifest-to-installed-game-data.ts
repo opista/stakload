@@ -4,8 +4,8 @@ export const mapAppManifestToGameInstallationDetails = (manifest: SteamAppManife
   return {
     gameId: manifest.gameId,
     installationDetails: {
-      installLocation: manifest.installLocation,
       installedAt: manifest.installedAt,
+      installLocation: manifest.installLocation,
     },
   };
 };

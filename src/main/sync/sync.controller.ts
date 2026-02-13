@@ -4,6 +4,7 @@ import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
+
 import { SYNC_CHANNELS } from "./sync.channels";
 import { SyncService } from "./sync.service";
 
@@ -14,6 +15,19 @@ export class SyncController extends IpcEventController {
     private readonly syncService: SyncService,
   ) {
     super(logger);
+  }
+
+  @IpcHandle(SYNC_CHANNELS.AUTH_INTEGRATION)
+  async authIntegration(library: Library, data?: unknown) {
+    this.logHandler(SYNC_CHANNELS.AUTH_INTEGRATION, { library });
+    try {
+      const authResult = await this.syncService.authenticate(library, data);
+      this.logger.info("Authentication completed", { library });
+      return authResult;
+    } catch (error: unknown) {
+      this.logger.error("Error in authIntegration", { error, library });
+      throw error;
+    }
   }
 
   @IpcOn(SYNC_CHANNELS.SYNC)
@@ -38,19 +52,6 @@ export class SyncController extends IpcEventController {
       return valid;
     } catch (error: unknown) {
       this.logger.error("Error in testIntegration", { error, library });
-      throw error;
-    }
-  }
-
-  @IpcHandle(SYNC_CHANNELS.AUTH_INTEGRATION)
-  async authIntegration(library: Library, data?: unknown) {
-    this.logHandler(SYNC_CHANNELS.AUTH_INTEGRATION, { library });
-    try {
-      const authResult = await this.syncService.authenticate(library, data);
-      this.logger.info("Authentication completed", { library });
-      return authResult;
-    } catch (error: unknown) {
-      this.logger.error("Error in authIntegration", { error, library });
       throw error;
     }
   }

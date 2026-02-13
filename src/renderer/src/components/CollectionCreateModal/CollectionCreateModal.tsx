@@ -10,7 +10,7 @@ type CollectionCreateModalProps = {
   opened: boolean;
 };
 
-export const CollectionCreateModal = ({ onConfirm, onClose, opened }: CollectionCreateModalProps) => {
+export const CollectionCreateModal = ({ onClose, onConfirm, opened }: CollectionCreateModalProps) => {
   const [value, setValue] = useState<string>("");
   const [selectedIcon, setSelectedIcon] = useState<string>("IconDeviceGamepad");
 

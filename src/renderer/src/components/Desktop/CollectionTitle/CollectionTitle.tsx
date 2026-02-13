@@ -9,6 +9,7 @@ import { forwardRef, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { IconSelector } from "../IconSelector/IconSelector";
+
 import classes from "./CollectionTitle.module.css";
 
 type CollectionTitleProps = {

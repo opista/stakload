@@ -16,8 +16,8 @@ import { InstalledGamesStrategy } from "../installed-games/types";
 
 @Service()
 export class GogLibraryService implements SyncService {
-  library: Library = "gog";
   private installedGamesStrategy: InstalledGamesStrategy;
+  library: Library = "gog";
 
   constructor(
     private readonly gameStore: GameStore,
@@ -30,37 +30,34 @@ export class GogLibraryService implements SyncService {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
-    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Gog);
-  }
+  private async handleAuthenticationResponse(
+    window: BrowserWindow,
+    _event: unknown,
+    url: string,
+    _httpResponseCode: number,
+    _httpStatusText: string,
+  ) {
+    this.logger.debug("Handling GOG authentication response", { url });
+    if (url.includes("on_login_success")) {
+      const code = new URL(url).searchParams.get("code");
 
-  async updateInstalledGames() {
-    this.logger.info("Updating installed GOG games");
-    const installedGames = await this.installedGamesStrategy.getInstalledGames();
-    const installedGameIds = installedGames.map((game) => game.gameId);
-
-    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
-      {
-        isInstalled: true,
-        libraries: [this.library],
-      },
-      "all",
-    );
-    const uninstalledGameIds = currentlyInstalledGames
-      .map((game) => game.gameId)
-      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
-
-    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
-    );
-
-    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
-    );
-
-    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed games updated");
+      if (code) {
+        window.close();
+        try {
+          const success = await this.gogApiService
+            .getAuthToken(code)
+            .then(() => true)
+            .catch(() => false);
+          this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
+            library: this.library,
+            success,
+          });
+          this.logger.info("GOG authentication completed", { success });
+        } catch (error) {
+          this.logger.error("GOG authentication error", error);
+        }
+      }
+    }
   }
 
   async addNewGames() {
@@ -100,6 +97,23 @@ export class GogLibraryService implements SyncService {
     }
   }
 
+  async authenticate() {
+    this.logger.info("Starting GOG authentication flow");
+    const window = await this.windowService.createChildWindow({
+      height: 430,
+      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
+      sessionId: "gog-auth",
+      url: `https://auth.gog.com/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&layout=client2`,
+      width: 410,
+    });
+    window.show();
+  }
+
+  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+    this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
+    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Gog);
+  }
+
   async isIntegrationValid(): Promise<boolean> {
     this.logger.debug("Validating GOG integration");
     return this.gogApiService
@@ -111,45 +125,31 @@ export class GogLibraryService implements SyncService {
       });
   }
 
-  private async handleAuthenticationResponse(
-    window: BrowserWindow,
-    _event: unknown,
-    url: string,
-    _httpResponseCode: number,
-    _httpStatusText: string,
-  ) {
-    this.logger.debug("Handling GOG authentication response", { url });
-    if (url.includes("on_login_success")) {
-      const code = new URL(url).searchParams.get("code");
+  async updateInstalledGames() {
+    this.logger.info("Updating installed GOG games");
+    const installedGames = await this.installedGamesStrategy.getInstalledGames();
+    const installedGameIds = installedGames.map((game) => game.gameId);
 
-      if (code) {
-        window.close();
-        try {
-          const success = await this.gogApiService
-            .getAuthToken(code)
-            .then(() => true)
-            .catch(() => false);
-          this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
-            library: this.library,
-            success,
-          });
-          this.logger.info("GOG authentication completed", { success });
-        } catch (error) {
-          this.logger.error("GOG authentication error", error);
-        }
-      }
-    }
-  }
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
+      {
+        isInstalled: true,
+        libraries: [this.library],
+      },
+      "all",
+    );
+    const uninstalledGameIds = currentlyInstalledGames
+      .map((game) => game.gameId)
+      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
 
-  async authenticate() {
-    this.logger.info("Starting GOG authentication flow");
-    const window = await this.windowService.createChildWindow({
-      height: 430,
-      networkRequestHandler: this.handleAuthenticationResponse.bind(this),
-      sessionId: "gog-auth",
-      url: `https://auth.gog.com/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&layout=client2`,
-      width: 410,
-    });
-    window.show();
+    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
+      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+    );
+
+    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
+      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+    );
+
+    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
+    this.logger.info("Installed games updated");
   }
 }

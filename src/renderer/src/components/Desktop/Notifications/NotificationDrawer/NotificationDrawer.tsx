@@ -5,14 +5,15 @@ import { useShallow } from "zustand/react/shallow";
 
 import { NotificationDrawerItem } from "../NotificationDrawerItem/NotificationDrawerItem";
 import { NotificationDrawerTitle } from "../NotificationDrawerTitle/NotificationDrawerTitle";
+
 import classes from "./NotificationDrawer.module.css";
 
 export const NotificationDrawer = () => {
   const { notifications, removeNotification } = useNotifications();
-  const { isDrawerOpen, closeDrawer } = useNotificationStore(
+  const { closeDrawer, isDrawerOpen } = useNotificationStore(
     useShallow((state) => ({
-      isDrawerOpen: state.isDrawerOpen,
       closeDrawer: state.closeDrawer,
+      isDrawerOpen: state.isDrawerOpen,
     })),
   );
 

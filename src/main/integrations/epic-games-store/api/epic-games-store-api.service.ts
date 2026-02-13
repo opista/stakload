@@ -2,6 +2,7 @@ import { ApolloClient, InMemoryCache } from "@apollo/client/core/core.cjs";
 import { Service } from "typedi";
 
 import { LoggerService } from "../../../logger/logger.service";
+
 import CatalogQuery from "./catalog-query.graphql";
 import { Catalog } from "./types";
 

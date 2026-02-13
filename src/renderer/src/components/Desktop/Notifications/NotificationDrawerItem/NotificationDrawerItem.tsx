@@ -12,10 +12,10 @@ type NotificationDrawerItemProps = {
 };
 
 const indiciatorColorMap: Record<Notification["type"], string> = {
+  error: "var(--mantine-color-red-filled)",
   info: "var(--mantine-color-blue-filled)",
   success: "var(--mantine-color-green-filled)",
   warning: "var(--mantine-color-yellow-filled)",
-  error: "var(--mantine-color-red-filled)",
 };
 
 export const NotificationDrawerItem = ({ notification, onClose }: NotificationDrawerItemProps) => {

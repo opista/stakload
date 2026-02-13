@@ -17,11 +17,11 @@ type GamesListProps = {
 export const GamesList = ({ games, onSelectGame }: GamesListProps) => {
   const parentRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const { ref, focusSelf, focusKey } = useFocusable({
+  const { focusKey, focusSelf, ref } = useFocusable({
     autoRestoreFocus: true,
+    focusable: true,
     focusBoundaryDirections: ["right", "down"],
     focusKey: FOCUS_KEY,
-    focusable: true,
     isFocusBoundary: true,
     onArrowPress: () => true,
     preferredChildFocusKey: undefined,

@@ -49,12 +49,12 @@ export const GameSyncStatus = () => {
         operation({
           autoClose: 5000,
           classNames: undefined,
-          withCloseButton: true,
           icon: <IconCheck size={16} />,
           id: notificationId,
           loading: false,
           message: `${message.total} games added`,
           title: "Sync complete",
+          withCloseButton: true,
         });
         setNotificationId(undefined);
         return;

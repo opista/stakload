@@ -15,8 +15,8 @@ import { InstalledGamesStrategy } from "../installed-games/types";
 
 @Service()
 export class BattleNetLibraryService implements SyncService {
-  library: Library = "battle-net";
   private installedGamesStrategy: InstalledGamesStrategy;
+  library: Library = "battle-net";
 
   constructor(
     private readonly gameStore: GameStore,
@@ -27,54 +27,6 @@ export class BattleNetLibraryService implements SyncService {
     private readonly windowService: WindowService,
   ) {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
-  }
-
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
-    // TODO: Implement this when IGDB support Battle.net games
-    return null;
-    // return await this.StakloadApiClient.getGameMetadata(game.gameId!, this.library);
-  }
-
-  async updateInstalledGames() {
-    this.logger.info("Updating installed Battle.net games");
-    const installedGames = await this.installedGamesStrategy.getInstalledGames();
-    const installedGameIds = installedGames.map((game) => game.gameId);
-
-    console.dir({ installedGames }, { depth: Infinity });
-
-    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
-      {
-        isInstalled: true,
-        libraries: [this.library],
-      },
-      "all",
-    );
-    const uninstalledGameIds = currentlyInstalledGames
-      .map((game) => game.gameId)
-      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
-
-    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
-    );
-
-    // TODO: Maybe rather than upsert, we should check if the game already exists and update it if it does. If it doesn't, we should insert it.
-    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails, name }) =>
-      this.gameStore.updateGameByGameId(
-        gameId,
-        {
-          installationDetails,
-          isInstalled: true,
-          library: this.library,
-          name,
-          sortableName: mapSortableName(name),
-        },
-        { upsert: true },
-      ),
-    );
-
-    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed games updated");
   }
 
   async addNewGames() {
@@ -121,7 +73,55 @@ export class BattleNetLibraryService implements SyncService {
     });
   }
 
+  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+    this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
+    // TODO: Implement this when IGDB support Battle.net games
+    return null;
+    // return await this.StakloadApiClient.getGameMetadata(game.gameId!, this.library);
+  }
+
   async isIntegrationValid(): Promise<boolean> {
     return this.battleNetApiService.isAuthenticated();
+  }
+
+  async updateInstalledGames() {
+    this.logger.info("Updating installed Battle.net games");
+    const installedGames = await this.installedGamesStrategy.getInstalledGames();
+    const installedGameIds = installedGames.map((game) => game.gameId);
+
+    console.dir({ installedGames }, { depth: Infinity });
+
+    const currentlyInstalledGames = await this.gameStore.findFilteredGames(
+      {
+        isInstalled: true,
+        libraries: [this.library],
+      },
+      "all",
+    );
+    const uninstalledGameIds = currentlyInstalledGames
+      .map((game) => game.gameId)
+      .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
+
+    const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
+      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+    );
+
+    // TODO: Maybe rather than upsert, we should check if the game already exists and update it if it does. If it doesn't, we should insert it.
+    const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails, name }) =>
+      this.gameStore.updateGameByGameId(
+        gameId,
+        {
+          installationDetails,
+          isInstalled: true,
+          library: this.library,
+          name,
+          sortableName: mapSortableName(name),
+        },
+        { upsert: true },
+      ),
+    );
+
+    await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
+    this.logger.info("Installed games updated");
   }
 }

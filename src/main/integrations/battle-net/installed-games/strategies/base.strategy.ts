@@ -12,9 +12,9 @@ import { InstalledGameData, InstalledGamesStrategy } from "../types";
 @Service()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
-  abstract getApplicationPath(): Promise<string>;
-
   constructor(protected readonly logger: LoggerService) {}
+
+  abstract getApplicationPath(): Promise<string>;
 
   async getInstalledGames(): Promise<InstalledGameData[]> {
     try {
@@ -27,8 +27,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
 
       const data = decoder.decode(buffer);
       const message = decoder.toObject(data, {
-        longs: Number,
         defaults: true,
+        longs: Number,
       });
 
       this.logger.debug("Found Battle.net installations", { installations: message.productInstall.length });
@@ -46,8 +46,8 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
           return {
             gameId: product.productCode,
             installationDetails: {
-              installLocation: product.settings.installPath,
               installedAt: new Date(),
+              installLocation: product.settings.installPath,
             },
             library: "battle-net",
             name: game?.name,

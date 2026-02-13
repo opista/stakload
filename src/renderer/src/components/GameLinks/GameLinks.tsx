@@ -212,7 +212,7 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
     })
     .map(({ url, websiteType }) => {
-      const { icon, label, deepLinkFormatter } = websiteIconPropsMap[websiteType] || defaultIcon;
+      const { deepLinkFormatter, icon, label } = websiteIconPropsMap[websiteType] || defaultIcon;
       const deepLink = deepLinkFormatter?.(url);
 
       return deepLink ? (

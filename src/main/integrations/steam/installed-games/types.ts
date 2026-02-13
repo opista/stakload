@@ -15,8 +15,8 @@ export interface SteamLibraryFolders {
 
 export interface SteamAppManifest {
   gameId: string;
-  installLocation: string;
   installedAt: Date;
+  installLocation: string;
   lastUpdated: Date;
 }
 

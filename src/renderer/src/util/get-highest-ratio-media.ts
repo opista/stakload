@@ -1,6 +1,6 @@
 import { Media } from "@contracts/database/games";
 
-const ratio = ({ width, height }: { height: number; width: number }) => width / height;
+const ratio = ({ height, width }: { height: number; width: number }) => width / height;
 
 export const getHighestRatioMedia = (media?: Media[]) => {
   if (!media) return null;

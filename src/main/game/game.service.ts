@@ -6,6 +6,7 @@ import { ProtondbApiClient } from "../api/protondb-api.client";
 import { CollectionStore } from "../collection/collection.store";
 import { LoggerService } from "../logger/logger.service";
 import { WindowService } from "../window/window.service";
+
 import { GameStore } from "./game.store";
 @Service()
 export class GameService {
@@ -16,6 +17,64 @@ export class GameService {
     private readonly protondbApiClient: ProtondbApiClient,
     private readonly windowService: WindowService,
   ) {}
+
+  async archiveGame(id: string) {
+    this.logger.debug("Processing game archive", { id });
+    try {
+      const result = await this.gameStore.updateGameById(id, { archivedAt: new Date() });
+      if (result) {
+        this.logger.info("Game archived successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+      }
+      return result;
+    } catch (error) {
+      this.logger.error("Failed to archive game", error, { id });
+      throw error;
+    }
+  }
+
+  async deleteGame(id: string) {
+    this.logger.debug("Processing game deletion", { id });
+    try {
+      const result = await this.gameStore.removeGameById(id);
+      if (result) {
+        this.logger.info("Game deleted successfully", { id });
+        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
+      }
+      return result;
+    } catch (error) {
+      this.logger.error("Failed to delete game", error, { id });
+      throw error;
+    }
+  }
+
+  async getFilteredGames(filters: GameFilters) {
+    this.logger.debug("Processing filtered games request", { filters });
+    try {
+      const games = await this.gameStore.findFilteredGames(filters, "list");
+      this.logger.debug("Filtered games retrieved successfully", { count: games.length, filters });
+      return games;
+    } catch (error) {
+      this.logger.error("Failed to get filtered games", error, { filters });
+      throw error;
+    }
+  }
+
+  async getGameById(id: string) {
+    this.logger.debug("Processing game fetch by id", { id });
+    try {
+      const game = await this.gameStore.findGameById(id);
+      if (!game) {
+        this.logger.warn("Game not found", { id });
+      } else {
+        this.logger.debug("Game retrieved successfully", { id });
+      }
+      return game;
+    } catch (error) {
+      this.logger.error("Failed to get game by id", error, { id });
+      throw error;
+    }
+  }
 
   async getGameFilters() {
     this.logger.debug("Processing game filters request");
@@ -58,55 +117,21 @@ export class GameService {
     }
   }
 
-  async getGameById(id: string) {
-    this.logger.debug("Processing game fetch by id", { id });
+  async getGamesByCollectionId(id: string) {
+    this.logger.debug("Processing games fetch by collection", { id });
     try {
-      const game = await this.gameStore.findGameById(id);
-      if (!game) {
-        this.logger.warn("Game not found", { id });
-      } else {
-        this.logger.debug("Game retrieved successfully", { id });
+      const collection = await this.collectionStore.findCollectionById(id);
+      if (!collection) {
+        this.logger.warn("Collection not found for games fetch", { id });
+        return [];
       }
-      return game;
+      const games = await this.gameStore.findFilteredGames(collection.filters, "list");
+      this.logger.debug("Games retrieved for collection", { count: games.length, id });
+      return games;
     } catch (error) {
-      this.logger.error("Failed to get game by id", error, { id });
+      this.logger.error("Failed to get games by collection", error, { id });
       throw error;
     }
-  }
-
-  async archiveGame(id: string) {
-    this.logger.debug("Processing game archive", { id });
-    try {
-      const result = await this.gameStore.updateGameById(id, { archivedAt: new Date() });
-      if (result) {
-        this.logger.info("Game archived successfully", { id });
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-      }
-      return result;
-    } catch (error) {
-      this.logger.error("Failed to archive game", error, { id });
-      throw error;
-    }
-  }
-
-  async deleteGame(id: string) {
-    this.logger.debug("Processing game deletion", { id });
-    try {
-      const result = await this.gameStore.removeGameById(id);
-      if (result) {
-        this.logger.info("Game deleted successfully", { id });
-        this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
-      }
-      return result;
-    } catch (error) {
-      this.logger.error("Failed to delete game", error, { id });
-      throw error;
-    }
-  }
-
-  async getProtondbTier(gameId: string) {
-    this.logger.debug("Processing Protondb tier request", { gameId });
-    return this.protondbApiClient.getTier(gameId);
   }
 
   async getGamesList() {
@@ -121,18 +146,6 @@ export class GameService {
     }
   }
 
-  async getQuickLaunchGames() {
-    this.logger.debug("Processing quick launch games request");
-    try {
-      const games = await this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
-      this.logger.debug("Quick launch games retrieved successfully", { count: games.length });
-      return games;
-    } catch (error) {
-      this.logger.error("Failed to get quick launch games", error);
-      throw error;
-    }
-  }
-
   async getNewGames() {
     this.logger.debug("Processing new games request");
     try {
@@ -140,8 +153,8 @@ export class GameService {
         { createdAt: { dateRange: "ONE_WEEK" } },
         "featured",
         {
-          field: "createdAt",
           direction: -1,
+          field: "createdAt",
         },
         10,
       );
@@ -153,31 +166,19 @@ export class GameService {
     }
   }
 
-  async getFilteredGames(filters: GameFilters) {
-    this.logger.debug("Processing filtered games request", { filters });
-    try {
-      const games = await this.gameStore.findFilteredGames(filters, "list");
-      this.logger.debug("Filtered games retrieved successfully", { count: games.length, filters });
-      return games;
-    } catch (error) {
-      this.logger.error("Failed to get filtered games", error, { filters });
-      throw error;
-    }
+  async getProtondbTier(gameId: string) {
+    this.logger.debug("Processing Protondb tier request", { gameId });
+    return this.protondbApiClient.getTier(gameId);
   }
 
-  async getGamesByCollectionId(id: string) {
-    this.logger.debug("Processing games fetch by collection", { id });
+  async getQuickLaunchGames() {
+    this.logger.debug("Processing quick launch games request");
     try {
-      const collection = await this.collectionStore.findCollectionById(id);
-      if (!collection) {
-        this.logger.warn("Collection not found for games fetch", { id });
-        return [];
-      }
-      const games = await this.gameStore.findFilteredGames(collection.filters, "list");
-      this.logger.debug("Games retrieved for collection", { id, count: games.length });
+      const games = await this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
+      this.logger.debug("Quick launch games retrieved successfully", { count: games.length });
       return games;
     } catch (error) {
-      this.logger.error("Failed to get games by collection", error, { id });
+      this.logger.error("Failed to get quick launch games", error);
       throw error;
     }
   }

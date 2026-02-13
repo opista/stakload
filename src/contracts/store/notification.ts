@@ -1,14 +1,14 @@
 export const NOTIFICATION_KEYS = {
-  INTEGRATION_SUCCESS_TITLE: "notifications.integration.successTitle",
-  INTEGRATION_SUCCESS_MESSAGE: "notifications.integration.successMessage",
-  INTEGRATION_FAILED_TITLE: "notifications.integration.failedTitle",
-  INTEGRATION_FAILED_MESSAGE: "notifications.integration.failedMessage",
-  GAME_INSTALLATION_FAILED_TITLE: "notifications.gameInstallation.failedTitle",
   GAME_INSTALLATION_FAILED_MESSAGE: "notifications.gameInstallation.failedMessage",
-  GAME_UNINSTALLATION_FAILED_TITLE: "notifications.gameUninstallation.failedTitle",
-  GAME_UNINSTALLATION_FAILED_MESSAGE: "notifications.gameUninstallation.failedMessage",
-  GAME_LAUNCH_FAILED_TITLE: "notifications.gameLaunch.failedTitle",
+  GAME_INSTALLATION_FAILED_TITLE: "notifications.gameInstallation.failedTitle",
   GAME_LAUNCH_FAILED_MESSAGE: "notifications.gameLaunch.failedMessage",
+  GAME_LAUNCH_FAILED_TITLE: "notifications.gameLaunch.failedTitle",
+  GAME_UNINSTALLATION_FAILED_MESSAGE: "notifications.gameUninstallation.failedMessage",
+  GAME_UNINSTALLATION_FAILED_TITLE: "notifications.gameUninstallation.failedTitle",
+  INTEGRATION_FAILED_MESSAGE: "notifications.integration.failedMessage",
+  INTEGRATION_FAILED_TITLE: "notifications.integration.failedTitle",
+  INTEGRATION_SUCCESS_MESSAGE: "notifications.integration.successMessage",
+  INTEGRATION_SUCCESS_TITLE: "notifications.integration.successTitle",
 } as const;
 
 export type Notification = {

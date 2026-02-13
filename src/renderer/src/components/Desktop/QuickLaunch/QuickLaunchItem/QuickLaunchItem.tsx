@@ -16,13 +16,13 @@ type QuickLaunchItemProps = {
 
 export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   const { t } = useTranslation();
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: game._id });
+  const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({ id: game._id });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
     cursor: isDragging ? "grabbing" : "default",
     opacity: isDragging ? 0.5 : 1,
+    transform: CSS.Transform.toString(transform),
+    transition,
   };
 
   const onClick = () => {

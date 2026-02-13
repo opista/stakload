@@ -15,8 +15,8 @@ type CollectionButtonProps = {
 
 export const CollectionButton = ({ icon: Icon, name, onFocus, onSelect }: CollectionButtonProps) => {
   const { focused, ref } = useFocusable({
-    focusKey: name,
     focusable: true,
+    focusKey: name,
     onEnterPress: onSelect,
     onFocus: () => {
       console.log("focus collection button");

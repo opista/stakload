@@ -6,23 +6,10 @@ import { ProcessMonitorStrategy } from "../types";
 
 @Service()
 export class WindowsProcessMonitor implements ProcessMonitorStrategy {
-  private watchedProcesses: Map<number, () => void> = new Map();
   private processCheckInterval: NodeJS.Timeout | null = null;
+  private watchedProcesses: Map<number, () => void> = new Map();
 
   constructor(private readonly logger: LoggerService) {}
-
-  async isProcessRunning(pid: number): Promise<boolean> {
-    this.logger.debug("Checking if process is running", { pid });
-    try {
-      const { stdout } = await execAsync(`tasklist /FI "PID eq ${pid}" /NH`);
-      const isRunning = stdout.trim().length > 0;
-      this.logger.debug("Process running status checked", { pid, isRunning });
-      return isRunning;
-    } catch (error) {
-      this.logger.error("Failed to check process status", error, { pid });
-      return false;
-    }
-  }
 
   async findProcessByParentDirectory(directory: string): Promise<number | null> {
     this.logger.debug("Finding process launched from directory", { directory });
@@ -44,6 +31,50 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
       this.logger.error("Failed to find process by directory", error, { directory });
       return null;
     }
+  }
+
+  async isProcessRunning(pid: number): Promise<boolean> {
+    this.logger.debug("Checking if process is running", { pid });
+    try {
+      const { stdout } = await execAsync(`tasklist /FI "PID eq ${pid}" /NH`);
+      const isRunning = stdout.trim().length > 0;
+      this.logger.debug("Process running status checked", { isRunning, pid });
+      return isRunning;
+    } catch (error) {
+      this.logger.error("Failed to check process status", error, { pid });
+      return false;
+    }
+  }
+
+  stopWatching() {
+    this.logger.debug("Stopping process monitor", { watchedCount: this.watchedProcesses.size });
+    if (this.processCheckInterval) {
+      clearTimeout(this.processCheckInterval);
+      this.processCheckInterval = null;
+    }
+    this.watchedProcesses.clear();
+  }
+
+  async waitForProcess(
+    directory: string,
+    options: { maxPollingTime: number; pollingInterval: number },
+  ): Promise<number | null> {
+    const startTime = Date.now();
+    this.logger.debug("Starting to poll for process", { directory });
+
+    while (Date.now() - startTime < options.maxPollingTime) {
+      const pid = await this.findProcessByParentDirectory(directory);
+
+      if (pid) {
+        this.logger.info("Process found", { directory, pid });
+        return pid;
+      }
+
+      await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
+    }
+
+    this.logger.warn("Process not found after timeout", { directory, timeoutMs: options.maxPollingTime });
+    return null;
   }
 
   async watchProcess(pid: number, onExit: () => void) {
@@ -94,36 +125,5 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
     };
 
     this.processCheckInterval = setTimeout(checkProcesses, 5000);
-  }
-
-  stopWatching() {
-    this.logger.debug("Stopping process monitor", { watchedCount: this.watchedProcesses.size });
-    if (this.processCheckInterval) {
-      clearTimeout(this.processCheckInterval);
-      this.processCheckInterval = null;
-    }
-    this.watchedProcesses.clear();
-  }
-
-  async waitForProcess(
-    directory: string,
-    options: { maxPollingTime: number; pollingInterval: number },
-  ): Promise<number | null> {
-    const startTime = Date.now();
-    this.logger.debug("Starting to poll for process", { directory });
-
-    while (Date.now() - startTime < options.maxPollingTime) {
-      const pid = await this.findProcessByParentDirectory(directory);
-
-      if (pid) {
-        this.logger.info("Process found", { directory, pid });
-        return pid;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
-    }
-
-    this.logger.warn("Process not found after timeout", { directory, timeoutMs: options.maxPollingTime });
-    return null;
   }
 }

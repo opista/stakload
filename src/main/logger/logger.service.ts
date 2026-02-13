@@ -8,7 +8,7 @@ import DailyRotateFile from "winston-daily-rotate-file";
 const defaultFormat = [
   format.timestamp(),
   format.errors({ stack: true }),
-  format.printf(({ timestamp, level, message, constructor, ...metadata }) => {
+  format.printf(({ constructor, level, message, timestamp, ...metadata }) => {
     const stringifiedMetadata = JSON.stringify(metadata);
     const metadataStr = stringifiedMetadata !== "{}" ? ` | ${stringifiedMetadata}` : "";
     return `${timestamp} [${level}] [${constructor}] ${message}${metadataStr}`;
@@ -28,8 +28,8 @@ export class LoggerService {
         datePattern: "YYYY-MM-DD",
         dirname: path.join(app.getPath("userData"), "logs"),
         filename: "stakload-%DATE%.log",
-        frequency: "1d",
         format: format.combine(...defaultFormat),
+        frequency: "1d",
         level: "debug",
         maxFiles: "7d",
         maxSize: "1m",
@@ -43,10 +43,6 @@ export class LoggerService {
     });
   }
 
-  private getCorrelationId() {
-    return correlationStorage.getStore();
-  }
-
   private getCallerInfo() {
     const error = new Error();
     const stack = error.stack?.split("\n")[3];
@@ -54,10 +50,22 @@ export class LoggerService {
     return match?.[1] || "Unknown";
   }
 
+  private getCorrelationId() {
+    return correlationStorage.getStore();
+  }
+
+  debug(message: string, context?: Record<string, unknown>) {
+    this.logger.debug(message, {
+      constructor: this.getCallerInfo(),
+      correlationId: this.getCorrelationId(),
+      ...context,
+    });
+  }
+
   error(message: string, error?: unknown, context?: Record<string, unknown>) {
     this.logger.error(message, {
-      correlationId: this.getCorrelationId(),
       constructor: this.getCallerInfo(),
+      correlationId: this.getCorrelationId(),
       error,
       ...context,
     });
@@ -65,24 +73,16 @@ export class LoggerService {
 
   info(message: string, context?: Record<string, unknown>) {
     this.logger.info(message, {
-      correlationId: this.getCorrelationId(),
       constructor: this.getCallerInfo(),
-      ...context,
-    });
-  }
-
-  debug(message: string, context?: Record<string, unknown>) {
-    this.logger.debug(message, {
       correlationId: this.getCorrelationId(),
-      constructor: this.getCallerInfo(),
       ...context,
     });
   }
 
   warn(message: string, context?: Record<string, unknown>) {
     this.logger.warn(message, {
-      correlationId: this.getCorrelationId(),
       constructor: this.getCallerInfo(),
+      correlationId: this.getCorrelationId(),
       ...context,
     });
   }

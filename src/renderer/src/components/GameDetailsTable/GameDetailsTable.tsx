@@ -113,7 +113,7 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
   return (
     <Flex gap="lg" justify="space-between">
       <div className={classes.column}>
-        {firstColumn.map(({ label, formatter }) => (
+        {firstColumn.map(({ formatter, label }) => (
           <Fragment key={label}>
             <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
             <Divider classNames={{ root: classes.divider }} />
@@ -121,7 +121,7 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
         ))}
       </div>
       <div className={classes.column}>
-        {secondColumn.map(({ label, formatter }) => (
+        {secondColumn.map(({ formatter, label }) => (
           <Fragment key={label}>
             <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
             <Divider classNames={{ root: classes.divider }} />

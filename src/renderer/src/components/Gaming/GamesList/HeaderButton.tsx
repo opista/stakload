@@ -14,8 +14,8 @@ type HeaderButtonProps = {
 
 export const HeaderButton = ({ icon: Icon, onFocus, onSelect }: HeaderButtonProps) => {
   const { focused, ref } = useFocusable({
-    focusKey: `HEADER-BUTTON-${Icon.displayName}`,
     focusable: true,
+    focusKey: `HEADER-BUTTON-${Icon.displayName}`,
     onEnterPress: onSelect,
     onFocus: () => {
       console.log("focus", Icon.displayName);
@@ -26,8 +26,8 @@ export const HeaderButton = ({ icon: Icon, onFocus, onSelect }: HeaderButtonProp
   return (
     <ActionIcon
       className={clsx(classes.button, {
-        [classes.focused]: focused,
         [classes.active]: Icon.displayName === "IconHome",
+        [classes.focused]: focused,
       })}
       radius="lg"
       ref={ref}

@@ -7,11 +7,11 @@ import { HeaderButton } from "./HeaderButton";
 const FOCUS_KEY = "HEADER_BUTTONS";
 
 export const HeaderButtons = () => {
-  const { ref, focusKey } = useFocusable({
+  const { focusKey, ref } = useFocusable({
     autoRestoreFocus: true,
+    focusable: true,
     focusBoundaryDirections: ["right", "up"],
     focusKey: FOCUS_KEY,
-    focusable: true,
     isFocusBoundary: true,
     onArrowPress: () => true,
     preferredChildFocusKey: undefined,

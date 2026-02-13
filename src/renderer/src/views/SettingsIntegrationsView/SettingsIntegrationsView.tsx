@@ -9,6 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
 import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
 import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
+
 import classes from "./SettingsIntegrationsView.module.css";
 
 type ValidationState = {
@@ -19,9 +20,9 @@ type ValidationAction = { library: Library; success: boolean; type: "SET_VALIDAT
 
 const initialValidationState: ValidationState = {
   "battle-net": null,
-  steam: null,
   "epic-game-store": null,
   gog: null,
+  steam: null,
 };
 
 const validationReducer = (state: ValidationState, action: ValidationAction): ValidationState => {
@@ -89,9 +90,9 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
   const { hasStoredWebApiKey, steamIntegrationEnabled, storeSteamId, toggleIntegrationEnabled } =
     useIntegrationSettingsStore(
       useShallow((state) => ({
-        storeSteamId: state.steamIntegration?.steamId,
         hasStoredWebApiKey: !!state.steamIntegration?.webApiKey,
         steamIntegrationEnabled: state.integrationsEnabled.steam,
+        storeSteamId: state.steamIntegration?.steamId,
         toggleIntegrationEnabled: state.toggleIntegrationEnabled,
       })),
     );
@@ -397,7 +398,7 @@ export const SettingsIntegrationsView = () => {
 
   useEffect(() => {
     const removeListener = window.api.onIntegrationAuthenticationResult((_event: unknown, { library, success }) => {
-      dispatch({ type: "SET_VALIDATION", library, success });
+      dispatch({ library, success, type: "SET_VALIDATION" });
     });
     return () => removeListener();
   }, []);

@@ -9,12 +9,6 @@ import { LoggerService } from "../logger/logger.service";
 export class SystemService {
   constructor(private readonly logger: LoggerService) {}
 
-  restartApplication() {
-    this.logger.info("Restarting application");
-    app.relaunch();
-    app.exit(0);
-  }
-
   async restart() {
     this.logger.info("Initiating system restart");
     try {
@@ -24,6 +18,12 @@ export class SystemService {
       this.logger.error("Failed to restart system", error);
       throw error;
     }
+  }
+
+  restartApplication() {
+    this.logger.info("Restarting application");
+    app.relaunch();
+    app.exit(0);
   }
 
   async shutdown() {

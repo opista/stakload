@@ -24,6 +24,10 @@ type TypeAtPath<T, P extends string> = P extends keyof T
 export class SharedConfigService {
   constructor(@Inject("conf") private readonly conf: Conf<Config>) {}
 
+  delete<P extends NestedKeyOf<Config>>(path: P) {
+    this.conf.delete(path);
+  }
+
   get<P extends NestedKeyOf<Config>>(path: P, { decrypt = false }: { decrypt?: boolean } = {}): TypeAtPath<Config, P> {
     const value = this.conf.get(path) as TypeAtPath<Config, P>;
 
@@ -50,9 +54,5 @@ export class SharedConfigService {
     } else {
       this.conf.set(path, value);
     }
-  }
-
-  delete<P extends NestedKeyOf<Config>>(path: P) {
-    this.conf.delete(path);
   }
 }

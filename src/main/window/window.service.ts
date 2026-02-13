@@ -4,6 +4,7 @@ import { join } from "path";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
+
 import { ChildWindowOptions } from "./types";
 
 @Service()
@@ -19,13 +20,60 @@ export class WindowService {
     });
   }
 
-  getBrowserWindow(): BrowserWindow {
-    if (!this.browserWindow) {
-      const error = new Error("Browser window has not been initialized");
-      this.logger.error("Attempted to retrieve an uninitialised browser window", { error });
+  close() {
+    this.logger.debug("Closing main window");
+    this.browserWindow?.close();
+  }
+
+  async createChildWindow({
+    clearCookies = true,
+    height,
+    networkRequestHandler,
+    sessionId,
+    url,
+    width,
+  }: ChildWindowOptions) {
+    try {
+      this.logger.debug("Creating child window", { height, sessionId, url, width });
+      const integrationSession = session.fromPartition(sessionId);
+      if (clearCookies) {
+        await integrationSession.clearStorageData({ storages: ["cookies"] });
+      }
+
+      const integrationWindow = new BrowserWindow({
+        alwaysOnTop: true,
+        autoHideMenuBar: true,
+        center: true,
+        closable: true,
+        fullscreen: false,
+        fullscreenable: false,
+        height,
+        modal: false,
+        movable: true,
+        parent: this.getBrowserWindow(),
+        resizable: false,
+        show: false,
+        webPreferences: {
+          contextIsolation: true,
+          nodeIntegration: false,
+          session: integrationSession,
+        },
+        width,
+      });
+
+      integrationWindow.webContents.on("did-navigate", (...args) => {
+        this.logger.debug("Child window navigated", { url: args[1] });
+        networkRequestHandler?.(integrationWindow, ...args);
+      });
+      await integrationWindow.loadURL(url);
+
+      this.logger.info("Child window created", { url });
+
+      return integrationWindow;
+    } catch (error: unknown) {
+      this.logger.error("Error creating child window", { error, sessionId, url });
       throw error;
     }
-    return this.browserWindow;
   }
 
   createWindow(): BrowserWindow {
@@ -43,8 +91,8 @@ export class WindowService {
       height: 800,
       maximizable: true,
       minHeight: 800,
-      minWidth: 1200,
       minimizable: true,
+      minWidth: 1200,
       movable: true,
       resizable: true,
       roundedCorners: true,
@@ -105,9 +153,18 @@ export class WindowService {
     return this.browserWindow;
   }
 
-  minimize() {
-    this.logger.debug("Minimising main window");
-    this.browserWindow?.minimize();
+  focus() {
+    this.logger.debug("Focusing main window");
+    this.browserWindow?.focus();
+  }
+
+  getBrowserWindow(): BrowserWindow {
+    if (!this.browserWindow) {
+      const error = new Error("Browser window has not been initialized");
+      this.logger.error("Attempted to retrieve an uninitialised browser window", { error });
+      throw error;
+    }
+    return this.browserWindow;
   }
 
   maximize() {
@@ -115,9 +172,19 @@ export class WindowService {
     this.browserWindow?.maximize();
   }
 
-  close() {
-    this.logger.debug("Closing main window");
-    this.browserWindow?.close();
+  minimize() {
+    this.logger.debug("Minimising main window");
+    this.browserWindow?.minimize();
+  }
+
+  restore() {
+    this.logger.debug("Restoring main window");
+    this.browserWindow?.restore();
+  }
+
+  sendEvent(channel: string, ...args: unknown[]) {
+    this.logger.debug("Sending event to renderer", { args, channel });
+    return this.browserWindow?.webContents.send(channel, ...args);
   }
 
   toggleMaximized() {
@@ -127,72 +194,6 @@ export class WindowService {
     } else {
       this.logger.debug("Maximising main window via toggle");
       this.maximize();
-    }
-  }
-
-  restore() {
-    this.logger.debug("Restoring main window");
-    this.browserWindow?.restore();
-  }
-
-  focus() {
-    this.logger.debug("Focusing main window");
-    this.browserWindow?.focus();
-  }
-
-  sendEvent(channel: string, ...args: unknown[]) {
-    this.logger.debug("Sending event to renderer", { args, channel });
-    return this.browserWindow?.webContents.send(channel, ...args);
-  }
-
-  async createChildWindow({
-    clearCookies = true,
-    height,
-    networkRequestHandler,
-    sessionId,
-    url,
-    width,
-  }: ChildWindowOptions) {
-    try {
-      this.logger.debug("Creating child window", { height, sessionId, url, width });
-      const integrationSession = session.fromPartition(sessionId);
-      if (clearCookies) {
-        await integrationSession.clearStorageData({ storages: ["cookies"] });
-      }
-
-      const integrationWindow = new BrowserWindow({
-        alwaysOnTop: true,
-        autoHideMenuBar: true,
-        center: true,
-        closable: true,
-        fullscreen: false,
-        fullscreenable: false,
-        height,
-        modal: false,
-        movable: true,
-        parent: this.getBrowserWindow(),
-        resizable: false,
-        show: false,
-        webPreferences: {
-          contextIsolation: true,
-          nodeIntegration: false,
-          session: integrationSession,
-        },
-        width,
-      });
-
-      integrationWindow.webContents.on("did-navigate", (...args) => {
-        this.logger.debug("Child window navigated", { url: args[1] });
-        networkRequestHandler?.(integrationWindow, ...args);
-      });
-      await integrationWindow.loadURL(url);
-
-      this.logger.info("Child window created", { url });
-
-      return integrationWindow;
-    } catch (error: unknown) {
-      this.logger.error("Error creating child window", { error, sessionId, url });
-      throw error;
     }
   }
 }

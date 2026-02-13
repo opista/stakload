@@ -8,6 +8,7 @@ import { NotificationService } from "../notification/notification.service";
 import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
 import { WindowService } from "../window/window.service";
+
 import { LibraryClientRegistryService } from "./library-client-registry/library-client-registry.service";
 import { LaunchResult, LibraryClientService } from "./types";
 
@@ -35,12 +36,35 @@ export class GameLifecycleService {
   }
 
   private watchGameProcess(pid: number, gameName: string) {
-    this.logger.debug("Setting up game process watch", { pid, gameName });
+    this.logger.debug("Setting up game process watch", { gameName, pid });
     this.processMonitor.watchProcess(pid, () => {
-      this.logger.info("Game process terminated, restoring window", { pid, gameName });
+      this.logger.info("Game process terminated, restoring window", { gameName, pid });
       this.windowService.restore();
       this.windowService.focus();
     });
+  }
+
+  async installGame(id: string) {
+    this.logger.debug("Processing game install request", { id });
+
+    const game = await this.gameStore.findGameById(id);
+    if (!game) {
+      this.logger.warn("Game not found for install", { id });
+      return;
+    }
+
+    try {
+      this.logger.info("Installing game", { id, library: game.library, name: game.name });
+      await this.getLauncher(game.library).install(game);
+      this.logger.info("Game installation initiated", { id, name: game.name });
+    } catch (error) {
+      this.logger.error("Game installation failed", error, { id, name: game.name });
+      this.notificationService.error({
+        message: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_MESSAGE,
+        title: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_TITLE,
+      });
+      throw error;
+    }
   }
 
   async launchGame(id: string): Promise<LaunchResult> {
@@ -49,11 +73,11 @@ export class GameLifecycleService {
     const game = await this.gameStore.findGameById(id);
     if (!game) {
       this.logger.warn("Game not found for launch", { id });
-      return { success: false, error: "Game not found" };
+      return { error: "Game not found", success: false };
     }
 
     try {
-      this.logger.info("Launching game", { id, name: game.name, library: game.library });
+      this.logger.info("Launching game", { id, library: game.library, name: game.name });
       await this.getLauncher(game.library).launch(game);
 
       if (!game.installationDetails?.installLocation) {
@@ -84,36 +108,13 @@ export class GameLifecycleService {
     } catch (error) {
       this.logger.error("Game launch failed", error, { id, name: game.name });
       this.notificationService.error({
-        title: NOTIFICATION_KEYS.GAME_LAUNCH_FAILED_TITLE,
         message: NOTIFICATION_KEYS.GAME_LAUNCH_FAILED_MESSAGE,
+        title: NOTIFICATION_KEYS.GAME_LAUNCH_FAILED_TITLE,
       });
       return {
-        success: false,
         error: error instanceof Error ? error.message : "Unknown error occurred",
+        success: false,
       };
-    }
-  }
-
-  async installGame(id: string) {
-    this.logger.debug("Processing game install request", { id });
-
-    const game = await this.gameStore.findGameById(id);
-    if (!game) {
-      this.logger.warn("Game not found for install", { id });
-      return;
-    }
-
-    try {
-      this.logger.info("Installing game", { id, name: game.name, library: game.library });
-      await this.getLauncher(game.library).install(game);
-      this.logger.info("Game installation initiated", { id, name: game.name });
-    } catch (error) {
-      this.logger.error("Game installation failed", error, { id, name: game.name });
-      this.notificationService.error({
-        title: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_TITLE,
-        message: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_MESSAGE,
-      });
-      throw error;
     }
   }
 
@@ -127,14 +128,14 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.info("Uninstalling game", { id, name: game.name, library: game.library });
+      this.logger.info("Uninstalling game", { id, library: game.library, name: game.name });
       await this.getLauncher(game.library).uninstall(game);
       this.logger.info("Game uninstallation initiated", { id, name: game.name });
     } catch (error) {
       this.logger.error("Game uninstallation failed", error, { id, name: game.name });
       this.notificationService.error({
-        title: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_TITLE,
         message: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_MESSAGE,
+        title: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_TITLE,
       });
       throw error;
     }

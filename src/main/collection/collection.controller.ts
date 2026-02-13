@@ -4,6 +4,7 @@ import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
+
 import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";
 
@@ -27,6 +28,17 @@ export class CollectionController extends IpcEventController {
     }
   }
 
+  @IpcHandle(COLLECTION_CHANNELS.DELETE)
+  async deleteCollection(id: string) {
+    this.logHandler(COLLECTION_CHANNELS.DELETE, { id });
+    try {
+      return await this.collectionService.deleteCollection(id);
+    } catch (error) {
+      this.logger.error("Failed to delete collection", error, { id });
+      throw error;
+    }
+  }
+
   @IpcHandle(COLLECTION_CHANNELS.GET_ALL)
   async getCollections() {
     this.logHandler(COLLECTION_CHANNELS.GET_ALL);
@@ -40,17 +52,6 @@ export class CollectionController extends IpcEventController {
       return await this.collectionService.updateCollection(id, updates);
     } catch (error) {
       this.logger.error("Failed to update collection", error, { id });
-      throw error;
-    }
-  }
-
-  @IpcHandle(COLLECTION_CHANNELS.DELETE)
-  async deleteCollection(id: string) {
-    this.logHandler(COLLECTION_CHANNELS.DELETE, { id });
-    try {
-      return await this.collectionService.deleteCollection(id);
-    } catch (error) {
-      this.logger.error("Failed to delete collection", error, { id });
       throw error;
     }
   }

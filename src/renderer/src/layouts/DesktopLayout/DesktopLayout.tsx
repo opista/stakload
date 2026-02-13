@@ -7,6 +7,7 @@ import { ModalsProvider } from "@mantine/modals";
 import { Outlet } from "react-router";
 
 import { Spotlight } from "../../components/Desktop/Spotlight/Spotlight";
+
 import classes from "./DesktopLayout.module.css";
 
 export const DesktopLayout = () => (

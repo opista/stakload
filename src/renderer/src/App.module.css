@@ -1,5 +1,5 @@
 .viewport {
-  >div {
+  > div {
     display: flex !important;
     flex-direction: column;
   }

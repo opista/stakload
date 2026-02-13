@@ -3,6 +3,7 @@ import { IpcEventController } from "@util/ipc/ipc-event.controller";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
+
 import { SYSTEM_CHANNELS } from "./system.channels";
 import { SystemService } from "./system.service";
 

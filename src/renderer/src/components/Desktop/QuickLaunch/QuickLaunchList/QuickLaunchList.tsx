@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { QuickLaunchItem } from "../QuickLaunchItem/QuickLaunchItem";
+
 import classes from "./QuickLaunchList.module.css";
 
 type QuickLaunchListProps = {
