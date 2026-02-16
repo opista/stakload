@@ -1,10 +1,8 @@
 import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { createDb } from "@util/database/create-db";
 import { dateRangeMatcher } from "@util/database/date-range-matcher";
 import { idMatcher } from "@util/database/id-matcher";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
 
 type FieldsType = "all" | "featured" | "list";
 
@@ -20,9 +18,11 @@ const fieldsMap: Record<FieldsType, Partial<Record<keyof GameStoreModel, number>
 };
 
 const db = createDb("games");
-@Service()
+@Injectable()
 export class GameStore {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async bulkInsertGames(games: Partial<GameStoreModel>[]) {
     this.logger.debug("Attempting bulk insert of games", { count: games.length });

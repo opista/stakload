@@ -1,6 +1,6 @@
 import { Library } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { assertNever } from "@util/assert-never";
-import { Service } from "typedi";
 
 import { BattleNetLibraryService } from "../../integrations/battle-net/sync/battle-net-sync.service";
 import { EpicGamesStoreSyncService } from "../../integrations/epic-games-store/sync/epic-games-store-sync.service";
@@ -9,14 +9,17 @@ import { SteamLibraryService } from "../../integrations/steam/sync/steam-sync.se
 
 import { SyncService } from "./types";
 
-@Service()
+@Injectable()
 export class SyncRegistryService {
   constructor(
+    private readonly logger: ConsoleLogger,
     private battleNetLibraryService: BattleNetLibraryService,
     private epicGamesStoreSyncService: EpicGamesStoreSyncService,
     private gogLibraryService: GogLibraryService,
     private steamLibraryService: SteamLibraryService,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   getLibrary(library: Library): SyncService {
     switch (library) {

@@ -1,14 +1,14 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { createDb } from "@util/database/create-db";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
 
 const db = createDb("collections");
 
-@Service({ global: true })
+@Injectable()
 export class CollectionStore {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async createCollection(collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) {
     this.logger.debug("Attempting to create collection in database", collection);

@@ -1,15 +1,18 @@
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { MacProcessMonitor } from "./strategies/mac.strategy";
 import { WindowsProcessMonitor } from "./strategies/windows.strategy";
 import { ProcessMonitorStrategy } from "./types";
 
-@Service()
+@Injectable()
 export class ProcessMonitorService {
   constructor(
+    private readonly logger: ConsoleLogger,
     private readonly macProcessMonitor: MacProcessMonitor,
     private readonly windowsProcessMonitor: WindowsProcessMonitor,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   getStrategy(): ProcessMonitorStrategy {
     switch (process.platform) {

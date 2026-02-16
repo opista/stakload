@@ -1,29 +1,29 @@
 import { GameFilters, GameStoreModel } from "@contracts/database/games";
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
-import { ProtondbApiClient } from "../api/protondb-api.client";
-import { CollectionStore } from "../collection/collection.store";
-import { LoggerService } from "../logger/logger.service";
+import { ProtondbApiClient } from "../protondb/protondb-api.client";
 import { WindowService } from "../window/window.service";
 
 import { GameStore } from "./game.store";
-@Service()
+
+@Injectable()
 export class GameService {
   constructor(
-    private readonly collectionStore: CollectionStore,
     private readonly gameStore: GameStore,
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly protondbApiClient: ProtondbApiClient,
     private readonly windowService: WindowService,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async archiveGame(id: string) {
     this.logger.debug("Processing game archive", { id });
     try {
       const result = await this.gameStore.updateGameById(id, { archivedAt: new Date() });
       if (result) {
-        this.logger.info("Game archived successfully", { id });
+        this.logger.log("Game archived successfully", { id });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
@@ -38,7 +38,7 @@ export class GameService {
     try {
       const result = await this.gameStore.removeGameById(id);
       if (result) {
-        this.logger.info("Game deleted successfully", { id });
+        this.logger.log("Game deleted successfully", { id });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
@@ -117,23 +117,6 @@ export class GameService {
     }
   }
 
-  async getGamesByCollectionId(id: string) {
-    this.logger.debug("Processing games fetch by collection", { id });
-    try {
-      const collection = await this.collectionStore.findCollectionById(id);
-      if (!collection) {
-        this.logger.warn("Collection not found for games fetch", { id });
-        return [];
-      }
-      const games = await this.gameStore.findFilteredGames(collection.filters, "list");
-      this.logger.debug("Games retrieved for collection", { count: games.length, id });
-      return games;
-    } catch (error) {
-      this.logger.error("Failed to get games by collection", error, { id });
-      throw error;
-    }
-  }
-
   async getGamesList() {
     this.logger.debug("Processing games list request");
     try {
@@ -188,7 +171,7 @@ export class GameService {
     try {
       const result = await this.gameStore.toggleFavouriteGame(id);
       if (result) {
-        this.logger.info("Game favourite status toggled successfully", { id });
+        this.logger.log("Game favourite status toggled successfully", { id });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
@@ -203,7 +186,7 @@ export class GameService {
     try {
       const result = await this.gameStore.toggleQuickLaunchGame(id);
       if (result) {
-        this.logger.info("Game quick launch status toggled successfully", { id });
+        this.logger.log("Game quick launch status toggled successfully", { id });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;

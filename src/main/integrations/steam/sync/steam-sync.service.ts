@@ -1,11 +1,10 @@
 import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { SharedConfigService } from "../../../config/shared-config.service";
 import { GameStore } from "../../../game/game.store";
-import { LoggerService } from "../../../logger/logger.service";
+import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { SteamApiService } from "../api/steam-api.service";
@@ -13,7 +12,7 @@ import { InstalledGamesRegistryService } from "../installed-games/installed-game
 import type { InstalledGamesStrategy } from "../installed-games/types";
 
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
-@Service()
+@Injectable()
 export class SteamLibraryService implements SyncService {
   private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "steam";
@@ -21,12 +20,13 @@ export class SteamLibraryService implements SyncService {
   constructor(
     private readonly gameStore: GameStore,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly sharedConfigService: SharedConfigService,
     private readonly steamApiService: SteamApiService,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
+    this.logger.setContext(this.constructor.name);
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
@@ -47,7 +47,7 @@ export class SteamLibraryService implements SyncService {
         .map(mapOwnedGameDetailsToGameStoreModel);
 
       await this.gameStore.bulkInsertGames(mappedGames);
-      this.logger.info("New Steam games added", { count: mappedGames.length });
+      this.logger.log("New Steam games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
       this.logger.error("Failed to add new Steam games", err);
@@ -72,7 +72,7 @@ export class SteamLibraryService implements SyncService {
           this.sharedConfigService.set("integration_settings.state.steamIntegration.webApiKey", webApiKey, {
             encrypt: true,
           });
-          this.logger.info("Steam authentication successful", { steamId });
+          this.logger.log("Steam authentication successful", { steamId });
         }
 
         return success;
@@ -143,6 +143,6 @@ export class SteamLibraryService implements SyncService {
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed Steam games updated");
+    this.logger.log("Installed Steam games updated");
   }
 }

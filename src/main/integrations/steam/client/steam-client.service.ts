@@ -1,18 +1,19 @@
 import { GameStoreModel } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { shell } from "electron";
-import { Service } from "typedi";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
-import { LoggerService } from "../../../logger/logger.service";
 
 const STEAM_LAUNCHER_BASE_URL = "steam://";
 
-@Service()
+@Injectable()
 export class SteamClientService implements LibraryClientService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async install(game: GameStoreModel): Promise<void> {
-    this.logger.info("Initiating Steam installation", { gameId: game.gameId });
+    this.logger.log("Initiating Steam installation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}install/${game.gameId}`);
       this.logger.debug("Steam installation initiated successfully", { gameId: game.gameId });
@@ -23,7 +24,7 @@ export class SteamClientService implements LibraryClientService {
   }
 
   async launch(game: GameStoreModel): Promise<void> {
-    this.logger.info("Launching game via Steam", { gameId: game.gameId });
+    this.logger.log("Launching game via Steam", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}run/${game.gameId}`);
       this.logger.debug("Game launched successfully via Steam", { gameId: game.gameId });
@@ -34,7 +35,7 @@ export class SteamClientService implements LibraryClientService {
   }
 
   async uninstall(game: GameStoreModel): Promise<void> {
-    this.logger.info("Initiating Steam uninstallation", { gameId: game.gameId });
+    this.logger.log("Initiating Steam uninstallation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}uninstall/${game.gameId}`);
       this.logger.debug("Steam uninstallation initiated successfully", { gameId: game.gameId });

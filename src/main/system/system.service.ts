@@ -1,19 +1,20 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { execAsync } from "@util/exec-async";
 import { app } from "electron";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
 
 // TODO - This is windows-only right now, we need to make it work for mac too when we build gaming mode
-@Service()
+
+@Injectable()
 export class SystemService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async restart() {
-    this.logger.info("Initiating system restart");
+    this.logger.log("Initiating system restart");
     try {
       await execAsync("shutdown /r");
-      this.logger.info("System restart command executed successfully");
+      this.logger.log("System restart command executed successfully");
     } catch (error) {
       this.logger.error("Failed to restart system", error);
       throw error;
@@ -21,16 +22,16 @@ export class SystemService {
   }
 
   restartApplication() {
-    this.logger.info("Restarting application");
+    this.logger.log("Restarting application");
     app.relaunch();
     app.exit(0);
   }
 
   async shutdown() {
-    this.logger.info("Initiating system shutdown");
+    this.logger.log("Initiating system shutdown");
     try {
       await execAsync("shutdown /s");
-      this.logger.info("System shutdown command executed successfully");
+      this.logger.log("System shutdown command executed successfully");
     } catch (error) {
       this.logger.error("Failed to shutdown system", error);
       throw error;
@@ -38,10 +39,10 @@ export class SystemService {
   }
 
   async sleep() {
-    this.logger.info("Putting system to sleep");
+    this.logger.log("Putting system to sleep");
     try {
       await execAsync("%windir%\\System32\\rundll32.exe powrprof.dll,SetSuspendState 0,1,0");
-      this.logger.info("System sleep command executed successfully");
+      this.logger.log("System sleep command executed successfully");
     } catch (error) {
       this.logger.error("Failed to put system to sleep", error);
       throw error;

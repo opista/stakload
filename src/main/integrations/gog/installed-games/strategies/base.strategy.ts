@@ -1,16 +1,17 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import Database from "better-sqlite3";
 import path from "path";
-import { Service } from "typedi";
 
-import { LoggerService } from "../../../../logger/logger.service";
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
 import { GogInstalledBaseProduct, InstalledGameData, InstalledGamesStrategy } from "../types";
 
-@Service()
+@Injectable()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  constructor(protected readonly logger: LoggerService) {}
+  constructor(protected readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   abstract getApplicationPath(): Promise<string>;
 

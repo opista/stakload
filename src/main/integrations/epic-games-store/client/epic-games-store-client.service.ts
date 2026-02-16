@@ -1,19 +1,20 @@
 import { GameStoreModel } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { shell } from "electron";
-import { Service } from "typedi";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
-import { LoggerService } from "../../../logger/logger.service";
 
 const EPIC_LAUNCHER_BASE_URL = "com.epicgames.launcher://";
 
-@Service()
-export class EpicGameStoreClientService implements LibraryClientService {
-  constructor(private readonly logger: LoggerService) {}
+@Injectable()
+export class EpicGamesStoreClientService implements LibraryClientService {
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async install(game: GameStoreModel): Promise<void> {
     const appName = game.libraryMeta?.appName;
-    this.logger.info("Installing game via EpicGameStore", { appName });
+    this.logger.log("Installing game via EpicGameStore", { appName });
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=install`);
     } catch (error: unknown) {
@@ -24,7 +25,7 @@ export class EpicGameStoreClientService implements LibraryClientService {
 
   async launch(game: GameStoreModel): Promise<void> {
     const appName = game.libraryMeta?.appName;
-    this.logger.info("Launching game via EpicGameStore", { appName });
+    this.logger.log("Launching game via EpicGameStore", { appName });
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=launch&silent=true`);
     } catch (error: unknown) {
@@ -34,7 +35,7 @@ export class EpicGameStoreClientService implements LibraryClientService {
   }
 
   async uninstall(): Promise<void> {
-    this.logger.info("Uninstalling game via EpicGameStore");
+    this.logger.log("Uninstalling game via EpicGameStore");
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}store/library`);
     } catch (error: unknown) {

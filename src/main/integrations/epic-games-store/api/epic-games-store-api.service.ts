@@ -1,7 +1,5 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client/core/core.cjs";
-import { Service } from "typedi";
-
-import { LoggerService } from "../../../logger/logger.service";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import CatalogQuery from "./catalog-query.graphql";
 import { Catalog } from "./types";
@@ -14,9 +12,11 @@ const client = new ApolloClient({
   uri: "https://graphql.epicgames.com/graphql",
 });
 
-@Service()
+@Injectable()
 export class EpicGamesStoreApiService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getGameId(namespace: string): Promise<string | null> {
     this.logger.debug("Querying EpicGamesStore API for game ID", { namespace });
@@ -33,7 +33,7 @@ export class EpicGamesStoreApiService {
       });
       const game = result.data.Catalog.catalogOffers.elements.find(({ offerType }) => offerType === "BASE_GAME");
       if (game) {
-        this.logger.info("Found game ID from EpicGamesStore API", {
+        this.logger.log("Found game ID from EpicGamesStore API", {
           gameId: game.id,
           namespace,
         });

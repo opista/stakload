@@ -1,11 +1,16 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import path from "path";
-import { Service } from "typedi";
 
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
-@Service()
+@Injectable()
 export class MacInstalledGamesStrategy extends BaseInstalledGamesStrategy {
   applicationPath: string | undefined;
+
+  constructor(protected readonly logger: ConsoleLogger) {
+    super(logger);
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getApplicationPath(): Promise<string> {
     if (this.applicationPath) return this.applicationPath;

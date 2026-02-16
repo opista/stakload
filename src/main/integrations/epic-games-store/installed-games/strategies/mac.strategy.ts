@@ -1,16 +1,15 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import path from "path";
-import { Service } from "typedi";
-
-import { LoggerService } from "../../../../logger/logger.service";
 
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
-@Service()
+@Injectable()
 export class MacInstalledGamesStrategy extends BaseInstalledGamesStrategy {
   applicationPath: string | undefined;
 
-  constructor(protected readonly logger: LoggerService) {
+  constructor(protected readonly logger: ConsoleLogger) {
     super(logger);
+    this.logger.setContext(this.constructor.name);
   }
 
   async getApplicationPath(): Promise<string> {
@@ -23,7 +22,7 @@ export class MacInstalledGamesStrategy extends BaseInstalledGamesStrategy {
     const homeDir = process.env.HOME;
     const applicationPath = path.join(homeDir!, "Library/Application Support/Epic");
     this.applicationPath = applicationPath;
-    this.logger.info("Determined Mac installed games application path", { applicationPath });
+    this.logger.log("Determined Mac installed games application path", { applicationPath });
     return applicationPath;
   }
 }

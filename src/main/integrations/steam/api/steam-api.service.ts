@@ -1,15 +1,15 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { buildQueryParams } from "@util/build-query-params";
-import { Service } from "typedi";
-
-import { LoggerService } from "../../../logger/logger.service";
 
 import { OwnedGamesResponse } from "./types";
 
 const STEAM_API_BASE_URL = "https://api.steampowered.com";
 
-@Service()
+@Injectable()
 export class SteamApiService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getOwnedGames(key: string, steamid: string) {
     this.logger.debug("Fetching owned games from Steam API", { steamid });

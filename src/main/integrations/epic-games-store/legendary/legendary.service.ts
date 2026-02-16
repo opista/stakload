@@ -1,7 +1,5 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { runApplicationCommand } from "@util/run-application-command";
-import { Service } from "typedi";
-
-import { LoggerService } from "../../../logger/logger.service";
 
 import { AuthResultModel, OwnedGame } from "./types";
 
@@ -15,9 +13,11 @@ import { AuthResultModel, OwnedGame } from "./types";
 
 const APPLICATION_NAME = "legendary";
 
-@Service()
+@Injectable()
 export class LegendaryService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getOwnedGames(): Promise<OwnedGame[]> {
     this.logger.debug("Fetching owned games using Legendary");
@@ -29,7 +29,7 @@ export class LegendaryService {
         "--platform Windows",
       ]);
       const ownedGames: OwnedGame[] = JSON.parse(result.stdout);
-      this.logger.info("Fetched owned games", { count: ownedGames.length });
+      this.logger.log("Fetched owned games", { count: ownedGames.length });
       return ownedGames;
     } catch (error: unknown) {
       this.logger.error("Failed to fetch owned games using Legendary", { error });
@@ -42,7 +42,7 @@ export class LegendaryService {
     try {
       const result = await runApplicationCommand(APPLICATION_NAME, "status");
       const isLoggedIn = !result.stdout.includes("<not logged in>");
-      this.logger.info("Legendary login status determined", { isLoggedIn });
+      this.logger.log("Legendary login status determined", { isLoggedIn });
       return isLoggedIn;
     } catch (error: unknown) {
       this.logger.error("Failed to check Legendary login status", { error });
@@ -56,7 +56,7 @@ export class LegendaryService {
       const result = await runApplicationCommand(APPLICATION_NAME, "auth", [`--code ${authorizationCode}`]);
       const match = /Successfully logged in as "(.*?)"/.exec(result.stderr);
       if (match) {
-        this.logger.info("Legendary login successful", { username: match[1] });
+        this.logger.log("Legendary login successful", { username: match[1] });
         return {
           data: { username: match[1] },
           success: true,
@@ -76,7 +76,7 @@ export class LegendaryService {
     this.logger.debug("Attempting Legendary logout");
     try {
       await runApplicationCommand(APPLICATION_NAME, "auth", ["--delete"]);
-      this.logger.info("Legendary logout successful");
+      this.logger.log("Legendary logout successful");
       return { success: true };
     } catch (error: unknown) {
       this.logger.error("Legendary logout failed", { error });

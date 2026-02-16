@@ -1,16 +1,14 @@
 import "reflect-metadata";
 
-import { createIpcApp, type IpcAppOptions } from "@electron-ipc-bridge/core";
+import { createIpcApp } from "@electron-ipc-bridge/core";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
+import { ConsoleLogger } from "@nestjs/common";
+import { NestFactory } from "@nestjs/core";
+import { getIpcControllers } from "@util/get-ipc-controllers";
 import { app } from "electron";
 import installExtension, { REACT_DEVELOPER_TOOLS } from "electron-devtools-installer";
 
-import { CollectionController } from "./collection/collection.controller";
-import { Container } from "./container";
-import { GameController } from "./game/game.controller";
-import { SyncController } from "./sync/sync.controller";
-import { SystemController } from "./system/system.controller";
-import { WindowController } from "./window/window.controller";
+import { IpcModule } from "./ipc.module";
 import { WindowService } from "./window/window.service";
 
 // Menu.setApplicationMenu(null);
@@ -18,7 +16,11 @@ import { WindowService } from "./window/window.service";
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-void app.whenReady().then(() => {
+void app.whenReady().then(async () => {
+  const nestContext = await NestFactory.createApplicationContext(IpcModule);
+  const windowService = nestContext.get(WindowService);
+  nestContext.useLogger(new ConsoleLogger());
+
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.opista.stakload");
 
@@ -36,20 +38,13 @@ void app.whenReady().then(() => {
   });
 
   const ipcApp = createIpcApp({
-    controllers: [
-      CollectionController,
-      GameController,
-      SyncController,
-      SystemController,
-      WindowController,
-    ] as IpcAppOptions["controllers"],
+    controllers: getIpcControllers(nestContext),
     correlation: true,
     resolver: {
-      resolve: (Token) => Container.get(Token),
+      resolve: <T>(Controller: new (...args: unknown[]) => T): T => nestContext.get(Controller),
     },
   });
 
-  const windowService = Container.get(WindowService);
   windowService.createWindow();
 
   app.on("window-all-closed", () => {

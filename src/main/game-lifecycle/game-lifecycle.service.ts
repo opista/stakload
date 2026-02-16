@@ -1,9 +1,8 @@
 import { Library } from "@contracts/database/games";
 import { NOTIFICATION_KEYS } from "@contracts/store/notification";
-import { Service } from "typedi";
+import { ConsoleLogger, forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { GameStore } from "../game/game.store";
-import { LoggerService } from "../logger/logger.service";
 import { NotificationService } from "../notification/notification.service";
 import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
@@ -15,18 +14,19 @@ import { LaunchResult, LibraryClientService } from "./types";
 const POLLING_INTERVAL = 2000;
 const MAX_POLLING_TIME = 60000;
 
-@Service()
+@Injectable()
 export class GameLifecycleService {
   private processMonitor: ProcessMonitorStrategy;
 
   constructor(
-    private readonly gameStore: GameStore,
+    @Inject(forwardRef(() => GameStore)) private readonly gameStore: GameStore,
     private readonly libraryClientRegistryService: LibraryClientRegistryService,
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly notificationService: NotificationService,
     private readonly processMonitorService: ProcessMonitorService,
     private readonly windowService: WindowService,
   ) {
+    this.logger.setContext(this.constructor.name);
     this.processMonitor = this.processMonitorService.getStrategy();
   }
 
@@ -38,7 +38,7 @@ export class GameLifecycleService {
   private watchGameProcess(pid: number, gameName: string) {
     this.logger.debug("Setting up game process watch", { gameName, pid });
     this.processMonitor.watchProcess(pid, () => {
-      this.logger.info("Game process terminated, restoring window", { gameName, pid });
+      this.logger.log("Game process terminated, restoring window", { gameName, pid });
       this.windowService.restore();
       this.windowService.focus();
     });
@@ -54,9 +54,9 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.info("Installing game", { id, library: game.library, name: game.name });
+      this.logger.log("Installing game", { id, library: game.library, name: game.name });
       await this.getLauncher(game.library).install(game);
-      this.logger.info("Game installation initiated", { id, name: game.name });
+      this.logger.log("Game installation initiated", { id, name: game.name });
     } catch (error) {
       this.logger.error("Game installation failed", error, { id, name: game.name });
       this.notificationService.error({
@@ -77,7 +77,7 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.info("Launching game", { id, library: game.library, name: game.name });
+      this.logger.log("Launching game", { id, library: game.library, name: game.name });
       await this.getLauncher(game.library).launch(game);
 
       if (!game.installationDetails?.installLocation) {
@@ -101,7 +101,7 @@ export class GameLifecycleService {
         };
       }
 
-      this.logger.info("Game launched successfully", { id, name: game.name, pid });
+      this.logger.log("Game launched successfully", { id, name: game.name, pid });
       this.windowService.minimize();
       this.watchGameProcess(pid, game.name);
       return { success: true };
@@ -128,9 +128,9 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.info("Uninstalling game", { id, library: game.library, name: game.name });
+      this.logger.log("Uninstalling game", { id, library: game.library, name: game.name });
       await this.getLauncher(game.library).uninstall(game);
-      this.logger.info("Game uninstallation initiated", { id, name: game.name });
+      this.logger.log("Game uninstallation initiated", { id, name: game.name });
     } catch (error) {
       this.logger.error("Game uninstallation failed", error, { id, name: game.name });
       this.notificationService.error({

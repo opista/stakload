@@ -1,6 +1,5 @@
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
-import { LoggerService } from "../../../logger/logger.service";
 import { WindowService } from "../../../window/window.service";
 
 import { BattleNetGame, GameAccounts } from "./types";
@@ -10,19 +9,21 @@ const BATTLE_NET_API_STATUS_URL = "https://account.battle.net/api/";
 const BATTLE_NET_REFRESH_URL = "https://account.battle.net:443/oauth2/authorization/account-settings";
 const SESSION_ID = "persist:battle-net-auth";
 
-@Service()
+@Injectable()
 export class BattleNetApiService {
   constructor(
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly windowService: WindowService,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async authenticate(): Promise<boolean> {
-    this.logger.info("Starting Battle.net authentication flow");
+    this.logger.log("Starting Battle.net authentication flow");
     try {
       const window = await this.windowService.createChildWindow({
         height: 730,
-        networkRequestHandler: async (win, _event, url) => {
+        networkRequestHandler: (win, _event, url) => {
           if (url.includes("/overview")) {
             win.close();
           }
@@ -62,7 +63,7 @@ export class BattleNetApiService {
 
       await window.loadURL(`${BATTLE_NET_API_URL}/api/games-and-subs`);
 
-      const content = await window.webContents.executeJavaScript("document.body.textContent");
+      const content: string = await window.webContents.executeJavaScript("document.body.textContent");
 
       window.close();
 
@@ -91,7 +92,7 @@ export class BattleNetApiService {
       });
 
       await window.loadURL(BATTLE_NET_API_STATUS_URL);
-      const content = await window.webContents.executeJavaScript("document.body.textContent");
+      const content: string = await window.webContents.executeJavaScript("document.body.textContent");
       window.close();
 
       try {

@@ -4,100 +4,112 @@
 /// <reference types="node" />
 
 export type AgeRating = {
-    descriptions: string[];
-    id: string;
-    name: string;
-    organization: string;
+  descriptions: string[];
+  id: string;
+  name: string;
+  organization: string;
 };
 
 export type CollectionStoreModel = {
-    _id: string;
-    filters: GameFilters;
-    icon?: string;
-    name: string;
+  _id: string;
+  filters: GameFilters;
+  icon?: string;
+  name: string;
 };
 
 export type DateFilter = {
-    dateRange: DateRange;
-    endDate?: Date;
-    startDate?: Date;
+  dateRange: DateRange;
+  endDate?: Date;
+  startDate?: Date;
 };
 
-export type DateRange = "ONE_DAY" | "ONE_WEEK" | "ONE_MONTH" | "ONE_YEAR" | "TODAY" | "THIS_WEEK" | "THIS_MONTH" | "THIS_YEAR" | "CUSTOM";
+export type DateRange =
+  | "ONE_DAY"
+  | "ONE_WEEK"
+  | "ONE_MONTH"
+  | "ONE_YEAR"
+  | "TODAY"
+  | "THIS_WEEK"
+  | "THIS_MONTH"
+  | "THIS_YEAR"
+  | "CUSTOM";
 
 export type EpicLibraryMeta = {
-    appName: string;
-    namespace: string;
+  appName: string;
+  namespace: string;
 };
 
 export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
 
 export type GameFilters = {
-    ageRatings?: string[];
-    createdAt?: DateFilter;
-    developers?: string[];
-    gameModes?: string[];
-    genres?: string[];
-    isFavourite?: boolean;
-    isInstalled?: boolean;
-    isQuickLaunch?: boolean;
-    libraries?: string[];
-    platforms?: string[];
-    playerPerspectives?: string[];
-    publishers?: string[];
+  ageRatings?: string[];
+  createdAt?: DateFilter;
+  developers?: string[];
+  gameModes?: string[];
+  genres?: string[];
+  isFavourite?: boolean;
+  isInstalled?: boolean;
+  isQuickLaunch?: boolean;
+  libraries?: string[];
+  platforms?: string[];
+  playerPerspectives?: string[];
+  publishers?: string[];
 };
 
 export type GameInstallationDetails = {
-    installLocation: string;
-    installedAt: Date;
+  installLocation: string;
+  installedAt: Date;
 };
 
-export type GameListModel = Pick<GameStoreModel, "_id" | "cover" | "isFavourite" | "isInstalled" | "isQuickLaunch" | "library" | "name">;
+export type GameListModel = Pick<
+  GameStoreModel,
+  "_id" | "cover" | "isFavourite" | "isInstalled" | "isQuickLaunch" | "library" | "name"
+>;
 
 export type GameStoreModel = {
-    _id: string;
-    ageRatings: AgeRating[];
-    archivedAt?: Date;
-    artworks?: Media[];
-    cover?: string;
-    createdAt: Date;
-    description?: string;
-    developers?: IdAndName[];
-    firstReleaseDate?: string;
-    gameId?: string;
-    gameModes?: IdAndName[];
-    genres?: IdAndName[];
-    igdbId?: number;
-    installationDetails?: GameInstallationDetails;
-    isFavourite?: boolean;
-    isInstalled?: boolean;
-    isQuickLaunch?: boolean;
-    lastPlayedAt?: Date;
-    library: Library;
-    libraryMeta?: LibraryMeta;
-    metadataSyncedAt?: Date;
-    multiplayerModes?: MultiplayerMode[];
-    name: string;
-    platforms?: IdAndName[];
-    playerPerspectives?: IdAndName[];
-    publishers?: IdAndName[];
-    screenshots?: string[];
-    sortableName?: string;
-    storyline?: string;
-    summary?: string;
-    videos?: string[];
-    websites?: Website[];
+  _id: string;
+  ageRatings: AgeRating[];
+  archivedAt?: Date;
+  artworks?: Media[];
+  cover?: string;
+  createdAt: Date;
+  description?: string;
+  developers?: IdAndName[];
+  firstReleaseDate?: string;
+  gameId?: string;
+  gameModes?: IdAndName[];
+  genres?: IdAndName[];
+  igdbId?: number;
+  installationDetails?: GameInstallationDetails;
+  isFavourite?: boolean;
+  isInstalled?: boolean;
+  isQuickLaunch?: boolean;
+  lastPlayedAt?: Date;
+  library: Library;
+  libraryMeta?: LibraryMeta;
+  metadataSyncedAt?: Date;
+  multiplayerModes?: MultiplayerMode[];
+  name: string;
+  platforms?: IdAndName[];
+  playerPerspectives?: IdAndName[];
+  publishers?: IdAndName[];
+  screenshots?: string[];
+  sortableName?: string;
+  storyline?: string;
+  summary?: string;
+  videos?: string[];
+  websites?: Website[];
 };
 
 export type IdAndName = {
-    id: string;
-    igdbId: number;
-    name: string;
+  id: string;
+  igdbId: number;
+  name: string;
 };
 
 export interface LaunchResult {
-    error?: string;
-    success: boolean;
+  error?: string;
+  success: boolean;
 }
 
 export type Library = "battle-net" | "epic-game-store" | "gog" | "steam";
@@ -107,95 +119,137 @@ export type LibraryMeta = EpicLibraryMeta;
 export type LikeWebsiteType = `${WebsiteType}`;
 
 export type Media = {
-    height: number;
-    url: string;
-    width: number;
+  height: number;
+  url: string;
+  width: number;
 };
 
 export type MultiplayerMode = {
-    campaignCoop: boolean;
-    dropIn: boolean;
-    id: string;
-    igdbId: number;
-    lanCoop: boolean;
-    offlineCoop: boolean;
-    offlineCoopMax: number;
-    offlineMax: number;
-    onlineCoop: boolean;
-    onlineCoopMax: number;
-    onlineMax: number;
-    platform: number;
-    splitscreen: boolean;
-    splitscreenOnline: boolean;
+  campaignCoop: boolean;
+  dropIn: boolean;
+  id: string;
+  igdbId: number;
+  lanCoop: boolean;
+  offlineCoop: boolean;
+  offlineCoopMax: number;
+  offlineMax: number;
+  onlineCoop: boolean;
+  onlineCoopMax: number;
+  onlineMax: number;
+  platform: number;
+  splitscreen: boolean;
+  splitscreenOnline: boolean;
 };
 
 export type Website = {
-    id: string;
-    igdbId: number;
-    url: string;
-    websiteType: LikeWebsiteType;
+  id: string;
+  igdbId: number;
+  url: string;
+  websiteType: LikeWebsiteType;
 };
 
 export enum WebsiteType {
-    Android = "android",
-    Bluesky = "bluesky",
-    Discord = "discord",
-    EpicGames = "epicgames",
-    Facebook = "facebook",
-    Gog = "gog",
-    Instagram = "instagram",
-    Ipad = "ipad",
-    Iphone = "iphone",
-    Itch = "itch",
-    Official = "official",
-    Reddit = "reddit",
-    Steam = "steam",
-    Twitch = "twitch",
-    Twitter = "twitter",
-    Wikia = "wikia",
-    Wikipedia = "wikipedia",
-    Youtube = "youtube"
+  Android = "android",
+  Bluesky = "bluesky",
+  Discord = "discord",
+  EpicGames = "epicgames",
+  Facebook = "facebook",
+  Gog = "gog",
+  Instagram = "instagram",
+  Ipad = "ipad",
+  Iphone = "iphone",
+  Itch = "itch",
+  Official = "official",
+  Reddit = "reddit",
+  Steam = "steam",
+  Twitch = "twitch",
+  Twitter = "twitter",
+  Wikia = "wikia",
+  Wikipedia = "wikipedia",
+  Youtube = "youtube",
 }
 
 export interface IpcApi {
-    collection: {
-      createCollection(collection: CollectionStoreModel): Promise<{ _id: string; createdAt: Date; updatedAt: Date; } & Omit<CollectionStoreModel, "_id">>;
-      deleteCollection(id: string): Promise<boolean>;
-      getCollections(): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & CollectionStoreModel)[]>;
-      updateCollection(id: string, updates: Partial<CollectionStoreModel>): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & CollectionStoreModel) | null>;
-    };
-    game: {
-      archiveGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & GameStoreModel) | null>;
-      deleteGameById(id: string): Promise<number>;
-      getFilteredGames(filters: GameFilters): Promise<GameListModel[]>;
-      getGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & GameStoreModel) | null>;
-      getGameFilters(): Promise<{ _id?: { label: string; value: string; }[] | undefined; ageRatings?: { label: string; value: string; }[] | undefined; archivedAt?: { label: string; value: string; }[] | undefined; artworks?: { label: string; value: string; }[] | undefined; cover?: { label: string; value: string; }[] | undefined; createdAt?: { label: string; value: string; }[] | undefined; description?: { label: string; value: string; }[] | undefined; developers?: { label: string; value: string; }[] | undefined; firstReleaseDate?: { label: string; value: string; }[] | undefined; gameId?: { label: string; value: string; }[] | undefined; gameModes?: { label: string; value: string; }[] | undefined; genres?: { label: string; value: string; }[] | undefined; igdbId?: { label: string; value: string; }[] | undefined; installationDetails?: { label: string; value: string; }[] | undefined; isFavourite?: { label: string; value: string; }[] | undefined; isInstalled?: { label: string; value: string; }[] | undefined; isQuickLaunch?: { label: string; value: string; }[] | undefined; lastPlayedAt?: { label: string; value: string; }[] | undefined; library?: { label: string; value: string; }[] | undefined; libraryMeta?: { label: string; value: string; }[] | undefined; metadataSyncedAt?: { label: string; value: string; }[] | undefined; multiplayerModes?: { label: string; value: string; }[] | undefined; name?: { label: string; value: string; }[] | undefined; platforms?: { label: string; value: string; }[] | undefined; playerPerspectives?: { label: string; value: string; }[] | undefined; publishers?: { label: string; value: string; }[] | undefined; screenshots?: { label: string; value: string; }[] | undefined; sortableName?: { label: string; value: string; }[] | undefined; storyline?: { label: string; value: string; }[] | undefined; summary?: { label: string; value: string; }[] | undefined; videos?: { label: string; value: string; }[] | undefined; websites?: { label: string; value: string; }[] | undefined; }>;
-      getGamesByCollection(collectionId: string): Promise<GameListModel[]>;
-      getGamesList(): Promise<GameListModel[]>;
-      getNewGames(): Promise<FeaturedGameModel[]>;
-      getProtondbTier(id: string): Promise<string | null>;
-      getQuickLaunchGames(): Promise<GameListModel[]>;
-      installGame(id: string): void;
-      launchGame(id: string): void;
-      toggleFavouriteGame(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & GameStoreModel) | null | undefined>;
-      toggleQuickLaunchGame(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date; } & GameStoreModel) | null | undefined>;
-      uninstallGame(id: string): void;
-    };
-    sync: {
-      authIntegration(library: Library, data?: unknown): Promise<false | void>;
-      syncGames(): void;
-      testIntegration(library: Library): Promise<boolean>;
-    };
-    system: {
-      getPlatform(): Promise<NodeJS.Platform>;
-      restartApplication(): void;
-      restartDevice(): void;
-      shutdownDevice(): void;
-      sleepDevice(): void;
-    };
-    window: {
-      close(): void;
-      maximize(): void;
-      minimize(): void;
-    };
+  collection: {
+    createCollection(
+      collection: CollectionStoreModel,
+    ): Promise<{ _id: string; createdAt: Date; updatedAt: Date } & Omit<CollectionStoreModel, "_id">>;
+    deleteCollection(id: string): Promise<boolean>;
+    getCollections(): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & CollectionStoreModel)[]>;
+    updateCollection(
+      id: string,
+      updates: Partial<CollectionStoreModel>,
+    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & CollectionStoreModel) | null>;
+  };
+  game: {
+    archiveGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null>;
+    deleteGameById(id: string): Promise<number>;
+    getFilteredGames(filters: GameFilters): Promise<GameListModel[]>;
+    getGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null>;
+    getGameFilters(): Promise<{
+      _id?: { label: string; value: string }[] | undefined;
+      ageRatings?: { label: string; value: string }[] | undefined;
+      archivedAt?: { label: string; value: string }[] | undefined;
+      artworks?: { label: string; value: string }[] | undefined;
+      cover?: { label: string; value: string }[] | undefined;
+      createdAt?: { label: string; value: string }[] | undefined;
+      description?: { label: string; value: string }[] | undefined;
+      developers?: { label: string; value: string }[] | undefined;
+      firstReleaseDate?: { label: string; value: string }[] | undefined;
+      gameId?: { label: string; value: string }[] | undefined;
+      gameModes?: { label: string; value: string }[] | undefined;
+      genres?: { label: string; value: string }[] | undefined;
+      igdbId?: { label: string; value: string }[] | undefined;
+      installationDetails?: { label: string; value: string }[] | undefined;
+      isFavourite?: { label: string; value: string }[] | undefined;
+      isInstalled?: { label: string; value: string }[] | undefined;
+      isQuickLaunch?: { label: string; value: string }[] | undefined;
+      lastPlayedAt?: { label: string; value: string }[] | undefined;
+      library?: { label: string; value: string }[] | undefined;
+      libraryMeta?: { label: string; value: string }[] | undefined;
+      metadataSyncedAt?: { label: string; value: string }[] | undefined;
+      multiplayerModes?: { label: string; value: string }[] | undefined;
+      name?: { label: string; value: string }[] | undefined;
+      platforms?: { label: string; value: string }[] | undefined;
+      playerPerspectives?: { label: string; value: string }[] | undefined;
+      publishers?: { label: string; value: string }[] | undefined;
+      screenshots?: { label: string; value: string }[] | undefined;
+      sortableName?: { label: string; value: string }[] | undefined;
+      storyline?: { label: string; value: string }[] | undefined;
+      summary?: { label: string; value: string }[] | undefined;
+      videos?: { label: string; value: string }[] | undefined;
+      websites?: { label: string; value: string }[] | undefined;
+    }>;
+    getGamesByCollection(collectionId: string): Promise<GameListModel[]>;
+    getGamesList(): Promise<GameListModel[]>;
+    getNewGames(): Promise<FeaturedGameModel[]>;
+    getProtondbTier(id: string): Promise<string | null>;
+    getQuickLaunchGames(): Promise<GameListModel[]>;
+    installGame(id: string): void;
+    launchGame(id: string): void;
+    toggleFavouriteGame(
+      id: string,
+    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null | undefined>;
+    toggleQuickLaunchGame(
+      id: string,
+    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null | undefined>;
+    uninstallGame(id: string): void;
+  };
+  sync: {
+    authIntegration(library: Library, data?: unknown): Promise<false | void>;
+    syncGames(): void;
+    testIntegration(library: Library): Promise<boolean>;
+  };
+  system: {
+    getPlatform(): Promise<NodeJS.Platform>;
+    restartApplication(): void;
+    restartDevice(): void;
+    shutdownDevice(): void;
+    sleepDevice(): void;
+  };
+  window: {
+    close(): void;
+    maximize(): void;
+    minimize(): void;
+  };
 }

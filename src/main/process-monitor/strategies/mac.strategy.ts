@@ -1,18 +1,19 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { exec } from "child_process";
-import { Service } from "typedi";
 import { promisify } from "util";
 
-import { LoggerService } from "../../logger/logger.service";
 import { ProcessMonitorStrategy } from "../types";
 
 const execAsync = promisify(exec);
 
-@Service()
+@Injectable()
 export class MacProcessMonitor implements ProcessMonitorStrategy {
   private processCheckInterval: NodeJS.Timeout | null = null;
   private watchedProcesses: Map<number, () => void> = new Map();
 
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async findProcessByParentDirectory(directory: string): Promise<number | null> {
     this.logger.debug("Finding process by directory", { directory });
@@ -26,7 +27,7 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
 
         if (cmd.includes(directory)) {
           const pid = parseInt(pidStr, 10);
-          this.logger.info("Process found for directory", { directory, pid });
+          this.logger.log("Process found for directory", { directory, pid });
           return pid;
         }
       }
@@ -72,7 +73,7 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
       const pid = await this.findProcessByParentDirectory(directory);
 
       if (pid) {
-        this.logger.info("Process found", { directory, pid });
+        this.logger.log("Process found", { directory, pid });
         return pid;
       }
 
@@ -102,7 +103,7 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
 
         for (const [pid, callback] of this.watchedProcesses.entries()) {
           if (!stdout.includes(String(pid))) {
-            this.logger.info("Process terminated", { pid });
+            this.logger.log("Process terminated", { pid });
             this.watchedProcesses.delete(pid);
             callback();
           }

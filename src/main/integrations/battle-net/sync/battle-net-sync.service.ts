@@ -1,19 +1,17 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
-import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { GameStore } from "../../../game/game.store";
-import { LoggerService } from "../../../logger/logger.service";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { BattleNetApiService } from "../api/battle-net-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
 
-@Service()
+@Injectable()
 export class BattleNetLibraryService implements SyncService {
   private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "battle-net";
@@ -22,15 +20,15 @@ export class BattleNetLibraryService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly battleNetApiService: BattleNetApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly logger: LoggerService,
-    private readonly StakloadApiClient: StakloadApiClient,
+    private readonly logger: ConsoleLogger,
     private readonly windowService: WindowService,
   ) {
+    this.logger.setContext(this.constructor.name);
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   async addNewGames() {
-    this.logger.info("Adding new Battle.net games to library");
+    this.logger.log("Adding new Battle.net games to library");
     try {
       const ownedGames = await this.battleNetApiService.getOwnedGames();
 
@@ -54,7 +52,7 @@ export class BattleNetLibraryService implements SyncService {
         });
 
       await this.gameStore.bulkInsertGames(mappedGames);
-      this.logger.info("New Battle.net games added", { count: mappedGames.length });
+      this.logger.log("New Battle.net games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
       console.log({ err });
@@ -64,7 +62,7 @@ export class BattleNetLibraryService implements SyncService {
   }
 
   async authenticate() {
-    this.logger.info("Starting Battle.net authentication");
+    this.logger.log("Starting Battle.net authentication");
     const success = await this.battleNetApiService.authenticate();
 
     this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
@@ -85,7 +83,7 @@ export class BattleNetLibraryService implements SyncService {
   }
 
   async updateInstalledGames() {
-    this.logger.info("Updating installed Battle.net games");
+    this.logger.log("Updating installed Battle.net games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
@@ -122,6 +120,6 @@ export class BattleNetLibraryService implements SyncService {
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed games updated");
+    this.logger.log("Installed games updated");
   }
 }

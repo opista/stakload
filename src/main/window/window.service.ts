@@ -1,20 +1,20 @@
 import { is, platform } from "@electron-toolkit/utils";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
 
 import { ChildWindowOptions } from "./types";
 
-@Service()
+@Injectable()
 export class WindowService {
   private browserWindow: BrowserWindow | null = null;
 
-  constructor(private readonly logger: LoggerService) {
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+
     app.on("activate", () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        this.logger.info("App activated on macOS with no windows; creating new main window");
+        this.logger.log("App activated on macOS with no windows; creating new main window");
         this.createWindow();
       }
     });
@@ -67,7 +67,7 @@ export class WindowService {
       });
       await integrationWindow.loadURL(url);
 
-      this.logger.info("Child window created", { url });
+      this.logger.log("Child window created", { url });
 
       return integrationWindow;
     } catch (error: unknown) {
@@ -77,7 +77,7 @@ export class WindowService {
   }
 
   createWindow(): BrowserWindow {
-    this.logger.info("Creating main browser window");
+    this.logger.log("Creating main browser window");
     this.browserWindow = new BrowserWindow({
       autoHideMenuBar: true,
       backgroundColor: "#00000000",

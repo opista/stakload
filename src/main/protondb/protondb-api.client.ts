@@ -1,10 +1,10 @@
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
-import { LoggerService } from "../logger/logger.service";
-
-@Service()
+@Injectable()
 export class ProtondbApiClient {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getTier(gameId: string) {
     try {

@@ -1,18 +1,19 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { mapSortableName } from "@util/map-sortable-name";
 import fs from "fs/promises";
 import path from "path";
 import protobuf from "protobufjs";
-import { Service } from "typedi";
 
-import { LoggerService } from "../../../../logger/logger.service";
 import { databaseSchema } from "../../data/database-schema";
 import { getBattleNetGameByProductId } from "../../data/games";
 import { InstalledGameData, InstalledGamesStrategy } from "../types";
 
-@Service()
+@Injectable()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
-  constructor(protected readonly logger: LoggerService) {}
+  constructor(protected readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   abstract getApplicationPath(): Promise<string>;
 

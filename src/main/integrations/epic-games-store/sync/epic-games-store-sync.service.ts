@@ -1,11 +1,10 @@
 import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
-import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { GameStore } from "../../../game/game.store";
-import { LoggerService } from "../../../logger/logger.service";
+import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
@@ -14,7 +13,7 @@ import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
 
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
-@Service()
+@Injectable()
 export class EpicGamesStoreSyncService implements SyncService {
   private installedGameStrategy: InstalledGamesStrategy;
   library: Library = "epic-game-store";
@@ -24,10 +23,11 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly legendaryService: LegendaryService,
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
+    this.logger.setContext(this.constructor.name);
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
@@ -45,11 +45,11 @@ export class EpicGamesStoreSyncService implements SyncService {
       const { authorizationCode } = parsed;
 
       window.close();
-      this.logger.info("Authentication window closed", { url });
+      this.logger.log("Authentication window closed", { url });
       await this.legendaryService.logout();
       this.logger.debug("Logged out from LegendaryService for authentication refresh");
       const result = await this.legendaryService.login(authorizationCode);
-      this.logger.info("LegendaryService authentication result", { success: result.success });
+      this.logger.log("LegendaryService authentication result", { success: result.success });
       this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
         library: this.library,
         success: result.success,
@@ -60,7 +60,7 @@ export class EpicGamesStoreSyncService implements SyncService {
   async addNewGames() {
     this.logger.debug("Adding new games from EpicGamesStore integration");
     const ownedGames = await this.legendaryService.getOwnedGames();
-    this.logger.info("Fetched owned games from LegendaryService", { count: ownedGames.length });
+    this.logger.log("Fetched owned games from LegendaryService", { count: ownedGames.length });
     const existingGames = await this.gameStore.findGamesByEpicNamespace(
       ownedGames.map(({ metadata: { namespace } }) => namespace),
     );
@@ -71,7 +71,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       .map((game) => mapOwnedGameToGameStoreModel(game));
 
     await this.gameStore.bulkInsertGames(mappedGames);
-    this.logger.info("New games added from EpicGamesStore integration", {
+    this.logger.log("New games added from EpicGamesStore integration", {
       count: mappedGames.length,
     });
     return mappedGames.length;
@@ -109,7 +109,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       });
       return null;
     }
-    this.logger.info("Updating game with new gameId", {
+    this.logger.log("Updating game with new gameId", {
       gameId,
       name: game.name,
       namespace: game.libraryMeta!.namespace,
@@ -121,14 +121,14 @@ export class EpicGamesStoreSyncService implements SyncService {
   async isIntegrationValid(): Promise<boolean> {
     this.logger.debug("Validating EpicGamesStore integration via LegendaryService");
     const valid = await this.legendaryService.isLoggedIn();
-    this.logger.info("EpicGamesStore integration valid status", { valid });
+    this.logger.log("EpicGamesStore integration valid status", { valid });
     return valid;
   }
 
   async updateInstalledGames() {
     this.logger.debug("Updating installed games status", { library: this.library });
     const installedGames = await this.installedGameStrategy.getInstalledGames();
-    this.logger.info("Retrieved installed games", { count: installedGames.length });
+    this.logger.log("Retrieved installed games", { count: installedGames.length });
     const installedGameAppNames = installedGames.map((game) => game.appName);
 
     const currentlyInstalledGames = await this.gameStore.findFilteredGames(
@@ -142,17 +142,17 @@ export class EpicGamesStoreSyncService implements SyncService {
       .map((game) => game.libraryMeta?.appName)
       .filter((appName): appName is string => !!appName && !installedGameAppNames.includes(appName));
 
-    this.logger.info("Games to mark as uninstalled", { uninstalledCount: uninstalledAppNames.length });
+    this.logger.log("Games to mark as uninstalled", { uninstalledCount: uninstalledAppNames.length });
     const gamesToMarkUninstalled = uninstalledAppNames.map((appName) =>
       this.gameStore.updateGameByEpicAppName(appName, { installationDetails: undefined, isInstalled: false }),
     );
 
-    this.logger.info("Games to mark as installed", { installedCount: installedGames.length });
+    this.logger.log("Games to mark as installed", { installedCount: installedGames.length });
     const gamesToMarkInstalled = installedGames.map(({ appName, installationDetails }) =>
       this.gameStore.updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed games status update complete");
+    this.logger.log("Installed games status update complete");
   }
 }

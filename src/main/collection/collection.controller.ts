@@ -1,22 +1,23 @@
 import type { CollectionStoreModel } from "@contracts/database/collections";
 import { IpcController, IpcHandle } from "@electron-ipc-bridge/core";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
+import { ConsoleLogger } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 
 import { CollectionService } from "./collection.service";
 
 @IpcController()
-@Service()
+@Controller()
 export class CollectionController {
   constructor(
     private readonly collectionService: CollectionService,
-    private readonly logger: LoggerService,
-  ) {}
+    private readonly logger: ConsoleLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   @IpcHandle()
   async createCollection(collection: CollectionStoreModel) {
-    this.logger.info("Handling IPC message", { name: collection.name });
+    this.logger.log("Handling IPC message", { name: collection.name });
     try {
       return await this.collectionService.createCollection(collection);
     } catch (error) {
@@ -27,7 +28,7 @@ export class CollectionController {
 
   @IpcHandle()
   async deleteCollection(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     try {
       return await this.collectionService.deleteCollection(id);
     } catch (error) {
@@ -43,7 +44,7 @@ export class CollectionController {
 
   @IpcHandle()
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
-    this.logger.info("Handling IPC message", { id, updates });
+    this.logger.log("Handling IPC message", { id, updates });
     try {
       return await this.collectionService.updateCollection(id, updates);
     } catch (error) {

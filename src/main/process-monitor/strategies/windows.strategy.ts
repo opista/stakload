@@ -1,15 +1,16 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { execAsync } from "@util/exec-async";
-import { Service } from "typedi";
 
-import { LoggerService } from "../../logger/logger.service";
 import { ProcessMonitorStrategy } from "../types";
 
-@Service()
+@Injectable()
 export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   private processCheckInterval: NodeJS.Timeout | null = null;
   private watchedProcesses: Map<number, () => void> = new Map();
 
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async findProcessByParentDirectory(directory: string): Promise<number | null> {
     this.logger.debug("Finding process launched from directory", { directory });
@@ -21,7 +22,7 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
       const pid = parseInt(lines[0], 10);
 
       if (!isNaN(pid)) {
-        this.logger.info("Process found for directory", { directory, pid });
+        this.logger.log("Process found for directory", { directory, pid });
       } else {
         this.logger.debug("No process found for directory", { directory });
       }
@@ -66,7 +67,7 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
       const pid = await this.findProcessByParentDirectory(directory);
 
       if (pid) {
-        this.logger.info("Process found", { directory, pid });
+        this.logger.log("Process found", { directory, pid });
         return pid;
       }
 
@@ -106,7 +107,7 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
 
         for (const [pid, callback] of this.watchedProcesses.entries()) {
           if (!runningPids.includes(pid)) {
-            this.logger.info("Process terminated", { pid });
+            this.logger.log("Process terminated", { pid });
             this.watchedProcesses.delete(pid);
             callback();
           }

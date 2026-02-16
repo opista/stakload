@@ -1,7 +1,6 @@
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { SharedConfigService } from "../../../config/shared-config.service";
-import { LoggerService } from "../../../logger/logger.service";
 
 import { GogTokenConfig, LibraryData, LibraryProduct, TokenResponse } from "./types";
 
@@ -9,12 +8,14 @@ export const CLIENT_ID = "46899977096215655";
 export const CLIENT_SECRET = "9d85c43b1482497dbbce61f6e4aa173a433796eeae2ca8c5f6129f2dc4de46d9";
 export const REDIRECT_URI = "https://embed.gog.com/on_login_success?origin=client";
 
-@Service()
+@Injectable()
 export class GogApiService {
   constructor(
     private readonly sharedConfigService: SharedConfigService,
-    private readonly logger: LoggerService,
-  ) {}
+    private readonly logger: ConsoleLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   private async saveTokens(tokens: TokenResponse) {
     const expiresAt = Date.now() + tokens.expires_in * 1000;
@@ -54,7 +55,7 @@ export class GogApiService {
     }
 
     await this.saveTokens(data);
-    this.logger.info("GOG authentication succeeded");
+    this.logger.log("GOG authentication succeeded");
     return data;
   }
 
@@ -116,7 +117,7 @@ export class GogApiService {
     }
 
     if (Date.now() >= config.expiresAt) {
-      this.logger.info("GOG token expired; attempting to refresh", { expiresAt: config.expiresAt });
+      this.logger.log("GOG token expired; attempting to refresh", { expiresAt: config.expiresAt });
       const newTokens = await this.refreshAccessToken(config.refreshToken);
 
       if (!newTokens || newTokens.error) {
@@ -128,7 +129,7 @@ export class GogApiService {
       }
 
       await this.saveTokens(newTokens);
-      this.logger.info("GOG token refreshed successfully");
+      this.logger.log("GOG token refreshed successfully");
       return newTokens.access_token;
     }
 

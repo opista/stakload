@@ -1,15 +1,16 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { CollectionStore } from "../collection/collection.store";
-import { LoggerService } from "../logger/logger.service";
 
-@Service()
+@Injectable()
 export class CollectionService {
   constructor(
     private readonly collectionStore: CollectionStore,
-    private readonly logger: LoggerService,
-  ) {}
+    private readonly logger: ConsoleLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async createCollection(collection: Pick<CollectionStoreModel, "filters" | "icon" | "name">) {
     this.logger.debug("Processing collection creation", collection);
@@ -31,7 +32,7 @@ export class CollectionService {
         filters: cleanFilters,
         name: formattedName,
       });
-      this.logger.info("Collection created successfully", {
+      this.logger.log("Collection created successfully", {
         filters: created.filters,
         id: created._id,
         name: created.name,
@@ -48,11 +49,23 @@ export class CollectionService {
     try {
       const deleted = await this.collectionStore.deleteCollectionById(id);
       if (deleted) {
-        this.logger.info("Collection deleted successfully", { id });
+        this.logger.log("Collection deleted successfully", { id });
       }
       return deleted;
     } catch (error) {
       this.logger.error("Failed to delete collection", error, { id });
+      throw error;
+    }
+  }
+
+  async getCollectionById(id: string) {
+    this.logger.debug("Fetching collection by id", { id });
+    try {
+      const collection = await this.collectionStore.findCollectionById(id);
+      this.logger.debug("Collection fetched successfully", { id, name: collection?.name });
+      return collection;
+    } catch (error) {
+      this.logger.error("Failed to fetch collection", error, { id });
       throw error;
     }
   }
@@ -78,7 +91,7 @@ export class CollectionService {
         ...(formattedName && { name: formattedName }),
       });
       if (updated) {
-        this.logger.info("Collection updated successfully", { id, name: updated.name });
+        this.logger.log("Collection updated successfully", { id, name: updated.name });
       }
       return updated;
     } catch (error) {

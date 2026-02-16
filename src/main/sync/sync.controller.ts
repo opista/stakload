@@ -1,25 +1,26 @@
 import type { Library } from "@contracts/database/games";
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
+import { ConsoleLogger } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 
 import { SyncService } from "./sync.service";
 
 @IpcController()
-@Service()
+@Controller()
 export class SyncController {
   constructor(
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly syncService: SyncService,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   @IpcHandle()
   async authIntegration(library: Library, data?: unknown) {
-    this.logger.info("Handling IPC message", { library });
+    this.logger.log("Handling IPC message", { library });
     try {
       const authResult = await this.syncService.authenticate(library, data);
-      this.logger.info("Authentication completed", { library });
+      this.logger.log("Authentication completed", { library });
       return authResult;
     } catch (error: unknown) {
       this.logger.error("Error in authIntegration", { error, library });
@@ -29,10 +30,10 @@ export class SyncController {
 
   @IpcOn()
   syncGames() {
-    this.logger.info("Handling IPC message");
+    this.logger.log("Handling IPC message");
     try {
       const result = this.syncService.sync();
-      this.logger.info("Sync operation initiated", { result });
+      this.logger.log("Sync operation initiated", { result });
       return result;
     } catch (error: unknown) {
       this.logger.error("Error in syncGames", { error });
@@ -42,10 +43,10 @@ export class SyncController {
 
   @IpcHandle()
   async testIntegration(library: Library) {
-    this.logger.info("Handling IPC message", { library });
+    this.logger.log("Handling IPC message", { library });
     try {
       const valid = await this.syncService.isIntegrationValid(library);
-      this.logger.info("Test integration complete", { library, valid });
+      this.logger.log("Test integration complete", { library, valid });
       return valid;
     } catch (error: unknown) {
       this.logger.error("Error in testIntegration", { error, library });

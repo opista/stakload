@@ -1,18 +1,19 @@
 import { GameStoreModel } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { shell } from "electron";
-import { Service } from "typedi";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
-import { LoggerService } from "../../../logger/logger.service";
 
 const GOG_LAUNCHER_BASE_URL = "goggalaxy://";
 
-@Service()
+@Injectable()
 export class GogClientService implements LibraryClientService {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async install(game: GameStoreModel): Promise<void> {
-    this.logger.info("Initiating GOG installation", { gameId: game.gameId });
+    this.logger.log("Initiating GOG installation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}openStore/games/${game.gameId}`);
       this.logger.debug("GOG installation launched successfully", { gameId: game.gameId });
@@ -23,7 +24,7 @@ export class GogClientService implements LibraryClientService {
   }
 
   async launch(game: GameStoreModel): Promise<void> {
-    this.logger.info("Launching game via GOG", { gameId: game.gameId });
+    this.logger.log("Launching game via GOG", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}launchGame/${game.gameId}`);
       this.logger.debug("Game launched successfully via GOG", { gameId: game.gameId });
@@ -34,7 +35,7 @@ export class GogClientService implements LibraryClientService {
   }
 
   async uninstall(game: GameStoreModel): Promise<void> {
-    this.logger.info("Initiating GOG uninstallation", { gameId: game.gameId });
+    this.logger.log("Initiating GOG uninstallation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}openStore/games/${game.gameId}`);
       this.logger.debug("GOG uninstallation launched successfully", { gameId: game.gameId });

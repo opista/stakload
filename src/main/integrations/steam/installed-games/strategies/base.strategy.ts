@@ -1,9 +1,8 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import fs from "fs/promises";
 import path from "path";
-import { Service } from "typedi";
 import vdf from "vdf";
 
-import { LoggerService } from "../../../../logger/logger.service";
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
 import {
   InstalledGameData,
@@ -13,11 +12,13 @@ import {
   SteamLibraryFolders,
 } from "../types";
 
-@Service()
+@Injectable()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  constructor(protected readonly logger: LoggerService) {}
+  constructor(protected readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   abstract getApplicationPath(): Promise<string>;
 

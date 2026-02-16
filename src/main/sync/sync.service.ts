@@ -1,20 +1,19 @@
 import { GAME_ICONS, GameStoreModel, Library } from "@contracts/database/games";
 import { NOTIFICATION_KEYS } from "@contracts/store/notification";
 import { GameSyncMessage } from "@contracts/sync";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import fastq from "fastq";
-import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { SharedConfigService } from "../config/shared-config.service";
 import { GameStore } from "../game/game.store";
-import { LoggerService } from "../logger/logger.service";
 import { NotificationService } from "../notification/notification.service";
 import { WindowService } from "../window/window.service";
 
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
 
-@Service()
+@Injectable()
 export class SyncService {
   private failures: FailureHistoryEntry[] = [];
   private gamesAdded: number = 0;
@@ -26,12 +25,14 @@ export class SyncService {
 
   constructor(
     private gameStore: GameStore,
-    private logger: LoggerService,
+    private logger: ConsoleLogger,
     private notificationService: NotificationService,
     private sharedConfigService: SharedConfigService,
     private syncRegistryService: SyncRegistryService,
     private windowService: WindowService,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   private addFailureEntry(entry: FailureHistoryEntry) {
     this.failures.push(entry);
@@ -49,7 +50,7 @@ export class SyncService {
   }
 
   private async libraryWorker(library: Library) {
-    this.logger.info("Initiating library sync", { library });
+    this.logger.log("Initiating library sync", { library });
     this.emitSyncEvent({
       action: "library",
       library,
@@ -69,10 +70,10 @@ export class SyncService {
     try {
       const numberOfNewGames = await libraryImpl.addNewGames();
       this.gamesAdded += numberOfNewGames;
-      this.logger.info("Added new games", { library, numberOfNewGames });
+      this.logger.log("Added new games", { library, numberOfNewGames });
 
       await libraryImpl.updateInstalledGames();
-      this.logger.info("Updated installed games", { library });
+      this.logger.log("Updated installed games", { library });
     } catch (error: unknown) {
       this.logger.error("Error synchronising library", { error, library });
       this.addFailureEntry({
@@ -91,7 +92,7 @@ export class SyncService {
       total: this.metadataToProcess,
     });
 
-    this.logger.info("Starting metadata sync", {
+    this.logger.log("Starting metadata sync", {
       game: game.name,
       library: game.library,
     });
@@ -115,7 +116,7 @@ export class SyncService {
         ...metadata,
         metadataSyncedAt: new Date(),
       });
-      this.logger.info("Successfully synchronised metadata", {
+      this.logger.log("Successfully synchronised metadata", {
         game: game.name,
         library: game.library,
       });
@@ -143,7 +144,7 @@ export class SyncService {
   }
 
   private async syncLibraries(libraries: Library[]) {
-    this.logger.info("Starting sync for enabled libraries", { libraries });
+    this.logger.log("Starting sync for enabled libraries", { libraries });
     await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
     await this.libraryQueue.drained();
 
@@ -158,7 +159,7 @@ export class SyncService {
       hasFailures: !!this.failures.length,
       total: this.gamesAdded,
     });
-    this.logger.info("Sync operation complete", {
+    this.logger.log("Sync operation complete", {
       failures: this.failures.length,
       syncFailures: this.failures,
       totalGamesAdded: this.gamesAdded,
@@ -204,7 +205,7 @@ export class SyncService {
     }
 
     const enabledLibraries = this.getEnabledLibraries();
-    this.logger.info("Initiating sync", { enabledLibraries });
+    this.logger.log("Initiating sync", { enabledLibraries });
     this.reset();
     this.syncInProgress = true;
     void this.syncLibraries(enabledLibraries);

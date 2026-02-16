@@ -1,20 +1,19 @@
 import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
 import { BrowserWindow } from "electron";
-import { Service } from "typedi";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
-import { StakloadApiClient } from "../../../api/stakload-api.client";
 import { GameStore } from "../../../game/game.store";
-import { LoggerService } from "../../../logger/logger.service";
+import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
 
-@Service()
+@Injectable()
 export class GogLibraryService implements SyncService {
   private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "gog";
@@ -23,10 +22,11 @@ export class GogLibraryService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly gogApiService: GogApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly logger: LoggerService,
+    private readonly logger: ConsoleLogger,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
+    this.logger.setContext(this.constructor.name);
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
@@ -52,7 +52,7 @@ export class GogLibraryService implements SyncService {
             library: this.library,
             success,
           });
-          this.logger.info("GOG authentication completed", { success });
+          this.logger.log("GOG authentication completed", { success });
         } catch (error) {
           this.logger.error("GOG authentication error", error);
         }
@@ -61,7 +61,7 @@ export class GogLibraryService implements SyncService {
   }
 
   async addNewGames() {
-    this.logger.info("Adding new GOG games to library");
+    this.logger.log("Adding new GOG games to library");
     try {
       const token = await this.gogApiService.getValidToken();
 
@@ -89,7 +89,7 @@ export class GogLibraryService implements SyncService {
         });
 
       await this.gameStore.bulkInsertGames(mappedGames);
-      this.logger.info("New GOG games added", { count: mappedGames.length });
+      this.logger.log("New GOG games added", { count: mappedGames.length });
       return mappedGames.length;
     } catch (err) {
       this.logger.error("Failed to add new GOG games", err);
@@ -98,7 +98,7 @@ export class GogLibraryService implements SyncService {
   }
 
   async authenticate() {
-    this.logger.info("Starting GOG authentication flow");
+    this.logger.log("Starting GOG authentication flow");
     const window = await this.windowService.createChildWindow({
       height: 430,
       networkRequestHandler: this.handleAuthenticationResponse.bind(this),
@@ -126,7 +126,7 @@ export class GogLibraryService implements SyncService {
   }
 
   async updateInstalledGames() {
-    this.logger.info("Updating installed GOG games");
+    this.logger.log("Updating installed GOG games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
 
@@ -150,6 +150,6 @@ export class GogLibraryService implements SyncService {
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);
-    this.logger.info("Installed games updated");
+    this.logger.log("Installed games updated");
   }
 }

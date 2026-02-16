@@ -1,13 +1,13 @@
 import { ExternalGameSource, GameStoreModel } from "@contracts/database/games";
-import { Service } from "typedi";
-
-import { LoggerService } from "../logger/logger.service";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 const BASE_URL = import.meta.env.MAIN_VITE_STAKLOAD_API_URL;
 
-@Service()
+@Injectable()
 export class StakloadApiClient {
-  constructor(private readonly logger: LoggerService) {}
+  constructor(private readonly logger: ConsoleLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getGameMetadata(gameId: string, source: ExternalGameSource) {
     this.logger.debug("Processing game metadata request", { gameId, source });

@@ -1,12 +1,17 @@
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 import { checkRegistry } from "@util/check-registry";
-import { Service } from "typedi";
 import Registry from "winreg";
 
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
-@Service()
+@Injectable()
 export class WindowsInstalledGamesStrategy extends BaseInstalledGamesStrategy {
   applicationPath: string | undefined;
+
+  constructor(protected readonly logger: ConsoleLogger) {
+    super(logger);
+    this.logger.setContext(this.constructor.name);
+  }
 
   async getApplicationPath(): Promise<string> {
     if (this.applicationPath) return this.applicationPath;

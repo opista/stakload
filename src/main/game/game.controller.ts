@@ -1,24 +1,27 @@
 import type { GameFilters } from "@contracts/database/games";
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
-import { Service } from "typedi";
+import { ConsoleLogger, Controller } from "@nestjs/common";
 
+import { CollectionService } from "../collection/collection.service";
 import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
-import { LoggerService } from "../logger/logger.service";
 
 import { GameService } from "./game.service";
 
 @IpcController()
-@Service()
+@Controller()
 export class GameController {
   constructor(
+    private readonly collectionService: CollectionService,
     private readonly gameLifecycleService: GameLifecycleService,
     private readonly gameService: GameService,
-    private readonly logger: LoggerService,
-  ) {}
+    private readonly logger: ConsoleLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   @IpcHandle()
   async archiveGameById(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     try {
       return await this.gameService.archiveGame(id);
     } catch (error) {
@@ -29,7 +32,7 @@ export class GameController {
 
   @IpcHandle()
   async deleteGameById(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     try {
       return await this.gameService.deleteGame(id);
     } catch (error) {
@@ -40,67 +43,69 @@ export class GameController {
 
   @IpcHandle()
   async getFilteredGames(filters: GameFilters) {
-    this.logger.info("Handling IPC message", { filters });
+    this.logger.log("Handling IPC message", { filters });
     return this.gameService.getFilteredGames(filters);
   }
 
   @IpcHandle()
   async getGameById(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     return this.gameService.getGameById(id);
   }
 
   @IpcHandle()
   async getGameFilters() {
-    this.logger.info("Handling IPC message");
+    this.logger.log("Handling IPC message");
     return this.gameService.getGameFilters();
   }
 
   @IpcHandle()
   async getGamesByCollection(collectionId: string) {
-    this.logger.info("Handling IPC message", { collectionId });
-    return this.gameService.getGamesByCollectionId(collectionId);
+    this.logger.log("Handling IPC message", { collectionId });
+    const collection = await this.collectionService.getCollectionById(collectionId);
+    if (!collection) return [];
+    return this.gameService.getFilteredGames(collection.filters);
   }
 
   @IpcHandle()
   async getGamesList() {
-    this.logger.info("Handling IPC message");
+    this.logger.log("Handling IPC message");
     return this.gameService.getGamesList();
   }
 
   @IpcHandle()
   async getNewGames() {
-    this.logger.info("Handling IPC message");
+    this.logger.log("Handling IPC message");
     return this.gameService.getNewGames();
   }
 
   @IpcHandle()
   async getProtondbTier(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     return this.gameService.getProtondbTier(id);
   }
 
   @IpcHandle()
   async getQuickLaunchGames() {
-    this.logger.info("Handling IPC message");
+    this.logger.log("Handling IPC message");
     return this.gameService.getQuickLaunchGames();
   }
 
   @IpcOn()
   async installGame(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     return this.gameLifecycleService.installGame(id);
   }
 
   @IpcOn()
   async launchGame(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     return this.gameLifecycleService.launchGame(id);
   }
 
   @IpcHandle()
   async toggleFavouriteGame(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     try {
       return await this.gameService.toggleFavouriteGame(id);
     } catch (error) {
@@ -111,7 +116,7 @@ export class GameController {
 
   @IpcHandle()
   async toggleQuickLaunchGame(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     try {
       return await this.gameService.toggleQuickLaunchGame(id);
     } catch (error) {
@@ -122,7 +127,7 @@ export class GameController {
 
   @IpcOn()
   async uninstallGame(id: string) {
-    this.logger.info("Handling IPC message", { id });
+    this.logger.log("Handling IPC message", { id });
     return this.gameLifecycleService.uninstallGame(id);
   }
 }

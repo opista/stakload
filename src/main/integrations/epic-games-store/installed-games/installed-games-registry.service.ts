@@ -1,15 +1,18 @@
-import { Service } from "typedi";
+import { ConsoleLogger, Injectable } from "@nestjs/common";
 
 import { MacInstalledGamesStrategy } from "./strategies/mac.strategy";
 import { WindowsInstalledGamesStrategy } from "./strategies/windows.strategy";
 import { InstalledGamesStrategy } from "./types";
 
-@Service()
+@Injectable()
 export class InstalledGamesRegistryService {
   constructor(
+    private readonly logger: ConsoleLogger,
     private readonly macInstalledGamesStrategy: MacInstalledGamesStrategy,
     private readonly windowsInstalledGamesStrategy: WindowsInstalledGamesStrategy,
-  ) {}
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   getStrategy(): InstalledGamesStrategy {
     switch (process.platform) {
