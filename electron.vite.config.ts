@@ -1,3 +1,4 @@
+import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin, swcPlugin } from "electron-vite";
 import { resolve } from "path";
@@ -5,7 +6,7 @@ import graphqlLoader from "vite-plugin-graphql-loader";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin()],
+    plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin(), electronIpcBridge()],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),
@@ -14,7 +15,7 @@ export default defineConfig({
     },
   },
   preload: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [externalizeDepsPlugin(), electronIpcBridge()],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),

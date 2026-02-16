@@ -1,8 +1,9 @@
 import { FeaturedGame } from "@components/FeaturedGame/FeaturedGame";
-import { FeaturedGameModel } from "@contracts/database/games";
 import { Carousel } from "@mantine/carousel";
 import { Stack, Title } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+
+import { FeaturedGameModel } from "../../ipc.types";
 
 import classes from "./FeaturedGamesCarousel.module.css";
 

@@ -11,11 +11,11 @@ export const GameControls = ({ game }: { game: GameStoreModel }) => {
             color="green"
             disabled={!game.isInstalled}
             leftSection={<IconPlayerPlayFilled size={16} />}
-            onClick={() => window.api.launchGame(game._id)}
+            onClick={() => window.ipc.game.launchGame(game._id)}
           >
             Launch
           </Button>
-          <Button color="red" disabled={!game.isInstalled} onClick={() => window.api.uninstallGame(game._id)}>
+          <Button color="red" disabled={!game.isInstalled} onClick={() => window.ipc.game.uninstallGame(game._id)}>
             Uninstall
           </Button>
         </>
@@ -24,7 +24,7 @@ export const GameControls = ({ game }: { game: GameStoreModel }) => {
         <Button
           disabled={game.isInstalled}
           leftSection={<IconDownload size={16} />}
-          onClick={() => window.api.installGame(game._id)}
+          onClick={() => window.ipc.game.installGame(game._id)}
         >
           Install
         </Button>

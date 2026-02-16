@@ -1,25 +1,22 @@
 import type { Library } from "@contracts/database/games";
-import { IpcHandle, IpcOn } from "@util/ipc/ipc.decorator";
-import { IpcEventController } from "@util/ipc/ipc-event.controller";
+import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
 
-import { SYNC_CHANNELS } from "./sync.channels";
 import { SyncService } from "./sync.service";
 
+@IpcController()
 @Service()
-export class SyncController extends IpcEventController {
+export class SyncController {
   constructor(
-    readonly logger: LoggerService,
+    private readonly logger: LoggerService,
     private readonly syncService: SyncService,
-  ) {
-    super(logger);
-  }
+  ) {}
 
-  @IpcHandle(SYNC_CHANNELS.AUTH_INTEGRATION)
+  @IpcHandle()
   async authIntegration(library: Library, data?: unknown) {
-    this.logHandler(SYNC_CHANNELS.AUTH_INTEGRATION, { library });
+    this.logger.info("Handling IPC message", { library });
     try {
       const authResult = await this.syncService.authenticate(library, data);
       this.logger.info("Authentication completed", { library });
@@ -30,11 +27,11 @@ export class SyncController extends IpcEventController {
     }
   }
 
-  @IpcOn(SYNC_CHANNELS.SYNC)
-  async syncGames() {
-    this.logHandler(SYNC_CHANNELS.SYNC);
+  @IpcOn()
+  syncGames() {
+    this.logger.info("Handling IPC message");
     try {
-      const result = await this.syncService.sync();
+      const result = this.syncService.sync();
       this.logger.info("Sync operation initiated", { result });
       return result;
     } catch (error: unknown) {
@@ -43,9 +40,9 @@ export class SyncController extends IpcEventController {
     }
   }
 
-  @IpcHandle(SYNC_CHANNELS.TEST_INTEGRATION)
+  @IpcHandle()
   async testIntegration(library: Library) {
-    this.logHandler(SYNC_CHANNELS.TEST_INTEGRATION, { library });
+    this.logger.info("Handling IPC message", { library });
     try {
       const valid = await this.syncService.isIntegrationValid(library);
       this.logger.info("Test integration complete", { library, valid });

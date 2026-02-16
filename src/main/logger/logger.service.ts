@@ -1,3 +1,4 @@
+import { getCorrelationId } from "@electron-ipc-bridge/core";
 import { correlationStorage } from "@util/ipc/ipc.decorator";
 import { app } from "electron";
 import path from "path";
@@ -11,7 +12,7 @@ const defaultFormat = [
   format.printf(({ constructor, level, message, timestamp, ...metadata }) => {
     const stringifiedMetadata = JSON.stringify(metadata);
     const metadataStr = stringifiedMetadata !== "{}" ? ` | ${stringifiedMetadata}` : "";
-    return `${timestamp} [${level}] [${constructor}] ${message}${metadataStr}`;
+    return `${timestamp as string} [${level}] [${getCorrelationId()}] [${constructor as unknown as string}] ${message as string}${metadataStr}`;
   }),
 ];
 

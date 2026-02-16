@@ -13,18 +13,18 @@ export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
       archiveGame: async (id: string) => {
-        await window.api.archiveGame(id);
+        await window.ipc.game.archiveGameById(id);
         await get().refreshGameData();
       },
       deleteGame: async (id: string) => {
-        await window.api.deleteGame(id);
+        await window.ipc.game.deleteGameById(id);
         await get().refreshGameData();
       },
       fetchFilteredGames: async (filters: GameFilters) => {
-        return await window.api.getFilteredGames(filters);
+        return await window.ipc.game.getFilteredGames(filters);
       },
       fetchGameDetails: async (id: string) => {
-        const details = await window.api.getGameById(id);
+        const details = await window.ipc.game.getGameById(id);
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
@@ -34,20 +34,20 @@ export const useGameStore = create<GameStore>()(
         return details;
       },
       fetchGameFilters: async () => {
-        const gameFilters = await window.api.getGameFilters();
+        const gameFilters = await window.ipc.game.getGameFilters();
         set({ gameFilters });
       },
       fetchGamesList: async () => {
-        const gamesList = await window.api.getGamesList();
+        const gamesList = await window.ipc.game.getGamesList();
         set({ gamesList });
       },
 
       fetchNewGames: async () => {
-        const newGames = await window.api.getNewGames();
+        const newGames = await window.ipc.game.getNewGames();
         set({ newGames });
       },
       fetchQuickLaunchGames: async () => {
-        const quickLaunchGames = await window.api.getQuickLaunchGames();
+        const quickLaunchGames = await window.ipc.game.getQuickLaunchGames();
         set({ quickLaunchGames });
       },
       gameFilters: {},
@@ -71,7 +71,7 @@ export const useGameStore = create<GameStore>()(
       },
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       toggleFavouriteGame: async (id: string) => {
-        const game = await window.api.toggleFavouriteGame(id);
+        const game = await window.ipc.game.toggleFavouriteGame(id);
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
@@ -83,7 +83,7 @@ export const useGameStore = create<GameStore>()(
         return game;
       },
       toggleQuickLaunchGame: async (id: string) => {
-        const { isQuickLaunch } = await window.api.toggleQuickLaunchGame(id);
+        const { isQuickLaunch } = await window.ipc.game.toggleQuickLaunchGame(id);
 
         await get().refreshGameData();
 

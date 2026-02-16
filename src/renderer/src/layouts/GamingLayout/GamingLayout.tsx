@@ -2,7 +2,6 @@ import { Collections } from "@components/Gaming/GamesList/Collections";
 import { GamesList } from "@components/Gaming/GamesList/GamesList";
 import { HeaderButtons } from "@components/Gaming/GamesList/HeaderButtons";
 import Logo from "@components/Logo/Logo";
-import { GameListModel } from "@contracts/database/games";
 import { AppShell, Button, Flex, Group, Text, Title } from "@mantine/core";
 import { init } from "@noriginmedia/norigin-spatial-navigation";
 import { useGameStore } from "@store/game.store";
@@ -11,6 +10,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+
+import { GameListModel } from "../../ipc.types";
 
 import classes from "./GamingLayout.module.css";
 

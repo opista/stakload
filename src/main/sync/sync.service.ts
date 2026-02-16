@@ -207,7 +207,7 @@ export class SyncService {
     this.logger.info("Initiating sync", { enabledLibraries });
     this.reset();
     this.syncInProgress = true;
-    this.syncLibraries(enabledLibraries);
+    void this.syncLibraries(enabledLibraries);
 
     return true;
   }

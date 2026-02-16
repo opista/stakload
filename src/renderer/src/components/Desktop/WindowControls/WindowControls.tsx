@@ -3,6 +3,7 @@ import { useGameStore } from "@store/game.store";
 import { useNotificationStore } from "@store/notification.store";
 import { IconBell, IconDeviceGamepad2, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
 import clsx from "clsx";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -19,15 +20,20 @@ export const WindowControls = () => {
   );
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const [platform, setPlatform] = useState<NodeJS.Platform | null>(null);
+
+  useEffect(() => {
+    void window.ipc.system.getPlatform().then(setPlatform);
+  }, []);
 
   const handleRandomGame = () => {
     const randomGame = getRandomGame();
-    navigate(`/desktop/library/${randomGame._id}`);
+    void navigate(`/desktop/library/${randomGame._id}`);
   };
-  const handleGamingMode = () => navigate("/gaming");
-  const handleMinimize = () => window.api.minimizeWindow();
-  const handleMaximize = () => window.api.maximizeWindow();
-  const handleClose = () => window.api.closeWindow();
+  const handleGamingMode = () => void navigate("/gaming");
+  const handleMinimize = () => window.ipc.window.minimize();
+  const handleMaximize = () => window.ipc.window.maximize();
+  const handleClose = () => window.ipc.window.close();
 
   return (
     <Group className={classes.container}>
@@ -67,7 +73,7 @@ export const WindowControls = () => {
             </Indicator>
           </ActionIcon>
         </Tooltip>
-        {window.api.platform !== "darwin" && (
+        {platform && platform !== "darwin" && (
           <Group gap={0}>
             <ActionIcon
               aria-label={t("windowControls.minimize")}

@@ -33,11 +33,11 @@ export const App = () => {
   useGamesQuery(refreshGameData, []);
 
   if (syncOnStartup) {
-    window.api.syncGames();
+    window.ipc.sync.syncGames();
   }
 
   useEffect(() => {
-    fetchCollections();
+    void fetchCollections();
   }, []);
 
   const theme = createTheme({

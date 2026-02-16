@@ -1,36 +1,33 @@
-import { IpcOn } from "@util/ipc/ipc.decorator";
-import { IpcEventController } from "@util/ipc/ipc-event.controller";
+import { IpcController, IpcOn } from "@electron-ipc-bridge/core";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
 
-import { WINDOW_CHANNELS } from "./window.channels";
 import { WindowService } from "./window.service";
 
+@IpcController()
 @Service()
-export class WindowController extends IpcEventController {
+export class WindowController {
   constructor(
-    readonly logger: LoggerService,
+    private readonly logger: LoggerService,
     private readonly windowService: WindowService,
-  ) {
-    super(logger);
-  }
+  ) {}
 
-  @IpcOn(WINDOW_CHANNELS.CLOSE)
+  @IpcOn()
   close() {
-    this.logHandler(WINDOW_CHANNELS.CLOSE);
+    this.logger.info("Handling IPC message");
     this.windowService.close();
   }
 
-  @IpcOn(WINDOW_CHANNELS.MAXIMIZE)
+  @IpcOn()
   maximize() {
-    this.logHandler(WINDOW_CHANNELS.MAXIMIZE);
+    this.logger.info("Handling IPC message");
     this.windowService.toggleMaximized();
   }
 
-  @IpcOn(WINDOW_CHANNELS.MINIMIZE)
+  @IpcOn()
   minimize() {
-    this.logHandler(WINDOW_CHANNELS.MINIMIZE);
+    this.logger.info("Handling IPC message");
     this.windowService.minimize();
   }
 }

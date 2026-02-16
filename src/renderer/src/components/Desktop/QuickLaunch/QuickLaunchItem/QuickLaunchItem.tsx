@@ -1,11 +1,12 @@
 import { GameCover } from "@components/GameCover/GameCover";
-import { GameListModel } from "@contracts/database/games";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Flex, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
+
+import { GameListModel } from "../../../../ipc.types";
 
 import classes from "./QuickLaunchItem.module.css";
 
@@ -29,10 +30,10 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
     if (editMode) return;
 
     if (game.isInstalled) {
-      return window.api.launchGame(game._id);
+      return window.ipc.game.launchGame(game._id);
     }
 
-    return window.api.installGame(game._id);
+    return window.ipc.game.installGame(game._id);
   };
 
   return (

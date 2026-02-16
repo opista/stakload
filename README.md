@@ -61,6 +61,7 @@ $ npm run build:linux
   - Build home view when there are no games
 
 - Chores
+  - Fix tabler icons that were broken with latest update
   - Update grey styling across the board, should use CSS variables (with possibility of later theming)
   - Revisit game controls (launch/install/uninstall etc.)
   - Accessibility across entire app. Look at Mantine docs for accessibility info

@@ -4,7 +4,7 @@ export { IconBrandFandom } from "./IconBrandFandom";
 export { IconBrandGog } from "./IconBrandGog";
 export { IconBrandProtonDb } from "./IconBrandProtonDb";
 export * from "@tabler/icons-react";
-import tablerIconsJson from "@tabler/icons/icons.json";
+const tablerIconsJson = {};
 
 import customIconsJson from "./custom-icons.json";
 

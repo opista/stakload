@@ -1,4 +1,3 @@
-import { Library } from "@contracts/database/games";
 import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
@@ -9,6 +8,7 @@ import { useShallow } from "zustand/react/shallow";
 import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
 import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
 import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
+import { Library } from "../../ipc.types";
 
 import classes from "./SettingsIntegrationsView.module.css";
 
@@ -48,7 +48,7 @@ const GeneralSettings = () => {
   );
   const { t } = useTranslation();
 
-  const onSyncClick = async () => window.api.syncGames();
+  const onSyncClick = () => window.ipc.sync.syncGames();
 
   return (
     <>
@@ -104,12 +104,12 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onAuthenticate = () => {
     setIsLoading(true);
-    window.api.authenticateIntegration("steam", { steamId, webApiKey });
+    void window.ipc.sync.authIntegration("steam", { steamId, webApiKey });
   };
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.api.testLibraryIntegration("steam");
+    const result = await window.ipc.sync.testIntegration("steam");
 
     console.log("result", result);
     setIsLoading(false);
@@ -213,12 +213,12 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onAuthenticate = () => {
     setIsLoading(true);
-    window.api.authenticateIntegration("epic-game-store");
+    void window.ipc.sync.authIntegration("epic-game-store");
   };
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.api.testLibraryIntegration("epic-game-store");
+    const result = await window.ipc.sync.testIntegration("epic-game-store");
 
     console.log("result", result);
     setIsLoading(false);
@@ -274,12 +274,12 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onAuthenticate = () => {
     setIsLoading(true);
-    window.api.authenticateIntegration("gog");
+    void window.ipc.sync.authIntegration("gog");
   };
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.api.testLibraryIntegration("gog");
+    const result = await window.ipc.sync.testIntegration("gog");
     console.log("result", result);
     setIsLoading(false);
   };
@@ -334,12 +334,12 @@ const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onAuthenticate = () => {
     setIsLoading(true);
-    window.api.authenticateIntegration("battle-net");
+    void window.ipc.sync.authIntegration("battle-net");
   };
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.api.testLibraryIntegration("battle-net");
+    const result = await window.ipc.sync.testIntegration("battle-net");
     console.log("result", result);
     setIsLoading(false);
   };

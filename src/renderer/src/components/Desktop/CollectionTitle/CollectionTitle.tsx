@@ -1,5 +1,4 @@
 import { EditableField } from "@components/EditableField/EditableField";
-import { CollectionStoreModel } from "@contracts/database/collections";
 import { Group, Title, TitleProps, Tooltip } from "@mantine/core";
 import { useCollectionStore } from "@store/collection.store";
 import { IconDeviceGamepad } from "@tabler/icons-react";
@@ -8,6 +7,7 @@ import clsx from "clsx";
 import { forwardRef, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { CollectionStoreModel } from "../../../ipc.types";
 import { IconSelector } from "../IconSelector/IconSelector";
 
 import classes from "./CollectionTitle.module.css";

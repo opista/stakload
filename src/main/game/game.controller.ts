@@ -1,27 +1,24 @@
 import type { GameFilters } from "@contracts/database/games";
-import { IpcHandle, IpcOn } from "@util/ipc/ipc.decorator";
-import { IpcEventController } from "@util/ipc/ipc-event.controller";
+import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
 import { Service } from "typedi";
 
 import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
 import { LoggerService } from "../logger/logger.service";
 
-import { GAME_CHANNELS } from "./game.channels";
 import { GameService } from "./game.service";
 
+@IpcController()
 @Service()
-export class GameController extends IpcEventController {
+export class GameController {
   constructor(
     private readonly gameLifecycleService: GameLifecycleService,
     private readonly gameService: GameService,
-    readonly logger: LoggerService,
-  ) {
-    super(logger);
-  }
+    private readonly logger: LoggerService,
+  ) {}
 
-  @IpcHandle(GAME_CHANNELS.ARCHIVE_BY_ID)
+  @IpcHandle()
   async archiveGameById(id: string) {
-    this.logHandler(GAME_CHANNELS.ARCHIVE_BY_ID, { id });
+    this.logger.info("Handling IPC message", { id });
     try {
       return await this.gameService.archiveGame(id);
     } catch (error) {
@@ -30,9 +27,9 @@ export class GameController extends IpcEventController {
     }
   }
 
-  @IpcHandle(GAME_CHANNELS.DELETE_BY_ID)
+  @IpcHandle()
   async deleteGameById(id: string) {
-    this.logHandler(GAME_CHANNELS.DELETE_BY_ID, { id });
+    this.logger.info("Handling IPC message", { id });
     try {
       return await this.gameService.deleteGame(id);
     } catch (error) {
@@ -41,69 +38,69 @@ export class GameController extends IpcEventController {
     }
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_FILTERED)
+  @IpcHandle()
   async getFilteredGames(filters: GameFilters) {
-    this.logHandler(GAME_CHANNELS.GET_FILTERED, { filters });
+    this.logger.info("Handling IPC message", { filters });
     return this.gameService.getFilteredGames(filters);
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_BY_ID)
+  @IpcHandle()
   async getGameById(id: string) {
-    this.logHandler(GAME_CHANNELS.GET_BY_ID, { id });
+    this.logger.info("Handling IPC message", { id });
     return this.gameService.getGameById(id);
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_FILTERS)
+  @IpcHandle()
   async getGameFilters() {
-    this.logHandler(GAME_CHANNELS.GET_FILTERS);
+    this.logger.info("Handling IPC message");
     return this.gameService.getGameFilters();
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_BY_COLLECTION)
+  @IpcHandle()
   async getGamesByCollection(collectionId: string) {
-    this.logHandler(GAME_CHANNELS.GET_BY_COLLECTION, { collectionId });
+    this.logger.info("Handling IPC message", { collectionId });
     return this.gameService.getGamesByCollectionId(collectionId);
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_LIST)
+  @IpcHandle()
   async getGamesList() {
-    this.logHandler(GAME_CHANNELS.GET_LIST);
+    this.logger.info("Handling IPC message");
     return this.gameService.getGamesList();
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_NEW)
+  @IpcHandle()
   async getNewGames() {
-    this.logHandler(GAME_CHANNELS.GET_NEW);
+    this.logger.info("Handling IPC message");
     return this.gameService.getNewGames();
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_PROTONDB_TIER)
+  @IpcHandle()
   async getProtondbTier(id: string) {
-    this.logHandler(GAME_CHANNELS.GET_PROTONDB_TIER, { id });
+    this.logger.info("Handling IPC message", { id });
     return this.gameService.getProtondbTier(id);
   }
 
-  @IpcHandle(GAME_CHANNELS.GET_QUICK_LAUNCH)
+  @IpcHandle()
   async getQuickLaunchGames() {
-    this.logHandler(GAME_CHANNELS.GET_QUICK_LAUNCH);
+    this.logger.info("Handling IPC message");
     return this.gameService.getQuickLaunchGames();
   }
 
-  @IpcOn(GAME_CHANNELS.INSTALL)
+  @IpcOn()
   async installGame(id: string) {
-    this.logHandler(GAME_CHANNELS.INSTALL, { id });
+    this.logger.info("Handling IPC message", { id });
     return this.gameLifecycleService.installGame(id);
   }
 
-  @IpcOn(GAME_CHANNELS.LAUNCH)
+  @IpcOn()
   async launchGame(id: string) {
-    this.logHandler(GAME_CHANNELS.LAUNCH, { id });
+    this.logger.info("Handling IPC message", { id });
     return this.gameLifecycleService.launchGame(id);
   }
 
-  @IpcHandle(GAME_CHANNELS.TOGGLE_FAVOURITE)
+  @IpcHandle()
   async toggleFavouriteGame(id: string) {
-    this.logHandler(GAME_CHANNELS.TOGGLE_FAVOURITE, { id });
+    this.logger.info("Handling IPC message", { id });
     try {
       return await this.gameService.toggleFavouriteGame(id);
     } catch (error) {
@@ -112,9 +109,9 @@ export class GameController extends IpcEventController {
     }
   }
 
-  @IpcHandle(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH)
+  @IpcHandle()
   async toggleQuickLaunchGame(id: string) {
-    this.logHandler(GAME_CHANNELS.TOGGLE_QUICK_LAUNCH, { id });
+    this.logger.info("Handling IPC message", { id });
     try {
       return await this.gameService.toggleQuickLaunchGame(id);
     } catch (error) {
@@ -123,9 +120,9 @@ export class GameController extends IpcEventController {
     }
   }
 
-  @IpcOn(GAME_CHANNELS.UNINSTALL)
+  @IpcOn()
   async uninstallGame(id: string) {
-    this.logHandler(GAME_CHANNELS.UNINSTALL, { id });
+    this.logger.info("Handling IPC message", { id });
     return this.gameLifecycleService.uninstallGame(id);
   }
 }

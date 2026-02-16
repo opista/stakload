@@ -1,25 +1,22 @@
 import type { CollectionStoreModel } from "@contracts/database/collections";
-import { IpcHandle } from "@util/ipc/ipc.decorator";
-import { IpcEventController } from "@util/ipc/ipc-event.controller";
+import { IpcController, IpcHandle } from "@electron-ipc-bridge/core";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
 
-import { COLLECTION_CHANNELS } from "./collection.channels";
 import { CollectionService } from "./collection.service";
 
+@IpcController()
 @Service()
-export class CollectionController extends IpcEventController {
+export class CollectionController {
   constructor(
     private readonly collectionService: CollectionService,
-    readonly logger: LoggerService,
-  ) {
-    super(logger);
-  }
+    private readonly logger: LoggerService,
+  ) {}
 
-  @IpcHandle(COLLECTION_CHANNELS.CREATE)
+  @IpcHandle()
   async createCollection(collection: CollectionStoreModel) {
-    this.logHandler(COLLECTION_CHANNELS.CREATE, { name: collection.name });
+    this.logger.info("Handling IPC message", { name: collection.name });
     try {
       return await this.collectionService.createCollection(collection);
     } catch (error) {
@@ -28,9 +25,9 @@ export class CollectionController extends IpcEventController {
     }
   }
 
-  @IpcHandle(COLLECTION_CHANNELS.DELETE)
+  @IpcHandle()
   async deleteCollection(id: string) {
-    this.logHandler(COLLECTION_CHANNELS.DELETE, { id });
+    this.logger.info("Handling IPC message", { id });
     try {
       return await this.collectionService.deleteCollection(id);
     } catch (error) {
@@ -39,15 +36,14 @@ export class CollectionController extends IpcEventController {
     }
   }
 
-  @IpcHandle(COLLECTION_CHANNELS.GET_ALL)
+  @IpcHandle()
   async getCollections() {
-    this.logHandler(COLLECTION_CHANNELS.GET_ALL);
     return this.collectionService.getCollections();
   }
 
-  @IpcHandle(COLLECTION_CHANNELS.UPDATE)
+  @IpcHandle()
   async updateCollection(id: string, updates: Partial<CollectionStoreModel>) {
-    this.logHandler(COLLECTION_CHANNELS.UPDATE, { id, updates });
+    this.logger.info("Handling IPC message", { id, updates });
     try {
       return await this.collectionService.updateCollection(id, updates);
     } catch (error) {

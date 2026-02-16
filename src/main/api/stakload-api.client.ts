@@ -1,4 +1,4 @@
-import { ExternalGameSource } from "@contracts/database/games";
+import { ExternalGameSource, GameStoreModel } from "@contracts/database/games";
 import { Service } from "typedi";
 
 import { LoggerService } from "../logger/logger.service";
@@ -19,7 +19,7 @@ export class StakloadApiClient {
        * should be shared. Move stakload-api into
        * this repo and convert to monorepo
        */
-      const parsed = await response.json();
+      const parsed: GameStoreModel = await response.json();
 
       return parsed;
     }

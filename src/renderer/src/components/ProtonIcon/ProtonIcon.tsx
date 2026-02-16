@@ -48,7 +48,7 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
       return;
     }
 
-    window.api
+    window.ipc.game
       .getProtondbTier(gameId)
       .then((tier) => {
         const tierMetadata = (tier && TIER_MAP[tier]) || TIER_MAP.unknown;

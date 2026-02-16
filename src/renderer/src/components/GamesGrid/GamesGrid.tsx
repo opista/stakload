@@ -1,12 +1,13 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
-import { GameListModel } from "@contracts/database/games";
 import { Box, Stack, Text } from "@mantine/core";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeGrid, GridChildComponentProps } from "react-window";
+
+import { GameListModel } from "../../ipc.types";
 
 import classes from "./GamesGrid.module.css";
 

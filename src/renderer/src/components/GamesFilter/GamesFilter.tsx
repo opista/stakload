@@ -1,4 +1,3 @@
-import { GameFilters, Library } from "@contracts/database/games";
 import { Checkbox, Flex, Grid, MultiSelect, Pill, Popover, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt } from "@tabler/icons-react";
@@ -6,6 +5,8 @@ import clsx from "clsx";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { GameFilters, Library } from "../../ipc.types";
 
 import classes from "./GamesFilter.module.css";
 

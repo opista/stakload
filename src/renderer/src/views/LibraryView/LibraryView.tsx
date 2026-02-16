@@ -3,7 +3,6 @@ import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
-import { GameFilters } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { Button, Group, Stack, Text, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -14,6 +13,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+
+import { GameFilters } from "../../ipc.types";
 
 import classes from "./LibraryView.module.css";
 

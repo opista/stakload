@@ -20,4 +20,4 @@ controllers.forEach((controller) => {
   Container.get(controller as Token<typeof controller>);
 });
 
-export { Container };
+export { Container, controllers };
