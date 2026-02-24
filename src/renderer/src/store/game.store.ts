@@ -25,6 +25,7 @@ export const useGameStore = create<GameStore>()(
       },
       fetchGameDetails: async (id: string) => {
         const details = await window.ipc.game.getGameById(id);
+        if (!details) return null;
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
@@ -72,6 +73,7 @@ export const useGameStore = create<GameStore>()(
       setQuickLaunchGameOrder: (ids: string[]) => set({ quickLaunchGamesOrder: ids }),
       toggleFavouriteGame: async (id: string) => {
         const game = await window.ipc.game.toggleFavouriteGame(id);
+        if (!game) return null;
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
@@ -83,7 +85,9 @@ export const useGameStore = create<GameStore>()(
         return game;
       },
       toggleQuickLaunchGame: async (id: string) => {
-        const { isQuickLaunch } = await window.ipc.game.toggleQuickLaunchGame(id);
+        const response = await window.ipc.game.toggleQuickLaunchGame(id);
+        if (!response) return;
+        const { isQuickLaunch } = response;
 
         await get().refreshGameData();
 

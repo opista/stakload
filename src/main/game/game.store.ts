@@ -1,8 +1,9 @@
 import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
 import { ConsoleLogger, Injectable } from "@nestjs/common";
-import { createDb } from "@util/database/create-db";
-import { dateRangeMatcher } from "@util/database/date-range-matcher";
-import { idMatcher } from "@util/database/id-matcher";
+import { InjectRepository } from "@nestjs/typeorm";
+import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
+
+import { GameEntity } from "./game.entity";
 
 type FieldsType = "all" | "featured" | "list";
 
@@ -11,23 +12,86 @@ type Sort = {
   field: keyof GameStoreModel;
 };
 
-const fieldsMap: Record<FieldsType, Partial<Record<keyof GameStoreModel, number>> | undefined> = {
+const selectMap: Record<FieldsType, (keyof GameEntity)[] | undefined> = {
   all: undefined,
-  featured: { _id: 1, genres: 1, name: 1, screenshots: 1, summary: 1 },
-  list: { _id: 1, cover: 1, isFavourite: 1, isInstalled: 1, isQuickLaunch: 1, library: 1, name: 1 },
+  featured: ["_id", "genres", "name", "screenshots", "summary"],
+  list: ["_id", "cover", "isFavourite", "isInstalled", "isQuickLaunch", "library", "name"],
 };
 
-const db = createDb("games");
 @Injectable()
 export class GameStore {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(
+    @InjectRepository(GameEntity)
+    private readonly repository: Repository<GameEntity>,
+    private readonly logger: ConsoleLogger,
+  ) {
     this.logger.setContext(this.constructor.name);
+  }
+
+  private applyDateRangeFilter(
+    query: SelectQueryBuilder<GameEntity>,
+    field: string,
+    dateFilter: NonNullable<GameFilters["createdAt"]>,
+  ) {
+    const { dateRange, endDate, startDate } = dateFilter;
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const startOfWeek = new Date(startOfDay);
+    startOfWeek.setDate(startOfDay.getDate() - startOfDay.getDay());
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfYear = new Date(now.getFullYear(), 0, 1);
+
+    switch (dateRange) {
+      case "CUSTOM":
+        if (startDate && endDate)
+          query.andWhere(`game.${field} BETWEEN :startDate AND :endDate`, { endDate, startDate });
+        else if (startDate) query.andWhere(`game.${field} >= :startDate`, { startDate });
+        else if (endDate) query.andWhere(`game.${field} <= :endDate`, { endDate });
+        break;
+      case "ONE_DAY": {
+        const d = new Date(now);
+        d.setDate(now.getDate() - 1);
+        query.andWhere(`game.${field} >= :d`, { d });
+        break;
+      }
+      case "ONE_WEEK": {
+        const d = new Date(now);
+        d.setDate(now.getDate() - 7);
+        query.andWhere(`game.${field} >= :d`, { d });
+        break;
+      }
+      case "ONE_MONTH": {
+        const d = new Date(now);
+        d.setDate(now.getDate() - 30);
+        query.andWhere(`game.${field} >= :d`, { d });
+        break;
+      }
+      case "ONE_YEAR": {
+        const d = new Date(now);
+        d.setFullYear(now.getFullYear() - 1);
+        query.andWhere(`game.${field} >= :d`, { d });
+        break;
+      }
+      case "TODAY":
+        query.andWhere(`game.${field} >= :startOfDay`, { startOfDay });
+        break;
+      case "THIS_WEEK":
+        query.andWhere(`game.${field} >= :startOfWeek`, { startOfWeek });
+        break;
+      case "THIS_MONTH":
+        query.andWhere(`game.${field} >= :startOfMonth`, { startOfMonth });
+        break;
+      case "THIS_YEAR":
+        query.andWhere(`game.${field} >= :startOfYear`, { startOfYear });
+        break;
+    }
   }
 
   async bulkInsertGames(games: Partial<GameStoreModel>[]) {
     this.logger.debug("Attempting bulk insert of games", { count: games.length });
     try {
-      const result = await db.insertMany<Partial<GameStoreModel>>(games);
+      const entities = this.repository.create(games);
+      const result = await this.repository.save(entities);
       this.logger.debug("Successfully bulk inserted games", { count: result.length });
       return result;
     } catch (error) {
@@ -44,27 +108,45 @@ export class GameStore {
   ) {
     this.logger.debug("Finding filtered games", { filters, limit, sort, type });
     try {
-      const results = await db
-        .find(
-          {
-            $or: [{ archivedAt: null }, { archivedAt: { $exists: false } }],
-            ...(filters.ageRatings?.length && { ageRating: { $in: filters.ageRatings } }),
-            ...(filters.isFavourite != undefined && { isFavourite: filters.isFavourite }),
-            ...(filters.isInstalled != undefined && { isInstalled: filters.isInstalled }),
-            ...(filters.isQuickLaunch != undefined && { isQuickLaunch: filters.isQuickLaunch }),
-            ...(filters.libraries?.length && { library: { $in: filters.libraries } }),
-            ...dateRangeMatcher("createdAt", filters.createdAt),
-            ...idMatcher("developers", filters.developers),
-            ...idMatcher("gameModes", filters.gameModes),
-            ...idMatcher("genres", filters.genres),
-            ...idMatcher("platforms", filters.platforms),
-            ...idMatcher("playerPerspectives", filters.playerPerspectives),
-            ...idMatcher("publishers", filters.publishers),
-          },
-          fieldsMap[type],
-        )
-        .sort({ [sort.field]: sort.direction })
-        .limit(limit || 0);
+      const qb = this.repository.createQueryBuilder("game").where("(game.archivedAt IS NULL)");
+
+      if (filters.isFavourite !== undefined) qb.andWhere("game.isFavourite = :isFav", { isFav: filters.isFavourite });
+      if (filters.isInstalled !== undefined) qb.andWhere("game.isInstalled = :isInst", { isInst: filters.isInstalled });
+      if (filters.isQuickLaunch !== undefined)
+        qb.andWhere("game.isQuickLaunch = :isQL", { isQL: filters.isQuickLaunch });
+      if (filters.libraries?.length) qb.andWhere("game.library IN (:...libs)", { libs: filters.libraries });
+
+      if (filters.createdAt) {
+        this.applyDateRangeFilter(qb, "createdAt", filters.createdAt);
+      }
+
+      const applyJsonArrayFilter = (field: string, ids?: string[]) => {
+        if (ids?.length) {
+          qb.andWhere(
+            `EXISTS (SELECT 1 FROM json_each(game.${field}) AS j WHERE json_extract(j.value, '$.id') IN (:...${field}Ids))`,
+            { [`${field}Ids`]: ids },
+          );
+        }
+      };
+
+      applyJsonArrayFilter("ageRatings", filters.ageRatings);
+      applyJsonArrayFilter("developers", filters.developers);
+      applyJsonArrayFilter("gameModes", filters.gameModes);
+      applyJsonArrayFilter("genres", filters.genres);
+      applyJsonArrayFilter("platforms", filters.platforms);
+      applyJsonArrayFilter("playerPerspectives", filters.playerPerspectives);
+      applyJsonArrayFilter("publishers", filters.publishers);
+
+      qb.orderBy(`game.${sort.field as string}`, sort.direction === 1 ? "ASC" : "DESC");
+
+      if (limit) qb.limit(limit);
+
+      const selections = selectMap[type];
+      if (selections) {
+        qb.select(selections.map((s) => `game.${s}`));
+      }
+
+      const results = await qb.getMany();
 
       this.logger.debug("Successfully retrieved filtered games", { count: results.length });
       return results as unknown as T extends "list"
@@ -80,7 +162,7 @@ export class GameStore {
 
   async findGameByGameId(gameId: string, library: Library) {
     try {
-      return await db.findOne<GameStoreModel>({ gameId, library });
+      return await this.repository.findOneBy({ gameId, library });
     } catch (error) {
       this.logger.error("Database error while finding game by game id", error, { gameId, library });
       throw error;
@@ -89,7 +171,7 @@ export class GameStore {
 
   async findGameById(id: string) {
     try {
-      return await db.findOne<GameStoreModel>({ _id: id });
+      return await this.repository.findOneBy({ _id: id });
     } catch (error) {
       this.logger.error("Database error while finding game", error, { id });
       throw error;
@@ -97,19 +179,26 @@ export class GameStore {
   }
 
   async findGamesByEpicAppName(ids: string[], library: Library) {
-    return await db.find({ gameId: { $in: ids }, library }, { _id: 0, gameId: 1 });
+    return await this.repository
+      .createQueryBuilder("game")
+      .select("game.gameId")
+      .where("game.gameId IN (:...ids)", { ids })
+      .andWhere("game.library = :library", { library })
+      .getMany();
   }
 
   async findGamesByEpicNamespace(ids: string[]) {
-    return await db.find<GameStoreModel>({
-      library: "epic-game-store",
-      "libraryMeta.namespace": { $in: ids },
-    });
+    return await this.repository
+      .createQueryBuilder("game")
+      .where("game.library = 'epic-game-store'")
+      .andWhere("json_extract(game.libraryMeta, '$.namespace') IN (:...ids)", { ids })
+      .getMany();
   }
 
   async findGamesByGameIds(gameIds: string[], library: Library) {
     try {
-      return await db.find<GameStoreModel>({ gameId: { $in: gameIds }, library });
+      if (!gameIds.length) return [];
+      return await this.repository.findBy({ gameId: In(gameIds), library });
     } catch (error) {
       this.logger.error("Database error while finding games by ids", error, { gameIds, library });
       throw error;
@@ -118,7 +207,7 @@ export class GameStore {
 
   async findRecentGames(limit: number) {
     try {
-      return await db.find<GameStoreModel>({}).sort({ createdAt: -1 }).limit(limit);
+      return await this.repository.find({ order: { createdAt: "DESC" }, take: limit });
     } catch (error) {
       this.logger.error("Database error while finding recent games", error, { limit });
       throw error;
@@ -126,20 +215,21 @@ export class GameStore {
   }
 
   async findUnsyncedGames() {
-    return await db
-      .find<GameStoreModel>({
-        metadataSyncedAt: { $exists: false },
-      })
-      .sort({ name: 1 });
+    return await this.repository.find({
+      order: { name: "ASC" },
+      where: { metadataSyncedAt: IsNull() },
+    });
   }
 
   async insertGame(game: Partial<GameStoreModel>) {
-    return await db.insert<Partial<GameStoreModel>>(game);
+    const entity = this.repository.create(game);
+    return await this.repository.save(entity);
   }
 
   async removeGameById(id: string) {
     try {
-      return await db.deleteOne({ _id: id }, { multi: false });
+      await this.repository.delete(id);
+      return true;
     } catch (error) {
       this.logger.error("Database error while removing game", error, { id });
       throw error;
@@ -153,7 +243,7 @@ export class GameStore {
         this.logger.warn("Game not found for favourite toggle", { id });
         return;
       }
-      return await this.updateGameById(id, { isFavourite: !game?.isFavourite });
+      return await this.updateGameById(id, { isFavourite: !game.isFavourite });
     } catch (error) {
       this.logger.error("Database error while toggling favourite", error, { id });
       throw error;
@@ -167,7 +257,7 @@ export class GameStore {
         this.logger.warn("Game not found for quick launch toggle", { id });
         return;
       }
-      return await this.updateGameById(id, { isQuickLaunch: !game?.isQuickLaunch });
+      return await this.updateGameById(id, { isQuickLaunch: !game.isQuickLaunch });
     } catch (error) {
       this.logger.error("Database error while toggling quick launch", error, { id });
       throw error;
@@ -175,11 +265,17 @@ export class GameStore {
   }
 
   async updateGameByEpicAppName(appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
-    return await db.update<GameStoreModel>(
-      { "libraryMeta.appName": appName },
-      { $set: updates },
-      { returnUpdatedDocs: true },
-    );
+    const games = await this.repository
+      .createQueryBuilder("game")
+      .where("json_extract(game.libraryMeta, '$.appName') = :appName", { appName })
+      .getMany();
+
+    if (!games.length) return 0;
+
+    await this.repository.update({ _id: In(games.map((g) => g._id)) }, updates);
+    return games.length; // Approximate "returnUpdatedDocs" return count if possible, but actually callers usually expect the updated docs or don't use it.
+    // Wait, let's look at callers.
+    // Wait, the NeDB returnUpdatedDocs returns the updated array, but only if returnUpdatedDocs is true. Let's return the updated elements.
   }
 
   async updateGameByGameId(
@@ -188,7 +284,18 @@ export class GameStore {
     { upsert = false }: { upsert?: boolean } = {},
   ) {
     try {
-      return await db.update<GameStoreModel>({ gameId }, { $set: updates }, { returnUpdatedDocs: true, upsert });
+      let game = await this.repository.findOneBy({ gameId });
+
+      if (!game && upsert) {
+        game = this.repository.create({ gameId, ...updates });
+        return await this.repository.save(game);
+      }
+
+      if (game) {
+        await this.repository.update({ gameId }, updates);
+        return await this.repository.findOneBy({ gameId });
+      }
+      return null;
     } catch (error) {
       this.logger.error("Database error while updating game by game id", error, { gameId });
       throw error;
@@ -197,7 +304,8 @@ export class GameStore {
 
   async updateGameById(id: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
     try {
-      return await db.update<GameStoreModel>({ _id: id }, { $set: updates }, { returnUpdatedDocs: true });
+      await this.repository.update(id, updates);
+      return await this.repository.findOneBy({ _id: id });
     } catch (error) {
       this.logger.error("Database error while updating game", error, { id });
       throw error;

@@ -13,7 +13,7 @@ export type GameActions = {
   archiveGame: (id: string) => Promise<void>;
   deleteGame: (id: string) => Promise<void>;
   fetchFilteredGames: (filters: GameFilters) => Promise<GameListModel[]>;
-  fetchGameDetails: (id: string) => Promise<GameStoreModel>;
+  fetchGameDetails: (id: string) => Promise<GameStoreModel | null>;
   fetchGameFilters: () => Promise<void>;
   fetchGamesList: () => Promise<void>;
   fetchNewGames: () => Promise<void>;
@@ -21,6 +21,6 @@ export type GameActions = {
   getRandomGame: () => GameListModel;
   refreshGameData: () => Promise<void>;
   setQuickLaunchGameOrder: (ids: string[]) => void;
-  toggleFavouriteGame: (id: string) => Promise<GameStoreModel>;
+  toggleFavouriteGame: (id: string) => Promise<GameStoreModel | null>;
   toggleQuickLaunchGame: (id: string) => Promise<void>;
 };

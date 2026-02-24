@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 
 import { CollectionModule } from "./collection/collection.module";
 import { ConfigModule } from "./config/config.module";
+import { DatabaseModule } from "./database/database.module";
 import { GameModule } from "./game/game.module";
 import { GameLifecycleModule } from "./game-lifecycle/game-lifecycle.module";
 import { LoggingModule } from "./logging/logging.module";
@@ -11,6 +12,7 @@ import { WindowModule } from "./window/window.module";
 
 @Module({
   imports: [
+    DatabaseModule,
     GameLifecycleModule,
     ConfigModule,
     LoggingModule,

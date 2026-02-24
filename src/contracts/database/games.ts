@@ -41,7 +41,7 @@ export type IdAndName = {
   name: string;
 };
 
-type MultiplayerMode = {
+export type MultiplayerMode = {
   campaignCoop: boolean;
   dropIn: boolean;
   id: string;

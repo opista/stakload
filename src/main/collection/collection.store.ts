@@ -1,19 +1,25 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
 import { ConsoleLogger, Injectable } from "@nestjs/common";
-import { createDb } from "@util/database/create-db";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 
-const db = createDb("collections");
+import { CollectionEntity } from "./collection.entity";
 
 @Injectable()
 export class CollectionStore {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(
+    @InjectRepository(CollectionEntity)
+    private readonly repository: Repository<CollectionEntity>,
+    private readonly logger: ConsoleLogger,
+  ) {
     this.logger.setContext(this.constructor.name);
   }
 
   async createCollection(collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) {
     this.logger.debug("Attempting to create collection in database", collection);
     try {
-      const created = await db.insert<Omit<CollectionStoreModel, "_id">>(collection);
+      const created = this.repository.create(collection);
+      await this.repository.save(created);
       this.logger.debug("Collection created in database", { id: created._id, name: created.name });
       return created;
     } catch (error) {
@@ -25,7 +31,7 @@ export class CollectionStore {
   async deleteCollectionById(id: string) {
     this.logger.debug("Deleting collection from database", { id });
     try {
-      await db.deleteOne({ _id: id }, { multi: false });
+      await this.repository.delete(id);
       this.logger.debug("Collection deleted from database", { id });
       return true;
     } catch (error) {
@@ -37,7 +43,7 @@ export class CollectionStore {
   async findCollectionById(id: string) {
     this.logger.debug("Finding collection by id in database", { id });
     try {
-      const collection = await db.findOne<CollectionStoreModel>({ _id: id });
+      const collection = await this.repository.findOneBy({ _id: id });
       if (!collection) {
         this.logger.warn("Collection not found in database", { id });
       }
@@ -51,7 +57,7 @@ export class CollectionStore {
   async getCollections() {
     this.logger.debug("Fetching all collections from database");
     try {
-      const collections = await db.find<CollectionStoreModel>({}).sort({ name: 1 });
+      const collections = await this.repository.find({ order: { name: "ASC" } });
       this.logger.debug("Collections fetched from database", { count: collections.length });
       return collections;
     } catch (error) {
@@ -63,11 +69,8 @@ export class CollectionStore {
   async updateCollectionById(id: string, updates: Partial<CollectionStoreModel>) {
     this.logger.debug("Updating collection in database", { id, updates });
     try {
-      const updated = await db.update<CollectionStoreModel>(
-        { _id: id },
-        { $set: updates },
-        { returnUpdatedDocs: true },
-      );
+      await this.repository.update(id, updates);
+      const updated = await this.repository.findOneBy({ _id: id });
       if (updated) {
         this.logger.debug("Collection updated in database", { id });
       }

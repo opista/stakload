@@ -170,22 +170,11 @@ export enum WebsiteType {
 }
 
 export interface IpcApi {
-  collection: {
-    createCollection(
-      collection: CollectionStoreModel,
-    ): Promise<{ _id: string; createdAt: Date; updatedAt: Date } & Omit<CollectionStoreModel, "_id">>;
-    deleteCollection(id: string): Promise<boolean>;
-    getCollections(): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & CollectionStoreModel)[]>;
-    updateCollection(
-      id: string,
-      updates: Partial<CollectionStoreModel>,
-    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & CollectionStoreModel) | null>;
-  };
   game: {
-    archiveGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null>;
-    deleteGameById(id: string): Promise<number>;
+    archiveGameById(id: string): Promise<GameEntity | null>;
+    deleteGameById(id: string): Promise<boolean>;
     getFilteredGames(filters: GameFilters): Promise<GameListModel[]>;
-    getGameById(id: string): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null>;
+    getGameById(id: string): Promise<GameEntity | null>;
     getGameFilters(): Promise<{
       _id?: { label: string; value: string }[] | undefined;
       ageRatings?: { label: string; value: string }[] | undefined;
@@ -227,13 +216,20 @@ export interface IpcApi {
     getQuickLaunchGames(): Promise<GameListModel[]>;
     installGame(id: string): void;
     launchGame(id: string): void;
-    toggleFavouriteGame(
-      id: string,
-    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null | undefined>;
-    toggleQuickLaunchGame(
-      id: string,
-    ): Promise<({ _id: string; createdAt: Date; updatedAt: Date } & GameStoreModel) | null | undefined>;
+    toggleFavouriteGame(id: string): Promise<GameEntity | null | undefined>;
+    toggleQuickLaunchGame(id: string): Promise<GameEntity | null | undefined>;
     uninstallGame(id: string): void;
+  };
+  collection: {
+    createCollection(collection: CollectionStoreModel): Promise<CollectionEntity>;
+    deleteCollection(id: string): Promise<boolean>;
+    getCollections(): Promise<CollectionEntity[]>;
+    updateCollection(id: string, updates: Partial<CollectionStoreModel>): Promise<CollectionEntity | null>;
+  };
+  window: {
+    close(): void;
+    maximize(): void;
+    minimize(): void;
   };
   sync: {
     authIntegration(library: Library, data?: unknown): Promise<false | void>;
@@ -246,10 +242,5 @@ export interface IpcApi {
     restartDevice(): void;
     shutdownDevice(): void;
     sleepDevice(): void;
-  };
-  window: {
-    close(): void;
-    maximize(): void;
-    minimize(): void;
   };
 }

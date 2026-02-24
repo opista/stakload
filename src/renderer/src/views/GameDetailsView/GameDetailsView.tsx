@@ -23,7 +23,6 @@ import {
   Title,
 } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconPuzzleOff } from "@tabler/icons-react";
 import { RefObject, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
@@ -154,16 +153,5 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement>;
         </div>
       </ScrollArea>
     </>
-  );
-};
-
-const GameNotFound = () => {
-  const { t } = useTranslation();
-
-  return (
-    <Stack align="center" h="100%" justify="center">
-      <IconPuzzleOff color="orange" size={60} stroke={0.5} />
-      <Text>{t("game.notFound")}</Text>
-    </Stack>
   );
 };

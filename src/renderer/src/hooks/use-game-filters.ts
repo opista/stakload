@@ -1,11 +1,11 @@
-import { GameFilters, Library, LikeAgeRatingText } from "@contracts/database/games";
+import { GameFilters, Library } from "@contracts/database/games";
 import { useGameStore } from "@store/game.store";
 import { ParseKeys } from "i18next";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-const ageRatingFilters: { label: ParseKeys; value: LikeAgeRatingText }[] = [
+const ageRatingFilters: { label: ParseKeys; value: string }[] = [
   {
     label: "ageRating.THREE",
     value: "THREE",
@@ -58,58 +58,58 @@ export const useLibraryFilters = (currentFilters?: GameFilters) => {
   const formattedFilters = useMemo(() => {
     if (!currentFilters) return [];
 
-    return Object.entries(currentFilters).flatMap<{ key: keyof GameFilters; label: string; value: string }>(
+    return Object.entries(currentFilters).flatMap<{ key: keyof GameFilters; label: string; value: string | boolean }>(
       ([key, value]) => {
         switch (key) {
           case "ageRatings":
-            return (value as string[])
-              ?.map((value) => {
-                const match = ageRatingFilters.find((filter) => filter.value === value);
+            return ((value as string[]) || []).flatMap((v) => {
+              const match = ageRatingFilters.find((filter) => filter.value === v);
 
-                if (!match) return null;
+              if (!match) return [];
 
-                return {
+              return [
+                {
                   key,
                   label: t(match.label),
                   value: match.value,
-                };
-              })
-              .filter(Boolean);
+                },
+              ];
+            });
           case "isInstalled":
             return value ? [{ key, label: t("filters.isInstalled"), value: true }] : [];
           case "libraries":
-            return (value as string[])
-              ?.map((value) => {
-                const match = libraryFilters.find((filter) => filter.value === value);
+            return ((value as string[]) || []).flatMap((v) => {
+              const match = libraryFilters.find((filter) => filter.value === v);
 
-                if (!match) return null;
+              if (!match) return [];
 
-                return {
+              return [
+                {
                   key,
                   label: match.label,
                   value: match.value,
-                };
-              })
-              .filter(Boolean);
+                },
+              ];
+            });
           case "developers":
           case "gameModes":
           case "genres":
           case "platforms":
           case "playerPerspectives":
           case "publishers":
-            return (value as string[])
-              ?.map((value) => {
-                const match = gameFilters?.[key]?.find((filter) => filter.value === value);
+            return ((value as string[]) || []).flatMap((v) => {
+              const match = gameFilters?.[key]?.find((filter) => filter.value === v);
 
-                if (!match) return null;
+              if (!match) return [];
 
-                return {
+              return [
+                {
                   key,
                   label: match.label,
                   value: match.value,
-                };
-              })
-              .filter(Boolean);
+                },
+              ];
+            });
           default:
             return [];
         }
