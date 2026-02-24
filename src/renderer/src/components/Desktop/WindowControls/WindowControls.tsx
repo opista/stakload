@@ -1,7 +1,7 @@
 import { ActionIcon, Group, Indicator, Tooltip } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { useNotificationStore } from "@store/notification.store";
-import { IconBell, IconDeviceGamepad2, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
+import { IconBell, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -28,9 +28,8 @@ export const WindowControls = () => {
 
   const handleRandomGame = () => {
     const randomGame = getRandomGame();
-    void navigate(`/desktop/library/${randomGame._id}`);
+    void navigate(`/library/${randomGame._id}`);
   };
-  const handleGamingMode = () => void navigate("/gaming");
   const handleMinimize = () => window.ipc.window.minimize();
   const handleMaximize = () => window.ipc.window.maximize();
   const handleClose = () => window.ipc.window.close();
@@ -47,17 +46,6 @@ export const WindowControls = () => {
             variant="subtle"
           >
             <IconDice5Filled size={16} />
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip label={t("windowControls.gamingMode")}>
-          <ActionIcon
-            aria-label={t("windowControls.gamingMode")}
-            className={classes.icon}
-            color="gray"
-            onClick={handleGamingMode}
-            variant="subtle"
-          >
-            <IconDeviceGamepad2 size={16} />
           </ActionIcon>
         </Tooltip>
         <Tooltip label={t("windowControls.notifications")}>

@@ -55,7 +55,7 @@ export const GameDetailsView = () => {
   }, [params.id, gameDetails, fetchGameDetails]);
 
   if (!params.id) {
-    navigate("/desktop/library");
+    navigate("/library");
     return null;
   }
 

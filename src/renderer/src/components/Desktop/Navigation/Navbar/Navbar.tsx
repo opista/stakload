@@ -48,13 +48,13 @@ export const Navbar = () => {
         <SearchButton className={classes.search} />
         <ScrollArea>
           <Stack gap="xs">
-            <NavbarLink href="/desktop" icon={IconHome} label={t("navigation.home")} />
-            <NavbarLink href="/desktop/library" icon={IconCategory} label={t("navigation.library")} />
-            <NavbarLink href="/desktop/favourites" icon={IconStar} label={t("navigation.favourites")} />
+            <NavbarLink href="/" icon={IconHome} label={t("navigation.home")} />
+            <NavbarLink href="/library" icon={IconCategory} label={t("navigation.library")} />
+            <NavbarLink href="/favourites" icon={IconStar} label={t("navigation.favourites")} />
             <NavbarLink disabled={!collections?.length} icon={IconBooks} label={t("navigation.collections")}>
               {collections.map((collection) => (
                 <NavbarLink
-                  href={`/desktop/collections/${collection._id}`}
+                  href={`/collections/${collection._id}`}
                   icon={collection.icon ? iconCache.get(collection.icon) || IconDeviceGamepad : IconDeviceGamepad}
                   key={collection._id}
                   label={collection.name}
@@ -63,7 +63,7 @@ export const Navbar = () => {
             </NavbarLink>
             <NavbarLink icon={IconSettings} label={t("navigation.settings")}>
               <NavbarLink
-                href="/desktop/settings/integrations"
+                href="/settings/integrations"
                 icon={IconLayersIntersect}
                 label={t("navigation.integrations")}
               />

@@ -95,7 +95,7 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
             <Text className={classes.summary} lineClamp={3}>
               {game.summary}
             </Text>
-            <NavLink to={`/desktop/library/${game._id}`}>{t("featuredGame.viewDetails")}</NavLink>
+            <NavLink to={`/library/${game._id}`}>{t("featuredGame.viewDetails")}</NavLink>
           </Stack>
         </Grid.Col>
       </Grid>

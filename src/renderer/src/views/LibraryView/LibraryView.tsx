@@ -22,7 +22,7 @@ const EmptyView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onImportClick = () => navigate("/desktop/settings/integrations");
+  const onImportClick = () => navigate("/settings/integrations");
 
   return (
     <Stack align="center" className={classes.notFoundContainer} justify="center">

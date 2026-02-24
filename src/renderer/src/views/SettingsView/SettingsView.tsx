@@ -5,7 +5,7 @@ export const SettingsView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate("/desktop/settings/interface");
+    navigate("/settings/interface");
   }, []);
 
   return <></>;

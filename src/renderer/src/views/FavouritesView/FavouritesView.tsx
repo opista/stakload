@@ -16,7 +16,7 @@ const EmptyView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onLibraryClick = () => navigate("/desktop/library");
+  const onLibraryClick = () => navigate("/library");
 
   return (
     <Stack align="center" className={classes.notFoundContainer} justify="center">

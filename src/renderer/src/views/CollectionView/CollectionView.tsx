@@ -44,7 +44,7 @@ export const CollectionView = () => {
 
   const onDeleteConfirm = async () => {
     await deleteCollection(collection._id);
-    navigate("/desktop/library");
+    navigate("/library");
   };
 
   const openDeleteModal = () =>

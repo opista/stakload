@@ -12,9 +12,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 import { App } from "./App";
-import { BaseLayout } from "./layouts/BaseLayout/BaseLayout";
 import { DesktopLayout } from "./layouts/DesktopLayout/DesktopLayout";
-import { GamingLayout } from "./layouts/GamingLayout/GamingLayout";
 import { CollectionView } from "./views/CollectionView/CollectionView";
 import { FavouritesView } from "./views/FavouritesView/FavouritesView";
 import { GameDetailsView } from "./views/GameDetailsView/GameDetailsView";
@@ -28,8 +26,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Routes>
         <Route element={<App />}>
-          <Route element={<BaseLayout />} path="/" />
-          <Route element={<DesktopLayout />} path="desktop">
+          <Route element={<DesktopLayout />} path="/">
             <Route element={<HomeView />} index />
             <Route path="library">
               <Route element={<LibraryView />} index />
@@ -44,7 +41,6 @@ createRoot(document.getElementById("root")!).render(
               <Route element={<SettingsIntegrationsView />} path="integrations" />
             </Route>
           </Route>
-          <Route element={<GamingLayout />} path="gaming" />
         </Route>
       </Routes>
     </BrowserRouter>

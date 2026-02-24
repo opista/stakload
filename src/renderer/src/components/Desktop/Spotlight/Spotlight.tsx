@@ -33,7 +33,7 @@ export const Spotlight = () => {
           showLibraryIcon={false}
         />
       ),
-      onClick: () => navigate(`/desktop/library/${game._id}`),
+      onClick: () => navigate(`/library/${game._id}`),
       rightSection: <LibraryIcon game={game} />,
     })) || [];
 

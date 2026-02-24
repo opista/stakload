@@ -48,7 +48,7 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
       >
         {games.map((game) => (
           <Carousel.Slide key={game._id}>
-            <GameCover game={game} hoverEffect={false} onClick={(game) => navigate(`/desktop/library/${game._id}`)} />
+            <GameCover game={game} hoverEffect={false} onClick={(game) => navigate(`/library/${game._id}`)} />
           </Carousel.Slide>
         ))}
       </Carousel>
