@@ -36,7 +36,7 @@
     "@apollo/client": "^3.12.4",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
-    "@electron-ipc-bridge/core": "file:electron-ipc-bridge-core-0.0.3.tgz",
+    "@electron-ipc-bridge/core": "^0.0.3",
     "@electron-toolkit/utils": "^3.0.0",
     "@mantine/carousel": "^7.15.0",
     "@mantine/core": "^7.13.4",
@@ -81,7 +81,7 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
-    "@electron-ipc-bridge/vite-plugin": "file:electron-ipc-bridge-vite-plugin-0.0.3.tgz",
+    "@electron-ipc-bridge/vite-plugin": "^0.0.3",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^2.0.0",

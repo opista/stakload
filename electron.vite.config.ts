@@ -6,7 +6,7 @@ import graphqlLoader from "vite-plugin-graphql-loader";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin(), electronIpcBridge()],
+    plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin(), electronIpcBridge({ resolutionStrategy: "nest" })],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),
@@ -15,7 +15,7 @@ export default defineConfig({
     },
   },
   preload: {
-    plugins: [externalizeDepsPlugin(), electronIpcBridge()],
+    plugins: [externalizeDepsPlugin(), electronIpcBridge({ resolutionStrategy: "nest" })],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),
