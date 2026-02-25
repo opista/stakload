@@ -63,7 +63,7 @@ export const LibraryView = () => {
   return (
     <>
       <Stack h="100%" w="100%">
-        <SectionHeading direction="column" gap="md">
+        <SectionHeading className="flex-col gap-4">
           <Group>
             <IconCategory size={40} />
             <Title order={1}>Library</Title>

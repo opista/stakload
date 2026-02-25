@@ -38,7 +38,7 @@ export const FavouritesView = () => {
 
   return (
     <div className={classes.container}>
-      <SectionHeading gap="md">
+      <SectionHeading className="gap-4">
         <IconStar size={40} />
         <Title order={1}>{t("favourites.title")}</Title>
       </SectionHeading>

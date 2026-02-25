@@ -58,7 +58,7 @@ export const CollectionView = () => {
 
   return (
     <Stack className="w-full" gap="md" ref={containerRef}>
-      <SectionHeading direction="column" gap="md">
+      <SectionHeading className="flex-col gap-4">
         <Group align="center" gap="sm" justify="space-between">
           {collection && <CollectionTitle collection={collection} />}
           <Group align="center" gap="sm" wrap="wrap">

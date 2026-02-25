@@ -1,7 +1,5 @@
-import { Paper, Title } from "@mantine/core";
+import { cn } from "@util/cn";
 import { ReactNode } from "react";
-
-import classes from "./ContentCard.module.css";
 
 type ContentCardProps = {
   children: ReactNode;
@@ -10,12 +8,8 @@ type ContentCardProps = {
 };
 
 export const ContentCard = ({ children, className, title }: ContentCardProps) => (
-  <Paper className={className} classNames={{ root: classes.container }} radius="lg">
-    {title && (
-      <Title classNames={{ root: classes.title }} order={2}>
-        {title}
-      </Title>
-    )}
+  <div className={cn("content-card pt-4 px-6 pb-6 bg-neutral-600/30 rounded-2xl [&+.content-card]:mt-6", className)}>
+    {title && <h2 className="mb-3 text-2xl font-bold leading-snug">{title}</h2>}
     {children}
-  </Paper>
+  </div>
 );

@@ -1,5 +1,6 @@
-import { Flex, FlexProps } from "@mantine/core";
+import { cn } from "@util/cn";
+import type { ComponentProps } from "react";
 
-import classes from "./SectionHeading.module.css";
-
-export const SectionHeading = (props: FlexProps) => <Flex className={classes.container} {...props} />;
+export const SectionHeading = ({ className, ...props }: ComponentProps<"div">) => (
+  <div className={cn("flex px-4", className)} {...props} />
+);
