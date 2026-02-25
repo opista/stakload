@@ -1,7 +1,4 @@
-import { Flex, Text } from "@mantine/core";
 import { ReactNode } from "react";
-
-import classes from "./GameDetailsTableRow.module.css";
 
 type GameDetailsTableRowProps = {
   label: string;
@@ -9,8 +6,8 @@ type GameDetailsTableRowProps = {
 };
 
 export const GameDetailsTableRow = ({ label, value }: GameDetailsTableRowProps) => (
-  <Flex justify="space-between">
-    <Text>{label}</Text>
-    <Text className={classes.value}>{value}</Text>
-  </Flex>
+  <div className="flex justify-between gap-4 py-1">
+    <span className="text-neutral-400">{label}</span>
+    <span className="text-right text-white">{value}</span>
+  </div>
 );

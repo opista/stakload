@@ -93,7 +93,7 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement>;
             </Title>
             <Group className={classes.iconGroup} gap="xs">
               {/* TODO - Only show this icon if game isn't supported on system */}
-              <IncompatibilityIcon size="xl" />
+              <IncompatibilityIcon />
               <LibraryIcon game={game} size="xl" />
               {game.library === "steam" && <ProtonIcon gameId={game?.gameId} platforms={game.platforms} size="xl" />}
             </Group>

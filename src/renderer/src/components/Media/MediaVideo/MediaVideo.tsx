@@ -1,9 +1,7 @@
-import { AspectRatio, BackgroundImage, UnstyledButton } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
+import { cn } from "@util/cn";
 import { useTranslation } from "react-i18next";
-
-import classes from "./MediaVideo.module.css";
 
 const getThumbnailUrl = (watchId: string) => `https://img.youtube.com/vi/${watchId}/hqdefault.jpg`;
 
@@ -22,30 +20,34 @@ export const MediaVideo = ({ id }: MediaVideoProps) => {
   const embedSrc = getEmbedUrl(id);
 
   return (
-    <UnstyledButton
-      className={classes.button}
+    <button
+      className="group relative flex h-full w-full overflow-hidden rounded-lg bg-neutral-800 transition-transform hover:scale-[1.02] active:scale-[0.98]"
       onClick={() =>
         modals.open({
           centered: true,
           children: (
-            <AspectRatio ratio={16 / 9}>
+            <div className="aspect-video w-full">
               <iframe
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className={classes.iframe}
+                className="h-full w-full border-none"
                 src={embedSrc}
               />
-            </AspectRatio>
+            </div>
           ),
           size: "70%",
           title: t("media"),
         })
       }
+      type="button"
     >
-      <div className={classes.playButton}>
-        <IconPlayerPlayFilled className={classes.playIcon} color="white" />
+      <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/40">
+        <IconPlayerPlayFilled className="h-12 w-12 text-white opacity-80 transition-opacity group-hover:opacity-100" />
       </div>
-      <BackgroundImage className={classes.backgroundImage} src={thumbnailSrc} />
-    </UnstyledButton>
+      <div
+        className="h-full w-full bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${thumbnailSrc})` }}
+      />
+    </button>
   );
 };

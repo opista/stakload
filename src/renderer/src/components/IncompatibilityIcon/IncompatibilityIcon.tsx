@@ -1,16 +1,16 @@
 import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
-import { IconAlertOctagon, IconProps } from "@tabler/icons-react";
+import { IconAlertOctagon } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 
-export const IncompatibilityIcon = ({ size }: IconProps) => {
+export const IncompatibilityIcon = () => {
   const { t } = useTranslation();
 
   return (
     <TooltipIcon
       icon={IconAlertOctagon}
       themeIconProps={{
-        color: "orange",
-        size,
+        className: "bg-orange-700",
+        size: "xl",
         variant: "filled",
       }}
       tooltipProps={{

@@ -1,10 +1,8 @@
 import { GameStoreModel } from "@contracts/database/games";
-import { Divider, Flex } from "@mantine/core";
 import { ParseKeys, TFunction } from "i18next";
 import { Fragment, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import classes from "./GameDetailsTable.module.css";
 import { GameDetailsTableRow } from "./GameDetailsTableRow/GameDetailsTableRow";
 
 type Column = {
@@ -32,37 +30,31 @@ const firstColumn: Column[] = [
   },
   {
     formatter: ({ developers }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {developers?.map((developer) => (
-          <span className={classes.valueStack} key={developer.id}>
-            {developer.name}
-          </span>
+          <span key={developer.id}>{developer.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.developers",
   },
   {
     formatter: ({ publishers }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {publishers?.map((publisher) => (
-          <span className={classes.valueStack} key={publisher.id}>
-            {publisher.name}
-          </span>
+          <span key={publisher.id}>{publisher.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.publishers",
   },
   {
     formatter: ({ gameModes }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {gameModes?.map((mode) => (
-          <span className={classes.valueStack} key={mode.id}>
-            {mode.name}
-          </span>
+          <span key={mode.id}>{mode.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.gameModes",
   },
@@ -71,37 +63,31 @@ const firstColumn: Column[] = [
 const secondColumn: Column[] = [
   {
     formatter: ({ genres }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {genres?.map((genre) => (
-          <span className={classes.valueStack} key={genre.id}>
-            {genre.name}
-          </span>
+          <span key={genre.id}>{genre.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.genres",
   },
   {
     formatter: ({ platforms }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {platforms?.map((platform) => (
-          <span className={classes.valueStack} key={platform.id}>
-            {platform.name}
-          </span>
+          <span key={platform.id}>{platform.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.platforms",
   },
   {
     formatter: ({ playerPerspectives }: GameStoreModel) => (
-      <>
+      <div className="flex flex-col text-right">
         {playerPerspectives?.map((perspective) => (
-          <span className={classes.valueStack} key={perspective.id}>
-            {perspective.name}
-          </span>
+          <span key={perspective.id}>{perspective.name}</span>
         ))}
-      </>
+      </div>
     ),
     label: "gameDetails.perspectives",
   },
@@ -111,23 +97,23 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
   const { t } = useTranslation();
 
   return (
-    <Flex gap="lg" justify="space-between">
-      <div className={classes.column}>
+    <div className="flex justify-between gap-8">
+      <div className="flex-1">
         {firstColumn.map(({ formatter, label }) => (
           <Fragment key={label}>
             <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
-            <Divider classNames={{ root: classes.divider }} />
+            <div className="my-1 border-t border-neutral-700/50" />
           </Fragment>
         ))}
       </div>
-      <div className={classes.column}>
+      <div className="flex-1">
         {secondColumn.map(({ formatter, label }) => (
           <Fragment key={label}>
             <GameDetailsTableRow label={t(label)} value={formatter(game, t)} />
-            <Divider classNames={{ root: classes.divider }} />
+            <div className="my-1 border-t border-neutral-700/50" />
           </Fragment>
         ))}
       </div>
-    </Flex>
+    </div>
   );
 };

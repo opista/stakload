@@ -120,12 +120,6 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
         )}
       </div>
 
-      {game.isInstalled && (
-        <div className="absolute top-3 right-3 z-10">
-          <div className="w-3 h-3 bg-success rounded-full shadow-lg shadow-black/50"></div>
-        </div>
-      )}
-
       {showGameTitle && (
         <div
           className={cn(

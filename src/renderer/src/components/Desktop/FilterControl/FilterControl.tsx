@@ -71,12 +71,12 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
         ))}
         {/* TODO: Make these buttons fit the theme */}
         {hasUnsavedChanges && collection && formattedFilters.length && (
-          <ActionIcon color="blue" onClick={onSave} variant="filled">
+          <ActionIcon onClick={onSave} variant="filled">
             <IconDeviceFloppy size={20} stroke={1} />
           </ActionIcon>
         )}
         {hasUnsavedChanges && !collection && formattedFilters.length && (
-          <ActionIcon color="blue" onClick={onCreate} variant="filled">
+          <ActionIcon onClick={onCreate} variant="filled">
             <IconDeviceFloppy size={20} stroke={1} />
           </ActionIcon>
         )}
