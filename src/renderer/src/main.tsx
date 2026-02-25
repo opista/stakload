@@ -9,7 +9,7 @@ import "./i18n";
 
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { MemoryRouter, Route, Routes } from "react-router";
 
 import { App } from "./App";
 import { DesktopLayout } from "./layouts/DesktopLayout/DesktopLayout";
@@ -23,7 +23,7 @@ import { SettingsView } from "./views/SettingsView/SettingsView";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
+    <MemoryRouter>
       <Routes>
         <Route element={<App />}>
           <Route element={<DesktopLayout />} path="/">
@@ -43,6 +43,6 @@ createRoot(document.getElementById("root")!).render(
           </Route>
         </Route>
       </Routes>
-    </BrowserRouter>
+    </MemoryRouter>
   </StrictMode>,
 );
