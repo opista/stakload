@@ -1,13 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-headings: "Readex Pro", sans-serif;
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: "Cinzel", serif;
+  --font-headings: var(--font-serif);
+
+  --color-primary: var(--color-amber-400);
+  --color-accent: #8b0000;
+  --color-gallery-surface: #0f0f0f;
+  --color-success: #4ade80;
+
+  --shadow-gold-edge: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 10%, transparent);
+  --shadow-gold-hover: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 0 15px color-mix(in srgb, var(--color-primary) 20%, transparent);
+  --shadow-glow: 0 0 12px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+@layer base {
+  body {
+    @apply text-slate-100 bg-zinc-950 font-sans;
+  }
 }
 
 :root {
   --scrollbar-size: 6px;
-  --color: #15202c;
 
   /* Font smoothing from Mantine theme */
   -webkit-font-smoothing: antialiased;
@@ -28,11 +44,9 @@
 
 html,
 body {
-  background: #0d171f;
   margin: 0;
   padding: 0;
   user-select: none;
-  font-family: var(--font-sans);
 }
 
 h1,

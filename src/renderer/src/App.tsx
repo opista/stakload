@@ -1,14 +1,5 @@
 import { useGamesQuery } from "@hooks/use-games-query";
-import {
-  Checkbox,
-  ColorSchemeScript,
-  Container,
-  createTheme,
-  MantineProvider,
-  Modal,
-  Notification,
-  ScrollArea,
-} from "@mantine/core";
+import { Checkbox, Container, createTheme, MantineProvider, Modal, Notification, ScrollArea } from "@mantine/core";
 import { Notifications } from "@mantine/notifications";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
@@ -86,7 +77,6 @@ export const App = () => {
 
   return (
     <>
-      <ColorSchemeScript defaultColorScheme="dark" />
       <MantineProvider defaultColorScheme="dark" theme={theme}>
         <ContextMenuProvider borderRadius="md" shadow="md">
           <Notifications classNames={{ root: classes.notifications }} limit={5} />

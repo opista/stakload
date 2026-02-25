@@ -8,8 +8,8 @@ import { CellComponentProps, Grid, GridImperativeAPI } from "react-window";
 
 import { GameListModel } from "../../ipc.types";
 
-const MAX_CELL_SIZE = 250;
-const CELL_GAP = 15;
+const MAX_CELL_SIZE = 270;
+const CELL_GAP = 6;
 const SCROLLBAR_WIDTH = 6;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>
@@ -79,7 +79,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-4">
         <GhostIcon />
-        <p className="text-gray-500 dark:text-gray-400">{t("gamesGrid.noGamesFound")}</p>
+        <p className="text-gray-400">{t("gamesGrid.noGamesFound")}</p>
       </div>
     );
   }

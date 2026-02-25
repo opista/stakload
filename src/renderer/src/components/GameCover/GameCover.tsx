@@ -1,68 +1,30 @@
 import { GameListModel } from "@contracts/database/games";
-import { AspectRatio, Image, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import {
   IconBolt,
-  IconDeviceGamepad2,
   IconDownload,
+  IconPercentage0,
   IconPlayerPlay,
   IconSquareRoundedMinus,
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
+import { cn } from "@util/cn";
 import { mapLibraryIcon } from "@util/map-library-icon";
 import clsx from "clsx";
 import { useContextMenu } from "mantine-contextmenu";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import classes from "./GameCover.module.css";
-
-const GAME_COVER_ART_RATIO = 3 / 4;
-
 type GameCoverProps = {
   className?: string;
   game: GameListModel;
-  hoverEffect?: boolean;
   onClick?: (game: GameListModel) => void;
   showGameTitle?: boolean;
-  showLibraryIcon?: boolean;
 };
 
-const LibraryIcon = ({ game }: { game: GameListModel }) => {
-  const { icon: Icon } = mapLibraryIcon(game.library);
-  return <Icon className={classes.libraryIcon} />;
-};
-
-const GameCoverArt = ({ game }: { game: GameListModel }) => <Image src={game.cover!} title={game.name} />;
-
-const GameCoverEmpty = ({
-  game,
-  showGameTitle,
-}: {
-  game: GameListModel;
-  showGameTitle?: boolean;
-  showLibraryIcon?: boolean;
-}) => (
-  <Stack className={classes.emptyContainer}>
-    <IconDeviceGamepad2 className={clsx(classes.emptyIcon, { [classes.centred]: !showGameTitle })} stroke={1} />
-    {showGameTitle && (
-      <Text className={classes.emptyText} lineClamp={2}>
-        {game.name}
-      </Text>
-    )}
-  </Stack>
-);
-
-export const GameCover = ({
-  className,
-  game,
-  hoverEffect = true,
-  onClick,
-  showGameTitle = true,
-  showLibraryIcon = true,
-}: GameCoverProps) => {
+export const GameCover = ({ className, game, onClick, showGameTitle = true }: GameCoverProps) => {
   const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
       toggleFavouriteGame: state.toggleFavouriteGame,
@@ -72,12 +34,17 @@ export const GameCover = ({
   const { showContextMenu } = useContextMenu();
   const { t } = useTranslation();
 
+  const { icon: SourceIcon, name: libraryName } = mapLibraryIcon(game.library);
+
   return (
-    <AspectRatio
-      className={clsx(classes.aspectRatio, className, {
-        [classes.clickable]: !!onClick,
-        [classes.hoverEffect]: hoverEffect,
-      })}
+    <div
+      className={cn(
+        "group relative aspect-[3/4] overflow-hidden rounded-sm bg-stone-950 text-white shadow-gold-edge hover:shadow-gold-hover transition-shadow duration-400 ease-in-out",
+        {
+          "cursor-pointer": !!onClick,
+        },
+        className,
+      )}
       onClick={() => onClick?.(game)}
       onContextMenu={showContextMenu([
         {
@@ -135,10 +102,48 @@ export const GameCover = ({
           title: t("gameCover.removeFromLibrary"),
         },
       ])}
-      ratio={GAME_COVER_ART_RATIO}
+      title={game.name}
     >
-      {showLibraryIcon && <LibraryIcon game={game} />}
-      {game.cover ? <GameCoverArt game={game} /> : <GameCoverEmpty game={game} showGameTitle={showGameTitle} />}
-    </AspectRatio>
+      <div className="w-full h-full transition-transform duration-400 group-hover:scale-110">
+        {game.cover ? (
+          <img src={game.cover} alt={game.name} className="w-full h-full object-cover" />
+        ) : (
+          <div className="flex flex-col items-center justify-end h-full relative overflow-hidden w-full">
+            <IconPercentage0
+              className={clsx(
+                "absolute left-1/2 -translate-x-1/2 opacity-20 w-[70%]",
+                showGameTitle ? "top-0 h-[80%]" : "top-1/2 -translate-y-1/2",
+              )}
+              stroke={1}
+            />
+          </div>
+        )}
+      </div>
+
+      {game.isInstalled && (
+        <div className="absolute top-3 right-3 z-10">
+          <div className="w-3 h-3 bg-success rounded-full shadow-lg shadow-black/50"></div>
+        </div>
+      )}
+
+      {showGameTitle && (
+        <div
+          className={cn(
+            "absolute inset-x-[1px] bottom-[1px] bg-black/80 backdrop-blur-md p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-white/5 z-20 rounded-b-sm",
+            {
+              "translate-y-0": !game.cover,
+            },
+          )}
+        >
+          <h4 className="font-serif text-sm font-bold tracking-wider text-white group-hover:text-primary truncate mb-1">
+            {game.name}
+          </h4>
+          <p className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+            <SourceIcon size={14} />
+            {libraryName}
+          </p>
+        </div>
+      )}
+    </div>
   );
 };

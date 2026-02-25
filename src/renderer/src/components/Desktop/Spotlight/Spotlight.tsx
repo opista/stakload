@@ -24,15 +24,7 @@ export const Spotlight = () => {
     games?.map((game) => ({
       id: game._id,
       label: game.name,
-      leftSection: (
-        <GameCover
-          className={classes.gameCover}
-          game={game}
-          hoverEffect={false}
-          showGameTitle={false}
-          showLibraryIcon={false}
-        />
-      ),
+      leftSection: <GameCover className={classes.gameCover} game={game} showGameTitle={false} />,
       onClick: () => navigate(`/library/${game._id}`),
       rightSection: <LibraryIcon game={game} />,
     })) || [];

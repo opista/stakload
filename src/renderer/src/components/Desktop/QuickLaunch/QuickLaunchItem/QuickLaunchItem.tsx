@@ -50,13 +50,7 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
         })}
         onClick={onClick}
       >
-        <GameCover
-          className={classes.gameCover}
-          game={game}
-          hoverEffect={false}
-          showGameTitle={false}
-          showLibraryIcon={false}
-        />
+        <GameCover className={classes.gameCover} game={game} showGameTitle={false} />
         <Stack className={classes.textContainer}>
           <Text className={classes.gameName} lineClamp={1} size="xs">
             {game.name}
