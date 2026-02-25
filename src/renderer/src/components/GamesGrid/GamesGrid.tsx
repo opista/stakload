@@ -1,11 +1,11 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
 import { Box, Stack, Text } from "@mantine/core";
+import { useElementSize } from "@mantine/hooks";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeGrid, GridChildComponentProps } from "react-window";
+import { useNavigate, NavigateFunction } from "react-router";
+import { Grid, CellComponentProps, GridImperativeAPI } from "react-window";
 
 import { GameListModel } from "../../ipc.types";
 
@@ -22,12 +22,43 @@ type GamesGridProps = {
   games?: GameListModel[];
 };
 
+type CellProps = {
+  columnCount: number;
+  games: GameListModel[];
+  navigate: NavigateFunction;
+};
+
+const Cell = ({
+  columnIndex,
+  rowIndex,
+  style,
+  columnCount,
+  games,
+  navigate,
+}: CellComponentProps<CellProps>) => {
+  const index = getItemIndex(rowIndex, columnIndex, columnCount);
+  const game = games[index];
+
+  if (!game) return null;
+
+  return (
+    <Box style={{ ...style, padding: CELL_GAP }}>
+      <GameCover game={game} onClick={(game) => navigate(`/library/${game._id}`)} />
+    </Box>
+  );
+};
+
 export const GamesGrid = ({ games }: GamesGridProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const gridRef = useRef<FixedSizeGrid>(null);
+  const gridRef = useRef<GridImperativeAPI>(null);
+  const { ref: containerRef, width, height } = useElementSize();
 
-  const calculateCellSize = (width: number, columnCount: number) => {
+  const calculateCellSize = (width: number, columnCount: number): { columnCount: number; columnWidth: number; rowCount: number; rowHeight: number } => {
+    // If width is 0 (initial render), return fallback values
+    if (width === 0) {
+      return { columnCount: 1, columnWidth: 0, rowCount: Math.ceil((games?.length || 0)), rowHeight: 0 };
+    }
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
 
     if (columnWidth > MAX_CELL_SIZE) {
@@ -35,7 +66,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     }
 
     const rowHeight = ((columnWidth - CELL_GAP * 2) / 3) * 4 + CELL_GAP * 2;
-    const rowCount = Math.ceil(games!.length / columnCount);
+    const rowCount = Math.ceil((games?.length || 0) / columnCount);
 
     return {
       columnCount,
@@ -46,7 +77,7 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
   };
 
   useEffect(() => {
-    gridRef.current?.scrollToItem({ columnIndex: 0, rowIndex: 0 });
+    gridRef.current?.scrollToCell({ columnIndex: 0, rowIndex: 0 });
   }, [games]);
 
   if (!games?.length) {
@@ -58,62 +89,23 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     );
   }
 
-  const Cell = ({
-    columnCount,
-    columnIndex,
-    rowIndex,
-    style,
-  }: GridChildComponentProps<unknown> & { columnCount: number }) => {
-    const index = getItemIndex(rowIndex, columnIndex, columnCount);
-    const game = games[index];
-
-    if (!game) return null;
-
-    return (
-      <Box style={{ ...style, padding: CELL_GAP }}>
-        <GameCover game={game} onClick={(game) => navigate(`/library/${game._id}`)} />
-      </Box>
-    );
-  };
-
-  const itemKey = (
-    {
-      columnIndex,
-      data: games,
-      rowIndex,
-    }: {
-      columnIndex: number;
-      data: GameListModel[];
-      rowIndex: number;
-    },
-    columnCount: number,
-  ) => {
-    const index = getItemIndex(rowIndex, columnIndex, columnCount);
-    return games[index]?._id || index;
-  };
+  const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
 
   return (
-    <Box className={classes.container}>
-      <AutoSizer>
-        {({ height, width }) => {
-          const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
-          return (
-            <FixedSizeGrid
-              columnCount={columnCount}
-              columnWidth={columnWidth}
-              height={height}
-              itemData={games}
-              itemKey={(args) => itemKey(args, columnCount)}
-              ref={gridRef}
-              rowCount={rowCount}
-              rowHeight={rowHeight}
-              width={width}
-            >
-              {(props) => <Cell columnCount={columnCount} {...props} />}
-            </FixedSizeGrid>
-          );
-        }}
-      </AutoSizer>
+    <Box ref={containerRef} className={classes.container}>
+      {width > 0 && height > 0 && (
+        <Grid
+          cellComponent={Cell}
+          cellProps={{ columnCount, games, navigate }}
+          columnCount={columnCount}
+          columnWidth={columnWidth}
+          gridRef={gridRef}
+          rowCount={rowCount}
+          rowHeight={rowHeight}
+          style={{ height, width }}
+        />
+      )}
     </Box>
   );
 };
+

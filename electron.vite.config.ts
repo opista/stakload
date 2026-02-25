@@ -1,13 +1,12 @@
-import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
-import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
-import { defineConfig, externalizeDepsPlugin, swcPlugin } from "electron-vite";
 import { resolve } from "path";
+import { defineConfig, swcPlugin } from "electron-vite";
+import react from "@vitejs/plugin-react";
 import graphqlLoader from "vite-plugin-graphql-loader";
+import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin(), graphqlLoader(), swcPlugin(), electronIpcBridge({ resolutionStrategy: "nest" })],
+    plugins: [swcPlugin(), graphqlLoader(), electronIpcBridge({ resolutionStrategy: "nest" })],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),
@@ -16,7 +15,7 @@ export default defineConfig({
     },
   },
   preload: {
-    plugins: [externalizeDepsPlugin(), electronIpcBridge({ resolutionStrategy: "nest" })],
+    plugins: [electronIpcBridge({ resolutionStrategy: "nest" })],
     resolve: {
       alias: {
         "@contracts": resolve("src/contracts"),
@@ -24,7 +23,6 @@ export default defineConfig({
     },
   },
   renderer: {
-    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         "@api": resolve("src/renderer/src/api"),
@@ -39,5 +37,12 @@ export default defineConfig({
         "@util": resolve("src/renderer/src/util"),
       },
     },
+    plugins: [
+      react({
+        babel: {
+          plugins: ["babel-plugin-react-compiler"],
+        },
+      }),
+    ],
   },
 });

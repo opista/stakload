@@ -10,7 +10,6 @@
     "composite": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
     "paths": {
       "@contracts/*": [
         "./src/contracts/*"

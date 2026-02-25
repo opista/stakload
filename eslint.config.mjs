@@ -1,54 +1,43 @@
 import { defineConfig } from "eslint/config";
-import js from "@eslint/js";
-import globals from "globals";
-import tseslint from "typescript-eslint";
+import tseslint from "@electron-toolkit/eslint-config-ts";
+import eslintConfigPrettier from "@electron-toolkit/eslint-config-prettier";
+import eslintPluginReact from "eslint-plugin-react";
+import eslintPluginReactHooks from "eslint-plugin-react-hooks";
+import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import perfectionist from "eslint-plugin-perfectionist";
 import unusedImports from "eslint-plugin-unused-imports";
-import eslintConfigPrettier from "eslint-config-prettier";
+import perfectionist from "eslint-plugin-perfectionist";
 
-export default defineConfig([
+export default defineConfig(
+  { ignores: ["**/node_modules", "**/dist", "**/out"] },
+  tseslint.configs.recommended,
+  eslintPluginReact.configs.flat.recommended,
+  eslintPluginReact.configs.flat["jsx-runtime"],
   {
-    ignores: [
-      "**/build/**",
-      "**/coverage/**",
-      "**/dist/**",
-      "**/fixtures/**",
-      "**/node_modules/**",
-      "eslint.config.mjs",
-    ],
-  },
-  eslintConfigPrettier,
-  js.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-      sourceType: "module",
-      parserOptions: {
-        projectService: {
-          allowDefaultProject: [
-            "*.js",
-            "*.mjs",
-            "packages/*/jest.config.js",
-            "packages/*/jest.config.cjs",
-            "packages/*/scripts/*.mjs",
-            "apps/*/*/eslint.config.mjs",
-          ],
-        },
-        tsconfigRootDir: import.meta.dirname,
+    settings: {
+      react: {
+        version: "detect",
       },
     },
   },
   {
+    files: ["**/*.{ts,tsx}"],
+    languageOptions: {
+      parserOptions: {
+        project: ["./tsconfig.json", "./tsconfig.node.json", "./tsconfig.web.json"],
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     plugins: {
+      "react-hooks": eslintPluginReactHooks,
+      "react-refresh": eslintPluginReactRefresh,
       "simple-import-sort": simpleImportSort,
       "unused-imports": unusedImports,
       perfectionist,
     },
     rules: {
+      ...eslintPluginReactHooks.configs.recommended.rules,
+      ...eslintPluginReactRefresh.configs.vite.rules,
       "simple-import-sort/imports": [
         "error",
         {
@@ -90,10 +79,5 @@ export default defineConfig([
       ],
     },
   },
-  {
-    files: ["**/*.spec.ts"],
-    rules: {
-      "@typescript-eslint/no-unused-vars": "off",
-    },
-  },
-]);
+  eslintConfigPrettier,
+);
