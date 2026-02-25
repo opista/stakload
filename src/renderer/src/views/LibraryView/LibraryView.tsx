@@ -1,3 +1,4 @@
+import { Button } from "@components/Button/Button";
 import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
 import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
@@ -5,8 +6,6 @@ import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
 import { PageTitle } from "@components/PageTitle/PageTitle";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Stack, Text } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
 import { IconSquareRoundedPlus } from "@tabler/icons-react";
@@ -17,8 +16,6 @@ import { useShallow } from "zustand/react/shallow";
 
 import { GameFilters } from "../../ipc.types";
 
-import classes from "./LibraryView.module.css";
-
 const EmptyView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,13 +23,13 @@ const EmptyView = () => {
   const onImportClick = () => navigate("/settings/integrations");
 
   return (
-    <Stack align="center" className={classes.notFoundContainer} justify="center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-6">
       <GhostIcon />
-      <Text c="dimmed">{t("library.noGamesFound")}</Text>
-      <Button leftSection={<IconSquareRoundedPlus />} onClick={onImportClick}>
+      <span className="text-neutral-500 font-medium">{t("library.noGamesFound")}</span>
+      <Button leftIcon={<IconSquareRoundedPlus size={18} />} onClick={onImportClick} size="sm">
         {t("library.importGames")}
       </Button>
-    </Stack>
+    </div>
   );
 };
 
@@ -40,7 +37,7 @@ export const LibraryView = () => {
   const { t } = useTranslation();
   const createCollection = useCollectionStore(useShallow((state) => state.createCollection));
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
-  const [openedCreate, { close: closeCreate, open: openCreate }] = useDisclosure(false);
+  const [openedCreate, setOpenedCreate] = useState(false);
   const [filters, setFilters] = useState<GameFilters>({});
   const { data: games } = useGamesQuery(() => fetchFilteredGames(filters), [filters]);
 
@@ -59,19 +56,19 @@ export const LibraryView = () => {
   const onCreate = async (name: string, icon?: string) => {
     if (!filters) return;
     await createCollection({ filters, icon, name });
-    closeCreate();
+    setOpenedCreate(false);
   };
 
   return (
     <>
-      <Stack h="100%" w="100%">
-        <SectionHeading className="flex-col gap-4">
+      <div className="flex h-full w-full flex-col gap-4">
+        <SectionHeading className="flex-col !items-start gap-4">
           <PageTitle>{t("library.title")}</PageTitle>
-          <FilterControl onChange={setFilters} onCreate={openCreate} />
+          <FilterControl onChange={setFilters} onCreate={() => setOpenedCreate(true)} />
         </SectionHeading>
         {!games?.length && !hasFiltersSet ? <EmptyView /> : <GamesGrid games={games} />}
-      </Stack>
-      <CollectionCreateModal onClose={() => closeCreate()} onConfirm={onCreate} opened={openedCreate} />
+      </div>
+      <CollectionCreateModal onClose={() => setOpenedCreate(false)} onConfirm={onCreate} opened={openedCreate} />
     </>
   );
 };

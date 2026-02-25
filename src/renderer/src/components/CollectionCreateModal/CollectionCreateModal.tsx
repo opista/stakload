@@ -1,5 +1,8 @@
+import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { Button } from "@components/Button/Button";
 import { IconSelector } from "@components/Desktop/IconSelector/IconSelector";
-import { ActionIcon, Button, Flex, Modal, ScrollArea, TextInput } from "@mantine/core";
+import { Modal } from "@components/Modal/Modal";
+import { TextInput } from "@components/TextInput/TextInput";
 import { IconDeviceGamepad } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 import { useMemo, useState } from "react";
@@ -21,28 +24,29 @@ export const CollectionCreateModal = ({ onClose, onConfirm, opened }: Collection
   return (
     <Modal centered onClose={onClose} opened={opened} size="lg" title="Save collection">
       <TextInput
+        className="mb-6"
         label="Collection name"
-        mb="md"
         onChange={(event) => setValue(event.currentTarget.value)}
+        placeholder="Enter collection name..."
         value={value}
       />
 
-      <ScrollArea h={400} mb="md">
+      <div className="mb-6 h-[400px] overflow-y-auto pr-2 scrollbar-hide">
         <IconSelector onSelect={setSelectedIcon} selectedIcon={selectedIcon}>
-          <ActionIcon variant="default">
+          <ActionIcon aria-label="Select icon" variant="default" size="xl">
             <Icon size={40} />
           </ActionIcon>
         </IconSelector>
-      </ScrollArea>
+      </div>
 
-      <Flex gap="xs" justify="flex-end">
-        <Button disabled={!value} onClick={onClickConfirm}>
-          Create collection
-        </Button>
+      <div className="flex justify-end gap-3">
         <Button onClick={onClose} variant="default">
           Cancel
         </Button>
-      </Flex>
+        <Button disabled={!value} onClick={onClickConfirm}>
+          Create collection
+        </Button>
+      </div>
     </Modal>
   );
 };

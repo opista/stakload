@@ -1,17 +1,14 @@
+import { Button } from "@components/Button/Button";
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
 import { PageTitle } from "@components/PageTitle/PageTitle";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Stack, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconCategory } from "@tabler/icons-react";
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./FavouritesView.module.css";
 
 const EmptyView = () => {
   const { t } = useTranslation();
@@ -20,25 +17,26 @@ const EmptyView = () => {
   const onLibraryClick = () => navigate("/library");
 
   return (
-    <Stack align="center" className={classes.notFoundContainer} justify="center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-6">
       <GhostIcon />
-      <div>
-        <Text c="dimmed">{t("favourites.notFoundTitle")}</Text>
-        <Text c="dimmed">{t("favourites.notFoundDescription")}</Text>
+      <div className="text-center">
+        <p className="text-neutral-500 font-medium">{t("favourites.notFoundTitle")}</p>
+        <p className="text-neutral-500 text-sm">{t("favourites.notFoundDescription")}</p>
       </div>
-      <Button leftSection={<IconCategory />} onClick={onLibraryClick}>
+      <Button leftIcon={<IconCategory size={18} />} onClick={onLibraryClick} size="sm">
         {t("favourites.libraryButton")}
       </Button>
-    </Stack>
+    </div>
   );
 };
 
 export const FavouritesView = () => {
+  const { t } = useTranslation();
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
   const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }));
 
   return (
-    <div className={classes.container}>
+    <div className="flex h-full w-full flex-col gap-4 overflow-hidden">
       <SectionHeading>
         <PageTitle>{t("favourites.title")}</PageTitle>
       </SectionHeading>

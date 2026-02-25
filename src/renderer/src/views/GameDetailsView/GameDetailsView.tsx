@@ -9,26 +9,11 @@ import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
 import ProtonIcon from "@components/ProtonIcon/ProtonIcon";
 import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
-import {
-  AspectRatio,
-  Container,
-  Flex,
-  Grid,
-  GridCol,
-  Group,
-  LoadingOverlay,
-  ScrollArea,
-  Stack,
-  Text,
-  Title,
-} from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { RefObject, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./GameDetailsView.module.css";
 
 export const GameDetailsView = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,7 +32,6 @@ export const GameDetailsView = () => {
   }, [params.id]);
 
   useEffect(() => {
-    console.log(gameDetails);
     if (!params.id) return;
     if (gameDetails) return;
 
@@ -61,17 +45,17 @@ export const GameDetailsView = () => {
 
   if (!gameDetails) {
     return (
-      <Stack align="stretch" className={classes.container} gap={0} justify="flex-start">
-        <LoadingOverlay visible={true} />
-      </Stack>
+      <div className="relative flex h-full w-full items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-4 border-cyan-500 border-t-transparent" />
+      </div>
     );
   }
 
   return (
-    <Stack align="stretch" className={classes.container} gap={0} justify="flex-start">
-      <GameHero className={classes.hero} game={gameDetails} />
+    <div className="relative h-full w-full overflow-hidden px-4">
+      <GameHero className="absolute inset-0 -z-10 h-full w-full" game={gameDetails} />
       <Game containerRef={containerRef} game={gameDetails} />
-    </Stack>
+    </div>
   );
 };
 
@@ -81,77 +65,72 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement>;
   return (
     <>
       <GameHeader game={game} />
-      <ScrollArea
-        className={classes.scrollArea}
-        classNames={{ root: classes.scrollArea, viewport: classes.scrollAreaViewport }}
-        viewportRef={containerRef}
-      >
-        <div className={classes.contentContainer}>
-          <Container size="responsive">
-            <Title className={classes.title} lineClamp={3} order={1} textWrap="balance" title={game.name}>
+      <div className="h-full overflow-y-auto scrollbar-hide" ref={containerRef}>
+        <div className="mb-[50px] mt-[100px]">
+          <div className="mx-auto max-w-screen-2xl px-6">
+            <h1
+              className="mb-4 line-clamp-3 max-w-[900px] text-[50px] font-black leading-[1.1] text-white/70 drop-shadow-[0_0_10px_rgba(0,0,0,1)]"
+              title={game.name}
+            >
               {game.name}
-            </Title>
-            <Group className={classes.iconGroup} gap="xs">
-              {/* TODO - Only show this icon if game isn't supported on system */}
-              <IncompatibilityIcon />
-              <LibraryIcon game={game} size="xl" />
-              {game.library === "steam" && <ProtonIcon gameId={game?.gameId} platforms={game.platforms} size="xl" />}
-            </Group>
+            </h1>
+            <div className="mb-8 flex items-center gap-4">
+              <div className="flex items-center gap-2">
+                <IncompatibilityIcon />
+                <LibraryIcon game={game} size="xl" />
+                {game.library === "steam" && <ProtonIcon gameId={game?.gameId} platforms={game.platforms} size="xl" />}
+              </div>
+            </div>
 
             {game.summary && (
               <main>
-                <Grid>
-                  <GridCol span={5}>
-                    <ContentCard className={classes.summaryCard} title={t("gameDetails.summary")}>
+                <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+                  <div className="lg:col-span-5">
+                    <ContentCard className="h-full" title={t("gameDetails.summary")}>
                       <Spoiler maxHeight={300}>
-                        <Text>{game.summary}</Text>
+                        <p className="text-neutral-200">{game.summary}</p>
                       </Spoiler>
                     </ContentCard>
-                  </GridCol>
-                  <GridCol span={7}>
-                    <AspectRatio ratio={16 / 9}>
+                  </div>
+                  <div className="lg:col-span-7">
+                    <div className="aspect-video w-full overflow-hidden rounded-2xl">
                       <MediaCarousel height="100%" images={game.screenshots} videos={game.videos} />
-                    </AspectRatio>
-                  </GridCol>
-                  <GridCol span={12}>
+                    </div>
+                  </div>
+                  <div className="lg:col-span-12">
                     <ContentCard title={t("gameDetails.details")}>
                       <GameDetailsTable game={game} />
                     </ContentCard>
-                  </GridCol>
-                  <GridCol span={12}>
+                  </div>
+                  <div className="lg:col-span-12">
                     <ContentCard title={t("gameDetails.links")}>
                       <GameLinks websites={game.websites} />
                     </ContentCard>
-                  </GridCol>
-                  <GridCol span={12}>
-                    <Flex justify="flex-end">
-                      <div>
-                        <Flex justify="space-between">
-                          <Text className={classes.idLabel} size="xs">
+                  </div>
+                  <div className="lg:col-span-12">
+                    <div className="flex justify-end pr-4">
+                      <div className="min-w-[200px]">
+                        <div className="flex justify-between gap-8 py-0.5">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                             {t("game.gameId")}
-                          </Text>
-                          <Text className={classes.idValue} size="xs">
-                            {game.gameId}
-                          </Text>
-                        </Flex>
-                        <Flex justify="space-between">
-                          <Text className={classes.idLabel} size="xs">
+                          </span>
+                          <span className="select-all font-mono text-[10px] text-neutral-400">{game.gameId}</span>
+                        </div>
+                        <div className="flex justify-between gap-8 py-0.5">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                             {t("game.igdbId")}
-                          </Text>
-                          <Text className={classes.idValue} size="xs">
-                            {game.igdbId}
-                          </Text>
-                        </Flex>
+                          </span>
+                          <span className="select-all font-mono text-[10px] text-neutral-400">{game.igdbId}</span>
+                        </div>
                       </div>
-                    </Flex>
-                  </GridCol>
-                </Grid>
+                    </div>
+                  </div>
+                </div>
               </main>
             )}
-            <div></div>
-          </Container>
+          </div>
         </div>
-      </ScrollArea>
+      </div>
     </>
   );
 };

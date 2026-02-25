@@ -1,6 +1,5 @@
 import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
 import { IdAndName } from "@contracts/database/games";
-import { MantineSize, UnstyledButton } from "@mantine/core";
 import { ParseKeys } from "i18next";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,7 +9,7 @@ import { IconBrandProtonDb } from "../../icons/IconBrandProtonDb";
 type ProtonIndicatorProps = {
   gameId?: string;
   platforms?: IdAndName[];
-  size: MantineSize;
+  size: "xs" | "sm" | "md" | "lg" | "xl";
 };
 
 type TierMetadata = {
@@ -61,7 +60,12 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
   }, [gameId, platforms]);
 
   return (
-    <UnstyledButton component="a" href={`https://www.protondb.com/app/${gameId}`} rel="noreferrer" target="_blank">
+    <a
+      href={`https://www.protondb.com/app/${gameId}`}
+      rel="noreferrer"
+      target="_blank"
+      className="inline-block transition-transform hover:scale-105"
+    >
       <TooltipIcon
         icon={IconBrandProtonDb}
         iconProps={{ style: { color: metadata.color } }}
@@ -69,7 +73,7 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
         themeIconProps={{ size, style: { background: metadata.background, color: metadata.color } }}
         tooltipProps={{ label: t("protondb.tier", { tier: `$t(${metadata.label})` }) }}
       />
-    </UnstyledButton>
+    </a>
   );
 });
 

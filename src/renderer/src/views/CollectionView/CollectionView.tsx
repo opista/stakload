@@ -1,11 +1,12 @@
+import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { Button } from "@components/Button/Button";
 import { CollectionTitle } from "@components/Desktop/CollectionTitle/CollectionTitle";
 import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
+import { Modal } from "@components/Modal/Modal";
 import { GameFilters } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { ActionIcon, Stack, Text, Title } from "@mantine/core";
-import { modals } from "@mantine/modals";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
 import { IconTrash } from "@tabler/icons-react";
@@ -28,16 +29,21 @@ export const CollectionView = () => {
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
 
   const [filters, setFilters] = useState<GameFilters>({ ...collection?.filters });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { data: games = [] } = useGamesQuery(() => fetchFilteredGames(filters), [filters]);
 
   useEffect(() => {
     containerRef.current?.scrollTo({ top: 0 });
     setFilters({ ...collection?.filters });
-  }, [id]);
+  }, [id, collection?.filters]);
 
   if (!collection) {
-    return <Title order={3}>{t("collection.notFound")}</Title>;
+    return (
+      <div className="flex h-full w-full items-center justify-center">
+        <h3 className="text-2xl font-black text-neutral-500">{t("collection.notFound")}</h3>
+      </div>
+    );
   }
 
   const onDeleteConfirm = async () => {
@@ -45,34 +51,48 @@ export const CollectionView = () => {
     navigate("/library");
   };
 
-  const openDeleteModal = () =>
-    modals.openConfirmModal({
-      children: <Text size="sm">Are you sure you want to delete this collection? This action is irreversible.</Text>,
-      labels: { cancel: "Cancel", confirm: "Delete" },
-      onConfirm: () => onDeleteConfirm(),
-      size: "sm",
-      title: `Delete ${collection.name} collection`,
-    });
-
   return (
-    <Stack className="w-full" gap="md" ref={containerRef}>
-      <SectionHeading className="flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <CollectionTitle collection={collection} />
-          <div className="flex items-center gap-2">
-            <ActionIcon
-              aria-label={t("settingsButton.title")}
-              className="w-auto h-auto p-3 rounded-lg"
-              onClick={() => openDeleteModal()}
-              title={"delete"}
-            >
-              <IconTrash size={20} stroke={1} />
-            </ActionIcon>
+    <>
+      <div className="flex h-full w-full flex-col gap-4 overflow-hidden" ref={containerRef}>
+        <SectionHeading className="flex-col !items-stretch gap-4">
+          <div className="flex items-center justify-between">
+            <CollectionTitle collection={collection} />
+            <div className="flex items-center gap-2">
+              <ActionIcon
+                aria-label={t("settingsButton.title")}
+                onClick={() => setShowDeleteModal(true)}
+                title={"delete"}
+                variant="subtle"
+              >
+                <IconTrash size={20} stroke={1.5} />
+              </ActionIcon>
+            </div>
+          </div>
+          <FilterControl collection={collection} onChange={setFilters} />
+        </SectionHeading>
+        <GamesGrid games={games} />
+      </div>
+
+      <Modal
+        opened={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title={`Delete ${collection.name}`}
+        size="sm"
+      >
+        <div className="flex flex-col gap-6">
+          <p className="text-sm font-medium leading-relaxed text-neutral-300">
+            Are you sure you want to delete this collection? This action is irreversible.
+          </p>
+          <div className="flex justify-end gap-3">
+            <Button onClick={() => setShowDeleteModal(false)} variant="default">
+              Cancel
+            </Button>
+            <Button onClick={onDeleteConfirm} variant="danger">
+              Delete Collection
+            </Button>
           </div>
         </div>
-        <FilterControl collection={collection} onChange={setFilters} />
-      </SectionHeading>
-      <GamesGrid games={games} />
-    </Stack>
+      </Modal>
+    </>
   );
 };

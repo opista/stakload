@@ -1,13 +1,12 @@
 import { TooltipIcon } from "@components/TooltipIcon/TooltipIcon";
 import { GameStoreModel } from "@contracts/database/games";
-import { MantineSize } from "@mantine/core";
 import { IconProps } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
 import { useTranslation } from "react-i18next";
 
 type LibraryIconProps = {
   game: GameStoreModel;
-  size: MantineSize;
+  size: "xs" | "sm" | "md" | "lg" | "xl";
 };
 export const LibraryIcon = ({ game, size, ...rest }: LibraryIconProps & IconProps) => {
   const { t } = useTranslation();

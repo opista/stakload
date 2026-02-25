@@ -1,27 +1,34 @@
-import { Button, Drawer, Group, Stack, Title } from "@mantine/core";
+import { Button } from "@components/Button/Button";
 import { useNotificationStore } from "@store/notification.store";
+import { IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import classes from "./NotificationDrawerTitle.module.css";
-
 export const NotificationDrawerTitle = () => {
-  const clearAllNotifications = useNotificationStore(useShallow((state) => state.clearAllNotifications));
+  const { clearAllNotifications, closeDrawer } = useNotificationStore(
+    useShallow((state) => ({
+      clearAllNotifications: state.clearAllNotifications,
+      closeDrawer: state.closeDrawer,
+    })),
+  );
   const { t } = useTranslation();
 
   return (
-    <Stack className={classes.stack}>
-      <Group>
-        <Title order={3} size="h4">
-          {t("notificationDrawer.title")}
-        </Title>
-        <Drawer.CloseButton />
-      </Group>
-      <Group justify="flex-end">
-        <Button className={classes.button} onClick={clearAllNotifications} variant="transparent">
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-2xl font-black">{t("notificationDrawer.title")}</h3>
+        <button
+          onClick={closeDrawer}
+          className="rounded-full p-2 text-neutral-500 hover:bg-white/5 hover:text-white transition-colors focus:outline-none"
+        >
+          <IconX size={24} />
+        </button>
+      </div>
+      <div className="flex justify-end">
+        <Button onClick={clearAllNotifications} variant="subtle" size="xs">
           {t("notificationDrawer.clearAll")}
         </Button>
-      </Group>
-    </Stack>
+      </div>
+    </div>
   );
 };

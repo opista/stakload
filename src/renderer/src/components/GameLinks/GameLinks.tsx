@@ -1,7 +1,6 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
 import { LikeWebsiteType, Website } from "@contracts/database/games";
-import { Flex, Menu, MenuDropdown, MenuItem, MenuTarget, UnstyledButton } from "@mantine/core";
 import {
   IconApps,
   IconBrandAndroid,
@@ -23,7 +22,7 @@ import {
   IconQuestionMark,
   IconWorldWww,
 } from "@tabler/icons-react";
-import { FC, forwardRef } from "react";
+import { FC, forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { IconBrandEpicGames } from "../../icons/IconBrandEpicGames";
@@ -63,35 +62,61 @@ type WebsiteIconProps = {
 
 const Dropdown = ({ deepLink, icon, label, url }: DropdownProps) => {
   const { t } = useTranslation();
-  return (
-    <Menu arrowOffset={16} position="bottom-start" width={200} withArrow>
-      <MenuTarget>
-        <ActionIcon aria-label={label} icon={icon} size="lg" title={label} variant="filled" />
-      </MenuTarget>
+  const [isOpen, setIsOpen] = useState(false);
 
-      <MenuDropdown>
-        <MenuItem component="a" href={deepLink} leftSection={<IconApps size="16" />} target="_blank">
-          {t("links.application")}
-        </MenuItem>
-        <MenuItem component="a" href={url} leftSection={<IconExternalLink size="16" />} target="_blank">
-          {t("links.website")}
-        </MenuItem>
-      </MenuDropdown>
-    </Menu>
+  return (
+    <div className="relative">
+      <ActionIcon
+        aria-label={label}
+        icon={icon}
+        onClick={() => setIsOpen(!isOpen)}
+        size="lg"
+        title={label}
+        variant="filled"
+      />
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
+          <div className="absolute left-0 top-full z-50 mt-2 w-48 rounded-lg bg-[#1b2c3b] p-1 shadow-xl ring-1 ring-white/10">
+            <a
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-bold hover:bg-neutral-700/50"
+              href={deepLink}
+              onClick={() => setIsOpen(false)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconApps size={16} />
+              {t("links.application")}
+            </a>
+            <a
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-bold hover:bg-neutral-700/50"
+              href={url}
+              onClick={() => setIsOpen(false)}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconExternalLink size={16} />
+              {t("links.website")}
+            </a>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 
-const WebsiteIcon = forwardRef<HTMLButtonElement, WebsiteIconProps>(function WebsiteIcon({ icon, label, url }, ref) {
+const WebsiteIcon = forwardRef<HTMLAnchorElement, WebsiteIconProps>(function WebsiteIcon({ icon, label, url }, ref) {
   return (
     <ConditionalWrapper
       condition={!!url}
       wrapper={(children) => (
-        <UnstyledButton component="a" href={url} rel="noreferrer" target="_blank">
+        <a href={url} ref={ref} rel="noreferrer" target="_blank">
           {children}
-        </UnstyledButton>
+        </a>
       )}
     >
-      <ActionIcon aria-label={label} icon={icon} ref={ref} size="lg" title={label} variant="filled" />
+      <ActionIcon aria-label={label} icon={icon} size="lg" title={label} variant="filled" />
     </ConditionalWrapper>
   );
 });
@@ -222,9 +247,5 @@ export const GameLinks = ({ websites }: GameLinksProps) => {
       );
     });
 
-  return (
-    <Flex gap="xs" wrap="wrap">
-      {buttons}
-    </Flex>
-  );
+  return <div className="flex flex-wrap gap-2">{buttons}</div>;
 };

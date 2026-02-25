@@ -1,11 +1,7 @@
 import { DynamicIcon } from "@components/DynamicIcon/DynamicIcon";
 import { Notification } from "@contracts/store/notification";
-import { ActionIcon, Group, Stack, Text } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
-import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-
-import classes from "./NotificationBody.module.css";
 
 type NotificationBodyProps = {
   notification: Omit<Notification, "timestamp">;
@@ -16,17 +12,20 @@ export const NotificationBody = ({ notification, onClose }: NotificationBodyProp
   const { t } = useTranslation();
 
   return (
-    <Group className={classes.container}>
-      {notification.icon && <DynamicIcon className={classes.icon} icon={notification.icon} size={32} />}
-      <Group className={clsx(classes.body, "custom-notification-body")}>
-        <Stack className={classes.stack}>
-          <Text className={classes.title}>{t(notification.title)}</Text>
-          <Text className={classes.message}>{t(notification.message)}</Text>
-        </Stack>
-        <ActionIcon onClick={() => onClose(notification.id)} variant="transparent">
-          <IconX size={16} />
-        </ActionIcon>
-      </Group>
-    </Group>
+    <div className="flex items-start gap-4 pr-2">
+      {notification.icon && <DynamicIcon className="mt-1 shrink-0" icon={notification.icon} size={32} />}
+      <div className="flex flex-1 flex-col gap-0.5">
+        <span className="text-sm font-black text-[#1b2c3b]">{t(notification.title)}</span>
+        <p className="text-[12px] font-medium leading-tight text-[#1b2c3b]/70 line-clamp-2">
+          {t(notification.message)}
+        </p>
+      </div>
+      <button
+        onClick={() => onClose(notification.id)}
+        className="mt-1 shrink-0 rounded-full p-1 text-[#1b2c3b]/40 hover:bg-[#1b2c3b]/5 hover:text-[#1b2c3b] transition-colors focus:outline-none"
+      >
+        <IconX size={16} stroke={2.5} />
+      </button>
+    </div>
   );
 };

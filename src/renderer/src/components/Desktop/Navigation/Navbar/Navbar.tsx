@@ -3,7 +3,6 @@ import { NavbarLink } from "@components/Desktop/Navigation/NavbarLink/NavbarLink
 import { QuickLaunchList } from "@components/Desktop/QuickLaunch/QuickLaunchList/QuickLaunchList";
 import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
 import Logo from "@components/Logo/Logo";
-import { AppShell, Card, Flex, ScrollArea, Stack } from "@mantine/core";
 import { useCollectionStore } from "@store/collection.store";
 import type { IconProps } from "@tabler/icons-react";
 import {
@@ -20,8 +19,6 @@ import type { FC } from "react";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./Navbar.module.css";
 
 export const Navbar = () => {
   const { t } = useTranslation();
@@ -40,14 +37,14 @@ export const Navbar = () => {
   }, [collections]);
 
   return (
-    <AppShell.Navbar className={classes.navbar}>
-      <Card className={classes.card}>
-        <Flex className={classes.logoContainer}>
+    <aside className="w-[300px] shrink-0 p-4 pt-0">
+      <div className="flex h-full flex-col rounded-[2rem] bg-[var(--color)] px-4 pb-4 shadow-xl">
+        <div className="flex h-[100px] shrink-0 items-center justify-center">
           <Logo />
-        </Flex>
-        <SearchButton className={classes.search} />
-        <ScrollArea>
-          <Stack gap="xs">
+        </div>
+        <SearchButton className="mb-8 shrink-0" />
+        <div className="flex-1 overflow-y-auto pr-1 scrollbar-hide">
+          <div className="flex flex-col gap-1">
             <NavbarLink href="/" icon={IconHome} label={t("navigation.home")} />
             <NavbarLink href="/library" icon={IconCategory} label={t("navigation.library")} />
             <NavbarLink href="/favourites" icon={IconStar} label={t("navigation.favourites")} />
@@ -68,11 +65,11 @@ export const Navbar = () => {
                 label={t("navigation.integrations")}
               />
             </NavbarLink>
-          </Stack>
-          <QuickLaunchList className={classes.quickLaunch} />
-        </ScrollArea>
+          </div>
+          <QuickLaunchList className="mt-[60px]" />
+        </div>
         <GameSyncStatus />
-      </Card>
-    </AppShell.Navbar>
+      </div>
+    </aside>
   );
 };

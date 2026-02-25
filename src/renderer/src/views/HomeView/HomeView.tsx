@@ -1,15 +1,9 @@
 import { FeaturedGamesCarousel } from "@components/FeaturedGamesCarousel/FeaturedGamesCarousel";
 import { GamesCarousel } from "@components/GamesCarousel/GamesCarousel";
-import { ScrollArea, Stack, Title } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { useShallow } from "zustand/react/shallow";
 
-import classes from "./HomeView.module.css";
-
 export const HomeView = () => {
-  // TODO - Quick launch games should be last played -
-  // we need a way to track this but it doesn't exist
-  // yet
   const { newGames, quickLaunchGames } = useGameStore(
     useShallow((state) => ({
       newGames: state.newGames,
@@ -22,18 +16,18 @@ export const HomeView = () => {
 
   if (!hasQuickLaunchGames && !hasNewGames) {
     return (
-      <Stack className={classes.container}>
-        <Title order={1}>TODO: Something here when you have no games</Title>
-      </Stack>
+      <div className="flex min-h-full w-full flex-col p-8">
+        <h1 className="text-4xl font-black text-white/70">TODO: Something here when you have no games</h1>
+      </div>
     );
   }
 
   return (
-    <ScrollArea className={classes.scrollArea}>
-      <Stack className={classes.container} gap={50}>
+    <div className="h-full w-full overflow-y-auto pr-4 scrollbar-hide">
+      <div className="flex min-h-full flex-col gap-[60px] pb-8 pt-4">
         {hasQuickLaunchGames && <GamesCarousel games={quickLaunchGames} title="Continue Playing" />}
         {hasNewGames && <FeaturedGamesCarousel games={newGames} title="Recently Added" />}
-      </Stack>
-    </ScrollArea>
+      </div>
+    </div>
   );
 };
