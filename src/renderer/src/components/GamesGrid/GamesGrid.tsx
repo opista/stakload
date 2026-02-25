@@ -1,15 +1,12 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
-import { Box, Stack, Text } from "@mantine/core";
-import { useElementSize } from "@mantine/hooks";
+import { useMeasure } from "@uidotdev/usehooks";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { NavigateFunction, useNavigate } from "react-router";
 import { CellComponentProps, Grid, GridImperativeAPI } from "react-window";
 
 import { GameListModel } from "../../ipc.types";
-
-import classes from "./GamesGrid.module.css";
 
 const MAX_CELL_SIZE = 250;
 const CELL_GAP = 15;
@@ -35,9 +32,9 @@ const Cell = ({ columnCount, columnIndex, games, navigate, rowIndex, style }: Ce
   if (!game) return null;
 
   return (
-    <Box style={{ ...style, padding: CELL_GAP }}>
+    <div style={{ ...style, padding: CELL_GAP }}>
       <GameCover game={game} onClick={(game) => navigate(`/library/${game._id}`)} />
-    </Box>
+    </div>
   );
 };
 
@@ -45,7 +42,9 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const gridRef = useRef<GridImperativeAPI>(null);
-  const { height, ref: containerRef, width } = useElementSize();
+  const [containerRef, measurements] = useMeasure();
+  const width = measurements?.width ?? 0;
+  const height = measurements?.height ?? 0;
 
   const calculateCellSize = (
     width: number,
@@ -78,17 +77,17 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
 
   if (!games?.length) {
     return (
-      <Stack align="center" className={classes.emptyContainer} justify="center">
+      <div className="flex h-full flex-col items-center justify-center gap-4">
         <GhostIcon />
-        <Text c="dimmed">{t("gamesGrid.noGamesFound")}</Text>
-      </Stack>
+        <p className="text-gray-500 dark:text-gray-400">{t("gamesGrid.noGamesFound")}</p>
+      </div>
     );
   }
 
   const { columnCount, columnWidth, rowCount, rowHeight } = calculateCellSize(width, 1);
 
   return (
-    <Box ref={containerRef} className={classes.container}>
+    <div ref={containerRef} className="flex flex-1 flex-col">
       {width > 0 && height > 0 && (
         <Grid
           cellComponent={Cell}
@@ -101,6 +100,6 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
           style={{ height, width }}
         />
       )}
-    </Box>
+    </div>
   );
 };

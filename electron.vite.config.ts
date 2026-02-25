@@ -1,4 +1,5 @@
 import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, swcPlugin } from "electron-vite";
 import { resolve } from "path";
@@ -29,6 +30,7 @@ export default defineConfig({
           plugins: ["babel-plugin-react-compiler"],
         },
       }),
+      tailwindcss(),
     ],
     resolve: {
       alias: {
