@@ -26,11 +26,11 @@ type CellProps = {
 
 const Cell = ({
   columnIndex,
-  rowIndex,
-  style,
   filteredIcons,
   onSelect,
+  rowIndex,
   selectedIcon,
+  style,
 }: CellComponentProps<CellProps>) => {
   const index = rowIndex * COLUMN_COUNT + columnIndex;
   if (index >= filteredIcons.length) return null;

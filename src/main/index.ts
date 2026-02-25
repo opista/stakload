@@ -7,8 +7,8 @@ import { NestFactory } from "@nestjs/core";
 import { app } from "electron";
 
 import { IpcModule } from "./ipc.module";
-import { WindowService } from "./window/window.service";
 import { getIpcControllers } from "./util/get-ipc-controllers";
+import { WindowService } from "./window/window.service";
 
 // Menu.setApplicationMenu(null);
 

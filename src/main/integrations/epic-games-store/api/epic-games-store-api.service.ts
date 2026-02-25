@@ -5,13 +5,13 @@ import CatalogQuery from "./catalog-query.graphql";
 import { Catalog } from "./types";
 
 const client = new ApolloClient({
+  cache: new InMemoryCache(),
   link: new HttpLink({
     headers: {
       Origin: "https://epicgames.com",
     },
     uri: "https://graphql.epicgames.com/graphql",
   }),
-  cache: new InMemoryCache(),
 });
 
 @Injectable()

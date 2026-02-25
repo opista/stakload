@@ -4,8 +4,8 @@ import { Box, Stack, Text } from "@mantine/core";
 import { useElementSize } from "@mantine/hooks";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, NavigateFunction } from "react-router";
-import { Grid, CellComponentProps, GridImperativeAPI } from "react-window";
+import { NavigateFunction, useNavigate } from "react-router";
+import { CellComponentProps, Grid, GridImperativeAPI } from "react-window";
 
 import { GameListModel } from "../../ipc.types";
 
@@ -28,14 +28,7 @@ type CellProps = {
   navigate: NavigateFunction;
 };
 
-const Cell = ({
-  columnIndex,
-  rowIndex,
-  style,
-  columnCount,
-  games,
-  navigate,
-}: CellComponentProps<CellProps>) => {
+const Cell = ({ columnCount, columnIndex, games, navigate, rowIndex, style }: CellComponentProps<CellProps>) => {
   const index = getItemIndex(rowIndex, columnIndex, columnCount);
   const game = games[index];
 
@@ -52,12 +45,15 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const gridRef = useRef<GridImperativeAPI>(null);
-  const { ref: containerRef, width, height } = useElementSize();
+  const { height, ref: containerRef, width } = useElementSize();
 
-  const calculateCellSize = (width: number, columnCount: number): { columnCount: number; columnWidth: number; rowCount: number; rowHeight: number } => {
+  const calculateCellSize = (
+    width: number,
+    columnCount: number,
+  ): { columnCount: number; columnWidth: number; rowCount: number; rowHeight: number } => {
     // If width is 0 (initial render), return fallback values
     if (width === 0) {
-      return { columnCount: 1, columnWidth: 0, rowCount: Math.ceil((games?.length || 0)), rowHeight: 0 };
+      return { columnCount: 1, columnWidth: 0, rowCount: Math.ceil(games?.length || 0), rowHeight: 0 };
     }
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
 
@@ -108,4 +104,3 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
     </Box>
   );
 };
-

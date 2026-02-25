@@ -1,8 +1,8 @@
-import { resolve } from "path";
-import { defineConfig, swcPlugin } from "electron-vite";
-import react from "@vitejs/plugin-react";
-import graphqlLoader from "vite-plugin-graphql-loader";
 import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+import react from "@vitejs/plugin-react";
+import { defineConfig, swcPlugin } from "electron-vite";
+import { resolve } from "path";
+import graphqlLoader from "vite-plugin-graphql-loader";
 
 export default defineConfig({
   main: {
@@ -23,6 +23,13 @@ export default defineConfig({
     },
   },
   renderer: {
+    plugins: [
+      react({
+        babel: {
+          plugins: ["babel-plugin-react-compiler"],
+        },
+      }),
+    ],
     resolve: {
       alias: {
         "@api": resolve("src/renderer/src/api"),
@@ -37,12 +44,5 @@ export default defineConfig({
         "@util": resolve("src/renderer/src/util"),
       },
     },
-    plugins: [
-      react({
-        babel: {
-          plugins: ["babel-plugin-react-compiler"],
-        },
-      }),
-    ],
   },
 });
