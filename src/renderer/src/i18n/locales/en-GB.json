@@ -28,6 +28,7 @@
     "libraryButton": "Go to Library"
   },
   "library": {
+    "title": "Library",
     "noGamesFound": "No games found",
     "importGames": "Import games"
   },

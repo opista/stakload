@@ -4,7 +4,7 @@ import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeadin
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GameFilters } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { ActionIcon, Group, Stack, Text, Title } from "@mantine/core";
+import { ActionIcon, Stack, Text, Title } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
@@ -13,8 +13,6 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./CollectionView.module.css";
 
 export const CollectionView = () => {
   const navigate = useNavigate();
@@ -59,9 +57,9 @@ export const CollectionView = () => {
   return (
     <Stack className="w-full" gap="md" ref={containerRef}>
       <SectionHeading className="flex-col gap-4">
-        <Group align="center" gap="sm" justify="space-between">
-          {collection && <CollectionTitle collection={collection} />}
-          <Group align="center" gap="sm" wrap="wrap">
+        <div className="flex items-center justify-between">
+          <CollectionTitle collection={collection} />
+          <div className="flex items-center gap-2">
             <ActionIcon
               aria-label={t("settingsButton.title")}
               className="w-auto h-auto p-3 rounded-lg"
@@ -70,8 +68,8 @@ export const CollectionView = () => {
             >
               <IconTrash size={20} stroke={1} />
             </ActionIcon>
-          </Group>
-        </Group>
+          </div>
+        </div>
         <FilterControl collection={collection} onChange={setFilters} />
       </SectionHeading>
       <GamesGrid games={games} />

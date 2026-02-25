@@ -1,10 +1,11 @@
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
+import { PageTitle } from "@components/PageTitle/PageTitle";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Stack, Text, Title } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
-import { IconCategory, IconStar } from "@tabler/icons-react";
+import { IconCategory } from "@tabler/icons-react";
 import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -38,9 +39,8 @@ export const FavouritesView = () => {
 
   return (
     <div className={classes.container}>
-      <SectionHeading className="gap-4">
-        <IconStar size={40} />
-        <Title order={1}>{t("favourites.title")}</Title>
+      <SectionHeading>
+        <PageTitle>{t("favourites.title")}</PageTitle>
       </SectionHeading>
       {games?.length ? <GamesGrid games={games} /> : <EmptyView />}
     </div>

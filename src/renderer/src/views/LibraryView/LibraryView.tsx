@@ -3,12 +3,13 @@ import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
 import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
 import { GamesGrid } from "@components/GamesGrid/GamesGrid";
 import { GhostIcon } from "@components/GhostIcon/GhostIcon";
+import { PageTitle } from "@components/PageTitle/PageTitle";
 import { useGamesQuery } from "@hooks/use-games-query";
-import { Button, Group, Stack, Text, Title } from "@mantine/core";
+import { Button, Stack, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
-import { IconCategory, IconSquareRoundedPlus } from "@tabler/icons-react";
+import { IconSquareRoundedPlus } from "@tabler/icons-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
@@ -36,6 +37,7 @@ const EmptyView = () => {
 };
 
 export const LibraryView = () => {
+  const { t } = useTranslation();
   const createCollection = useCollectionStore(useShallow((state) => state.createCollection));
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
   const [openedCreate, { close: closeCreate, open: openCreate }] = useDisclosure(false);
@@ -64,10 +66,7 @@ export const LibraryView = () => {
     <>
       <Stack h="100%" w="100%">
         <SectionHeading className="flex-col gap-4">
-          <Group>
-            <IconCategory size={40} />
-            <Title order={1}>Library</Title>
-          </Group>
+          <PageTitle>{t("library.title")}</PageTitle>
           <FilterControl onChange={setFilters} onCreate={openCreate} />
         </SectionHeading>
         {!games?.length && !hasFiltersSet ? <EmptyView /> : <GamesGrid games={games} />}
