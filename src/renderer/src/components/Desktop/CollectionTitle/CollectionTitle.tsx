@@ -1,26 +1,18 @@
 import { EditableField } from "@components/EditableField/EditableField";
-import { Group, Title, TitleProps, Tooltip } from "@mantine/core";
+import { PageTitle } from "@components/PageTitle/PageTitle";
+import { Tooltip } from "@mantine/core";
 import { useCollectionStore } from "@store/collection.store";
 import { IconDeviceGamepad } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
-import clsx from "clsx";
-import { forwardRef, useMemo } from "react";
+import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { CollectionStoreModel } from "../../../ipc.types";
 import { IconSelector } from "../IconSelector/IconSelector";
 
-import classes from "./CollectionTitle.module.css";
-
 type CollectionTitleProps = {
   collection: CollectionStoreModel;
 };
-
-const TitleComponent = forwardRef<HTMLHeadingElement, TitleProps>((props, ref) => (
-  <Title {...props} className={clsx(classes.title, { [classes.active]: props["data-active"] })} order={1} ref={ref} />
-));
-
-TitleComponent.displayName = "TitleComponent";
 
 export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
   const updateCollection = useCollectionStore(useShallow((state) => state.updateCollection));
@@ -44,19 +36,19 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
   const Icon = useMemo(() => importDynamicIcon(collection.icon) || IconDeviceGamepad, [collection.icon]);
 
   return (
-    <Group>
+    <div className="flex items-center gap-4">
       <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
         <Tooltip arrowSize={8} label="Change icon" offset={10} position="right" withArrow>
           <Icon size={40} />
         </Tooltip>
       </IconSelector>
       <EditableField
-        as={TitleComponent}
+        as={PageTitle}
         label="Edit collection name"
         maxLength={30}
         onBlur={onTitleUpdate}
         value={collection.name}
       />
-    </Group>
+    </div>
   );
 };

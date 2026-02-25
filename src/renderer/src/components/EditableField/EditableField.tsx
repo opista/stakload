@@ -1,15 +1,24 @@
 import { Tooltip } from "@mantine/core";
+import { cn } from "@util/cn";
 import { ElementType, FocusEvent, KeyboardEvent, useState } from "react";
 
 type EditableFieldProps = {
   as: ElementType;
+  className?: string;
   label: string;
   maxLength?: number;
   onBlur: (value: string) => void;
   value: string;
 };
 
-export const EditableField = ({ as: Component = "div", label, maxLength, onBlur, value }: EditableFieldProps) => {
+export const EditableField = ({
+  as: Component = "div",
+  className,
+  label,
+  maxLength,
+  onBlur,
+  value,
+}: EditableFieldProps) => {
   const [editable, setEditable] = useState(false);
 
   const handleBlur = (event: FocusEvent<HTMLHeadingElement>) => {
@@ -75,6 +84,12 @@ export const EditableField = ({ as: Component = "div", label, maxLength, onBlur,
   return (
     <Tooltip arrowSize={8} disabled={editable} label={label} offset={10} position="right" withArrow>
       <Component
+        className={cn(
+          "relative cursor-text select-none outline-none transition-colors",
+          "after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:border-b-2 after:border-dashed after:border-white/25 after:content-['']",
+          "hover:after:border-current data-[active=true]:after:border-current",
+          className,
+        )}
         contentEditable={editable}
         data-active={editable}
         onBlur={handleBlur}
