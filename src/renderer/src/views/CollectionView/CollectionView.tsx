@@ -57,14 +57,14 @@ export const CollectionView = () => {
     });
 
   return (
-    <Stack className={classes.container} gap="md" ref={containerRef}>
+    <Stack className="w-full" gap="md" ref={containerRef}>
       <SectionHeading direction="column" gap="md">
         <Group align="center" gap="sm" justify="space-between">
           {collection && <CollectionTitle collection={collection} />}
           <Group align="center" gap="sm" wrap="wrap">
             <ActionIcon
               aria-label={t("settingsButton.title")}
-              className={classes.actionIcon}
+              className="w-auto h-auto p-3 rounded-lg"
               onClick={() => openDeleteModal()}
               title={"delete"}
             >

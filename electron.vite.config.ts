@@ -1,4 +1,5 @@
 import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, externalizeDepsPlugin, swcPlugin } from "electron-vite";
 import { resolve } from "path";
@@ -23,7 +24,7 @@ export default defineConfig({
     },
   },
   renderer: {
-    plugins: [react()],
+    plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
         "@api": resolve("src/renderer/src/api"),

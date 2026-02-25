@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 :root {
   --scrollbar-size: 6px;
   --color: #15202c;
