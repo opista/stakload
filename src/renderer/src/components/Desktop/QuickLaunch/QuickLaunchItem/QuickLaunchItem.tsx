@@ -1,14 +1,11 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Flex, Group, Stack, Text } from "@mantine/core";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import clsx from "clsx";
+import { cn } from "@util/cn";
 import { useTranslation } from "react-i18next";
 
 import { GameListModel } from "../../../../ipc.types";
-
-import classes from "./QuickLaunchItem.module.css";
 
 type QuickLaunchItemProps = {
   editMode?: boolean;
@@ -37,32 +34,27 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className={clsx({ [classes.dragging]: isDragging })}
-    >
-      <Flex
-        className={clsx(classes.container, {
-          [classes.clickable]: !editMode,
-        })}
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <div
+        className={cn(
+          "group flex cursor-pointer items-center gap-2 rounded-lg p-2 transition-colors",
+          !editMode && "hover:bg-[#1b2c3b]",
+        )}
         onClick={onClick}
       >
-        <GameCover className={classes.gameCover} game={game} showGameTitle={false} />
-        <Stack className={classes.textContainer}>
-          <Text className={classes.gameName} lineClamp={1} size="xs">
+        <GameCover className="w-9 shrink-0 rounded-md" game={game} showGameTitle={false} />
+        <div className="relative flex w-full flex-col overflow-hidden">
+          <span className="truncate text-xs transition-transform duration-300 ease-in-out group-hover:-translate-y-1/2">
             {game.name}
-          </Text>
-          <Group className={classes.launchGroup} gap={4}>
-            <IconPlayerPlayFilled size={12} />
-            <Text className={classes.launchText} size="xs">
+          </span>
+          <div className="absolute bottom-0 flex translate-y-full items-center gap-1 opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-1/2 group-hover:opacity-100">
+            <IconPlayerPlayFilled size={10} />
+            <span className="text-[10px] font-bold">
               {game.isInstalled ? t("quickLaunch.launch") : t("quickLaunch.install")}
-            </Text>
-          </Group>
-        </Stack>
-      </Flex>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

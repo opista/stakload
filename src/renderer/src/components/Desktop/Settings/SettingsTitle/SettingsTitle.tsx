@@ -1,8 +1,5 @@
-import { Text, Title } from "@mantine/core";
-import clsx from "clsx";
+import { cn } from "@util/cn";
 import { ReactNode } from "react";
-
-import classes from "./SettingsTitle.module.css";
 
 type SettingsTitleProps = {
   subtitle?: ReactNode;
@@ -12,14 +9,8 @@ type SettingsTitleProps = {
 export const SettingsTitle = ({ subtitle, title }: SettingsTitleProps) => {
   return (
     <>
-      <Title className={clsx({ [classes.bottomMargin]: !subtitle })} order={2} size="h3">
-        {title}
-      </Title>
-      {subtitle && (
-        <Text c="dimmed" className={classes.bottomMargin} size="xs">
-          {subtitle}
-        </Text>
-      )}
+      <h2 className={cn("text-xl font-bold", !subtitle && "mb-3")}>{title}</h2>
+      {subtitle && <p className="mb-3 text-xs text-neutral-400">{subtitle}</p>}
     </>
   );
 };

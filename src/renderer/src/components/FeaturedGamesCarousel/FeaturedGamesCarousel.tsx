@@ -1,7 +1,7 @@
 import { FeaturedGame } from "@components/FeaturedGame/FeaturedGame";
 import { Carousel } from "@mantine/carousel";
-import { Stack, Title } from "@mantine/core";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
+import { cn } from "@util/cn";
 
 import { FeaturedGameModel } from "../../ipc.types";
 
@@ -13,8 +13,8 @@ type FeaturedGamesCarouselProps = {
 };
 
 export const FeaturedGamesCarousel = ({ games, title }: FeaturedGamesCarouselProps) => (
-  <Stack>
-    <Title order={1}>{title}</Title>
+  <div className="flex flex-col gap-4">
+    <h2 className="text-3xl font-bold">{title}</h2>
     <Carousel
       align="start"
       classNames={{
@@ -34,5 +34,5 @@ export const FeaturedGamesCarousel = ({ games, title }: FeaturedGamesCarouselPro
         </Carousel.Slide>
       ))}
     </Carousel>
-  </Stack>
+  </div>
 );

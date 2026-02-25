@@ -1,7 +1,6 @@
 import { GameCover } from "@components/GameCover/GameCover";
 import { GameListModel } from "@contracts/database/games";
 import { Carousel } from "@mantine/carousel";
-import { Stack, Title } from "@mantine/core";
 import { useViewportSize } from "@mantine/hooks";
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
 import { useMemo } from "react";
@@ -29,8 +28,8 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
   }, [width]);
 
   return (
-    <Stack>
-      <Title order={1}>{title}</Title>
+    <div className="flex flex-col gap-4">
+      <h2 className="text-3xl font-bold">{title}</h2>
       <Carousel
         align="start"
         classNames={{
@@ -52,6 +51,6 @@ export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
           </Carousel.Slide>
         ))}
       </Carousel>
-    </Stack>
+    </div>
   );
 };

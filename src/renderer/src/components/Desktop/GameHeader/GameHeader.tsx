@@ -1,20 +1,18 @@
 import ActionIcon from "@components/ActionIcon/ActionIcon";
 import { GameControls } from "@components/Desktop/GameControls/GameControls";
 import { GameStoreModel } from "@contracts/database/games";
-import { Container, Flex, Group } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
 import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./GameHeader.module.css";
 
 type GameHeaderProps = {
   game: GameStoreModel;
 };
 
 export const GameHeader = ({ game }: GameHeaderProps) => {
+  const { t } = useTranslation();
   const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
       toggleFavouriteGame: state.toggleFavouriteGame,
@@ -36,13 +34,13 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   };
 
   return (
-    <div className={classes.container}>
-      <Container size="responsive">
-        <Flex className={classes.header} justify="space-between">
-          <Group>
+    <div className="rounded-2xl bg-[var(--color)] overflow-hidden shadow-lg">
+      <div className="mx-auto max-w-screen-2xl px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
             <GameControls game={game} />
-          </Group>
-          <Group gap="xs">
+          </div>
+          <div className="flex items-center gap-2">
             <ActionIcon
               aria-label="Favourite"
               icon={game.isFavourite ? IconStarFilled : IconStar}
@@ -54,9 +52,9 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
               onClick={() => toggleQuickLaunchGame(game._id)}
             />
             <ActionIcon aria-label={t("common.delete")} icon={IconTrash} onClick={onDelete} />
-          </Group>
-        </Flex>
-      </Container>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

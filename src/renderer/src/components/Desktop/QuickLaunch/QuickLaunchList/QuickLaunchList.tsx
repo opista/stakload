@@ -13,15 +13,13 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Group, Stack, Text } from "@mantine/core";
 import { useGameStore } from "@store/game.store";
 import { IconBolt } from "@tabler/icons-react";
+import { cn } from "@util/cn";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { QuickLaunchItem } from "../QuickLaunchItem/QuickLaunchItem";
-
-import classes from "./QuickLaunchList.module.css";
 
 type QuickLaunchListProps = {
   className?: string;
@@ -69,23 +67,21 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
   );
 
   const gameStack = (
-    <Stack gap={0}>
+    <div className="flex flex-col">
       {sortedGames.map((game) => (
         <QuickLaunchItem editMode={isDragging} game={game} key={game._id} />
       ))}
-    </Stack>
+    </div>
   );
 
   return (
-    <Stack className={className}>
-      <Group align="center" justify="space-between">
-        <Group gap={4}>
-          <IconBolt size={16} />
-          <Text className={classes.title} size="xs">
-            Quick Launch
-          </Text>
-        </Group>
-      </Group>
+    <div className={cn("flex flex-col gap-3", className)}>
+      <div className="flex items-center justify-between px-2">
+        <div className="flex items-center gap-2 text-neutral-400">
+          <IconBolt size={14} />
+          <span className="text-[10px] font-black uppercase tracking-widest">Quick Launch</span>
+        </div>
+      </div>
 
       <DndContext
         collisionDetection={closestCenter}
@@ -97,6 +93,6 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
           {gameStack}
         </SortableContext>
       </DndContext>
-    </Stack>
+    </div>
   );
 };

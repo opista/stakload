@@ -1,5 +1,5 @@
-import { Flex, Text, Transition } from "@mantine/core";
 import { Icon, IconProps } from "@tabler/icons-react";
+import { cn } from "@util/cn";
 
 type SettingsStatusIndicatorProps = {
   className?: string;
@@ -16,12 +16,14 @@ export const SettingsStatusIndicator = ({
   mounted,
   text,
 }: SettingsStatusIndicatorProps) => (
-  <Transition duration={400} exitDuration={0} mounted={mounted} timingFunction="ease" transition="fade-left">
-    {(styles) => (
-      <Flex align="center" className={className} gap={4} style={styles}>
-        <Icon {...iconProps} size={24} />
-        <Text size="xs">{text}</Text>
-      </Flex>
+  <div
+    className={cn(
+      "flex items-center gap-1 transition-all duration-300 ease-out",
+      mounted ? "translate-x-0 opacity-100" : "-translate-x-2 opacity-0",
+      className,
     )}
-  </Transition>
+  >
+    <Icon {...iconProps} size={24} />
+    <span className="text-xs font-medium">{text}</span>
+  </div>
 );

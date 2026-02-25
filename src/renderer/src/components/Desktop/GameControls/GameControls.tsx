@@ -1,10 +1,10 @@
 import { GameStoreModel } from "@contracts/database/games";
-import { Button, Group } from "@mantine/core";
+import { Button } from "@mantine/core";
 import { IconDownload, IconPlayerPlayFilled } from "@tabler/icons-react";
 
 export const GameControls = ({ game }: { game: GameStoreModel }) => {
   return (
-    <Group>
+    <div className="flex items-center gap-2">
       {game.isInstalled && (
         <>
           <Button
@@ -29,6 +29,6 @@ export const GameControls = ({ game }: { game: GameStoreModel }) => {
           Install
         </Button>
       )}
-    </Group>
+    </div>
   );
 };
