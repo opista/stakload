@@ -28,9 +28,11 @@ export const App = () => {
   }, []);
 
   return (
-    <ContextMenuProvider>
-      <ToastRenderer />
-      <Outlet />
-    </ContextMenuProvider>
+    <div className="root">
+      <ContextMenuProvider>
+        <ToastRenderer />
+        <Outlet />
+      </ContextMenuProvider>
+    </div>
   );
 };

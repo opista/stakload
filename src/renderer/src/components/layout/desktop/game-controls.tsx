@@ -7,7 +7,7 @@ export const GameControls = ({ game }: { game: GameStoreModel }) => {
     <div className="flex items-center gap-2">
       {game.isInstalled && (
         <>
-          <Button leftIcon={<IconPlayerPlayFilled size={16} />} onClick={() => window.ipc.game.launchGame(game._id)}>
+          <Button leftIcon={IconPlayerPlayFilled} onClick={() => window.ipc.game.launchGame(game._id)}>
             Launch
           </Button>
           <Button
@@ -20,7 +20,7 @@ export const GameControls = ({ game }: { game: GameStoreModel }) => {
         </>
       )}
       {!game.isInstalled && (
-        <Button leftIcon={<IconDownload size={16} />} onClick={() => window.ipc.game.installGame(game._id)}>
+        <Button leftIcon={IconDownload} onClick={() => window.ipc.game.installGame(game._id)}>
           Install
         </Button>
       )}

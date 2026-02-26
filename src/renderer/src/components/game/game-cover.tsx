@@ -21,9 +21,18 @@ type GameCoverProps = {
   game: GameListModel;
   onClick?: (game: GameListModel) => void;
   showGameTitle?: boolean;
+  onMouseEnter?: () => void;
+  onFocus?: () => void;
 };
 
-export const GameCover = ({ className, game, onClick, showGameTitle = true }: GameCoverProps) => {
+export const GameCover = ({
+  className,
+  game,
+  onClick,
+  onFocus,
+  onMouseEnter,
+  showGameTitle = true,
+}: GameCoverProps) => {
   const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
       toggleFavouriteGame: state.toggleFavouriteGame,
@@ -46,6 +55,9 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
         className,
       )}
       onClick={() => onClick?.(game)}
+      onMouseEnter={onMouseEnter}
+      onFocus={onFocus}
+      tabIndex={onFocus ? 0 : undefined}
       onContextMenu={showContextMenu([
         {
           color: "green",
@@ -101,8 +113,8 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
           <div className="flex flex-col items-center justify-end h-full relative overflow-hidden w-full">
             <IconPercentage0
               className={cn(
-                "absolute left-1/2 -translate-x-1/2 opacity-20 w-[70%]",
-                showGameTitle ? "top-0 h-[80%]" : "top-1/2 -translate-y-1/2",
+                "absolute left-1/2 -translate-x-1/2 opacity-20 w-[70%] h-[70%]",
+                showGameTitle ? "top-0 h-[calc(100%-75px)]" : "top-1/2 -translate-y-1/2",
               )}
               stroke={1}
             />

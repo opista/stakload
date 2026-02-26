@@ -4,25 +4,48 @@ import { useNavigate } from "react-router";
 
 import { Carousel } from "./carousel";
 
-type GamesCarouselProps = {
-  games: GameListModel[];
+type GamesCarouselProps<T> = {
+  games: T[];
   loop?: boolean;
-  title: string;
+  onGameActive?: (game: T) => void;
 };
 
-export const GamesCarousel = ({ games, loop, title }: GamesCarouselProps) => {
+export const GamesCarousel = <
+  T extends Partial<GameListModel> & { _id: string; name: string; screenshots?: string[] },
+>({
+  games,
+  loop,
+  onGameActive,
+}: GamesCarouselProps<T>) => {
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-3xl font-bold text-white">{title}</h2>
       <Carousel
         options={{ align: "start", loop }}
-        slideClassName="w-[50%] xs:w-[33.33%] sm:w-[25%] md:w-[20%] lg:w-[16.66%] 2xl:w-[14.28%]"
+        slideClassName="w-[175px] h-sm:w-[200px] h-md:w-[220px] h-lg:w-[260px] h-xl:w-[320px] shrink-0"
       >
-        {games.map((game) => (
-          <GameCover key={game._id} game={game} onClick={(game) => navigate(`/library/${game._id}`)} />
-        ))}
+        {games.map((game) => {
+          const mappedGame: GameListModel = {
+            ...game,
+            cover: game.cover ?? game.screenshots?.[0],
+            isFavourite: game.isFavourite,
+            isInstalled: game.isInstalled,
+            isQuickLaunch: game.isQuickLaunch,
+            library: game.library,
+          } as GameListModel;
+
+          return (
+            <GameCover
+              key={game._id}
+              game={mappedGame}
+              onClick={(g) => navigate(`/library/${g._id}`)}
+              onMouseEnter={() => onGameActive?.(game)}
+              onFocus={() => onGameActive?.(game)}
+              showGameTitle={false}
+            />
+          );
+        })}
       </Carousel>
     </div>
   );

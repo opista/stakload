@@ -1,19 +1,19 @@
 import { ContextMenu } from "@base-ui/react/context-menu";
 import { cn } from "@util/cn";
-import React, { createContext, useCallback, useContext, useState } from "react";
+import { createContext, ReactNode, useCallback, useContext, useState } from "react";
 
 export interface ContextMenuItem {
   color?: string;
   divider?: boolean;
   hidden?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   key: string;
   onClick?: () => void;
   title?: string;
 }
 
 interface ContextMenuContextType {
-  showContextMenu: (items: ContextMenuItem[]) => (e: React.MouseEvent) => void;
+  showContextMenu: (items: ContextMenuItem[]) => (e: MouseEvent) => void;
 }
 
 const ContextMenuContext = createContext<ContextMenuContextType | null>(null);
@@ -24,13 +24,13 @@ export const useContextMenu = () => {
   return context;
 };
 
-export const ContextMenuProvider = ({ children }: { children: React.ReactNode }) => {
+export const ContextMenuProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [items, setItems] = useState<ContextMenuItem[]>([]);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const showContextMenu = useCallback(
-    (newItems: ContextMenuItem[]) => (e: React.MouseEvent) => {
+    (newItems: ContextMenuItem[]) => (e: MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
 

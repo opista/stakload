@@ -1,7 +1,7 @@
 import { Tooltip } from "@components/ui/tooltip";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { cn } from "@util/cn";
-import { CSSProperties } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 
@@ -24,7 +24,7 @@ type TooltipIconProps = {
     className?: string;
   };
   tooltipProps: {
-    label: React.ReactNode;
+    label: ReactNode;
     position?: any;
     offset?: number;
     className?: string;

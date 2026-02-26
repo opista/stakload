@@ -1,9 +1,9 @@
 import { cn } from "@util/cn";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface SpoilerProps {
-  children: React.ReactNode;
+  children: ReactNode;
   initialState?: boolean;
   maxHeight: number;
 }
@@ -18,7 +18,7 @@ export const Spoiler = ({ children, initialState = false, maxHeight }: SpoilerPr
         className={cn(
           "relative overflow-hidden transition-[max-height] duration-300 ease-in-out",
           !expanded &&
-            "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-12 after:bg-gradient-to-t after:from-[#2b2b2b] after:to-transparent",
+          "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-12 after:bg-gradient-to-t after:from-[#2b2b2b] after:to-transparent",
         )}
         style={{ maxHeight: expanded ? "none" : maxHeight }}
       >

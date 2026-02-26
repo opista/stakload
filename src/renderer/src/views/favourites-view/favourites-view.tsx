@@ -23,7 +23,7 @@ const EmptyView = () => {
         <p className="text-neutral-500 font-medium">{t("favourites.notFoundTitle")}</p>
         <p className="text-neutral-500 text-sm">{t("favourites.notFoundDescription")}</p>
       </div>
-      <Button leftIcon={<IconCategory size={18} />} onClick={onLibraryClick} size="sm">
+      <Button leftIcon={IconCategory} onClick={onLibraryClick} size="sm">
         {t("favourites.libraryButton")}
       </Button>
     </div>

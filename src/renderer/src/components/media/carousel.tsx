@@ -1,14 +1,15 @@
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { cn } from "@util/cn";
+import { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
-import React, { ReactNode, useCallback } from "react";
+import { Children, ReactNode, useCallback, useEffect, useState } from "react";
 
 type CarouselProps = {
   children: ReactNode;
   className?: string;
   slideClassName?: string;
-  options?: any;
+  options?: EmblaOptionsType;
   autoplay?: boolean;
   withControls?: boolean;
 };
@@ -23,39 +24,63 @@ export const Carousel = ({
 }: CarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(options, autoplay ? [Autoplay()] : []);
 
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
+  const [prevBtnDisabled, setPrevBtnDisabled] = useState(true);
+  const [nextBtnDisabled, setNextBtnDisabled] = useState(true);
+  const bothButtonsDisabled = prevBtnDisabled && nextBtnDisabled;
 
-  const scrollNext = useCallback(() => {
+  const scrollPrev = () => {
+    if (emblaApi) emblaApi.scrollPrev();
+  };
+
+  const scrollNext = () => {
     if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
+  };
+
+  const onSelect = useCallback((emblaApi: EmblaCarouselType) => {
+    setPrevBtnDisabled(!emblaApi.canScrollPrev());
+    setNextBtnDisabled(!emblaApi.canScrollNext());
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    onSelect(emblaApi);
+    emblaApi.on("reInit", onSelect).on("select", onSelect);
+  }, [emblaApi, onSelect]);
 
   return (
-    <div className={cn("relative group", className)}>
+    <div className={cn("relative group/carousel", className)}>
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex">
-          {React.Children.map(children, (child) => (
-            <div className={cn("flex-[0_0_auto] min-w-0 pr-4", slideClassName)}>{child}</div>
+        <div className="flex gap-4">
+          {Children.map(children, (child) => (
+            <div className={cn("flex-none min-w-0", slideClassName)}>{child}</div>
           ))}
         </div>
       </div>
 
-      {withControls && (
-        <>
+      {withControls && !bothButtonsDisabled && (
+        <div className="absolute bottom-full mb-6 right-0 flex gap-2">
           <button
             onClick={scrollPrev}
-            className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100 focus:outline-none"
+            disabled={prevBtnDisabled}
+            className={cn(
+              "w-8 h-8 rounded border border-white/5 flex items-center justify-center text-slate-500 transition-all focus:outline-none",
+              prevBtnDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-primary hover:border-primary/50",
+            )}
           >
-            <IconChevronLeft size={24} />
+            <IconChevronLeft size={20} />
           </button>
           <button
             onClick={scrollNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white opacity-0 transition-opacity hover:bg-black/70 group-hover:opacity-100 focus:outline-none"
+            disabled={nextBtnDisabled}
+            className={cn(
+              "w-8 h-8 rounded border border-white/5 flex items-center justify-center text-slate-500 transition-all focus:outline-none",
+              nextBtnDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-primary hover:border-primary/50",
+            )}
           >
-            <IconChevronRight size={24} />
+            <IconChevronRight size={20} />
           </button>
-        </>
+        </div>
       )}
     </div>
   );

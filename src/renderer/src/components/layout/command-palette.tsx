@@ -5,7 +5,7 @@ import { useGameStore } from "@store/game.store";
 import { IconSearch } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { mapLibraryIcon } from "@util/map-library-icon";
-import { useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
@@ -30,7 +30,7 @@ export const CommandPalette = () => {
     }
   }, [isOpen]);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       setSelectedIndex((prev) => (prev + 1) % filteredGames.length);
     } else if (e.key === "ArrowUp") {

@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export const NOTIFICATION_KEYS = {
   GAME_INSTALLATION_FAILED_MESSAGE: "notifications.gameInstallation.failedMessage",
   GAME_INSTALLATION_FAILED_TITLE: "notifications.gameInstallation.failedTitle",
@@ -22,9 +24,9 @@ export type Notification = {
 
 export type Toast = {
   id: string;
-  title?: React.ReactNode;
-  message?: React.ReactNode;
-  icon?: React.ReactNode;
+  title?: ReactNode;
+  message?: ReactNode;
+  icon?: ReactNode;
   loading?: boolean;
   autoClose?: number | false;
   color?: string;

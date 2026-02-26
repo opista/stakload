@@ -26,7 +26,7 @@ const EmptyView = () => {
     <div className="flex h-full w-full flex-col items-center justify-center gap-6">
       <GhostIcon />
       <span className="text-neutral-500 font-medium">{t("library.noGamesFound")}</span>
-      <Button leftIcon={<IconSquareRoundedPlus size={18} />} onClick={onImportClick} size="sm">
+      <Button leftIcon={IconSquareRoundedPlus} onClick={onImportClick} size="sm">
         {t("library.importGames")}
       </Button>
     </div>
