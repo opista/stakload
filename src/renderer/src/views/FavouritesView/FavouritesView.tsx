@@ -1,6 +1,6 @@
-import { GamesGrid } from "@components/game/GamesGrid";
+﻿import { GamesGrid } from "@components/game/GamesGrid";
 import { GhostIcon } from "@components/icons/GhostIcon";
-import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading";
 import { PageTitle } from "@components/layout/PageTitle";
 import { Button } from "@components/ui/Button";
 import { useGamesQuery } from "@hooks/use-games-query";
@@ -44,3 +44,4 @@ export const FavouritesView = () => {
     </div>
   );
 };
+

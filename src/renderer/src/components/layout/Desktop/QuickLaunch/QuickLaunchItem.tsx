@@ -1,11 +1,11 @@
-import { GameCover } from "@components/game/GameCover";
+﻿import { GameCover } from "@components/game/GameCover";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { useTranslation } from "react-i18next";
 
-import { GameListModel } from "../../../../../ipc.types";
+import { GameListModel } from "../../../../ipc.types";
 
 type QuickLaunchItemProps = {
   editMode?: boolean;
@@ -58,3 +58,5 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
     </div>
   );
 };
+
+

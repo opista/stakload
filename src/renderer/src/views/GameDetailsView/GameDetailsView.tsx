@@ -1,12 +1,12 @@
-import { ContentCard } from "@components/game/ContentCard";
+﻿import { ContentCard } from "@components/game/ContentCard";
 import { GameDetailsTable } from "@components/game/GameDetailsTable/GameDetailsTable";
 import { GameHero } from "@components/game/GameHero";
 import { GameLinks } from "@components/game/GameLinks";
 import { IncompatibilityIcon } from "@components/icons/IncompatibilityIcon";
 import { LibraryIcon } from "@components/icons/LibraryIcon";
 import { ProtonIcon } from "@components/icons/ProtonIcon";
-import { GameHeader } from "@components/layout/Desktop/GameHeader/GameHeader";
-import { MediaCarousel } from "@components/media/MediaCarousel/MediaCarousel";
+import { GameHeader } from "@components/layout/Desktop/GameHeader";
+import { MediaCarousel } from "@components/media/MediaCarousel";
 import { Spoiler } from "@components/ui/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGameStore } from "@store/game.store";

@@ -1,9 +1,9 @@
-import { GameStoreModel } from "@contracts/database/games";
+﻿import { GameStoreModel } from "@contracts/database/games";
 import { ParseKeys, TFunction } from "i18next";
 import { Fragment, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
-import { GameDetailsTableRow } from "./GameDetailsTableRow/GameDetailsTableRow";
+import { GameDetailsTableRow } from "./GameDetailsTableRow";
 
 type Column = {
   formatter: (game: GameStoreModel, t: TFunction) => ReactNode | string | undefined;
@@ -117,3 +117,4 @@ export const GameDetailsTable = ({ game }: GameDetailsTableProps) => {
     </div>
   );
 };
+

@@ -1,4 +1,4 @@
-import { RemoveGameModal } from "./RemoveGameModal/RemoveGameModal";
+import { RemoveGameModal } from "./RemoveGameModal";
 
 export const modals = {
   removeGame: RemoveGameModal,

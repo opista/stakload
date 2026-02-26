@@ -1,4 +1,4 @@
-import { IconSelector } from "@components/layout/Desktop/IconSelector/IconSelector";
+﻿import { IconSelector } from "@components/layout/Desktop/IconSelector";
 import { ActionIcon } from "@components/ui/ActionIcon";
 import { Button } from "@components/ui/Button";
 import { Modal } from "@components/ui/Modal";
@@ -50,3 +50,4 @@ export const CollectionCreateModal = ({ onClose, onConfirm, opened }: Collection
     </Modal>
   );
 };
+

@@ -1,7 +1,7 @@
-import { GamesGrid } from "@components/game/GamesGrid";
+﻿import { GamesGrid } from "@components/game/GamesGrid";
 import { GhostIcon } from "@components/icons/GhostIcon";
-import { FilterControl } from "@components/layout/Desktop/FilterControl/FilterControl";
-import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+import { FilterControl } from "@components/layout/Desktop/FilterControl";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading";
 import { PageTitle } from "@components/layout/PageTitle";
 import { CollectionCreateModal } from "@components/misc/CollectionCreateModal";
 import { Button } from "@components/ui/Button";
@@ -72,3 +72,4 @@ export const LibraryView = () => {
     </>
   );
 };
+

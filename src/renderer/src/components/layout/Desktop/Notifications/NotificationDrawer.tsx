@@ -1,11 +1,11 @@
-import { useNotifications } from "@hooks/use-notifications";
+﻿import { useNotifications } from "@hooks/use-notifications";
 import { useNotificationStore } from "@store/notification.store";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useShallow } from "zustand/react/shallow";
 
-import { NotificationDrawerItem } from "../NotificationDrawerItem/NotificationDrawerItem";
-import { NotificationDrawerTitle } from "../NotificationDrawerTitle/NotificationDrawerTitle";
+import { NotificationDrawerItem } from "./NotificationDrawerItem";
+import { NotificationDrawerTitle } from "./NotificationDrawerTitle";
 
 export const NotificationDrawer = () => {
   const { notifications, removeNotification } = useNotifications();
@@ -51,3 +51,4 @@ export const NotificationDrawer = () => {
     document.body,
   );
 };
+

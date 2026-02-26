@@ -1,4 +1,4 @@
-import { PageTitle } from "@components/layout/PageTitle";
+﻿import { PageTitle } from "@components/layout/PageTitle";
 import { EditableField } from "@components/ui/EditableField";
 import { Tooltip } from "@components/ui/Tooltip";
 import { useCollectionStore } from "@store/collection.store";
@@ -7,8 +7,9 @@ import { importDynamicIcon } from "@util/import-dynamic-icon";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { CollectionStoreModel } from "../../../../ipc.types";
-import { IconSelector } from "../IconSelector/IconSelector";
+import { CollectionStoreModel } from "../../../ipc.types";
+
+import { IconSelector } from "./IconSelector";
 
 type CollectionTitleProps = {
   collection: CollectionStoreModel;
@@ -52,5 +53,4 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
     </div>
   );
 };
-
 

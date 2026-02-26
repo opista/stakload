@@ -1,7 +1,7 @@
-import { GamesGrid } from "@components/game/GamesGrid";
-import { CollectionTitle } from "@components/layout/Desktop/CollectionTitle/CollectionTitle";
-import { FilterControl } from "@components/layout/Desktop/FilterControl/FilterControl";
-import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+﻿import { GamesGrid } from "@components/game/GamesGrid";
+import { CollectionTitle } from "@components/layout/Desktop/CollectionTitle";
+import { FilterControl } from "@components/layout/Desktop/FilterControl";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading";
 import { ActionIcon } from "@components/ui/ActionIcon";
 import { Button } from "@components/ui/Button";
 import { Modal } from "@components/ui/Modal";
@@ -96,3 +96,4 @@ export const CollectionView = () => {
     </>
   );
 };
+

@@ -1,4 +1,4 @@
-import { Logo } from "@components/icons/Logo";
+﻿import { Logo } from "@components/icons/Logo";
 import { useCollectionStore } from "@store/collection.store";
 import type { IconProps } from "@tabler/icons-react";
 import {
@@ -16,10 +16,11 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import { GameSyncStatus } from "../../GameSyncStatus/GameSyncStatus";
-import { QuickLaunchList } from "../../QuickLaunch/QuickLaunchList/QuickLaunchList";
-import { SearchButton } from "../../SearchButton/SearchButton";
-import { NavbarLink } from "../NavbarLink/NavbarLink";
+import { GameSyncStatus } from "../GameSyncStatus";
+import { QuickLaunchList } from "../QuickLaunch/QuickLaunchList";
+import { SearchButton } from "../SearchButton";
+
+import { NavbarLink } from "./NavbarLink";
 
 export const Navbar = () => {
   const { t } = useTranslation();

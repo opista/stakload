@@ -1,4 +1,4 @@
-import { RemoveGameModal } from "@components/layout/Desktop/Modals/RemoveGameModal/RemoveGameModal";
+﻿import { RemoveGameModal } from "@components/layout/Desktop/Modals/RemoveGameModal";
 import { useModalStore } from "@store/modal.store";
 import { useShallow } from "zustand/react/shallow";
 
@@ -31,3 +31,4 @@ export const GlobalModalRenderer = () => {
 
   return <ModalComponent opened={isOpen} onClose={closeModal} {...props} />;
 };
+

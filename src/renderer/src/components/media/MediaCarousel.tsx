@@ -1,6 +1,6 @@
-import { Carousel } from "../Carousel";
-import { MediaImage } from "../MediaImage/MediaImage";
-import { MediaVideo } from "../MediaVideo/MediaVideo";
+﻿import { Carousel } from "./Carousel";
+import { MediaImage } from "./MediaImage";
+import { MediaVideo } from "./MediaVideo";
 
 type MediaCarouselProps = {
   height?: string | number;

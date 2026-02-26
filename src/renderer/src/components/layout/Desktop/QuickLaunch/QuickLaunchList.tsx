@@ -1,4 +1,4 @@
-import {
+﻿import {
   closestCenter,
   DndContext,
   DragEndEvent,
@@ -19,7 +19,7 @@ import { cn } from "@util/cn";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-import { QuickLaunchItem } from "../QuickLaunchItem/QuickLaunchItem";
+import { QuickLaunchItem } from "./QuickLaunchItem";
 
 type QuickLaunchListProps = {
   className?: string;
@@ -96,3 +96,4 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
     </div>
   );
 };
+

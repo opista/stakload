@@ -1,6 +1,6 @@
-import { SettingsCheckbox } from "@components/layout/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
-import { SettingsStatusIndicator } from "@components/layout/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
-import { SettingsTitle } from "@components/layout/Desktop/Settings/SettingsTitle/SettingsTitle";
+﻿import { SettingsCheckbox } from "@components/layout/Desktop/Settings/SettingsCheckbox";
+import { SettingsStatusIndicator } from "@components/layout/Desktop/Settings/SettingsStatusIndicator";
+import { SettingsTitle } from "@components/layout/Desktop/Settings/SettingsTitle";
 import { Button } from "@components/ui/Button";
 import { PasswordInput } from "@components/ui/PasswordInput";
 import { TextInput } from "@components/ui/TextInput";
@@ -399,3 +399,4 @@ export const SettingsIntegrationsView = () => {
     </div>
   );
 };
+

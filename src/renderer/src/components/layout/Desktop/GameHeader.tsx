@@ -1,4 +1,4 @@
-import { ActionIcon } from "@components/ui/ActionIcon";
+﻿import { ActionIcon } from "@components/ui/ActionIcon";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGameStore } from "@store/game.store";
 import { useModalStore } from "@store/modal.store";
@@ -6,7 +6,7 @@ import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import { GameControls } from "../GameControls/GameControls";
+import { GameControls } from "./GameControls";
 
 type GameHeaderProps = {
   game: GameStoreModel;
@@ -57,3 +57,4 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
     </div>
   );
 };
+
