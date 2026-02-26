@@ -23,7 +23,7 @@ export const HomeHero = ({ children, game }: HomeHeroProps) => {
 
       <div className="relative z-20 flex w-full max-w-5xl flex-col px-12 pb-8">
         <Heading
-          className="mb-4 line-clamp-2 leading-none tracking-tight text-white drop-shadow-lg text-7xl"
+          className="mb-4 line-clamp-2 leading-none tracking-tight text-white drop-shadow-lg text-7xl [text-shadow:var(--text-shadow-gold)]"
           title={game.name}
         >
           {game.name}
@@ -56,7 +56,7 @@ export const HomeHero = ({ children, game }: HomeHeroProps) => {
         </div>
       </div>
 
-      {children && <div className="relative z-20 w-full pl-12 pb-12 h-sm:pt-8 h-md:pt-32 h-lg:pt-64">{children}</div>}
+      {children && <div className="relative z-20 w-full pb-12 h-sm:pt-8 h-md:pt-32 h-lg:pt-64">{children}</div>}
     </div>
   );
 };

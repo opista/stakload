@@ -21,6 +21,8 @@
   --shadow-gold-hover: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 0 15px color-mix(in srgb, var(--color-primary) 20%, transparent);
   --shadow-glow: 0 0 12px color-mix(in srgb, var(--color-primary) 25%, transparent);
 
+  --text-shadow-gold: 0 0 2px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 0 15px color-mix(in srgb, var(--color-primary) 20%, transparent);
+
   @keyframes float {
 
     0%,
