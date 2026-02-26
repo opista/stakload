@@ -1,8 +1,8 @@
-export { IconBrandBattleNet } from "./IconBrandBattleNet";
-export { IconBrandEpicGames } from "./IconBrandEpicGames";
-export { IconBrandFandom } from "./IconBrandFandom";
-export { IconBrandGog } from "./IconBrandGog";
-export { IconBrandProtonDb } from "./IconBrandProtonDB";
+export { IconBrandBattleNet } from "./icon-brand-battle-net";
+export { IconBrandEpicGames } from "./icon-brand-epic-games";
+export { IconBrandFandom } from "./icon-brand-fandom";
+export { IconBrandGog } from "./icon-brand-gog";
+export { IconBrandProtonDb } from "./icon-brand-proton-db";
 export * from "@tabler/icons-react";
 const tablerIconsJson = {};
 

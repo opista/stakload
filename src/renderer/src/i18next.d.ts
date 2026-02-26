@@ -1,6 +1,6 @@
 import "react-i18next";
 
-import enGB from "./i18n/locales/en-GB.json";
+import enGB from "./i18n/locales/en-gb.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {

@@ -5,15 +5,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router";
 
-import { App } from "./App";
-import { DesktopLayout } from "./layouts/DesktopLayout/DesktopLayout";
-import { CollectionView } from "./views/CollectionView/CollectionView";
-import { FavouritesView } from "./views/FavouritesView/FavouritesView";
-import { GameDetailsView } from "./views/GameDetailsView/GameDetailsView";
-import { HomeView } from "./views/HomeView/HomeView";
-import { LibraryView } from "./views/LibraryView/LibraryView";
-import { SettingsIntegrationsView } from "./views/SettingsIntegrationsView/SettingsIntegrationsView";
-import { SettingsView } from "./views/SettingsView/SettingsView";
+import { App } from "./app";
+import { DesktopLayout } from "./layouts/desktop-layout/desktop-layout";
+import { CollectionView } from "./views/collection-view/collection-view";
+import { FavouritesView } from "./views/favourites-view/favourites-view";
+import { GameDetailsView } from "./views/game-details-view/game-details-view";
+import { HomeView } from "./views/home-view/home-view";
+import { LibraryView } from "./views/library-view/library-view";
+import { SettingsIntegrationsView } from "./views/settings-integrations-view/settings-integrations-view";
+import { SettingsView } from "./views/settings-view/settings-view";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
