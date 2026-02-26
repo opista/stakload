@@ -1,4 +1,5 @@
-﻿import { Logo } from "@components/icons/logo";
+﻿import { ScrollArea } from "@base-ui/react";
+import { Logo } from "@components/icons/logo";
 import { useCollectionStore } from "@store/collection.store";
 import type { IconProps } from "@tabler/icons-react";
 import {
@@ -18,7 +19,6 @@ import { useShallow } from "zustand/react/shallow";
 
 import { GameSyncStatus } from "../game-sync-status";
 import { QuickLaunchList } from "../quick-launch/quick-launch-list";
-import { SearchButton } from "../search-button";
 
 import { NavbarLink } from "./navbar-link";
 
@@ -39,20 +39,22 @@ export const Navbar = () => {
   }, [collections]);
 
   return (
-    <aside className="w-[300px] shrink-0 p-4 pt-0">
-      <div className="flex h-full flex-col rounded-[2rem] bg-[var(--color)] px-4 pb-4 shadow-xl">
-        <div className="flex h-[100px] shrink-0 items-center justify-center">
-          <Logo />
-        </div>
-        <SearchButton className="mb-8 shrink-0" />
-        <div className="flex-1 overflow-y-auto pr-1 scrollbar-hide">
-          <div className="flex flex-col gap-1">
+    <aside className="flex flex-col h-full w-[260px] shrink-0 py-8 px-6 bg-stone-950 border-r border-white/5">
+      <div className="flex shrink-0 items-center justify-center pb-8">
+        <Logo />
+      </div>
+
+      <ScrollArea.Root className="flex-1 overflow-hidden flex flex-col">
+        <ScrollArea.Viewport className="h-full w-full outline-none pr-3">
+          <nav className="flex flex-col space-y-2 pb-4">
             <NavbarLink href="/" icon={IconHome} label={t("navigation.home")} />
             <NavbarLink href="/library" icon={IconCategory} label={t("navigation.library")} />
             <NavbarLink href="/favourites" icon={IconStar} label={t("navigation.favourites")} />
+
             <NavbarLink disabled={!collections?.length} icon={IconBooks} label={t("navigation.collections")}>
               {collections.map((collection) => (
                 <NavbarLink
+                  isSubItem
                   href={`/collections/${collection._id}`}
                   icon={collection.icon ? iconCache.get(collection.icon) || IconDeviceGamepad : IconDeviceGamepad}
                   key={collection._id}
@@ -60,18 +62,24 @@ export const Navbar = () => {
                 />
               ))}
             </NavbarLink>
-            <NavbarLink icon={IconSettings} label={t("navigation.settings")}>
+
+            <div className="pt-6 mt-6 border-t border-white/5 space-y-2">
+              <NavbarLink href="/settings" icon={IconSettings} label={t("navigation.settings")} />
               <NavbarLink
                 href="/settings/integrations"
                 icon={IconLayersIntersect}
                 label={t("navigation.integrations")}
               />
-            </NavbarLink>
-          </div>
-          <QuickLaunchList className="mt-[60px]" />
-        </div>
-        <GameSyncStatus />
-      </div>
+            </div>
+          </nav>
+        </ScrollArea.Viewport>
+        <ScrollArea.Scrollbar className="flex touch-none select-none p-0.5 bg-black/10 hover:bg-black/20 w-1.5 transition-colors rounded-full mt-2 mb-2">
+          <ScrollArea.Thumb className="flex-1 bg-white/10 hover:bg-white/20 rounded-full relative" />
+        </ScrollArea.Scrollbar>
+      </ScrollArea.Root>
+      <QuickLaunchList className="mt-8" />
+
+      <GameSyncStatus />
     </aside>
   );
 };
