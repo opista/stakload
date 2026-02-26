@@ -56,7 +56,7 @@ export const HomeHero = ({ children, game }: HomeHeroProps) => {
         </div>
       </div>
 
-      {children && <div className="relative z-20 w-full px-12 pb-12 h-sm:pt-8 h-md:pt-32 h-lg:pt-64">{children}</div>}
+      {children && <div className="relative z-20 w-full pl-12 pb-12 h-sm:pt-8 h-md:pt-32 h-lg:pt-64">{children}</div>}
     </div>
   );
 };

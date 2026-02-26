@@ -14,6 +14,25 @@ type CarouselProps = {
   withControls?: boolean;
 };
 
+type ControlButtonProps = {
+  onClick: () => void;
+  disabled: boolean;
+  icon: React.ComponentType<{ size: number }>;
+};
+
+const ControlButton = ({ disabled, icon: Icon, onClick }: ControlButtonProps) => (
+  <button
+    onClick={onClick}
+    disabled={disabled}
+    className={cn(
+      "w-8 h-8 rounded border border-white/5 flex items-center justify-center bg-zinc-950 text-slate-500 transition-all focus:outline-none",
+      disabled ? "opacity-50 cursor-not-allowed" : "hover:text-primary hover:border-primary/50",
+    )}
+  >
+    <Icon size={20} />
+  </button>
+);
+
 export const Carousel = ({
   autoplay = false,
   children,
@@ -59,27 +78,9 @@ export const Carousel = ({
       </div>
 
       {withControls && !bothButtonsDisabled && (
-        <div className="absolute bottom-full mb-6 right-0 flex gap-2">
-          <button
-            onClick={scrollPrev}
-            disabled={prevBtnDisabled}
-            className={cn(
-              "w-8 h-8 rounded border border-white/5 flex items-center justify-center text-slate-500 transition-all focus:outline-none",
-              prevBtnDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-primary hover:border-primary/50",
-            )}
-          >
-            <IconChevronLeft size={20} />
-          </button>
-          <button
-            onClick={scrollNext}
-            disabled={nextBtnDisabled}
-            className={cn(
-              "w-8 h-8 rounded border border-white/5 flex items-center justify-center text-slate-500 transition-all focus:outline-none",
-              nextBtnDisabled ? "opacity-50 cursor-not-allowed" : "hover:text-primary hover:border-primary/50",
-            )}
-          >
-            <IconChevronRight size={20} />
-          </button>
+        <div className="absolute bottom-full mb-6 right-4 flex gap-2">
+          <ControlButton onClick={scrollPrev} disabled={prevBtnDisabled} icon={IconChevronLeft} />
+          <ControlButton onClick={scrollNext} disabled={nextBtnDisabled} icon={IconChevronRight} />
         </div>
       )}
     </div>
