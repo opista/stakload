@@ -1,4 +1,5 @@
-﻿import {
+﻿import { SubHeading } from "@components/ui/sub-heading";
+import {
   closestCenter,
   DndContext,
   DragEndEvent,
@@ -14,7 +15,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useGameStore } from "@store/game.store";
-import { IconBolt } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -76,12 +76,7 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
 
   return (
     <div className={cn("flex flex-col gap-3", className)}>
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-2 text-neutral-400">
-          <IconBolt size={14} />
-          <span className="text-[10px] font-black uppercase tracking-widest">Quick Launch</span>
-        </div>
-      </div>
+      <SubHeading className="px-2 text-slate-400">Quick Launch</SubHeading>
 
       <DndContext
         collisionDetection={closestCenter}

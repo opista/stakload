@@ -38,13 +38,13 @@ export const Navbar = () => {
   }, [collections]);
 
   return (
-    <aside className="flex flex-col h-full w-[260px] shrink-0 py-8 px-6 bg-stone-950 border-r border-white/5">
+    <aside className="flex flex-col h-full w-[260px] shrink-0 p-6 bg-stone-950 border-r border-white/5">
       <div className="flex shrink-0 items-center justify-center pb-8">
         <Logo />
       </div>
 
       <ScrollArea.Root className="flex-1 overflow-hidden flex flex-col">
-        <ScrollArea.Viewport className="h-full w-full outline-none pr-3">
+        <ScrollArea.Viewport className="h-full w-full outline-none">
           <nav className="flex flex-col space-y-2 pb-4">
             <NavbarLink href="/" icon={IconHome} label={t("navigation.home")} />
             <NavbarLink href="/library" icon={IconCategory} label={t("navigation.library")} />

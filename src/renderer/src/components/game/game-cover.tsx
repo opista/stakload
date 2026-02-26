@@ -51,7 +51,7 @@ export const GameCover = ({
     <div
       data-active={isActive ? "true" : undefined}
       className={cn(
-        "group relative aspect-[3/4] overflow-hidden rounded-sm bg-stone-950 text-white shadow-gold-edge hover:shadow-gold-hover focus-within:shadow-gold-hover data-[active=true]:shadow-gold-hover transition-shadow duration-400 ease-in-out",
+        "group relative aspect-[3/4] overflow-hidden rounded-sm bg-stone-950 text-white shadow-gold-edge group-hover:shadow-gold-hover hover:shadow-gold-hover focus-within:shadow-gold-hover data-[active=true]:shadow-gold-hover transition-shadow duration-400 ease-in-out",
         {
           "cursor-pointer": !!onClick,
         },
