@@ -1,6 +1,6 @@
 import { Tooltip as BaseTooltip } from "@base-ui/react";
 import { cn } from "@util/cn";
-import { ReactNode } from "react";
+import { isValidElement, ReactNode } from "react";
 
 export interface TooltipProps {
   children: ReactNode;
@@ -23,9 +23,11 @@ export const Tooltip = ({
   position = "top",
   withArrow = true,
 }: TooltipProps) => {
+  const render = isValidElement(children) ? children : undefined;
   return (
     <BaseTooltip.Root open={opened} onOpenChange={onOpenedChange}>
-      <BaseTooltip.Trigger>{children}</BaseTooltip.Trigger>
+      {/* Use render prop to avoid double buttons when children is already a button (like ActionIcon) */}
+      <BaseTooltip.Trigger render={render}>{children}</BaseTooltip.Trigger>
       <BaseTooltip.Portal>
         <BaseTooltip.Positioner
           side={position.split("-")[0] as any}

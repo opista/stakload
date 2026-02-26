@@ -42,7 +42,11 @@ export const MultiSelect = ({
       {label && <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider">{label}</label>}
 
       <BaseSelect.Root multiple value={value} onValueChange={(newVal: any) => onChange?.(newVal as string[])}>
-        <BaseSelect.Trigger className="flex min-h-[42px] w-full flex-wrap items-center gap-1.5 rounded-xl bg-neutral-800/50 p-2 text-sm text-white ring-1 ring-white/10 transition-all hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50">
+        <BaseSelect.Trigger
+          render={<div />}
+          nativeButton={false}
+          className="flex min-h-[42px] w-full flex-wrap items-center gap-1.5 rounded-xl bg-neutral-800/50 p-2 text-sm text-white ring-1 ring-white/10 transition-all hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
+        >
           {value.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
               {value.map((val) => {

@@ -1,6 +1,6 @@
 import { Popover as BasePopover } from "@base-ui/react";
 import { cn } from "@util/cn";
-import { ReactNode } from "react";
+import { isValidElement, ReactNode } from "react";
 
 export interface PopoverProps {
   children: ReactNode;
@@ -23,9 +23,10 @@ export const Popover = ({
   position = "bottom",
   withArrow = true,
 }: PopoverProps) => {
+  const render = isValidElement(children) ? children : undefined;
   return (
     <BasePopover.Root open={opened} onOpenChange={onOpenedChange}>
-      <BasePopover.Trigger>{children}</BasePopover.Trigger>
+      <BasePopover.Trigger render={render}>{children}</BasePopover.Trigger>
       <BasePopover.Portal>
         <BasePopover.Positioner
           side={position.split("-")[0] as any}
