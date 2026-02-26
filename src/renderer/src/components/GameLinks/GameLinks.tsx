@@ -1,4 +1,4 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { ConditionalWrapper } from "@components/ConditionalWrapper/ConditionalWrapper";
 import { LikeWebsiteType, Website } from "@contracts/database/games";
 import {

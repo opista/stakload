@@ -1,4 +1,4 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { Button } from "@components/Button/Button";
 import { IconSelector } from "@components/Desktop/IconSelector/IconSelector";
 import { Modal } from "@components/Modal/Modal";

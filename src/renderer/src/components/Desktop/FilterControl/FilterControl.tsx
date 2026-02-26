@@ -1,14 +1,13 @@
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { Badge } from "@components/Badge/Badge";
 import { GamesFilter } from "@components/GamesFilter/GamesFilter";
 import { CollectionStoreModel } from "@contracts/database/collections";
 import { GameFilters } from "@contracts/database/games";
 import { useLibraryFilters } from "@hooks/use-game-filters";
-import { ActionIcon, Divider, Group, Pill } from "@mantine/core";
 import { useCollectionStore } from "@store/collection.store";
-import { IconDeviceFloppy } from "@tabler/icons-react";
+import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-
-import classes from "./FilterControl.module.css";
 
 type FilterControlProps = {
   collection?: CollectionStoreModel;
@@ -58,29 +57,41 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
   };
 
   return (
-    <Group align="start" gap="sm">
+    <div className="flex items-start gap-4">
       <GamesFilter filters={filters} onChange={onUpdate} />
 
-      {formattedFilters.length && <Divider className={classes.divider} orientation="vertical" />}
+      {formattedFilters.length > 0 && <div className="h-8 w-px bg-white/10 self-center" />}
 
-      <Group className={classes.pillContainer} gap="xs">
+      <div className="flex flex-wrap items-center gap-2 pt-1">
         {formattedFilters.map(({ key, label, value }) => (
-          <Pill className={classes.pill} key={value} onRemove={() => onRemove(key, value)} size="md" withRemoveButton>
-            {label}
-          </Pill>
+          <Badge key={String(value)} variant="filled" className="flex items-center gap-2 pr-1">
+            <span className="max-w-[150px] truncate">{label}</span>
+            <button onClick={() => onRemove(key, String(value))} className="rounded-full p-0.5 hover:bg-black/20">
+              <IconX size={12} />
+            </button>
+          </Badge>
         ))}
-        {/* TODO: Make these buttons fit the theme */}
-        {hasUnsavedChanges && collection && formattedFilters.length && (
-          <ActionIcon onClick={onSave} variant="filled">
-            <IconDeviceFloppy size={20} stroke={1} />
+        {hasUnsavedChanges && collection && formattedFilters.length > 0 && (
+          <ActionIcon
+            onClick={onSave}
+            variant="filled"
+            className="bg-cyan-500 hover:bg-cyan-400"
+            aria-label="Save collection"
+          >
+            <IconDeviceFloppy size={20} stroke={2} />
           </ActionIcon>
         )}
-        {hasUnsavedChanges && !collection && formattedFilters.length && (
-          <ActionIcon onClick={onCreate} variant="filled">
-            <IconDeviceFloppy size={20} stroke={1} />
+        {hasUnsavedChanges && !collection && formattedFilters.length > 0 && (
+          <ActionIcon
+            onClick={onCreate}
+            variant="filled"
+            className="bg-cyan-500 hover:bg-cyan-400"
+            aria-label="Create collection"
+          >
+            <IconDeviceFloppy size={20} stroke={2} />
           </ActionIcon>
         )}
-      </Group>
-    </Group>
+      </div>
+    </div>
   );
 };

@@ -6,7 +6,7 @@ import { GameLinks } from "@components/GameLinks/GameLinks";
 import { IncompatibilityIcon } from "@components/IncompatibilityIcon/IncompatibilityIcon";
 import { LibraryIcon } from "@components/LibraryIcon/LibraryIcon";
 import { MediaCarousel } from "@components/Media/MediaCarousel/MediaCarousel";
-import ProtonIcon from "@components/ProtonIcon/ProtonIcon";
+import { ProtonIcon } from "@components/ProtonIcon/ProtonIcon";
 import { Spoiler } from "@components/Spoiler/Spoiler";
 import { GameStoreModel } from "@contracts/database/games";
 import { useGameStore } from "@store/game.store";
@@ -59,7 +59,7 @@ export const GameDetailsView = () => {
   );
 };
 
-const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement>; game: GameStoreModel }) => {
+const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement | null>; game: GameStoreModel }) => {
   const { t } = useTranslation();
 
   return (

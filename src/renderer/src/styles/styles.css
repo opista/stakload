@@ -14,6 +14,33 @@
   --shadow-gold-edge: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 10%, transparent);
   --shadow-gold-hover: inset 0 0 0 1px color-mix(in srgb, var(--color-primary) 40%, transparent), 0 0 15px color-mix(in srgb, var(--color-primary) 20%, transparent);
   --shadow-glow: 0 0 12px color-mix(in srgb, var(--color-primary) 25%, transparent);
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(8%);
+    }
+  }
+
+  @keyframes shadow {
+
+    0%,
+    100% {
+      transform: scale(0.8);
+    }
+
+    50% {
+      transform: scale(1);
+    }
+  }
+
+  --animate-float: float 1.5s infinite ease-in-out;
+  --animate-shadow: shadow 1.5s infinite ease-in-out;
 }
 
 @layer base {
@@ -25,7 +52,7 @@
 :root {
   --scrollbar-size: 6px;
 
-  /* Font smoothing from Mantine theme */
+  /* Font smoothing */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

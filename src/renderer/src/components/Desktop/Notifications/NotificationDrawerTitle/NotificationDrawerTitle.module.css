@@ -1,8 +1,0 @@
-.stack {
-  gap: 0;
-  padding: var(--mantine-spacing-lg);
-}
-
-.button {
-  padding: 0 var(--mantine-spacing-xs);
-}

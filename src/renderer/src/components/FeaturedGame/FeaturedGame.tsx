@@ -1,7 +1,6 @@
 import { FeaturedGameModel } from "@contracts/database/games";
-import { useHover, useInterval, useInViewport } from "@mantine/hooks";
 import { cn } from "@util/cn";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 
@@ -15,35 +14,44 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
   const screenshots = hasScreenshots ? game.screenshots!.slice(0, 3) : [];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const { hovered, ref: hoverRef } = useHover();
-  const { inViewport, ref: inViewportRef } = useInViewport();
-
-  const interval = useInterval(() => {
-    setCurrentIndex((current) => (current + 1) % screenshots.length);
-  }, 10000);
+  const [hovered, setHovered] = useState(false);
+  const [inViewport, setInViewport] = useState(false);
+  const inViewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!hasScreenshots || hovered || !inViewport) {
-      interval.stop();
-    } else {
-      interval.start();
-    }
-    return interval.stop;
-  }, [hovered, inViewport, hasScreenshots]);
+    const observer = new IntersectionObserver(([entry]) => setInViewport(entry.isIntersecting), { threshold: 0.1 });
+    if (inViewportRef.current) observer.observe(inViewportRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasScreenshots || hovered || !inViewport) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((current) => (current + 1) % screenshots.length);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [hovered, inViewport, hasScreenshots, screenshots.length]);
 
   const handleImageClick = (index: number) => {
     if (!hasScreenshots) return;
     setCurrentIndex(index);
-    interval.stop();
-    interval.start();
   };
 
   return (
-    <div className="flex h-full w-full gap-4 overflow-hidden rounded-2xl bg-[var(--color)] p-4 shadow-lg">
+    <div
+      className="flex h-full w-full gap-4 overflow-hidden rounded-2xl bg-[var(--color)] p-4 shadow-lg"
+      ref={inViewportRef}
+    >
       <div className="grid w-full grow grid-cols-11 gap-3">
         <div className="col-span-5">
           <div className="aspect-[3/2] w-full overflow-hidden rounded-xl">
-            <div className="relative h-full w-full" ref={hoverRef as any}>
+            <div
+              className="relative h-full w-full"
+              onMouseEnter={() => setHovered(true)}
+              onMouseLeave={() => setHovered(false)}
+            >
               {hasScreenshots ? (
                 screenshots.map((screenshot, index) => (
                   <div
@@ -61,21 +69,24 @@ export const FeaturedGame = ({ game }: FeaturedGameProps) => {
             </div>
           </div>
         </div>
-        <div className="col-span-1" ref={inViewportRef as any}>
+        <div className="col-span-1">
           <div className="flex h-full flex-col justify-between gap-2">
             {hasScreenshots
               ? screenshots.map((screenshot, index) => (
-                <button
-                  className="h-full w-full cursor-pointer rounded-lg bg-cover bg-center transition-opacity hover:opacity-80 focus:outline-none"
-                  key={screenshot}
-                  onClick={() => handleImageClick(index)}
-                  style={{ backgroundImage: `url(${screenshot})` }}
-                  type="button"
-                />
-              ))
+                  <button
+                    className={cn(
+                      "h-full w-full cursor-pointer rounded-lg bg-cover bg-center transition-all hover:opacity-80 focus:outline-none ring-primary/50",
+                      index === currentIndex ? "ring-2 opacity-100" : "opacity-40",
+                    )}
+                    key={screenshot}
+                    onClick={() => handleImageClick(index)}
+                    style={{ backgroundImage: `url(${screenshot})` }}
+                    type="button"
+                  />
+                ))
               : Array(3)
-                .fill(null)
-                .map((_, index) => <div className="h-full w-full rounded-lg bg-[#1b2c3b]" key={index} />)}
+                  .fill(null)
+                  .map((_, index) => <div className="h-full w-full rounded-lg bg-[#1b2c3b]" key={index} />)}
           </div>
         </div>
         <div className="col-span-5">

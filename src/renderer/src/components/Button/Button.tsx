@@ -1,7 +1,7 @@
 import { cn } from "@util/cn";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
 
-type ButtonVariant = "filled" | "default" | "outline" | "subtle" | "danger";
+type ButtonVariant = "filled" | "default" | "outline" | "subtle" | "danger" | "ghost";
 type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";
 
 type ButtonProps = {
@@ -9,6 +9,7 @@ type ButtonProps = {
   variant?: ButtonVariant;
   size?: ButtonSize;
   loading?: boolean;
+  isLoading?: boolean;
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
 } & ComponentPropsWithoutRef<"button">;
@@ -17,6 +18,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   danger: "bg-red-600 text-white hover:bg-red-500 active:scale-[0.98]",
   default: "bg-neutral-800 text-white hover:bg-neutral-700 active:scale-[0.98]",
   filled: "bg-cyan-600 text-white hover:bg-cyan-500 active:scale-[0.98]",
+  ghost: "bg-transparent text-white hover:bg-white/5 active:scale-[0.98]",
   outline: "border border-neutral-700 bg-transparent text-white hover:bg-neutral-800 active:scale-[0.98]",
   subtle: "bg-transparent text-white hover:bg-white/5 active:scale-[0.98]",
 };
@@ -33,6 +35,7 @@ export const Button = ({
   children,
   className,
   disabled,
+  isLoading,
   leftIcon,
   loading,
   rightIcon,
@@ -40,6 +43,8 @@ export const Button = ({
   variant = "filled",
   ...props
 }: ButtonProps) => {
+  const isActuallyLoading = loading || isLoading;
+
   return (
     <button
       className={cn(
@@ -48,17 +53,17 @@ export const Button = ({
         sizeClasses[size],
         className,
       )}
-      disabled={disabled || loading}
+      disabled={disabled || isActuallyLoading}
       type={props.type || "button"}
       {...props}
     >
-      {loading ? (
+      {isActuallyLoading ? (
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
       ) : (
         leftIcon
       )}
       {children}
-      {!loading && rightIcon}
+      {!isActuallyLoading && rightIcon}
     </button>
   );
 };

@@ -14,6 +14,11 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
   },
 
   closeDrawer: () => set({ isDrawerOpen: false }),
+  hideToast: (id) => {
+    set((state) => ({
+      toasts: state.toasts.filter((t) => t.id !== id),
+    }));
+  },
   isDrawerOpen: false,
   notifications: [],
 
@@ -25,5 +30,21 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
     }));
   },
 
+  showToast: (toast) => {
+    const id = toast.id || Math.random().toString(36).substring(7);
+    set((state) => ({
+      toasts: [...state.toasts, { ...toast, id }],
+    }));
+    return id;
+  },
+
+  toasts: [],
+
   toggleDrawer: () => set((state) => ({ isDrawerOpen: !state.isDrawerOpen })),
+
+  updateToast: (id, toast) => {
+    set((state) => ({
+      toasts: state.toasts.map((t) => (t.id === id ? { ...t, ...toast } : t)),
+    }));
+  },
 }));

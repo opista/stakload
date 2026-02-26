@@ -1,5 +1,5 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
-import { Tooltip } from "@mantine/core";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
+import { Tooltip } from "@components/Tooltip/Tooltip";
 import { useGameStore } from "@store/game.store";
 import { useNotificationStore } from "@store/notification.store";
 import { IconBell, IconDice5Filled, IconMinus, IconSquare, IconX } from "@tabler/icons-react";

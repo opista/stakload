@@ -2,7 +2,7 @@ import { GameSyncStatus } from "@components/Desktop/GameSyncStatus/GameSyncStatu
 import { NavbarLink } from "@components/Desktop/Navigation/NavbarLink/NavbarLink";
 import { QuickLaunchList } from "@components/Desktop/QuickLaunch/QuickLaunchList/QuickLaunchList";
 import { SearchButton } from "@components/Desktop/SearchButton/SearchButton";
-import Logo from "@components/Logo/Logo";
+import { Logo } from "@components/Logo/Logo";
 import { useCollectionStore } from "@store/collection.store";
 import type { IconProps } from "@tabler/icons-react";
 import {

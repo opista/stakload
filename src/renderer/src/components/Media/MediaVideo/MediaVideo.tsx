@@ -1,6 +1,5 @@
-import { modals } from "@mantine/modals";
+import { useModalStore } from "@store/modal.store";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { useTranslation } from "react-i18next";
 
 const getThumbnailUrl = (watchId: string) => `https://img.youtube.com/vi/${watchId}/hqdefault.jpg`;
@@ -13,6 +12,7 @@ type MediaVideoProps = {
 
 export const MediaVideo = ({ id }: MediaVideoProps) => {
   const { t } = useTranslation();
+  const openModal = useModalStore((state) => state.openModal);
 
   if (!id) return;
 
@@ -21,10 +21,9 @@ export const MediaVideo = ({ id }: MediaVideoProps) => {
 
   return (
     <button
-      className="group relative flex h-full w-full overflow-hidden rounded-lg bg-neutral-800 transition-transform hover:scale-[1.02] active:scale-[0.98]"
+      className="group relative flex h-full w-full overflow-hidden rounded-xl bg-neutral-800 transition-transform hover:scale-[1.02] active:scale-[0.98]"
       onClick={() =>
-        modals.open({
-          centered: true,
+        openModal("media", {
           children: (
             <div className="aspect-video w-full">
               <iframe
@@ -35,8 +34,7 @@ export const MediaVideo = ({ id }: MediaVideoProps) => {
               />
             </div>
           ),
-          size: "70%",
-          title: t("media"),
+          title: t("media" as any),
         })
       }
       type="button"

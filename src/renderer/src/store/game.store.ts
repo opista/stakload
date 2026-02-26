@@ -29,10 +29,10 @@ export const useGameStore = create<GameStore>()(
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
-            [id]: details,
+            [id]: details as any,
           },
         }));
-        return details;
+        return details as any;
       },
       fetchGameFilters: async () => {
         const gameFilters = await window.ipc.game.getGameFilters();
@@ -77,12 +77,12 @@ export const useGameStore = create<GameStore>()(
         set((state) => ({
           gamesDetails: {
             ...state.gamesDetails,
-            [id]: game,
+            [id]: game as any,
           },
         }));
         await get().refreshGameData();
 
-        return game;
+        return game as any;
       },
       toggleQuickLaunchGame: async (id: string) => {
         const response = await window.ipc.game.toggleQuickLaunchGame(id);

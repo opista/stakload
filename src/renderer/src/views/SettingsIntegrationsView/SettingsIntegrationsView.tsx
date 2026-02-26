@@ -1,4 +1,6 @@
-import { Button, Divider, Flex, PasswordInput, TextInput, Title } from "@mantine/core";
+import { Button } from "@components/Button/Button";
+import { PasswordInput } from "@components/PasswordInput/PasswordInput";
+import { TextInput } from "@components/TextInput/TextInput";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
 import { useEffect, useReducer, useState } from "react";
@@ -9,8 +11,6 @@ import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsChec
 import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
 import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
 import { Library } from "../../ipc.types";
-
-import classes from "./SettingsIntegrationsView.module.css";
 
 type ValidationState = {
   [key in Library]: boolean | null;
@@ -51,14 +51,12 @@ const GeneralSettings = () => {
   const onSyncClick = () => window.ipc.sync.syncGames();
 
   return (
-    <>
-      <Title className={classes.title} order={2} size="h3">
-        {t("settings.library.general")}
-      </Title>
-      <div className={classes.buttonContainer}>
-        <div>
-          <label className={classes.label}>{t("settings.library.syncLibrary")} </label>
-          <span className={classes.date}>
+    <div className="flex flex-col gap-4">
+      <h3 className="text-xl font-black text-white">{t("settings.library.general")}</h3>
+      <div className="flex items-center justify-between py-2 border-b border-white/5">
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold text-[#a0a7a9]">{t("settings.library.syncLibrary")} </label>
+          <span className="text-[10px] text-neutral-500 italic">
             {t("settings.library.lastSync", {
               formatParams: {
                 val: { dateStyle: "short", timeStyle: "short" },
@@ -67,7 +65,12 @@ const GeneralSettings = () => {
             })}
           </span>
         </div>
-        <Button color="red" onClick={onSyncClick} size="xs">
+        <Button
+          variant="ghost"
+          className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+          onClick={onSyncClick}
+          size="sm"
+        >
           {t("settings.library.syncLibrary")}
         </Button>
       </div>
@@ -77,15 +80,10 @@ const GeneralSettings = () => {
         labelInfo={t("settings.library.syncOnStartupInfo")}
         onCheckboxChange={setSyncOnStartup}
       />
-    </>
+    </div>
   );
 };
 
-/**
- * TODO - To be honest this is a total mess.
- * I wonder if this can be cleaned up and re-used
- * for each integration with a few props
- */
 const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
   const { hasStoredWebApiKey, steamIntegrationEnabled, storeSteamId, toggleIntegrationEnabled } =
     useIntegrationSettingsStore(
@@ -109,37 +107,37 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.ipc.sync.testIntegration("steam");
-
-    console.log("result", result);
+    await window.ipc.sync.testIntegration("steam");
     setIsLoading(false);
-  };
-
-  const onSteamIdChange = (value: string) => {
-    setSteamId(value);
-  };
-
-  const onWebApiKeyChange = (value: string) => {
-    setWebApiKey(value);
   };
 
   const Subtitle = (
     <Trans
       components={{
-        SteamAccountLink: <a href="https://store.steampowered.com/account/" rel="noreferrer" target="_blank" />,
-        SteamApiKeyLink: <a href="https://steamcommunity.com/dev/apikey" rel="noreferrer" target="_blank" />,
+        SteamAccountLink: (
+          <a
+            className="text-cyan-500 hover:underline"
+            href="https://store.steampowered.com/account/"
+            rel="noreferrer"
+            target="_blank"
+          />
+        ),
+        SteamApiKeyLink: (
+          <a
+            className="text-cyan-500 hover:underline"
+            href="https://steamcommunity.com/dev/apikey"
+            rel="noreferrer"
+            target="_blank"
+          />
+        ),
       }}
       i18nKey="steam.integrationGuide"
       t={t}
-    ></Trans>
+    />
   );
 
-  /**
-   * Use some kind of form lib to handle dirty
-   * changes/disable save if form updates
-   */
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <SettingsTitle subtitle={Subtitle} title="Steam" />
 
       <SettingsCheckbox
@@ -148,56 +146,55 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("steam")}
       />
-      <TextInput
-        classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
-        disabled={isLoading}
-        label={t("steam.id")}
-        onChange={(event) => onSteamIdChange(event.target.value)}
-        placeholder={t("steam.id")}
-        size="xs"
-        value={steamId}
-      />
-      <PasswordInput
-        classNames={{ input: classes.input, label: classes.inputLabel, root: classes.inputRoot }}
-        disabled={isLoading}
-        label={t("steam.webApiKey")}
-        onChange={(event) => onWebApiKeyChange(event.target.value)}
-        placeholder={t("steam.webApiKey")}
-        size="xs"
-        value={webApiKey}
-      />
 
-      <Flex justify="flex-end">
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedCheckFilled}
-          iconProps={{ className: classes.check }}
-          mounted={isValid === true}
-          text={t("common.success")}
+      <div className="grid grid-cols-2 gap-4">
+        <TextInput
+          disabled={isLoading}
+          label={t("steam.id")}
+          onChange={(event) => setSteamId(event.target.value)}
+          placeholder={t("steam.id")}
+          value={steamId}
         />
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedXFilled}
-          iconProps={{ className: classes.cross }}
-          mounted={isValid === false}
-          text={t("common.failure")}
+        <PasswordInput
+          disabled={isLoading}
+          label={t("steam.webApiKey")}
+          onChange={(event) => setWebApiKey(event.target.value)}
+          placeholder={t("steam.webApiKey")}
+          value={webApiKey}
         />
-        <Flex gap="xs">
+      </div>
+
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-4">
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedCheckFilled}
+            iconProps={{ className: "text-green-500" }}
+            mounted={isValid === true}
+            text={t("common.success")}
+          />
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedXFilled}
+            iconProps={{ className: "text-red-500" }}
+            mounted={isValid === false}
+            text={t("common.failure")}
+          />
+        </div>
+        <div className="flex gap-2">
           <Button
             disabled={!steamId || (!hasStoredWebApiKey && !webApiKey)}
-            loading={isLoading}
+            isLoading={isLoading}
             onClick={onTest}
-            size="xs"
-            variant="light"
+            size="sm"
+            variant="ghost"
           >
             {t("settings.integration.test")}
           </Button>
-          <Button disabled={isLoading || isValid === false} onClick={onAuthenticate} size="xs">
+          <Button disabled={isLoading || isValid === false} onClick={onAuthenticate} size="sm">
             {t("settings.integration.authenticate")}
           </Button>
-        </Flex>
-      </Flex>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -218,14 +215,12 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.ipc.sync.testIntegration("epic-game-store");
-
-    console.log("result", result);
+    await window.ipc.sync.testIntegration("epic-game-store");
     setIsLoading(false);
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "Epic Games" })} title="Epic Games" />
       <SettingsCheckbox
         checked={epicIntegrationEnabled}
@@ -233,32 +228,32 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("epic-game-store")}
       />
-      <Flex justify="flex-end">
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedCheckFilled}
-          iconProps={{ className: classes.check }}
-          mounted={isValid === true}
-          text={t("common.success")}
-        />
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedXFilled}
-          iconProps={{ className: classes.cross }}
-          mounted={isValid === false}
-          text={t("common.failure")}
-        />
-        <Flex gap="xs">
-          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-4">
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedCheckFilled}
+            iconProps={{ className: "text-green-500" }}
+            mounted={isValid === true}
+            text={t("common.success")}
+          />
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedXFilled}
+            iconProps={{ className: "text-red-500" }}
+            mounted={isValid === false}
+            text={t("common.failure")}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button disabled={isLoading} isLoading={isLoading} onClick={onTest} size="sm" variant="ghost">
             {t("settings.integration.test")}
           </Button>
 
-          <Button disabled={isLoading} loading={isLoading} onClick={onAuthenticate} size="xs">
+          <Button disabled={isLoading} isLoading={isLoading} onClick={onAuthenticate} size="sm">
             {t("settings.integration.authenticate")}
           </Button>
-        </Flex>
-      </Flex>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -279,13 +274,12 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.ipc.sync.testIntegration("gog");
-    console.log("result", result);
+    await window.ipc.sync.testIntegration("gog");
     setIsLoading(false);
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "GOG" })} title="GOG" />
       <SettingsCheckbox
         checked={gogIntegrationEnabled}
@@ -293,32 +287,32 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("gog")}
       />
-      <Flex justify="flex-end">
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedCheckFilled}
-          iconProps={{ className: classes.check }}
-          mounted={isValid === true}
-          text={t("common.success")}
-        />
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedXFilled}
-          iconProps={{ className: classes.cross }}
-          mounted={isValid === false}
-          text={t("common.failure")}
-        />
-        <Flex gap="xs">
-          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-4">
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedCheckFilled}
+            iconProps={{ className: "text-green-500" }}
+            mounted={isValid === true}
+            text={t("common.success")}
+          />
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedXFilled}
+            iconProps={{ className: "text-red-500" }}
+            mounted={isValid === false}
+            text={t("common.failure")}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button disabled={isLoading} isLoading={isLoading} onClick={onTest} size="sm" variant="ghost">
             {t("settings.integration.test")}
           </Button>
 
-          <Button loading={isLoading} onClick={onAuthenticate} size="xs">
+          <Button isLoading={isLoading} onClick={onAuthenticate} size="sm">
             {t("settings.integration.authenticate")}
           </Button>
-        </Flex>
-      </Flex>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -339,13 +333,12 @@ const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
 
   const onTest = async () => {
     setIsLoading(true);
-    const result = await window.ipc.sync.testIntegration("battle-net");
-    console.log("result", result);
+    await window.ipc.sync.testIntegration("battle-net");
     setIsLoading(false);
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <SettingsTitle subtitle={t("settings.library.authSecurity", { library: "Battle.net" })} title="Battle.net" />
       <SettingsCheckbox
         checked={battleNetIntegrationEnabled}
@@ -353,46 +346,35 @@ const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("battle-net")}
       />
-      <Flex justify="flex-end">
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedCheckFilled}
-          iconProps={{ className: classes.check }}
-          mounted={isValid === true}
-          text={t("common.success")}
-        />
-        <SettingsStatusIndicator
-          className={classes.statusIndicator}
-          icon={IconSquareRoundedXFilled}
-          iconProps={{ className: classes.cross }}
-          mounted={isValid === false}
-          text={t("common.failure")}
-        />
-        <Flex gap="xs">
-          <Button disabled={isLoading} loading={isLoading} onClick={onTest} size="xs" variant="light">
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-4">
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedCheckFilled}
+            iconProps={{ className: "text-green-500" }}
+            mounted={isValid === true}
+            text={t("common.success")}
+          />
+          <SettingsStatusIndicator
+            icon={IconSquareRoundedXFilled}
+            iconProps={{ className: "text-red-500" }}
+            mounted={isValid === false}
+            text={t("common.failure")}
+          />
+        </div>
+        <div className="flex gap-2">
+          <Button disabled={isLoading} isLoading={isLoading} onClick={onTest} size="sm" variant="ghost">
             {t("settings.integration.test")}
           </Button>
 
-          <Button loading={isLoading} onClick={onAuthenticate} size="xs">
+          <Button isLoading={isLoading} onClick={onAuthenticate} size="sm">
             {t("settings.integration.authenticate")}
           </Button>
-        </Flex>
-      </Flex>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
-/**
- * TODO - Should have a section per
- * integration. We'll start with Steam which
- * requires a user ID and API key. We can add
- * a link directly to the API key here:
- * https://steamcommunity.com/dev/apikey
- * We should ask user for explicit confirmation
- * when saving these details, and then store them
- * using electron-conf
- *
- */
 export const SettingsIntegrationsView = () => {
   const [validationState, dispatch] = useReducer(validationReducer, initialValidationState);
 
@@ -404,15 +386,15 @@ export const SettingsIntegrationsView = () => {
   }, []);
 
   return (
-    <div className={classes.container}>
+    <div className="flex flex-col gap-8 pb-12 pr-4">
       <GeneralSettings />
-      <Divider className={classes.divider} />
+      <hr className="border-white/5" />
       <SteamSettings isValid={validationState.steam} />
-      <Divider className={classes.divider} />
+      <hr className="border-white/5" />
       <EpicGamesSettings isValid={validationState["epic-game-store"]} />
-      <Divider className={classes.divider} />
+      <hr className="border-white/5" />
       <GogSettings isValid={validationState.gog} />
-      <Divider className={classes.divider} />
+      <hr className="border-white/5" />
       <BattleNetSettings isValid={validationState["battle-net"]} />
     </div>
   );

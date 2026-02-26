@@ -1,4 +1,4 @@
-import { Tooltip, TooltipProps } from "@mantine/core";
+import { Tooltip } from "@components/Tooltip/Tooltip";
 import { Icon, IconProps } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { CSSProperties } from "react";
@@ -23,7 +23,12 @@ type TooltipIconProps = {
     style?: CSSProperties;
     className?: string;
   };
-  tooltipProps: Omit<TooltipProps, "children">;
+  tooltipProps: {
+    label: React.ReactNode;
+    position?: any;
+    offset?: number;
+    className?: string;
+  };
 };
 
 export const TooltipIcon = ({
@@ -35,20 +40,12 @@ export const TooltipIcon = ({
 }: TooltipIconProps) => {
   const { style: iconStyle, ...restIconProps } = iconProps;
   const { className: themeClassName, size = "md", style: themeStyle } = themeIconProps;
-  const { maw = "200", position = "bottom-start", ...restTooltipProps } = tooltipProps;
 
   const sizeClass = typeof size === "string" ? SIZE_MAP[size] : "";
-
   const dimensionStyle = typeof size === "number" ? { height: size, width: size } : {};
 
   return (
-    <Tooltip
-      events={{ focus: true, hover: true, touch: false }}
-      maw={maw}
-      multiline
-      position={position}
-      {...restTooltipProps}
-    >
+    <Tooltip {...tooltipProps}>
       <div
         className={cn(
           "inline-flex items-center justify-center rounded-lg overflow-hidden bg-neutral-800 text-white",

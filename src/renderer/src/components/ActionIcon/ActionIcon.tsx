@@ -55,4 +55,4 @@ const ActionIcon = memo(
 
 ActionIcon.displayName = "ActionIcon";
 
-export default ActionIcon;
+export { ActionIcon };

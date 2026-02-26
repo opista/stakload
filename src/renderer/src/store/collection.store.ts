@@ -18,7 +18,7 @@ export const useCollectionStore = create<CollectionStore>()((set, get) => ({
   },
   fetchCollections: async () => {
     const collections = await window.ipc.collection.getCollections();
-    set({ collections });
+    set({ collections: collections as any });
   },
   updateCollection: async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters" | "icon">) => {
     await window.ipc.collection.updateCollection(id, updates);

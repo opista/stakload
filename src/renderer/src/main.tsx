@@ -1,9 +1,3 @@
-import "@mantine/core/styles.css";
-import "@mantine/dates/styles.css";
-import "@mantine/spotlight/styles.css";
-import "@mantine/carousel/styles.css";
-import "@mantine/notifications/styles.css";
-import "mantine-contextmenu/styles.css";
 import "./styles/styles.css";
 import "./i18n";
 

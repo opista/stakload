@@ -4,7 +4,7 @@ import { ParseKeys } from "i18next";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { IconBrandProtonDb } from "../../icons/IconBrandProtonDb";
+import { IconBrandProtonDb } from "../../icons/IconBrandProtonDB";
 
 type ProtonIndicatorProps = {
   gameId?: string;
@@ -79,4 +79,4 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
 
 ProtonIcon.displayName = "ProtonIcon";
 
-export default ProtonIcon;
+export { ProtonIcon };

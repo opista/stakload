@@ -64,7 +64,7 @@ $ npm run build:linux
   - Fix tabler icons that were broken with latest update
   - Update grey styling across the board, should use CSS variables (with possibility of later theming)
   - Revisit game controls (launch/install/uninstall etc.)
-  - Accessibility across entire app. Look at Mantine docs for accessibility info
+  - Accessibility across entire app
   - If app crashes, window controls disappear (windows/linux). We should mitigate this
   - Fix bug with full window scrolling rather than just the main contents (behaviour seen on integrations page, but may happen everywhere)
   - Last sync timestamp

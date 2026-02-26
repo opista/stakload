@@ -1,6 +1,6 @@
 import { EditableField } from "@components/EditableField/EditableField";
 import { PageTitle } from "@components/PageTitle/PageTitle";
-import { Tooltip } from "@mantine/core";
+import { Tooltip } from "@components/Tooltip/Tooltip";
 import { useCollectionStore } from "@store/collection.store";
 import { IconDeviceGamepad } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
@@ -38,8 +38,8 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
   return (
     <div className="flex items-center gap-4">
       <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
-        <Tooltip arrowSize={8} label="Change icon" offset={10} position="right" withArrow>
-          <Icon size={40} />
+        <Tooltip label="Change icon" position="right">
+          <Icon className="cursor-pointer" size={40} />
         </Tooltip>
       </IconSelector>
       <EditableField

@@ -1,0 +1,48 @@
+import { Tooltip as BaseTooltip } from "@base-ui/react";
+import { cn } from "@util/cn";
+import { ReactNode } from "react";
+
+export interface TooltipProps {
+  children: ReactNode;
+  className?: string;
+  label: ReactNode;
+  offset?: number;
+  onOpenedChange?: (opened: boolean) => void;
+  opened?: boolean;
+  position?: "top" | "bottom" | "left" | "right" | "top-start" | "top-end" | "bottom-start" | "bottom-end";
+  withArrow?: boolean;
+}
+
+export const Tooltip = ({
+  children,
+  className,
+  label,
+  offset = 8,
+  onOpenedChange,
+  opened,
+  position = "top",
+  withArrow = true,
+}: TooltipProps) => {
+  return (
+    <BaseTooltip.Root open={opened} onOpenChange={onOpenedChange}>
+      <BaseTooltip.Trigger>{children}</BaseTooltip.Trigger>
+      <BaseTooltip.Portal>
+        <BaseTooltip.Positioner
+          side={position.split("-")[0] as any}
+          align={position.split("-")[1] as any}
+          sideOffset={offset}
+        >
+          <BaseTooltip.Popup
+            className={cn(
+              "z-[1000] select-none rounded-lg bg-neutral-900 px-3 py-1.5 text-xs font-medium text-white shadow-xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-150",
+              className,
+            )}
+          >
+            {withArrow && <BaseTooltip.Arrow className="fill-neutral-900 stroke-white/10" />}
+            {label}
+          </BaseTooltip.Popup>
+        </BaseTooltip.Positioner>
+      </BaseTooltip.Portal>
+    </BaseTooltip.Root>
+  );
+};

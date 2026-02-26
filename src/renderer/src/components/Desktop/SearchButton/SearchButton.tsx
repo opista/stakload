@@ -1,12 +1,26 @@
 import { SHORTCUT_KEYS } from "@constants/shortcuts";
-import { spotlight } from "@mantine/spotlight";
+import { useCommandPaletteStore } from "@store/command-palette.store";
 import { IconSearch } from "@tabler/icons-react";
 import { cn } from "@util/cn";
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, useEffect } from "react";
 
 type SearchButtonProps = ComponentPropsWithoutRef<"button">;
 
 export const SearchButton = ({ className, disabled, ...others }: SearchButtonProps) => {
+  const open = useCommandPaletteStore((state) => state.open);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        open();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   return (
     <button
       {...others}
@@ -16,7 +30,7 @@ export const SearchButton = ({ className, disabled, ...others }: SearchButtonPro
         className,
       )}
       disabled={disabled}
-      onClick={() => !disabled && spotlight.open()}
+      onClick={() => !disabled && open()}
       type="button"
     >
       <div className="flex flex-1 items-center gap-2">

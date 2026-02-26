@@ -21,4 +21,4 @@ const Logo = memo(({ className, useGradient = true }: LogoProps) => (
 
 Logo.displayName = "Logo";
 
-export default Logo;
+export { Logo };

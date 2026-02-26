@@ -37,9 +37,9 @@ export const NotificationDrawerItem = ({ notification, onClose }: NotificationDr
         {notification.icon && <DynamicIcon className="shrink-0" icon={notification.icon} size={32} />}
 
         <div className="max-w-full overflow-hidden flex flex-col gap-0.5">
-          <span className="text-sm font-black text-white">{t(notification.title)}</span>
+          <span className="text-sm font-black text-white">{t(notification.title as any)}</span>
           <p className="text-[12px] font-medium leading-relaxed text-neutral-400 truncate-2-lines">
-            {t(notification.message)}
+            {t(notification.message as any)}
           </p>
         </div>
       </div>

@@ -1,7 +1,35 @@
-import { Spoiler as MantineSpoiler, SpoilerProps as MantineSpoilerProps } from "@mantine/core";
+import { cn } from "@util/cn";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-export const Spoiler = (props: Omit<MantineSpoilerProps, "hideLabel" | "showLabel">) => {
+export interface SpoilerProps {
+  children: React.ReactNode;
+  initialState?: boolean;
+  maxHeight: number;
+}
+
+export const Spoiler = ({ children, initialState = false, maxHeight }: SpoilerProps) => {
+  const [expanded, setExpanded] = useState(initialState);
   const { t } = useTranslation();
-  return <MantineSpoiler hideLabel={t("spoiler.hide")} showLabel={t("spoiler.showMore")} {...props} />;
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div
+        className={cn(
+          "relative overflow-hidden transition-[max-height] duration-300 ease-in-out",
+          !expanded &&
+            "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-12 after:bg-gradient-to-t after:from-[#2b2b2b] after:to-transparent",
+        )}
+        style={{ maxHeight: expanded ? "none" : maxHeight }}
+      >
+        {children}
+      </div>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="self-start text-xs font-bold text-cyan-500 hover:text-cyan-400 transition-colors"
+      >
+        {expanded ? t("spoiler.hide") : t("spoiler.showMore")}
+      </button>
+    </div>
+  );
 };

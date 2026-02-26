@@ -14,15 +14,27 @@ export const NOTIFICATION_KEYS = {
 export type Notification = {
   icon?: string;
   id: string;
-  message: (typeof NOTIFICATION_KEYS)[keyof typeof NOTIFICATION_KEYS];
+  message: string;
   timestamp: number;
-  title: (typeof NOTIFICATION_KEYS)[keyof typeof NOTIFICATION_KEYS];
+  title: string;
   type: "info" | "success" | "warning" | "error";
+};
+
+export type Toast = {
+  id: string;
+  title?: React.ReactNode;
+  message?: React.ReactNode;
+  icon?: React.ReactNode;
+  loading?: boolean;
+  autoClose?: number | false;
+  color?: string;
+  type?: "info" | "success" | "warning" | "error";
 };
 
 export type NotificationStoreState = {
   isDrawerOpen: boolean;
   notifications: Notification[];
+  toasts: Toast[];
 };
 
 export type NotificationStoreActions = {
@@ -32,4 +44,8 @@ export type NotificationStoreActions = {
   openDrawer: () => void;
   removeNotification: (id: string) => void;
   toggleDrawer: () => void;
+
+  showToast: (toast: Omit<Toast, "id"> & { id?: string }) => string;
+  updateToast: (id: string, toast: Partial<Toast>) => void;
+  hideToast: (id: string) => void;
 };

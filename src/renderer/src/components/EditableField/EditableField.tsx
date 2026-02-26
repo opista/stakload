@@ -1,4 +1,4 @@
-import { Tooltip } from "@mantine/core";
+import { Tooltip } from "@components/Tooltip/Tooltip";
 import { cn } from "@util/cn";
 import { ElementType, FocusEvent, KeyboardEvent, useState } from "react";
 
@@ -82,7 +82,7 @@ export const EditableField = ({
   };
 
   return (
-    <Tooltip arrowSize={8} disabled={editable} label={label} offset={10} position="right" withArrow>
+    <Tooltip label={label} opened={editable ? false : undefined} position="right">
       <Component
         className={cn(
           "relative cursor-text select-none outline-none transition-colors",

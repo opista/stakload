@@ -1,6 +1,7 @@
+import { useContextMenu } from "@components/ContextMenu/ContextMenu";
 import { GameListModel } from "@contracts/database/games";
-import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
+import { useModalStore } from "@store/modal.store";
 import {
   IconBolt,
   IconDownload,
@@ -12,8 +13,6 @@ import {
 } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { mapLibraryIcon } from "@util/map-library-icon";
-import clsx from "clsx";
-import { useContextMenu } from "mantine-contextmenu";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
@@ -33,6 +32,7 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
   );
   const { showContextMenu } = useContextMenu();
   const { t } = useTranslation();
+  const openModal = useModalStore((state) => state.openModal);
 
   const { icon: SourceIcon, name: libraryName } = mapLibraryIcon(game.library);
 
@@ -88,17 +88,7 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
           color: "red",
           icon: <IconSquareRoundedMinus size={16} />,
           key: "delete",
-          onClick: () => {
-            modals.openContextModal({
-              innerProps: {
-                id: game._id,
-                name: game.name,
-              },
-              modal: "removeGame",
-              size: "sm",
-              title: t("removeGameModal.title"),
-            });
-          },
+          onClick: () => openModal("removeGame", { innerProps: { id: game._id, name: game.name } }),
           title: t("gameCover.removeFromLibrary"),
         },
       ])}
@@ -110,7 +100,7 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
         ) : (
           <div className="flex flex-col items-center justify-end h-full relative overflow-hidden w-full">
             <IconPercentage0
-              className={clsx(
+              className={cn(
                 "absolute left-1/2 -translate-x-1/2 opacity-20 w-[70%]",
                 showGameTitle ? "top-0 h-[80%]" : "top-1/2 -translate-y-1/2",
               )}
@@ -132,10 +122,10 @@ export const GameCover = ({ className, game, onClick, showGameTitle = true }: Ga
           <h4 className="font-serif text-sm font-bold tracking-wider text-white group-hover:text-primary truncate mb-1">
             {game.name}
           </h4>
-          <p className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+          <div className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
             <SourceIcon size={14} />
             {libraryName}
-          </p>
+          </div>
         </div>
       )}
     </div>

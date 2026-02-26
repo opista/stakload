@@ -1,11 +1,7 @@
+import { Carousel } from "@components/Carousel/Carousel";
 import { FeaturedGame } from "@components/FeaturedGame/FeaturedGame";
-import { Carousel } from "@mantine/carousel";
-import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 
 import { FeaturedGameModel } from "../../ipc.types";
-
-import classes from "./FeaturedGamesCarousel.module.css";
 
 type FeaturedGamesCarouselProps = {
   games: FeaturedGameModel[];
@@ -14,24 +10,10 @@ type FeaturedGamesCarouselProps = {
 
 export const FeaturedGamesCarousel = ({ games, title }: FeaturedGamesCarouselProps) => (
   <div className="flex flex-col gap-4">
-    <h2 className="text-3xl font-bold">{title}</h2>
-    <Carousel
-      align="start"
-      classNames={{
-        control: classes.control,
-        controls: classes.controls,
-      }}
-      loop
-      nextControlIcon={<IconArrowRight size={20} stroke={2} />}
-      previousControlIcon={<IconArrowLeft size={20} stroke={2} />}
-      slideGap="md"
-      slideSize={860}
-      slidesToScroll="auto"
-    >
+    <h2 className="text-3xl font-bold text-white">{title}</h2>
+    <Carousel options={{ align: "start", loop: true }} slideClassName="w-full max-w-[860px]">
       {games.map((game) => (
-        <Carousel.Slide key={game._id}>
-          <FeaturedGame game={game} />
-        </Carousel.Slide>
+        <FeaturedGame key={game._id} game={game} />
       ))}
     </Carousel>
   </div>

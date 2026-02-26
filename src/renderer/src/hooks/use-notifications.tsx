@@ -1,42 +1,33 @@
-import { NotificationBody } from "@components/Desktop/Notifications/NotificationBody/NotificationBody";
 import { Notification } from "@contracts/store/notification";
-import { notifications } from "@mantine/notifications";
 import { useNotificationStore } from "@store/notification.store";
+import { IconCheck, IconExclamationCircle, IconInfoCircle, IconX } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 
-const notificationColorMap: Record<Notification["type"], string> = {
-  error: "red",
-  info: "blue",
-  success: "green",
-  warning: "yellow",
+const notificationIconMap: Record<Notification["type"], any> = {
+  error: <IconX size={18} className="text-red-400" />,
+  info: <IconInfoCircle size={18} className="text-blue-400" />,
+  success: <IconCheck size={18} className="text-green-400" />,
+  warning: <IconExclamationCircle size={18} className="text-yellow-400" />,
 };
 
-const mapNotificationTypeToColor = (type: Notification["type"]) =>
-  notificationColorMap[type] || notificationColorMap.info;
-
 export const useNotifications = () => {
-  const { addNotification, notificationsList, removeNotification } = useNotificationStore(
+  const { addNotification, notificationsList, removeNotification, showToast } = useNotificationStore(
     useShallow((state) => ({
       addNotification: state.addNotification,
       notificationsList: state.notifications,
       removeNotification: state.removeNotification,
+      showToast: state.showToast,
     })),
   );
 
-  const onNotificationHide = (id: string) => {
-    removeNotification(id);
-    notifications.hide(id);
-  };
-
   const createNotification = (notification: Notification) => {
-    notifications.show({
+    showToast({
       autoClose: 5000,
-      color: mapNotificationTypeToColor(notification.type),
+      icon: notificationIconMap[notification.type],
       id: notification.id,
-      message: <NotificationBody notification={notification} onClose={onNotificationHide} />,
-      radius: "lg",
-      withCloseButton: false,
+      message: notification.message,
+      title: notification.title,
     });
 
     addNotification(notification);

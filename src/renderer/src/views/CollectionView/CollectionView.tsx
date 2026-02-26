@@ -1,4 +1,4 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { Button } from "@components/Button/Button";
 import { CollectionTitle } from "@components/Desktop/CollectionTitle/CollectionTitle";
 import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";

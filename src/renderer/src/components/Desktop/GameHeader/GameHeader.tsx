@@ -1,8 +1,8 @@
-import ActionIcon from "@components/ActionIcon/ActionIcon";
+import { ActionIcon } from "@components/ActionIcon/ActionIcon";
 import { GameControls } from "@components/Desktop/GameControls/GameControls";
 import { GameStoreModel } from "@contracts/database/games";
-import { modals } from "@mantine/modals";
 import { useGameStore } from "@store/game.store";
+import { useModalStore } from "@store/modal.store";
 import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
@@ -13,6 +13,7 @@ type GameHeaderProps = {
 
 export const GameHeader = ({ game }: GameHeaderProps) => {
   const { t } = useTranslation();
+  const openModal = useModalStore((state) => state.openModal);
   const { toggleFavouriteGame, toggleQuickLaunchGame } = useGameStore(
     useShallow((state) => ({
       toggleFavouriteGame: state.toggleFavouriteGame,
@@ -21,15 +22,12 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
   );
 
   const onDelete = () => {
-    modals.openContextModal({
+    openModal("removeGame", {
       innerProps: {
         id: game._id,
         name: game.name,
         navigateTo: "..",
       },
-      modal: "removeGame",
-      size: "sm",
-      title: t("removeGameModal.title"),
     });
   };
 
