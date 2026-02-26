@@ -1,5 +1,5 @@
-import { FeaturedGamesCarousel } from "@components/FeaturedGamesCarousel/FeaturedGamesCarousel";
-import { GamesCarousel } from "@components/GamesCarousel/GamesCarousel";
+import { FeaturedGamesCarousel } from "@components/media/FeaturedGamesCarousel";
+import { GamesCarousel } from "@components/media/GamesCarousel";
 import { useGameStore } from "@store/game.store";
 import { useShallow } from "zustand/react/shallow";
 

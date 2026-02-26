@@ -1,10 +1,10 @@
-import { Button } from "@components/Button/Button";
-import { CollectionCreateModal } from "@components/CollectionCreateModal/CollectionCreateModal";
-import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
-import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
-import { GamesGrid } from "@components/GamesGrid/GamesGrid";
-import { GhostIcon } from "@components/GhostIcon/GhostIcon";
-import { PageTitle } from "@components/PageTitle/PageTitle";
+import { GamesGrid } from "@components/game/GamesGrid";
+import { GhostIcon } from "@components/icons/GhostIcon";
+import { FilterControl } from "@components/layout/Desktop/FilterControl/FilterControl";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+import { PageTitle } from "@components/layout/PageTitle";
+import { CollectionCreateModal } from "@components/misc/CollectionCreateModal";
+import { Button } from "@components/ui/Button";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";

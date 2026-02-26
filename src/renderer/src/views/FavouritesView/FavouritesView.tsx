@@ -1,8 +1,8 @@
-import { Button } from "@components/Button/Button";
-import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
-import { GamesGrid } from "@components/GamesGrid/GamesGrid";
-import { GhostIcon } from "@components/GhostIcon/GhostIcon";
-import { PageTitle } from "@components/PageTitle/PageTitle";
+import { GamesGrid } from "@components/game/GamesGrid";
+import { GhostIcon } from "@components/icons/GhostIcon";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+import { PageTitle } from "@components/layout/PageTitle";
+import { Button } from "@components/ui/Button";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useGameStore } from "@store/game.store";
 import { IconCategory } from "@tabler/icons-react";

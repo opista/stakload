@@ -1,10 +1,9 @@
-import { Navbar } from "@components/Desktop/Navigation/Navbar/Navbar";
-import { NotificationDrawer } from "@components/Desktop/Notifications/NotificationDrawer/NotificationDrawer";
-import { WindowBar } from "@components/Desktop/WindowBar/WindowBar";
+import { CommandPalette } from "@components/layout/CommandPalette";
+import { Navbar } from "@components/layout/Desktop/Navigation/Navbar/Navbar";
+import { NotificationDrawer } from "@components/layout/Desktop/Notifications/NotificationDrawer/NotificationDrawer";
+import { WindowBar } from "@components/layout/Desktop/WindowBar/WindowBar";
+import { GlobalModalRenderer } from "@components/ui/GlobalModalRenderer";
 import { Outlet } from "react-router";
-
-import { CommandPalette } from "../../components/CommandPalette/CommandPalette";
-import { GlobalModalRenderer } from "../../components/Modal/GlobalModalRenderer";
 
 export const DesktopLayout = () => (
   <div className="flex h-screen w-full pt-12">

@@ -1,15 +1,15 @@
-import { Button } from "@components/Button/Button";
-import { PasswordInput } from "@components/PasswordInput/PasswordInput";
-import { TextInput } from "@components/TextInput/TextInput";
+import { SettingsCheckbox } from "@components/layout/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
+import { SettingsStatusIndicator } from "@components/layout/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
+import { SettingsTitle } from "@components/layout/Desktop/Settings/SettingsTitle/SettingsTitle";
+import { Button } from "@components/ui/Button";
+import { PasswordInput } from "@components/ui/PasswordInput";
+import { TextInput } from "@components/ui/TextInput";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
 import { useEffect, useReducer, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
-import { SettingsCheckbox } from "../../components/Desktop/Settings/SettingsCheckbox/SettingsCheckbox";
-import { SettingsStatusIndicator } from "../../components/Desktop/Settings/SettingsStatusIndicator/SettingsStatusIndicator";
-import { SettingsTitle } from "../../components/Desktop/Settings/SettingsTitle/SettingsTitle";
 import { Library } from "../../ipc.types";
 
 type ValidationState = {

@@ -1,10 +1,10 @@
-import { ActionIcon } from "@components/ActionIcon/ActionIcon";
-import { Button } from "@components/Button/Button";
-import { CollectionTitle } from "@components/Desktop/CollectionTitle/CollectionTitle";
-import { FilterControl } from "@components/Desktop/FilterControl/FilterControl";
-import { SectionHeading } from "@components/Desktop/SectionHeading/SectionHeading";
-import { GamesGrid } from "@components/GamesGrid/GamesGrid";
-import { Modal } from "@components/Modal/Modal";
+import { GamesGrid } from "@components/game/GamesGrid";
+import { CollectionTitle } from "@components/layout/Desktop/CollectionTitle/CollectionTitle";
+import { FilterControl } from "@components/layout/Desktop/FilterControl/FilterControl";
+import { SectionHeading } from "@components/layout/Desktop/SectionHeading/SectionHeading";
+import { ActionIcon } from "@components/ui/ActionIcon";
+import { Button } from "@components/ui/Button";
+import { Modal } from "@components/ui/Modal";
 import { GameFilters } from "@contracts/database/games";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useCollectionStore } from "@store/collection.store";

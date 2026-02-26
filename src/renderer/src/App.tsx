@@ -1,5 +1,5 @@
-import { ContextMenuProvider } from "@components/ContextMenu/ContextMenu";
-import { ToastRenderer } from "@components/Desktop/Notifications/ToastRenderer";
+import { ContextMenuProvider } from "@components/layout/ContextMenu";
+import { ToastRenderer } from "@components/layout/Desktop/Notifications/ToastRenderer";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
