@@ -375,7 +375,7 @@ const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
   );
 };
 
-export const SettingsIntegrationsView = () => {
+export const IntegrationsView = () => {
   const [validationState, dispatch] = useReducer(validationReducer, initialValidationState);
 
   useEffect(() => {

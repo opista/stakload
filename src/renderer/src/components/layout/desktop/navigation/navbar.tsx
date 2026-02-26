@@ -8,7 +8,6 @@ import {
   IconDeviceGamepad,
   IconHome,
   IconLayersIntersect,
-  IconSettings,
   IconStar,
 } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
@@ -62,15 +61,6 @@ export const Navbar = () => {
                 />
               ))}
             </NavbarLink>
-
-            <div className="pt-6 mt-6 border-t border-white/5 space-y-2">
-              <NavbarLink href="/settings" icon={IconSettings} label={t("navigation.settings")} />
-              <NavbarLink
-                href="/settings/integrations"
-                icon={IconLayersIntersect}
-                label={t("navigation.integrations")}
-              />
-            </div>
           </nav>
         </ScrollArea.Viewport>
         <ScrollArea.Scrollbar className="flex touch-none select-none p-0.5 bg-black/10 hover:bg-black/20 w-1.5 transition-colors rounded-full mt-2 mb-2">
@@ -80,6 +70,10 @@ export const Navbar = () => {
       <QuickLaunchList className="mt-8" />
 
       <GameSyncStatus />
+
+      <div className="pt-6 mt-6 border-t border-white/5 space-y-2">
+        <NavbarLink href="/integrations" icon={IconLayersIntersect} label={t("navigation.integrations")} />
+      </div>
     </aside>
   );
 };

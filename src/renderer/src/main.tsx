@@ -11,9 +11,8 @@ import { CollectionView } from "./views/collection-view/collection-view";
 import { FavouritesView } from "./views/favourites-view/favourites-view";
 import { GameDetailsView } from "./views/game-details-view/game-details-view";
 import { HomeView } from "./views/home-view/home-view";
+import { IntegrationsView } from "./views/integrations-view/integrations-view";
 import { LibraryView } from "./views/library-view/library-view";
-import { SettingsIntegrationsView } from "./views/settings-integrations-view/settings-integrations-view";
-import { SettingsView } from "./views/settings-view/settings-view";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -30,9 +29,8 @@ createRoot(document.getElementById("root")!).render(
             <Route path="collections">
               <Route element={<CollectionView />} path=":id" />
             </Route>
-            <Route path="settings">
-              <Route element={<SettingsView />} index />
-              <Route element={<SettingsIntegrationsView />} path="integrations" />
+            <Route path="integrations">
+              <Route element={<IntegrationsView />} index />
             </Route>
           </Route>
         </Route>

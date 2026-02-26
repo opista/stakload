@@ -20,7 +20,7 @@ const EmptyView = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const onImportClick = () => navigate("/settings/integrations");
+  const onImportClick = () => navigate("/integrations");
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-6">
