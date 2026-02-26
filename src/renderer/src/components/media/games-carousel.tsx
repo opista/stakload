@@ -1,5 +1,6 @@
 import { GameCover } from "@components/game/game-cover";
 import { GameListModel } from "@contracts/database/games";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import { Carousel } from "./carousel";
@@ -18,14 +19,20 @@ export const GamesCarousel = <
   onGameActive,
 }: GamesCarouselProps<T>) => {
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <div className="flex flex-col gap-4">
       <Carousel
         options={{ align: "start", loop }}
+        className="px-12"
+        onSlideChange={(index) => {
+          setActiveIndex(index);
+          onGameActive?.(games[index]);
+        }}
         slideClassName="w-[175px] h-sm:w-[200px] h-md:w-[220px] h-lg:w-[260px] h-xl:w-[320px] shrink-0"
       >
-        {games.map((game) => {
+        {games.map((game, index) => {
           const mappedGame: GameListModel = {
             ...game,
             cover: game.cover ?? game.screenshots?.[0],
@@ -39,6 +46,7 @@ export const GamesCarousel = <
             <GameCover
               key={game._id}
               game={mappedGame}
+              isActive={index === activeIndex}
               onClick={(g) => navigate(`/library/${g._id}`)}
               onMouseEnter={() => onGameActive?.(game)}
               onFocus={() => onGameActive?.(game)}

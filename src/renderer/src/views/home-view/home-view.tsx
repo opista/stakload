@@ -29,12 +29,10 @@ export const HomeView = () => {
     <main className="relative flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden custom-scrollbar bg-zinc-950 font-sans text-slate-100">
       {currentActiveGame && (
         <HomeHero game={currentActiveGame}>
-          <div className="w-full">
-            <div className="mb-6 flex items-center justify-between">
-              <SubHeading as="h3" className="text-slate-500">
-                Recently Played
-              </SubHeading>
-            </div>
+          <div className="w-full relative z-20">
+            <SubHeading as="h3" className="text-slate-500 mb-6 px-12">
+              Recently Played
+            </SubHeading>
             <GamesCarousel games={newGames} onGameActive={setActiveGame} />
           </div>
         </HomeHero>

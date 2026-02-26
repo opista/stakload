@@ -23,11 +23,13 @@ type GameCoverProps = {
   showGameTitle?: boolean;
   onMouseEnter?: () => void;
   onFocus?: () => void;
+  isActive?: boolean;
 };
 
 export const GameCover = ({
   className,
   game,
+  isActive,
   onClick,
   onFocus,
   onMouseEnter,
@@ -47,8 +49,9 @@ export const GameCover = ({
 
   return (
     <div
+      data-active={isActive ? "true" : undefined}
       className={cn(
-        "group relative aspect-[3/4] overflow-hidden rounded-sm bg-stone-950 text-white shadow-gold-edge hover:shadow-gold-hover transition-shadow duration-400 ease-in-out",
+        "group relative aspect-[3/4] overflow-hidden rounded-sm bg-stone-950 text-white shadow-gold-edge hover:shadow-gold-hover focus-within:shadow-gold-hover data-[active=true]:shadow-gold-hover transition-shadow duration-400 ease-in-out",
         {
           "cursor-pointer": !!onClick,
         },
@@ -106,7 +109,7 @@ export const GameCover = ({
       ])}
       title={game.name}
     >
-      <div className="w-full h-full transition-transform duration-400 group-hover:scale-110">
+      <div className="w-full h-full transition-transform duration-400 group-hover:scale-110 group-focus-within:scale-110 group-data-[active=true]:scale-110">
         {game.cover ? (
           <img src={game.cover} alt={game.name} className="w-full h-full object-cover" />
         ) : (
@@ -125,13 +128,13 @@ export const GameCover = ({
       {showGameTitle && (
         <div
           className={cn(
-            "absolute inset-x-[1px] bottom-[1px] bg-black/80 backdrop-blur-md p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300 border-t border-white/5 z-20 rounded-b-sm",
+            "absolute inset-x-[1px] bottom-[1px] bg-black/80 backdrop-blur-md p-4 translate-y-full group-hover:translate-y-0 group-focus-within:translate-y-0 group-data-[active=true]:translate-y-0 transition-transform duration-300 border-t border-white/5 z-20 rounded-b-sm",
             {
               "translate-y-0": !game.cover,
             },
           )}
         >
-          <h4 className="font-serif text-sm font-bold tracking-wider text-white group-hover:text-primary truncate mb-1">
+          <h4 className="font-serif text-sm font-bold tracking-wider text-white group-hover:text-primary group-focus-within:text-primary group-data-[active=true]:text-primary truncate mb-1">
             {game.name}
           </h4>
           <div className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
