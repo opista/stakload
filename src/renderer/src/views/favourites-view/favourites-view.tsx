@@ -36,8 +36,8 @@ export const FavouritesView = () => {
   const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }));
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 overflow-hidden">
-      <SectionHeading>
+    <div className="flex h-full w-full flex-col gap-4 px-12">
+      <SectionHeading className="flex-col items-start pl-2 gap-4">
         <PageTitle>{t("favourites.title")}</PageTitle>
       </SectionHeading>
       {games?.length ? <GamesGrid games={games} /> : <EmptyView />}

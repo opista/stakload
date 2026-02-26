@@ -9,7 +9,7 @@ import { CellComponentProps, Grid, GridImperativeAPI } from "react-window";
 import { GameListModel } from "../../ipc.types";
 
 const MAX_CELL_SIZE = 270;
-const CELL_GAP = 6;
+const CELL_GAP = 8;
 const SCROLLBAR_WIDTH = 6;
 
 const getItemIndex = (rowIndex: number, columnIndex: number, columnCount: number) =>

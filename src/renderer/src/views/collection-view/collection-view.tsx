@@ -48,13 +48,13 @@ export const CollectionView = () => {
 
   const onDeleteConfirm = async () => {
     await deleteCollection(collection._id);
-    navigate("/library");
+    void navigate("/library");
   };
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4 overflow-hidden" ref={containerRef}>
-        <SectionHeading className="flex-col !items-stretch gap-4">
+      <div className="flex h-full w-full flex-col gap-4 px-12 overflow-hidden" ref={containerRef}>
+        <SectionHeading className="flex-col items-start pl-2 gap-4">
           <div className="flex items-center justify-between">
             <CollectionTitle collection={collection} />
             <div className="flex items-center gap-2">

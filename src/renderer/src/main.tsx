@@ -6,7 +6,7 @@ import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router";
 
 import { App } from "./app";
-import { DesktopLayout } from "./layouts/desktop-layout/desktop-layout";
+import { DesktopLayout } from "./layouts/desktop-layout";
 import { CollectionView } from "./views/collection-view/collection-view";
 import { FavouritesView } from "./views/favourites-view/favourites-view";
 import { GameDetailsView } from "./views/game-details-view/game-details-view";

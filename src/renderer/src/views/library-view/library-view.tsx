@@ -61,8 +61,8 @@ export const LibraryView = () => {
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4">
-        <SectionHeading className="flex-col !items-start gap-4">
+      <div className="flex h-full w-full flex-col gap-4 px-12">
+        <SectionHeading className="flex-col items-start pl-2 gap-4">
           <PageTitle>{t("library.title")}</PageTitle>
           <FilterControl onChange={setFilters} onCreate={() => setOpenedCreate(true)} />
         </SectionHeading>
