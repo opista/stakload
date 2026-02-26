@@ -76,6 +76,14 @@ body {
   user-select: none;
 }
 
+body {
+  position: relative;
+}
+
+.root {
+  isolation: isolate;
+}
+
 h1,
 h2,
 h3,

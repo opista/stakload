@@ -53,4 +53,3 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
     </div>
   );
 };
-

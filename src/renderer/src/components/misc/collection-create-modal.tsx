@@ -50,4 +50,3 @@ export const CollectionCreateModal = ({ onClose, onConfirm, opened }: Collection
     </Modal>
   );
 };
-

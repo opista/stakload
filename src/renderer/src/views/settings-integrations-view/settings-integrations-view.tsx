@@ -399,4 +399,3 @@ export const SettingsIntegrationsView = () => {
     </div>
   );
 };
-

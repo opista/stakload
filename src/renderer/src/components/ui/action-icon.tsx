@@ -1,3 +1,4 @@
+import { Button as BaseButton } from "@base-ui/react/button";
 import { IconProps } from "@tabler/icons-react";
 import { cn } from "@util/cn";
 import { ComponentPropsWithoutRef, ComponentType, forwardRef, memo } from "react";
@@ -34,7 +35,7 @@ const ActionIcon = memo(
   forwardRef<HTMLButtonElement, ActionIconProps>(
     ({ children, className, icon: Icon, iconStroke = 1.5, size = "md", variant = "default", ...props }, ref) => {
       return (
-        <button
+        <BaseButton
           className={cn(
             "inline-flex items-center justify-center rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",
             sizeMap[size],
@@ -42,12 +43,11 @@ const ActionIcon = memo(
             className,
           )}
           ref={ref}
-          type="button"
           {...props}
         >
           <span className="sr-only">{props["aria-label"]}</span>
           {Icon ? <Icon className="h-[60%] w-[60%]" stroke={iconStroke} /> : children}
-        </button>
+        </BaseButton>
       );
     },
   ),

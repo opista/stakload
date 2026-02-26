@@ -57,4 +57,3 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
     </div>
   );
 };
-

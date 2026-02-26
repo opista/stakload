@@ -31,4 +31,3 @@ export const GlobalModalRenderer = () => {
 
   return <ModalComponent opened={isOpen} onClose={closeModal} {...props} />;
 };
-

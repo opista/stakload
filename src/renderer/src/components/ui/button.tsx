@@ -1,3 +1,4 @@
+import { Button as BaseButton } from "@base-ui/react/button";
 import { cn } from "@util/cn";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
 
@@ -46,7 +47,7 @@ export const Button = ({
   const isActuallyLoading = loading || isLoading;
 
   return (
-    <button
+    <BaseButton
       className={cn(
         "inline-flex items-center justify-center rounded-lg font-bold transition-all duration-200 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 gap-2",
         variantClasses[variant],
@@ -54,7 +55,6 @@ export const Button = ({
         className,
       )}
       disabled={disabled || isActuallyLoading}
-      type={props.type || "button"}
       {...props}
     >
       {isActuallyLoading ? (
@@ -64,6 +64,6 @@ export const Button = ({
       )}
       {children}
       {!isActuallyLoading && rightIcon}
-    </button>
+    </BaseButton>
   );
 };

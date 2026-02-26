@@ -1,6 +1,6 @@
+import { ContextMenu } from "@base-ui/react/context-menu";
 import { cn } from "@util/cn";
 import React, { createContext, useCallback, useContext, useState } from "react";
-import { createPortal } from "react-dom";
 
 export interface ContextMenuItem {
   color?: string;
@@ -43,48 +43,38 @@ export const ContextMenuProvider = ({ children }: { children: React.ReactNode })
 
   return (
     <ContextMenuContext.Provider value={{ showContextMenu }}>
-      {children}
-      {isOpen &&
-        createPortal(
-          <div
-            className="fixed inset-0 z-[9999]"
-            onMouseDown={() => setIsOpen(false)}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              setIsOpen(false);
-            }}
-          >
-            <div
-              className="absolute min-w-[200px] overflow-hidden rounded-xl bg-[#2b2b2b] p-1.5 shadow-2xl ring-1 ring-white/10"
-              style={{ left: position.x, top: position.y }}
-              onMouseDown={(e) => e.stopPropagation()}
-            >
+      <ContextMenu.Root open={isOpen} onOpenChange={setIsOpen}>
+        {/* Trigger with virtual element for the recorded position */}
+        <ContextMenu.Trigger render={<div style={{ left: position.x, position: "fixed", top: position.y }} />} />
+        <ContextMenu.Portal>
+          <ContextMenu.Positioner side="right" align="start">
+            <ContextMenu.Popup className="z-[9999] min-w-[200px] overflow-hidden rounded-xl bg-[#2b2b2b] p-1.5 shadow-2xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-200">
               {items.map((item) => {
                 if (item.key.includes("divider")) {
-                  return <div key={item.key} className="my-1 h-px bg-white/5" />;
+                  return <ContextMenu.Separator key={item.key} className="my-1 h-px bg-white/5" />;
                 }
 
                 return (
-                  <button
+                  <ContextMenu.Item
                     key={item.key}
-                    onClick={() => {
+                    onSelect={() => {
                       item.onClick?.();
-                      setIsOpen(false);
                     }}
                     className={cn(
-                      "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-white/5",
+                      "flex w-full cursor-pointer select-none items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors outline-none focus:bg-white/5 data-[highlighted]:bg-white/5",
                       item.color === "red" ? "text-red-400 hover:text-red-300" : "text-neutral-200 hover:text-white",
                     )}
                   >
                     <span className="shrink-0 opacity-70">{item.icon}</span>
                     <span className="flex-1 text-left">{item.title}</span>
-                  </button>
+                  </ContextMenu.Item>
                 );
               })}
-            </div>
-          </div>,
-          document.body,
-        )}
+            </ContextMenu.Popup>
+          </ContextMenu.Positioner>
+        </ContextMenu.Portal>
+      </ContextMenu.Root>
+      {children}
     </ContextMenuContext.Provider>
   );
 };
