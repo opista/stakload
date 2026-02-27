@@ -31,6 +31,7 @@ export const GamesCarousel = <
           onGameActive?.(games[index]);
         }}
         slideClassName="w-[175px] h-sm:w-[200px] h-md:w-[220px] h-lg:w-[260px] h-xl:w-[320px] shrink-0"
+        withControls={false}
       >
         {games.map((game, index) => {
           const mappedGame: GameListModel = {

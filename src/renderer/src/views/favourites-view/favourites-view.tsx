@@ -36,7 +36,7 @@ export const FavouritesView = () => {
   const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }));
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 px-12">
+    <div className="flex h-full w-full flex-col gap-4 pt-12 px-12">
       <SectionHeading className="flex-col items-start pl-2 gap-4">
         <PageTitle>{t("favourites.title")}</PageTitle>
       </SectionHeading>

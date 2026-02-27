@@ -53,7 +53,7 @@ export const CollectionView = () => {
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4 px-12 overflow-hidden" ref={containerRef}>
+      <div className="flex h-full w-full flex-col gap-4 pt-12 px-12 overflow-hidden" ref={containerRef}>
         <SectionHeading className="flex-col items-start pl-2 gap-4">
           <div className="flex items-center justify-between">
             <CollectionTitle collection={collection} />

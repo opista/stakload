@@ -34,7 +34,7 @@ export const GameHeader = ({ game }: GameHeaderProps) => {
 
   return (
     <div className="rounded-2xl bg-[var(--color)] overflow-hidden shadow-lg">
-      <div className="mx-auto max-w-screen-2xl px-6 py-4">
+      <div className="mx-auto max-w-screen-2xl px-6 pt-12">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <GameControls game={game} />

@@ -53,15 +53,15 @@ export const LibraryView = () => {
 
   const hasFiltersSet = !!Object.keys(cleanFilters).length;
 
-  const onCreate = async (name: string, icon?: string) => {
+  const onCreate = async (name: string) => {
     if (!filters) return;
-    await createCollection({ filters, icon, name });
+    await createCollection({ filters, name });
     setOpenedCreate(false);
   };
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4 px-12">
+      <div className="flex h-full w-full flex-col gap-4 pt-12 px-12">
         <SectionHeading className="flex-col items-start pl-2 gap-4">
           <PageTitle>{t("library.title")}</PageTitle>
           <FilterControl onChange={setFilters} onCreate={() => setOpenedCreate(true)} />
