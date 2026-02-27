@@ -1,13 +1,16 @@
 ﻿import { ScrollArea } from "@base-ui/react";
 import { Logo } from "@components/icons/logo";
 import { useCollectionStore } from "@store/collection.store";
+import { useNotificationStore } from "@store/notification.store";
 import type { IconProps } from "@tabler/icons-react";
 import {
+  IconBell,
   IconBooks,
   IconCategory,
   IconDeviceGamepad,
   IconHome,
   IconLayersIntersect,
+  IconSettings,
   IconStar,
 } from "@tabler/icons-react";
 import { importDynamicIcon } from "@util/import-dynamic-icon";
@@ -19,11 +22,18 @@ import { useShallow } from "zustand/react/shallow";
 import { GameSyncStatus } from "../game-sync-status";
 import { QuickLaunchList } from "../quick-launch/quick-launch-list";
 
+import { NavbarIconButton } from "./navbar-icon-button";
 import { NavbarLink } from "./navbar-link";
 
 export const Navbar = () => {
   const { t } = useTranslation();
   const collections = useCollectionStore(useShallow((state) => state.collections));
+  const { hasNotifications, toggleDrawer } = useNotificationStore(
+    useShallow((state) => ({
+      hasNotifications: !!state.notifications.length,
+      toggleDrawer: state.toggleDrawer,
+    })),
+  );
 
   const iconCache = useMemo(() => {
     const cache = new Map<string, FC<IconProps>>();
@@ -71,8 +81,16 @@ export const Navbar = () => {
 
       <GameSyncStatus />
 
-      <div className="pt-6 mt-6 border-t border-white/5 space-y-2">
-        <NavbarLink href="/integrations" icon={IconLayersIntersect} label={t("navigation.integrations")} />
+      <div className="pt-6 mt-6 border-t border-white/5 flex gap-2">
+        <NavbarIconButton className="grow" href="/integrations" label="Integrations" icon={IconLayersIntersect} />
+        <NavbarIconButton className="grow" label="Settings" icon={IconSettings} />
+        <NavbarIconButton
+          className="grow"
+          label="Notifications"
+          icon={IconBell}
+          onClick={toggleDrawer}
+          indicator={hasNotifications}
+        />
       </div>
     </aside>
   );

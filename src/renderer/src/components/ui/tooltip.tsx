@@ -5,6 +5,7 @@ import { isValidElement, ReactNode } from "react";
 export interface TooltipProps {
   children: ReactNode;
   className?: string;
+  delay?: number;
   label: ReactNode;
   offset?: number;
   onOpenedChange?: (opened: boolean) => void;
@@ -16,6 +17,7 @@ export interface TooltipProps {
 export const Tooltip = ({
   children,
   className,
+  delay = 200,
   label,
   offset = 8,
   onOpenedChange,
@@ -27,7 +29,9 @@ export const Tooltip = ({
   return (
     <BaseTooltip.Root open={opened} onOpenChange={onOpenedChange}>
       {/* Use render prop to avoid double buttons when children is already a button (like ActionIcon) */}
-      <BaseTooltip.Trigger render={render}>{children}</BaseTooltip.Trigger>
+      <BaseTooltip.Trigger delay={delay} render={render}>
+        {children}
+      </BaseTooltip.Trigger>
       <BaseTooltip.Portal>
         <BaseTooltip.Positioner
           side={position.split("-")[0] as any}
