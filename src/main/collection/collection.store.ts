@@ -15,7 +15,7 @@ export class CollectionStore {
     this.logger.setContext(this.constructor.name);
   }
 
-  async createCollection(collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) {
+  async createCollection(collection: Pick<CollectionStoreModel, "name" | "filters">) {
     this.logger.debug("Attempting to create collection in database", collection);
     try {
       const created = this.repository.create(collection);

@@ -57,18 +57,18 @@ export const CollectionView = () => {
         <SectionHeading className="flex-col items-start pl-2 gap-4">
           <div className="flex items-center justify-between">
             <CollectionTitle collection={collection} />
-            <div className="flex items-center gap-2">
-              <ActionIcon
-                aria-label={t("settingsButton.title")}
-                onClick={() => setShowDeleteModal(true)}
-                title={"delete"}
-                variant="subtle"
-              >
-                <IconTrash size={20} stroke={1.5} />
-              </ActionIcon>
-            </div>
           </div>
-          <FilterControl collection={collection} onChange={setFilters} />
+          <div className="flex justify-between">
+            <FilterControl collection={collection} onChange={setFilters} />
+            <ActionIcon
+              aria-label={t("settingsButton.title")}
+              onClick={() => setShowDeleteModal(true)}
+              title={"delete"}
+              variant="subtle"
+            >
+              <IconTrash size={20} stroke={1.5} />
+            </ActionIcon>
+          </div>
         </SectionHeading>
         <GamesGrid games={games} />
       </div>

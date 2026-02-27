@@ -5,8 +5,8 @@ export type CollectionState = {
 };
 
 export type CollectionActions = {
-  createCollection: (collection: Pick<CollectionStoreModel, "filters" | "icon" | "name">) => Promise<void>;
+  createCollection: (collection: Pick<CollectionStoreModel, "filters" | "name">) => Promise<void>;
   deleteCollection: (id: string) => Promise<void>;
   fetchCollections: () => Promise<void>;
-  updateCollection: (id: string, updates: Pick<CollectionStoreModel, "filters" | "icon" | "name">) => Promise<void>;
+  updateCollection: (id: string, updates: Pick<CollectionStoreModel, "filters" | "name">) => Promise<void>;
 };

@@ -8,7 +8,7 @@ type CollectionStore = CollectionState & CollectionActions;
 export const useCollectionStore = create<CollectionStore>()((set, get) => ({
   collections: [],
 
-  createCollection: async (collection: Pick<CollectionStoreModel, "icon" | "name" | "filters">) => {
+  createCollection: async (collection: Pick<CollectionStoreModel, "name" | "filters">) => {
     await window.ipc.collection.createCollection(collection as CollectionStoreModel);
     await get().fetchCollections();
   },
@@ -20,7 +20,7 @@ export const useCollectionStore = create<CollectionStore>()((set, get) => ({
     const collections = await window.ipc.collection.getCollections();
     set({ collections: collections as any });
   },
-  updateCollection: async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters" | "icon">) => {
+  updateCollection: async (id: string, updates: Pick<CollectionStoreModel, "name" | "filters">) => {
     await window.ipc.collection.updateCollection(id, updates);
     await get().fetchCollections();
   },

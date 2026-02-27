@@ -9,9 +9,6 @@ export class CollectionEntity {
   @Column("simple-json")
   filters!: GameFilters;
 
-  @Column({ nullable: true, type: "text" })
-  icon?: string;
-
   @Column("text")
   name!: string;
 }

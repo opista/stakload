@@ -13,7 +13,6 @@ export type AgeRating = {
 export type CollectionStoreModel = {
   _id: string;
   filters: GameFilters;
-  icon?: string;
   name: string;
 };
 

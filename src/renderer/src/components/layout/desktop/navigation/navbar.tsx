@@ -2,20 +2,15 @@
 import { Logo } from "@components/icons/logo";
 import { useCollectionStore } from "@store/collection.store";
 import { useNotificationStore } from "@store/notification.store";
-import type { IconProps } from "@tabler/icons-react";
 import {
   IconBell,
   IconBooks,
   IconCategory,
-  IconDeviceGamepad,
   IconHome,
   IconLayersIntersect,
   IconSettings,
   IconStar,
 } from "@tabler/icons-react";
-import { importDynamicIcon } from "@util/import-dynamic-icon";
-import type { FC } from "react";
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
 
@@ -35,18 +30,6 @@ export const Navbar = () => {
     })),
   );
 
-  const iconCache = useMemo(() => {
-    const cache = new Map<string, FC<IconProps>>();
-
-    collections.forEach((collection) => {
-      if (collection.icon && !cache.has(collection.icon)) {
-        cache.set(collection.icon, importDynamicIcon(collection.icon) || IconDeviceGamepad);
-      }
-    });
-
-    return cache;
-  }, [collections]);
-
   return (
     <aside className="flex flex-col h-full w-[260px] shrink-0 p-6 bg-stone-950 border-r border-white/5">
       <div className="flex shrink-0 items-center justify-center pb-8">
@@ -65,7 +48,6 @@ export const Navbar = () => {
                 <NavbarLink
                   isSubItem
                   href={`/collections/${collection._id}`}
-                  icon={collection.icon ? iconCache.get(collection.icon) || IconDeviceGamepad : IconDeviceGamepad}
                   key={collection._id}
                   label={collection.name}
                 />

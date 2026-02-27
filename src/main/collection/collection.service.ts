@@ -12,7 +12,7 @@ export class CollectionService {
     this.logger.setContext(this.constructor.name);
   }
 
-  async createCollection(collection: Pick<CollectionStoreModel, "filters" | "icon" | "name">) {
+  async createCollection(collection: Pick<CollectionStoreModel, "filters" | "name">) {
     this.logger.debug("Processing collection creation", collection);
     try {
       const formattedName = collection.name.trim();
