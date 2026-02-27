@@ -39,7 +39,7 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
   return (
     <div className="flex items-center gap-4">
       <IconSelector onSelect={onIconSelect} selectedIcon={collection.icon}>
-        <Tooltip label="Change icon" position="right">
+        <Tooltip label="Change icon" side="right" align="center">
           <Icon className="cursor-pointer" size={40} />
         </Tooltip>
       </IconSelector>

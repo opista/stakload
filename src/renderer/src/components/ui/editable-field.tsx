@@ -82,7 +82,7 @@ export const EditableField = ({
   };
 
   return (
-    <Tooltip label={label} opened={editable ? false : undefined} position="right">
+    <Tooltip label={label} open={editable ? false : undefined} side="right" align="center">
       <Component
         className={cn(
           "relative cursor-text select-none outline-none transition-colors",
