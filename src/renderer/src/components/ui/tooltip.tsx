@@ -28,7 +28,7 @@ export const Tooltip = ({
   return (
     <BaseTooltip.Root {...props}>
       <BaseTooltip.Trigger delay={delay} render={render}>
-        {children}
+        {render ? undefined : children}
       </BaseTooltip.Trigger>
       <BaseTooltip.Portal>
         <BaseTooltip.Positioner side={side} align={align} sideOffset={offset}>

@@ -1,9 +1,9 @@
 import { Tooltip } from "@components/ui/tooltip";
 import { cn } from "@util/cn";
-import { ElementType, FocusEvent, KeyboardEvent, useState } from "react";
+import { ElementType, FocusEvent, FormEvent, KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
 type EditableFieldProps = {
-  as: ElementType;
+  as?: ElementType;
   className?: string;
   label: string;
   maxLength?: number;
@@ -20,8 +20,48 @@ export const EditableField = ({
   value,
 }: EditableFieldProps) => {
   const [editable, setEditable] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const clickPosRef = useRef<{ x: number; y: number } | null>(null);
 
-  const handleBlur = (event: FocusEvent<HTMLHeadingElement>) => {
+  useEffect(() => {
+    if (editable && ref.current) {
+      ref.current.focus();
+
+      let range: Range | null = null;
+      if (clickPosRef.current) {
+        const { x, y } = clickPosRef.current;
+        if (typeof document.caretRangeFromPoint === "function") {
+          range = document.caretRangeFromPoint(x, y);
+        } else if (typeof document.caretPositionFromPoint === "function") {
+          const position = document.caretPositionFromPoint(x, y);
+          if (position) {
+            range = document.createRange();
+            range.setStart(position.offsetNode, position.offset);
+            range.collapse(true);
+          }
+        }
+        clickPosRef.current = null;
+      }
+
+      if (!range) {
+        range = document.createRange();
+        range.selectNodeContents(ref.current);
+        range.collapse(false);
+      }
+
+      const selection = window.getSelection();
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  }, [editable]);
+
+  const handleClick = (event: MouseEvent<HTMLElement>) => {
+    if (editable) return;
+    clickPosRef.current = { x: event.clientX, y: event.clientY };
+    setEditable(true);
+  };
+
+  const handleBlur = (event: FocusEvent<HTMLElement>) => {
     setEditable(false);
 
     const editableValue = event.currentTarget.innerText.trim();
@@ -36,7 +76,7 @@ export const EditableField = ({
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLHeadingElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
     const currentLength = event.currentTarget.innerText.length;
 
     // Prevent input if we're at max length, unless it's a deletion or navigation key
@@ -81,20 +121,30 @@ export const EditableField = ({
     }
   };
 
+  const handleInput = (event: FormEvent<HTMLElement>) => {
+    const text = event.currentTarget.innerText.trim();
+    if (!text && event.currentTarget.innerHTML.includes("<br")) {
+      event.currentTarget.innerHTML = "";
+    }
+  };
+
   return (
-    <Tooltip label={label} open={editable ? false : undefined} side="right" align="center">
+    <Tooltip label={label} disabled={editable} side="right" align="center">
       <Component
+        ref={ref}
         className={cn(
           "relative cursor-text select-none outline-none transition-colors",
           "after:absolute after:bottom-[-2px] after:left-0 after:right-0 after:border-b-2 after:border-dashed after:border-white/25 after:content-['']",
           "hover:after:border-current data-[active=true]:after:border-current",
+          "empty:inline-block empty:min-w-[1ch] empty:before:content-['\\200b']",
           className,
         )}
         contentEditable={editable}
         data-active={editable}
         onBlur={handleBlur}
-        onClick={() => setEditable(true)}
+        onClick={handleClick}
         onKeyDown={handleKeyDown}
+        onInput={handleInput}
         suppressContentEditableWarning
       >
         {value}
