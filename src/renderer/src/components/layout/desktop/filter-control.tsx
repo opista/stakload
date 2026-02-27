@@ -1,3 +1,4 @@
+import { Separator } from "@base-ui/react";
 import { GamesFilter } from "@components/game/games-filter";
 import { ActionIcon } from "@components/ui/action-icon";
 import { Badge } from "@components/ui/badge";
@@ -49,7 +50,6 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
 
     await updateCollection(collection._id, {
       filters,
-      icon: collection.icon,
       name: collection.name,
     });
 
@@ -60,7 +60,7 @@ export const FilterControl = ({ collection, onChange, onCreate }: FilterControlP
     <div className="flex items-start gap-4">
       <GamesFilter filters={filters} onChange={onUpdate} />
 
-      {formattedFilters.length > 0 && <div className="h-8 w-px bg-white/10 self-center" />}
+      {formattedFilters.length > 0 && <Separator orientation="vertical" className="h-full w-px bg-white/10" />}
 
       <div className="flex flex-wrap items-center gap-2 pt-1">
         {formattedFilters.map(({ key, label, value }) => (

@@ -1,3 +1,4 @@
+import { Button } from "@components/ui/button";
 import { Checkbox } from "@components/ui/checkbox";
 import { MultiSelect } from "@components/ui/multi-select";
 import { Popover } from "@components/ui/popover";
@@ -119,18 +120,10 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
         </div>
       }
     >
-      <button
-        disabled={disabled}
-        onClick={() => setOpened((o) => !o)}
-        className={cn(
-          "flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all",
-          "bg-neutral-800/50 text-neutral-400 hover:bg-neutral-800 hover:text-white",
-          opened && "bg-neutral-800 text-white ring-2 ring-cyan-500/50",
-        )}
-      >
+      <Button disabled={disabled} onClick={() => setOpened((o) => !o)} size="sm">
         <IconAdjustmentsAlt size={16} stroke={1.5} />
-        <span>All Filters</span>
-      </button>
+        <span>Filters</span>
+      </Button>
     </Popover>
   );
 };

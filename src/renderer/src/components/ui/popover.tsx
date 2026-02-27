@@ -35,11 +35,11 @@ export const Popover = ({
         >
           <BasePopover.Popup
             className={cn(
-              "z-[1000] min-w-[200px] rounded-2xl bg-[#2b2b2b] p-4 text-white shadow-2xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-200",
+              "z-[1000] min-w-[200px] bg-stone-950 border border-white/5 p-4 text-white shadow-2xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-200",
               className,
             )}
           >
-            {withArrow && <BasePopover.Arrow className="fill-[#2b2b2b] stroke-white/10" />}
+            {withArrow && <BasePopover.Arrow className="fill-stone-950 stroke-white/5" />}
             {content}
           </BasePopover.Popup>
         </BasePopover.Positioner>
