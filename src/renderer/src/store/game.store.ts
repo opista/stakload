@@ -54,11 +54,6 @@ export const useGameStore = create<GameStore>()(
       gameFilters: {},
       gamesDetails: {},
       gamesList: [],
-      getRandomGame: () => {
-        const gamesList = get().gamesList;
-        const randomGame = gamesList[Math.floor(Math.random() * gamesList.length)];
-        return randomGame;
-      },
       newGames: [],
       quickLaunchGames: [],
       quickLaunchGamesOrder: [],

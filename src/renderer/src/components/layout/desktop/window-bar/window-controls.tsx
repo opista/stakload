@@ -9,14 +9,13 @@ import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 export const WindowControls = () => {
-  const { getRandomGame } = useGameStore(useShallow((state) => ({ getRandomGame: state.getRandomGame })));
   const { hasNotifications, toggleDrawer } = useNotificationStore(
     useShallow((state) => ({
       hasNotifications: !!state.notifications.length,
       toggleDrawer: state.toggleDrawer,
     })),
   );
-  const navigate = useNavigate();
+
   const { t } = useTranslation();
   const [platform, setPlatform] = useState<NodeJS.Platform | null>(null);
 
@@ -24,28 +23,12 @@ export const WindowControls = () => {
     void window.ipc.system.getPlatform().then(setPlatform);
   }, []);
 
-  const handleRandomGame = () => {
-    const randomGame = getRandomGame();
-    if (randomGame) {
-      void navigate(`/library/${randomGame._id}`);
-    }
-  };
   const handleMinimize = () => window.ipc.window.minimize();
   const handleMaximize = () => window.ipc.window.maximize();
   const handleClose = () => window.ipc.window.close();
 
   return (
     <div className="flex items-center gap-2 [app-region:no-drag]">
-      <Tooltip label={t("windowControls.randomGame")}>
-        <ActionIcon
-          aria-label={t("windowControls.randomGame")}
-          className="h-auto w-auto px-4 py-2"
-          onClick={handleRandomGame}
-          variant="subtle"
-        >
-          <IconDice5Filled size={16} />
-        </ActionIcon>
-      </Tooltip>
       <Tooltip label={t("windowControls.notifications")}>
         <ActionIcon
           aria-label={t("windowControls.notifications")}
