@@ -1,6 +1,6 @@
 import { IconChevronRight, IconProps } from "@tabler/icons-react";
 import { cn } from "@util/cn";
-import { FC, ReactNode, useMemo, useState } from "react";
+import { Children, FC, isValidElement, ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 type NavbarLinkProps = {
@@ -15,10 +15,22 @@ type NavbarLinkProps = {
 export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, label }: NavbarLinkProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
 
-  const active = useMemo(() => (href ? location.pathname === href : false), [location.pathname, href]);
+  const active = href ? location.pathname === href : false;
   const hasChildren = !!children;
+
+  const isChildActive = (() => {
+    if (!children) return false;
+    return Children.toArray(children).some((child) => {
+      if (isValidElement<{ href?: string }>(child)) {
+        return child.props.href === location.pathname;
+      }
+      return false;
+    });
+  })();
+
+  // Open by default if a child route is currently active
+  const [isOpen, setIsOpen] = useState(isChildActive);
 
   const onClick = () => {
     if (disabled) return;
@@ -36,10 +48,11 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
         className={cn(
           "flex w-full cursor-pointer text-left focus:outline-none",
           "text-xs uppercase tracking-widest transition-all",
-          "rounded-sm px-2 py-1 -ml-2",
+          "rounded-sm px-2 py-1.5 -ml-2",
           "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
-          "text-slate-500 hover:text-primary focus-visible:text-primary",
-          active && "text-primary",
+          !active &&
+          "text-slate-500 hover:text-primary focus-visible:text-primary hover:bg-white/5 focus-visible:bg-white/5",
+          active && "text-primary bg-primary/10 font-bold",
           disabled && "cursor-not-allowed opacity-50 grayscale hover:text-slate-500",
         )}
         disabled={disabled}
@@ -56,10 +69,15 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
       <button
         className={cn(
           "flex w-full cursor-pointer items-center gap-4 rounded-lg px-3 py-3 transition-all focus:outline-none",
-          "text-slate-400",
           "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
-          !active && "hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
-          active && "bg-primary/10 text-primary",
+          // Default inactive state
+          !active &&
+          !isChildActive &&
+          "text-slate-400 hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
+          // Subtle active when expanded (child is active)
+          isChildActive && isOpen && "text-primary hover:bg-white/5 focus-visible:bg-white/5",
+          // Full active when collapsed (child active) OR directly active
+          (active || (isChildActive && !isOpen)) && "bg-primary/10 text-primary",
           disabled && "cursor-not-allowed opacity-50 grayscale hover:bg-transparent hover:text-slate-400",
         )}
         disabled={disabled}
@@ -76,7 +94,7 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
         )}
       </button>
 
-      {hasChildren && isOpen && <div className="ml-8 mt-1 flex flex-col space-y-2">{children}</div>}
+      {hasChildren && isOpen && <div className="ml-8 mt-1 flex flex-col space-y-1">{children}</div>}
     </div>
   );
 };
