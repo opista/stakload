@@ -1,6 +1,7 @@
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
-import { ConsoleLogger } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 import { SystemService } from "./system.service";
 
@@ -8,7 +9,7 @@ import { SystemService } from "./system.service";
 @Controller()
 export class SystemController {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly systemService: SystemService,
   ) {
     this.logger.setContext(this.constructor.name);

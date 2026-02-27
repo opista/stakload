@@ -1,7 +1,8 @@
 import type { CollectionStoreModel } from "@contracts/database/collections";
 import { IpcController, IpcHandle } from "@electron-ipc-bridge/core";
-import { ConsoleLogger } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 import { CollectionService } from "./collection.service";
 
@@ -10,7 +11,7 @@ import { CollectionService } from "./collection.service";
 export class CollectionController {
   constructor(
     private readonly collectionService: CollectionService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

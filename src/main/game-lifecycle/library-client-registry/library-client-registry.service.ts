@@ -1,18 +1,19 @@
 import { Library } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { assertNever } from "@util/assert-never";
 
 import { BattleNetClientService } from "../../integrations/battle-net/client/battle-net-client.service";
 import { EpicGamesStoreClientService } from "../../integrations/epic-games-store/client/epic-games-store-client.service";
 import { GogClientService } from "../../integrations/gog/client/gog-client.service";
 import { SteamClientService } from "../../integrations/steam/client/steam-client.service";
+import { Logger } from "../../logging/logging.service";
 
 import { LibraryClientService } from "./types";
 
 @Injectable()
 export class LibraryClientRegistryService {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly battleNetClientService: BattleNetClientService,
     private readonly epicGamesStoreClientService: EpicGamesStoreClientService,
     private readonly gogClientService: GogClientService,

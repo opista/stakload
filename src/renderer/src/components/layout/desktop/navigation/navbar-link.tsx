@@ -51,7 +51,7 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
           "rounded-sm px-2 py-1.5 -ml-2",
           "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
           !active &&
-          "text-slate-500 hover:text-primary focus-visible:text-primary hover:bg-white/5 focus-visible:bg-white/5",
+            "text-slate-500 hover:text-primary focus-visible:text-primary hover:bg-white/5 focus-visible:bg-white/5",
           active && "text-primary bg-primary/10 font-bold",
           disabled && "cursor-not-allowed opacity-50 grayscale hover:text-slate-500",
         )}
@@ -72,8 +72,8 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
           "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
           // Default inactive state
           !active &&
-          !isChildActive &&
-          "text-slate-400 hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
+            !isChildActive &&
+            "text-slate-400 hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
           // Subtle active when expanded (child is active)
           isChildActive && isOpen && "text-primary hover:bg-white/5 focus-visible:bg-white/5",
           // Full active when collapsed (child active) OR directly active

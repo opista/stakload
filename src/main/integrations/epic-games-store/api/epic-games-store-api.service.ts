@@ -1,5 +1,7 @@
 import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+
+import { Logger } from "../../../logging/logging.service";
 
 import CatalogQuery from "./catalog-query.graphql";
 import { Catalog } from "./types";
@@ -16,7 +18,7 @@ const client = new ApolloClient({
 
 @Injectable()
 export class EpicGamesStoreApiService {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

@@ -1,8 +1,10 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 @Injectable()
 export class ProtondbApiClient {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

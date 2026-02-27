@@ -1,5 +1,5 @@
 import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { SharedConfigService } from "../../../config/shared-config.service";
@@ -10,6 +10,7 @@ import { WindowService } from "../../../window/window.service";
 import { SteamApiService } from "../api/steam-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
+import { Logger } from "../../../logging/logging.service";
 
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 @Injectable()
@@ -20,7 +21,7 @@ export class SteamLibraryService implements SyncService {
   constructor(
     private readonly gameStore: GameStore,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly sharedConfigService: SharedConfigService,
     private readonly steamApiService: SteamApiService,
     private readonly StakloadApiClient: StakloadApiClient,

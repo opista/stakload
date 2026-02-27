@@ -1,4 +1,6 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 import { MacProcessMonitor } from "./strategies/mac.strategy";
 import { WindowsProcessMonitor } from "./strategies/windows.strategy";
@@ -7,7 +9,7 @@ import { ProcessMonitorStrategy } from "./types";
 @Injectable()
 export class ProcessMonitorService {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly macProcessMonitor: MacProcessMonitor,
     private readonly windowsProcessMonitor: WindowsProcessMonitor,
   ) {

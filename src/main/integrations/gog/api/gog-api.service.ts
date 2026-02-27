@@ -1,6 +1,7 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { SharedConfigService } from "../../../config/shared-config.service";
+import { Logger } from "../../../logging/logging.service";
 
 import { GogTokenConfig, LibraryData, LibraryProduct, TokenResponse } from "./types";
 
@@ -12,7 +13,7 @@ export const REDIRECT_URI = "https://embed.gog.com/on_login_success?origin=clien
 export class GogApiService {
   constructor(
     private readonly sharedConfigService: SharedConfigService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

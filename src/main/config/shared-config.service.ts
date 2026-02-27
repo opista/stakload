@@ -1,6 +1,8 @@
-import { ConsoleLogger, Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { decryptString, encryptString } from "@util/safe-storage";
 import { Conf } from "electron-conf/main";
+
+import { Logger } from "../logging/logging.service";
 
 import { Config } from "./types";
 
@@ -24,7 +26,7 @@ type TypeAtPath<T, P extends string> = P extends keyof T
 export class SharedConfigService {
   constructor(
     @Inject("conf") private readonly conf: Conf<Config>,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

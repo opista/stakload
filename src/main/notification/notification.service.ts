@@ -1,7 +1,8 @@
 import { Notification } from "@contracts/store/notification";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
+import { Logger } from "../logging/logging.service";
 import { WindowService } from "../window/window.service";
 
 type NotificationOptions = Pick<Notification, "icon" | "message" | "title">;
@@ -9,7 +10,7 @@ type NotificationOptions = Pick<Notification, "icon" | "message" | "title">;
 @Injectable()
 export class NotificationService {
   constructor(
-    private logger: ConsoleLogger,
+    private logger: Logger,
     private windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);

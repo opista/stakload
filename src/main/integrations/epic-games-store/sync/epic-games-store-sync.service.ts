@@ -1,5 +1,5 @@
 import { ExternalGameSource, GameStoreModel, Library } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
@@ -11,6 +11,7 @@ import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
+import { Logger } from "../../../logging/logging.service";
 
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
 @Injectable()
@@ -23,7 +24,7 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
     private readonly legendaryService: LegendaryService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {

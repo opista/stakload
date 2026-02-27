@@ -1,8 +1,9 @@
 import { Library } from "@contracts/database/games";
 import { NOTIFICATION_KEYS } from "@contracts/store/notification";
-import { ConsoleLogger, forwardRef, Inject, Injectable } from "@nestjs/common";
+import { forwardRef, Inject, Injectable } from "@nestjs/common";
 
 import { GameStore } from "../game/game.store";
+import { Logger } from "../logging/logging.service";
 import { NotificationService } from "../notification/notification.service";
 import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
@@ -21,7 +22,7 @@ export class GameLifecycleService {
   constructor(
     @Inject(forwardRef(() => GameStore)) private readonly gameStore: GameStore,
     private readonly libraryClientRegistryService: LibraryClientRegistryService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly notificationService: NotificationService,
     private readonly processMonitorService: ProcessMonitorService,
     private readonly windowService: WindowService,

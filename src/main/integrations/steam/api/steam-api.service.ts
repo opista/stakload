@@ -1,5 +1,7 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { buildQueryParams } from "@util/build-query-params";
+
+import { Logger } from "../../../logging/logging.service";
 
 import { OwnedGamesResponse } from "./types";
 
@@ -7,7 +9,7 @@ const STEAM_API_BASE_URL = "https://api.steampowered.com";
 
 @Injectable()
 export class SteamApiService {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

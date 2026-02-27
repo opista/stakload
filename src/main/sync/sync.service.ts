@@ -1,12 +1,13 @@
 import { GAME_ICONS, GameStoreModel, Library } from "@contracts/database/games";
 import { NOTIFICATION_KEYS } from "@contracts/store/notification";
 import { GameSyncMessage } from "@contracts/sync";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import fastq from "fastq";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { SharedConfigService } from "../config/shared-config.service";
 import { GameStore } from "../game/game.store";
+import { Logger } from "../logging/logging.service";
 import { NotificationService } from "../notification/notification.service";
 import { WindowService } from "../window/window.service";
 
@@ -25,7 +26,7 @@ export class SyncService {
 
   constructor(
     private gameStore: GameStore,
-    private logger: ConsoleLogger,
+    private logger: Logger,
     private notificationService: NotificationService,
     private sharedConfigService: SharedConfigService,
     private syncRegistryService: SyncRegistryService,

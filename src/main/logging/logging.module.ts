@@ -1,23 +1,12 @@
-import { ConsoleLogger, Global, Module, Scope } from "@nestjs/common";
-import { INQUIRER } from "@nestjs/core";
+import { Global, Module } from "@nestjs/common";
 
-import { CorrelationLogger } from "./logging.service";
+import { LoggingController } from "./logging.controller";
+import { Logger } from "./logging.service";
 
 @Global()
 @Module({
-  exports: [ConsoleLogger],
-  providers: [
-    {
-      inject: [INQUIRER],
-      provide: ConsoleLogger,
-      scope: Scope.TRANSIENT,
-      useFactory: () =>
-        new CorrelationLogger({
-          colors: true,
-          compact: true,
-          timestamp: true,
-        }),
-    },
-  ],
+  controllers: [LoggingController],
+  exports: [Logger],
+  providers: [Logger],
 })
 export class LoggingModule {}

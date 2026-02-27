@@ -1,7 +1,8 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { exec } from "child_process";
 import { promisify } from "util";
 
+import { Logger } from "../../logging/logging.service";
 import { ProcessMonitorStrategy } from "../types";
 
 const execAsync = promisify(exec);
@@ -11,7 +12,7 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
   private processCheckInterval: NodeJS.Timeout | null = null;
   private watchedProcesses: Map<number, () => void> = new Map();
 
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

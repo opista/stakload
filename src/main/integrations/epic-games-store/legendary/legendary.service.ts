@@ -1,5 +1,7 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { runApplicationCommand } from "@util/run-application-command";
+
+import { Logger } from "../../../logging/logging.service";
 
 import { AuthResultModel, OwnedGame } from "./types";
 
@@ -15,7 +17,7 @@ const APPLICATION_NAME = "legendary";
 
 @Injectable()
 export class LegendaryService {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

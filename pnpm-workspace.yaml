@@ -1,5 +1,5 @@
 onlyBuiltDependencies:
-  - '@nestjs/core'
+  - "@nestjs/core"
   - better-sqlite3
   - electron
   - esbuild

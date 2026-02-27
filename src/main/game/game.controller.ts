@@ -1,9 +1,10 @@
 import type { GameFilters } from "@contracts/database/games";
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
-import { ConsoleLogger, Controller } from "@nestjs/common";
+import { Controller } from "@nestjs/common";
 
 import { CollectionService } from "../collection/collection.service";
 import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
+import { Logger } from "../logging/logging.service";
 
 import { GameService } from "./game.service";
 
@@ -14,7 +15,7 @@ export class GameController {
     private readonly collectionService: CollectionService,
     private readonly gameLifecycleService: GameLifecycleService,
     private readonly gameService: GameService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

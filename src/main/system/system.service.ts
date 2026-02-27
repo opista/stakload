@@ -1,12 +1,14 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { execAsync } from "@util/exec-async";
 import { app } from "electron";
+
+import { Logger } from "../logging/logging.service";
 
 // TODO - This is windows-only right now, we need to make it work for mac too when we build gaming mode
 
 @Injectable()
 export class SystemService {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

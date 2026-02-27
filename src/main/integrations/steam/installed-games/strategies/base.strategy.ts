@@ -1,8 +1,9 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import fs from "fs/promises";
 import path from "path";
 import vdf from "vdf";
 
+import { Logger } from "../../../../logging/logging.service";
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";
 import {
   InstalledGameData,
@@ -16,7 +17,7 @@ import {
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  constructor(protected readonly logger: ConsoleLogger) {
+  constructor(protected readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

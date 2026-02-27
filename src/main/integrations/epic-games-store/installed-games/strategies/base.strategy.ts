@@ -1,14 +1,15 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import fs from "fs/promises";
 import path from "path";
 
+import { Logger } from "../../../../logging/logging.service";
 import { EpicInstallationData, InstalledGameData, InstalledGamesStrategy } from "../types";
 
 @Injectable()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
 
-  constructor(protected readonly logger: ConsoleLogger) {
+  constructor(protected readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

@@ -1,7 +1,8 @@
 import { GameFilters, GameStoreModel } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
+import { Logger } from "../logging/logging.service";
 import { ProtondbApiClient } from "../protondb/protondb-api.client";
 import { WindowService } from "../window/window.service";
 
@@ -11,7 +12,7 @@ import { GameStore } from "./game.store";
 export class GameService {
   constructor(
     private readonly gameStore: GameStore,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly protondbApiClient: ProtondbApiClient,
     private readonly windowService: WindowService,
   ) {

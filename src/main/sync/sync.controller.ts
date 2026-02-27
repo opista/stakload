@@ -1,7 +1,8 @@
 import type { Library } from "@contracts/database/games";
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
-import { ConsoleLogger } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 import { SyncService } from "./sync.service";
 
@@ -9,7 +10,7 @@ import { SyncService } from "./sync.service";
 @Controller()
 export class SyncController {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly syncService: SyncService,
   ) {
     this.logger.setContext(this.constructor.name);

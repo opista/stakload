@@ -1,7 +1,9 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
+
+import { Logger } from "../logging/logging.service";
 
 import { CollectionEntity } from "./collection.entity";
 
@@ -10,7 +12,7 @@ export class CollectionStore {
   constructor(
     @InjectRepository(CollectionEntity)
     private readonly repository: Repository<CollectionEntity>,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

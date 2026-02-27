@@ -1,11 +1,13 @@
 import { ExternalGameSource, GameStoreModel } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 const BASE_URL = import.meta.env.MAIN_VITE_STAKLOAD_API_URL;
 
 @Injectable()
 export class StakloadApiClient {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

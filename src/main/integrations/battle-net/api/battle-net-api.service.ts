@@ -1,6 +1,7 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { WindowService } from "../../../window/window.service";
+import { Logger } from "../../../logging/logging.service";
 
 import { BattleNetGame, GameAccounts } from "./types";
 
@@ -12,7 +13,7 @@ const SESSION_ID = "persist:battle-net-auth";
 @Injectable()
 export class BattleNetApiService {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);

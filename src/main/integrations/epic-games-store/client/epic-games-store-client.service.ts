@@ -1,14 +1,15 @@
 import { GameStoreModel } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { shell } from "electron";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
+import { Logger } from "../../../logging/logging.service";
 
 const EPIC_LAUNCHER_BASE_URL = "com.epicgames.launcher://";
 
 @Injectable()
 export class EpicGamesStoreClientService implements LibraryClientService {
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

@@ -2,11 +2,12 @@ import "reflect-metadata";
 
 import { createIpcApp } from "@electron-ipc-bridge/core";
 import { electronApp, optimizer } from "@electron-toolkit/utils";
-import { ConsoleLogger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { app } from "electron";
+import { WinstonModule } from "nest-winston";
 
 import { IpcModule } from "./ipc.module";
+import { winstonInstance } from "./logging/winston.setup";
 import { getIpcControllers } from "./util/get-ipc-controllers";
 import { WindowService } from "./window/window.service";
 
@@ -14,11 +15,14 @@ import { WindowService } from "./window/window.service";
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 void app.whenReady().then(async () => {
-  const nestContext = await NestFactory.createApplicationContext(IpcModule);
+  const nestContext = await NestFactory.createApplicationContext(IpcModule, {
+    logger: WinstonModule.createLogger({ instance: winstonInstance }),
+  });
   const windowService = nestContext.get(WindowService);
-  nestContext.useLogger(new ConsoleLogger());
 
   // Set app user model id for windows
   electronApp.setAppUserModelId("com.opista.stakload");

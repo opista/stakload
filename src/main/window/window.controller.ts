@@ -1,6 +1,7 @@
 import { IpcController, IpcOn } from "@electron-ipc-bridge/core";
-import { ConsoleLogger } from "@nestjs/common";
 import { Controller } from "@nestjs/common";
+
+import { Logger } from "../logging/logging.service";
 
 import { WindowService } from "./window.service";
 
@@ -8,7 +9,7 @@ import { WindowService } from "./window.service";
 @Controller()
 export class WindowController {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);

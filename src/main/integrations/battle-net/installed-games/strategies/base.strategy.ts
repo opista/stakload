@@ -1,9 +1,10 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { mapSortableName } from "@util/map-sortable-name";
 import fs from "fs/promises";
 import path from "path";
 import protobuf from "protobufjs";
 
+import { Logger } from "../../../../logging/logging.service";
 import { databaseSchema } from "../../data/database-schema";
 import { getBattleNetGameByProductId } from "../../data/games";
 import { InstalledGameData, InstalledGamesStrategy } from "../types";
@@ -11,7 +12,7 @@ import { InstalledGameData, InstalledGamesStrategy } from "../types";
 @Injectable()
 export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrategy {
   abstract applicationPath: string | undefined;
-  constructor(protected readonly logger: ConsoleLogger) {
+  constructor(protected readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

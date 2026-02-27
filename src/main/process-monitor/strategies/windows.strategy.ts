@@ -1,6 +1,7 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { execAsync } from "@util/exec-async";
 
+import { Logger } from "../../logging/logging.service";
 import { ProcessMonitorStrategy } from "../types";
 
 @Injectable()
@@ -8,7 +9,7 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   private processCheckInterval: NodeJS.Timeout | null = null;
   private watchedProcesses: Map<number, () => void> = new Map();
 
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
   }
 

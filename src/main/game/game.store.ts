@@ -1,7 +1,9 @@
 import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel, Library } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
+
+import { Logger } from "../logging/logging.service";
 
 import { GameEntity } from "./game.entity";
 
@@ -23,7 +25,7 @@ export class GameStore {
   constructor(
     @InjectRepository(GameEntity)
     private readonly repository: Repository<GameEntity>,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }

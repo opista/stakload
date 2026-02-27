@@ -1,6 +1,8 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { checkRegistry } from "@util/check-registry";
 import Registry from "winreg";
+
+import { Logger } from "../../../../logging/logging.service";
 
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
@@ -8,7 +10,7 @@ import { BaseInstalledGamesStrategy } from "./base.strategy";
 export class WindowsInstalledGamesStrategy extends BaseInstalledGamesStrategy {
   applicationPath: string | undefined;
 
-  constructor(protected readonly logger: ConsoleLogger) {
+  constructor(protected readonly logger: Logger) {
     super(logger);
     this.logger.setContext(this.constructor.name);
   }

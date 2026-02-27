@@ -1,7 +1,9 @@
 import { is, platform } from "@electron-toolkit/utils";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
+
+import { Logger } from "../logging/logging.service";
 
 import { ChildWindowOptions } from "./types";
 
@@ -9,7 +11,7 @@ import { ChildWindowOptions } from "./types";
 export class WindowService {
   private browserWindow: BrowserWindow | null = null;
 
-  constructor(private readonly logger: ConsoleLogger) {
+  constructor(private readonly logger: Logger) {
     this.logger.setContext(this.constructor.name);
 
     app.on("activate", () => {

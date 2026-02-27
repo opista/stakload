@@ -1,5 +1,5 @@
 import { GameStoreModel, Library } from "@contracts/database/games";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
 
@@ -10,6 +10,7 @@ import { WindowService } from "../../../window/window.service";
 import { BattleNetApiService } from "../api/battle-net-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import { InstalledGamesStrategy } from "../installed-games/types";
+import { Logger } from "../../../logging/logging.service";
 
 @Injectable()
 export class BattleNetLibraryService implements SyncService {
@@ -20,7 +21,7 @@ export class BattleNetLibraryService implements SyncService {
     private readonly gameStore: GameStore,
     private readonly battleNetApiService: BattleNetApiService,
     private readonly installedGamesRegistryService: InstalledGamesRegistryService,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);

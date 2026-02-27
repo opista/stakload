@@ -1,4 +1,6 @@
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+
+import { Logger } from "../../../logging/logging.service";
 
 import { MacInstalledGamesStrategy } from "./strategies/mac.strategy";
 import { WindowsInstalledGamesStrategy } from "./strategies/windows.strategy";
@@ -7,7 +9,7 @@ import { InstalledGamesStrategy } from "./types";
 @Injectable()
 export class InstalledGamesRegistryService {
   constructor(
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
     private readonly macInstalledGamesStrategy: MacInstalledGamesStrategy,
     private readonly windowsInstalledGamesStrategy: WindowsInstalledGamesStrategy,
   ) {

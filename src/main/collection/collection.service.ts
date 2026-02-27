@@ -1,13 +1,14 @@
 import { CollectionStoreModel } from "@contracts/database/collections";
-import { ConsoleLogger, Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 
 import { CollectionStore } from "../collection/collection.store";
+import { Logger } from "../logging/logging.service";
 
 @Injectable()
 export class CollectionService {
   constructor(
     private readonly collectionStore: CollectionStore,
-    private readonly logger: ConsoleLogger,
+    private readonly logger: Logger,
   ) {
     this.logger.setContext(this.constructor.name);
   }
