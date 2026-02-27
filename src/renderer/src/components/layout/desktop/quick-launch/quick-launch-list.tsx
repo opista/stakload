@@ -1,19 +1,6 @@
 ﻿import { SubHeading } from "@components/ui/sub-heading";
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
+import { closestCenter, DndContext, DragEndEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useGameStore } from "@store/game.store";
 import { cn } from "@util/cn";
 import { useState } from "react";
@@ -40,9 +27,6 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
       activationConstraint: {
         distance: 5,
       },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
 

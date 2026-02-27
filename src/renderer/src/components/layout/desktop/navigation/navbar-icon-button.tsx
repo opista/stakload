@@ -32,8 +32,9 @@ export const NavbarIconButton = ({ className, href, icon: Icon, indicator, label
     <Tooltip label={label} side="top" align="center">
       <button
         className={cn(
-          "flex w-full cursor-pointer items-center justify-center rounded-lg px-3 py-3 transition-colors focus:outline-none",
+          "flex w-full cursor-pointer items-center justify-center rounded-lg px-3 py-3 transition-all focus:outline-none",
           "text-slate-400",
+          "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
           !active && "hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
           active && "bg-primary/10 text-primary",
           className,

@@ -35,7 +35,9 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
       <button
         className={cn(
           "flex w-full cursor-pointer text-left focus:outline-none",
-          "text-xs uppercase tracking-widest transition-colors",
+          "text-xs uppercase tracking-widest transition-all",
+          "rounded-sm px-2 py-1 -ml-2",
+          "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
           "text-slate-500 hover:text-primary focus-visible:text-primary",
           active && "text-primary",
           disabled && "cursor-not-allowed opacity-50 grayscale hover:text-slate-500",
@@ -53,8 +55,9 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
     <div className="flex flex-col">
       <button
         className={cn(
-          "flex w-full cursor-pointer items-center gap-4 rounded-lg px-3 py-3 transition-colors focus:outline-none",
+          "flex w-full cursor-pointer items-center gap-4 rounded-lg px-3 py-3 transition-all focus:outline-none",
           "text-slate-400",
+          "focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-primary/40",
           !active && "hover:text-primary hover:bg-white/5 focus-visible:text-primary focus-visible:bg-white/5",
           active && "bg-primary/10 text-primary",
           disabled && "cursor-not-allowed opacity-50 grayscale hover:bg-transparent hover:text-slate-400",
