@@ -48,12 +48,12 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
         className={cn(
           "relative z-50 flex w-max min-w-full max-w-full cursor-pointer items-center gap-2 rounded-lg p-2 pr-3 transition-all duration-300 ease-in-out text-slate-400 hover:max-w-[200%] hover:pr-5 hover:shadow-gold-hover group-focus-visible:max-w-[200%] group-focus-visible:pr-5 group-focus-visible:shadow-gold-hover",
           !editMode &&
-            "hover:bg-stone-950 hover:text-primary group-focus-visible:bg-stone-950 group-focus-visible:text-primary group-focus-visible:ring-1 group-focus-visible:ring-inset group-focus-visible:ring-primary/40",
+          "hover:bg-stone-950 hover:text-primary group-focus-visible:bg-stone-950 group-focus-visible:text-primary group-focus-visible:ring-1 group-focus-visible:ring-inset group-focus-visible:ring-primary/40",
         )}
       >
         <GameCover className="w-9 shrink-0 rounded-md" game={game} showGameTitle={false} />
-        <div className="relative flex w-full min-w-0 flex-col text-xs font-bold uppercase">
-          <span className="truncate tracking-wider transition-all duration-300 ease-in-out group-hover:-translate-y-1/2 group-focus-visible:-translate-y-1/2 items-start">
+        <div className="relative flex items-start w-full min-w-0 flex-col text-left text-xs font-bold uppercase">
+          <span className="w-full truncate tracking-wider transition-all duration-300 ease-in-out group-hover:-translate-y-1/2 group-focus-visible:-translate-y-1/2">
             {game.name}
           </span>
           <div className="absolute bottom-0 flex translate-y-full items-center gap-1 opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-1/2 group-hover:opacity-100 group-focus-visible:translate-y-1/2 group-focus-visible:opacity-100 text-white">
