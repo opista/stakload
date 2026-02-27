@@ -1,4 +1,4 @@
-import { is, platform } from "@electron-toolkit/utils";
+import { is } from "@electron-toolkit/utils";
 import { Injectable } from "@nestjs/common";
 import { app, BrowserWindow, session, shell } from "electron";
 import { join } from "path";
@@ -87,7 +87,6 @@ export class WindowService {
       closable: true,
       enableLargerThanScreen: false,
       focusable: true,
-      frame: platform.isWindows,
       fullscreenable: true,
       hasShadow: true,
       height: 800,
@@ -100,8 +99,6 @@ export class WindowService {
       roundedCorners: true,
       show: false,
       title: "Stakload",
-      titleBarOverlay: false,
-      titleBarStyle: platform.isMacOS ? "hiddenInset" : "hidden",
       vibrancy: "under-window",
       visualEffectState: "active",
       webPreferences: {

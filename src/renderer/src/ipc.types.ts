@@ -180,11 +180,6 @@ export interface IpcApi {
       getCollections(): Promise<CollectionEntity[]>;
       updateCollection(id: string, updates: Partial<CollectionStoreModel>): Promise<CollectionEntity | null>;
     };
-    window: {
-      close(): void;
-      maximize(): void;
-      minimize(): void;
-    };
     logging: {
       getLogsPath(): Promise<string>;
       openLogsFolder(): void;
