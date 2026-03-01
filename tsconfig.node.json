@@ -1,21 +1,24 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": [
-    "electron.vite.config.*",
-    "src/contracts/**/*",
-    "src/main/**/*",
-    "src/preload/**/*"
+    "apps/desktop/electron.vite.config.*",
+    "apps/frontend/vite.config.ts",
+    "apps/desktop/src/main/**/*",
+    "apps/desktop/src/preload/**/*",
+    "apps/frontend/src/vite-env.d.ts",
+    "packages/contracts/src/**/*",
+    "apps/desktop/scripts/**/*.mjs"
   ],
   "compilerOptions": {
     "composite": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "paths": {
-      "@contracts/*": [
-        "./src/contracts/*"
+      "@stakload/contracts/*": [
+        "./packages/contracts/src/*"
       ],
       "@util/*": [
-        "./src/main/util/*"
+        "./apps/desktop/src/main/util/*"
       ]
     },
     "types": [

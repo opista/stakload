@@ -1,0 +1,57 @@
+{
+  "name": "@stakload/desktop",
+  "private": true,
+  "version": "0.0.1",
+  "description": "A unified experience that aggregates all of your favourite game launchers",
+  "type": "module",
+  "main": "./out/main/index.js",
+  "author": {
+    "name": "metacurb",
+    "email": "stakload@opista.com",
+    "url": "http://opista.com/"
+  },
+  "homepage": "https://github.com/opista/stakload#readme",
+  "bugs": "https://github.com/opista/stakload/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:opista/stakload.git"
+  },
+  "dependencies": {
+    "@stakload/contracts": "workspace:*",
+    "@apollo/client": "^4.1.6",
+    "@electron-ipc-bridge/core": "^0.1.1",
+    "@electron-toolkit/preload": "^3.0.2",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@nestjs/common": "^11.1.14",
+    "@nestjs/core": "^11.1.14",
+    "@nestjs/typeorm": "^11.0.0",
+    "better-sqlite3": "^12.6.2",
+    "electron-conf": "^1.3.0",
+    "electron-updater": "^6.3.9",
+    "fastq": "^1.20.1",
+    "nest-winston": "^1.10.2",
+    "protobufjs": "^8.0.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28",
+    "vdf": "^0.0.2",
+    "winreg": "^1.2.5",
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
+  },
+  "devDependencies": {
+    "@electron-ipc-bridge/vite-plugin": "^0.1.1",
+    "@swc/core": "^1.15.13",
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/winreg": "^1.2.36",
+    "electron": "^39.2.6",
+    "electron-builder": "^26.0.12",
+    "electron-vite": "^5.0.0",
+    "vite-plugin-graphql-loader": "^4.0.4"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/dev.mjs",
+    "start": "electron-vite preview --config electron.vite.config.ts"
+  }
+}

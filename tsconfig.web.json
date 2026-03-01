@@ -1,11 +1,10 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/renderer/src/env.d.ts",
-    "src/renderer/src/**/*",
-    "src/renderer/src/**/*.tsx",
-    "src/contracts/**/*",
-    "src/preload/*.d.ts"
+    "apps/frontend/src/**/*",
+    "apps/frontend/src/**/*.tsx",
+    "packages/contracts/src/**/*",
+    "apps/desktop/src/preload/*.d.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -13,28 +12,31 @@
     "baseUrl": ".",
     "paths": {
       "@api/*": [
-        "src/renderer/src/api/*"
+        "apps/frontend/src/api/*"
       ],
       "@components/*": [
-        "src/renderer/src/components/*"
+        "apps/frontend/src/components/*"
       ],
-      "@contracts/*": [
-        "src/contracts/*"
+      "@stakload/contracts/*": [
+        "packages/contracts/src/*"
       ],
       "@constants/*": [
-        "src/renderer/src/constants/*"
+        "apps/frontend/src/constants/*"
       ],
       "@hooks/*": [
-        "src/renderer/src/hooks/*"
+        "apps/frontend/src/hooks/*"
       ],
       "@icons/*": [
-        "src/renderer/src/icons/*"
+        "apps/frontend/src/icons/*"
+      ],
+      "@platform/*": [
+        "apps/frontend/src/platform/*"
       ],
       "@store/*": [
-        "src/renderer/src/store/*"
+        "apps/frontend/src/store/*"
       ],
       "@util/*": [
-        "src/renderer/src/util/*"
+        "apps/frontend/src/util/*"
       ]
     }
   }
