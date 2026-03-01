@@ -2,13 +2,19 @@
   "name": "@stakload/frontend",
   "private": true,
   "type": "module",
+  "scripts": {
+    "build": "vite build --config vite.config.ts",
+    "dev": "vite --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts",
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
+  },
   "dependencies": {
-    "@stakload/contracts": "workspace:*",
     "@base-ui/react": "^1.2.0",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@noriginmedia/norigin-spatial-navigation": "^2.3.0",
+    "@stakload/contracts": "workspace:*",
     "@tabler/icons-react": "^3.37.1",
     "@uidotdev/usehooks": "^2.4.1",
     "clsx": "^2.1.1",
@@ -33,11 +39,5 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "tailwindcss": "^4.2.1",
     "vite": "^7.2.6"
-  },
-  "scripts": {
-    "build": "vite build --config vite.config.ts",
-    "dev": "vite --config vite.config.ts",
-    "preview": "vite preview --config vite.config.ts",
-    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   }
 }

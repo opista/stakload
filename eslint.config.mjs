@@ -27,7 +27,11 @@ export default defineConfig(
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
       parserOptions: {
-        project: ["./packages/contracts/tsconfig.json", "./apps/frontend/tsconfig.json", "./apps/desktop/tsconfig.json"],
+        project: [
+          "./packages/contracts/tsconfig.json",
+          "./apps/frontend/tsconfig.json",
+          "./apps/desktop/tsconfig.json",
+        ],
         tsconfigRootDir: import.meta.dirname,
       },
     },

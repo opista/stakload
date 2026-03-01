@@ -6,7 +6,7 @@ files:
   - "!**/.vscode/*"
   - "!apps/**/*"
   - "!packages/**/*"
-  - "!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,CHANGELOG.md,README.md}"
+  - "!{.eslintcache,.oxfmtrc.jsonc,eslint.config.mjs,CHANGELOG.md,README.md}"
   - "!{.env,.env.*,.npmrc,pnpm-lock.yaml}"
   - "!{tsconfig.base.json,tsconfig.json}"
 asarUnpack:

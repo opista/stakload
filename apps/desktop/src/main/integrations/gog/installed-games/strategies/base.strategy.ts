@@ -24,14 +24,16 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
       const db = new Database(dbPath, { readonly: true });
 
       const installedGames = db
-        .prepare<
-          unknown[],
-          GogInstalledBaseProduct
-        >(`SELECT installationDate, installationPath, productId FROM InstalledBaseProducts`)
+        .prepare<unknown[], GogInstalledBaseProduct>(
+          `SELECT installationDate, installationPath, productId FROM InstalledBaseProducts`,
+        )
         .all();
 
       db.close();
-      this.logger.debug("Fetched installed GOG games from database", { count: installedGames.length, dbPath });
+      this.logger.debug("Fetched installed GOG games from database", {
+        count: installedGames.length,
+        dbPath,
+      });
       return installedGames.map(mapAppManifestToGameInstallationDetails);
     } catch (err) {
       this.logger.error("Failed to read GOG Galaxy database", err, { dbPath });
