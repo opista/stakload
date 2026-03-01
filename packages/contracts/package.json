@@ -1,5 +1,11 @@
 {
   "name": "@stakload/contracts",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.7"
+  }
 }

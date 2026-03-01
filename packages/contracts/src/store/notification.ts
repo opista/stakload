@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const NOTIFICATION_KEYS = {
   GAME_INSTALLATION_FAILED_MESSAGE: "notifications.gameInstallation.failedMessage",

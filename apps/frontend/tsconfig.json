@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*", "../desktop/src/preload/*.d.ts"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "paths": {
+      "@api/*": ["src/api/*"],
+      "@components/*": ["src/components/*"],
+      "@constants/*": ["src/constants/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@icons/*": ["src/icons/*"],
+      "@platform/*": ["src/platform/*"],
+      "@stakload/contracts/*": ["../../packages/contracts/src/*"],
+      "@store/*": ["src/store/*"],
+      "@util/*": ["src/util/*"]
+    }
+  }
+}

@@ -52,6 +52,7 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/dev.mjs",
-    "start": "electron-vite preview --config electron.vite.config.ts"
+    "start": "electron-vite preview --config electron.vite.config.ts",
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   }
 }
