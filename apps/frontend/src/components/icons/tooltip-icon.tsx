@@ -1,7 +1,8 @@
-import { Tooltip } from "@components/ui/tooltip";
 import { Icon, IconProps } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { CSSProperties, ReactNode } from "react";
+
+import { Tooltip } from "@components/ui/tooltip";
+import { cn } from "@util/cn";
 
 type Size = "xs" | "sm" | "md" | "lg" | "xl";
 

@@ -1,11 +1,12 @@
+import { useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
 import { HomeHero } from "@components/home-hero/home-hero";
 import { GamesCarousel } from "@components/media/games-carousel";
 import { Heading } from "@components/ui/heading";
 import { SubHeading } from "@components/ui/sub-heading";
 import { FeaturedGameModel } from "@stakload/contracts/database/games";
 import { useGameStore } from "@store/game.store";
-import { useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 export const HomeView = () => {
   const newGames = useGameStore(useShallow((state) => state.newGames));

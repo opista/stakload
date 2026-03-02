@@ -1,5 +1,6 @@
-import { NotificationStoreActions, NotificationStoreState } from "@stakload/contracts/store/notification";
 import { create } from "zustand";
+
+import { NotificationStoreActions, NotificationStoreState } from "@stakload/contracts/store/notification";
 
 type NotificationStore = NotificationStoreState & NotificationStoreActions;
 

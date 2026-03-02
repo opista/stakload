@@ -1,6 +1,7 @@
-﻿import { RemoveGameModal } from "@components/layout/desktop/modals/remove-game-modal";
-import { useModalStore } from "@store/modal.store";
 import { useShallow } from "zustand/react/shallow";
+
+import { RemoveGameModal } from "@components/layout/desktop/modals/remove-game-modal";
+import { useModalStore } from "@store/modal.store";
 
 // Import other modals as they are migrated if needed
 import { Modal } from "./modal";

@@ -1,9 +1,10 @@
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { EmblaCarouselType, EmblaOptionsType } from "embla-carousel";
 import Autoplay from "embla-carousel-autoplay";
 import useEmblaCarousel from "embla-carousel-react";
 import { Children, ReactNode, useCallback, useEffect, useRef, useState } from "react";
+
+import { cn } from "@util/cn";
 
 type CarouselProps = {
   children: ReactNode;

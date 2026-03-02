@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { GameStoreModel } from "@stakload/contracts/database/games";
 import { shell } from "electron";
+
+import { GameStoreModel } from "@stakload/contracts/database/games";
 
 import { LibraryClientService } from "../../../game-lifecycle/types";
 import { Logger } from "../../../logging/logging.service";

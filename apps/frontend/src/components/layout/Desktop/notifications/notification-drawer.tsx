@@ -1,7 +1,8 @@
+import { useShallow } from "zustand/react/shallow";
+
 import { Drawer } from "@components/ui/drawer";
 import { useNotifications } from "@hooks/use-notifications";
 import { useNotificationStore } from "@store/notification.store";
-import { useShallow } from "zustand/react/shallow";
 
 import { NotificationDrawerItem } from "./notification-drawer-item";
 import { NotificationDrawerTitle } from "./notification-drawer-title";

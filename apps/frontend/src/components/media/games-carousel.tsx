@@ -1,7 +1,8 @@
-import { GameCover } from "@components/game/game-cover";
-import { GameListModel } from "@stakload/contracts/database/games";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+
+import { GameCover } from "@components/game/game-cover";
+import { GameListModel } from "@stakload/contracts/database/games";
 
 import { Carousel } from "./carousel";
 

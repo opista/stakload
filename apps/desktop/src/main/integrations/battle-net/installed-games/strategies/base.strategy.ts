@@ -2,8 +2,9 @@ import fs from "fs/promises";
 import path from "path";
 
 import { Injectable } from "@nestjs/common";
-import { mapSortableName } from "@util/map-sortable-name";
 import protobuf from "protobufjs";
+
+import { mapSortableName } from "@util/map-sortable-name";
 
 import { Logger } from "../../../../logging/logging.service";
 import { databaseSchema } from "../../data/database-schema";

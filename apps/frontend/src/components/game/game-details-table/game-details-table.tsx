@@ -1,7 +1,8 @@
-import { GameStoreModel } from "@stakload/contracts/database/games";
 import { ParseKeys, TFunction } from "i18next";
 import { Fragment, ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+
+import { GameStoreModel } from "@stakload/contracts/database/games";
 
 import { GameDetailsTableRow } from "./game-details-table-row";
 

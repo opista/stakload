@@ -1,7 +1,8 @@
 import { Field } from "@base-ui/react/field";
 import { Input } from "@base-ui/react/input";
-import { cn } from "@util/cn";
 import { ComponentPropsWithoutRef, ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 type TextInputProps = {
   label?: string;

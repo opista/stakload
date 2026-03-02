@@ -1,4 +1,10 @@
-﻿import { GamesGrid } from "@components/game/games-grid";
+import { IconSquareRoundedPlus } from "@tabler/icons-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
+import { GamesGrid } from "@components/game/games-grid";
 import { GhostIcon } from "@components/icons/ghost-icon";
 import { FilterControl } from "@components/layout/desktop/filter-control";
 import { SectionHeading } from "@components/layout/desktop/section-heading";
@@ -8,11 +14,6 @@ import { Button } from "@components/ui/button";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
-import { IconSquareRoundedPlus } from "@tabler/icons-react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 
 import { GameFilters } from "../../ipc.types";
 

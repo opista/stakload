@@ -1,10 +1,11 @@
-import { GameCover } from "@components/game/game-cover";
-import { GhostIcon } from "@components/icons/ghost-icon";
 import { useMeasure } from "@uidotdev/usehooks";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { NavigateFunction, useNavigate } from "react-router";
 import { CellComponentProps, Grid, GridImperativeAPI } from "react-window";
+
+import { GameCover } from "@components/game/game-cover";
+import { GhostIcon } from "@components/icons/ghost-icon";
 
 import { GameListModel } from "../../ipc.types";
 

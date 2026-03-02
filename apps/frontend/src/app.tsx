@@ -1,12 +1,13 @@
+import { useEffect } from "react";
+import { Outlet } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
 import { ContextMenuProvider } from "@components/layout/context-menu";
 import { ToastRenderer } from "@components/layout/desktop/notifications/toast-renderer";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
-import { useEffect } from "react";
-import { Outlet } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 
 export const App = () => {
   const fetchCollections = useCollectionStore(useShallow((state) => state.fetchCollections));

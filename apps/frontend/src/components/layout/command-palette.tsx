@@ -1,15 +1,16 @@
 import { Dialog } from "@base-ui/react/dialog";
-import { GameCover } from "@components/game/game-cover";
-import { SHORTCUT_KEYS } from "@constants/shortcuts";
-import { useCommandPaletteStore } from "@store/command-palette.store";
-import { useGameStore } from "@store/game.store";
 import { IconSearch } from "@tabler/icons-react";
-import { cn } from "@util/cn";
-import { mapLibraryIcon } from "@util/map-library-icon";
 import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+
+import { GameCover } from "@components/game/game-cover";
+import { SHORTCUT_KEYS } from "@constants/shortcuts";
+import { useCommandPaletteStore } from "@store/command-palette.store";
+import { useGameStore } from "@store/game.store";
+import { cn } from "@util/cn";
+import { mapLibraryIcon } from "@util/map-library-icon";
 
 export const CommandPalette = () => {
   const { close, isOpen, open } = useCommandPaletteStore();

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { decryptString, encryptString } from "@util/safe-storage";
 import { Conf } from "electron-conf/main";
+
+import { decryptString, encryptString } from "@util/safe-storage";
 
 import { Logger } from "../logging/logging.service";
 import { Config } from "./types";

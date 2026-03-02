@@ -1,3 +1,5 @@
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+
 import type {
   AgeRating,
   GameInstallationDetails,
@@ -8,7 +10,6 @@ import type {
   MultiplayerMode,
   Website,
 } from "@stakload/contracts/database/games";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("games")
 export class GameEntity {

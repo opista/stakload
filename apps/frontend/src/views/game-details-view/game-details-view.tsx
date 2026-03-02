@@ -1,3 +1,8 @@
+import { RefObject, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
 import { ContentCard } from "@components/game/content-card";
 import { GameDetailsTable } from "@components/game/game-details-table/game-details-table";
 import { GameHero } from "@components/game/game-hero";
@@ -10,10 +15,6 @@ import { MediaCarousel } from "@components/media/media-carousel";
 import { Spoiler } from "@components/ui/spoiler";
 import { GameStoreModel } from "@stakload/contracts/database/games";
 import { useGameStore } from "@store/game.store";
-import { RefObject, useEffect, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 
 export const GameDetailsView = () => {
   const containerRef = useRef<HTMLDivElement>(null);

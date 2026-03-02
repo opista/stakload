@@ -1,8 +1,9 @@
+import { IconProps } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+
 import { TooltipIcon } from "@components/icons/tooltip-icon";
 import { GameStoreModel } from "@stakload/contracts/database/games";
-import { IconProps } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
-import { useTranslation } from "react-i18next";
 
 type LibraryIconProps = {
   game: GameStoreModel;

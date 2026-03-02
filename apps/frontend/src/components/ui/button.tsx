@@ -1,7 +1,8 @@
 import { Button as BaseButton } from "@base-ui/react/button";
 import { Icon, IconLoader2 } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 type ButtonVariant = "filled" | "default" | "outline" | "subtle" | "danger" | "ghost";
 type ButtonSize = "xs" | "sm" | "md" | "lg" | "xl";

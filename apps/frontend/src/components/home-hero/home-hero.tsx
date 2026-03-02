@@ -1,9 +1,10 @@
-import { Button } from "@components/ui/button";
-import { Heading } from "@components/ui/heading";
-import { FeaturedGameModel } from "@stakload/contracts/database/games";
 import { IconInfoCircle, IconPlayerPlay } from "@tabler/icons-react";
 import { ReactNode } from "react";
 import { NavLink } from "react-router";
+
+import { Button } from "@components/ui/button";
+import { Heading } from "@components/ui/heading";
+import { FeaturedGameModel } from "@stakload/contracts/database/games";
 
 type HomeHeroProps = {
   game: FeaturedGameModel;

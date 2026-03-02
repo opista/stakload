@@ -8,12 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@electron-toolkit/eslint-config-prettier':
-        specifier: ^3.0.0
-        version: 3.0.0(eslint@9.39.3(jiti@2.6.1))(prettier@3.8.1)
-      '@electron-toolkit/eslint-config-ts':
-        specifier: ^3.1.0
-        version: 3.1.0(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
       '@electron-toolkit/tsconfig':
         specifier: ^2.0.0
         version: 2.0.0(@types/node@22.19.11)
@@ -26,24 +20,6 @@ importers:
       eslint:
         specifier: ^9.39.1
         version: 9.39.3(jiti@2.6.1)
-      eslint-plugin-perfectionist:
-        specifier: ^5.6.0
-        version: 5.6.0(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
-      eslint-plugin-react:
-        specifier: ^7.37.5
-        version: 7.37.5(eslint@9.39.3(jiti@2.6.1))
-      eslint-plugin-react-compiler:
-        specifier: 19.1.0-rc.2
-        version: 19.1.0-rc.2(eslint@9.39.3(jiti@2.6.1))
-      eslint-plugin-react-hooks:
-        specifier: ^7.0.1
-        version: 7.0.1(eslint@9.39.3(jiti@2.6.1))
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.24
-        version: 0.4.26(eslint@9.39.3(jiti@2.6.1))
-      eslint-plugin-unused-imports:
-        specifier: ^4.4.1
-        version: 4.4.1(@typescript-eslint/eslint-plugin@8.56.1(@typescript-eslint/parser@8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))
       oxfmt:
         specifier: ^0.35.0
         version: 0.35.0
@@ -117,6 +93,9 @@ importers:
       '@electron-ipc-bridge/vite-plugin':
         specifier: ^0.1.1
         version: 0.1.1(typescript@5.9.3)(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(lightningcss@1.31.1))
+      '@stakload/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@swc/core':
         specifier: ^1.15.13
         version: 1.15.13
@@ -205,6 +184,9 @@ importers:
         specifier: ^5.0.11
         version: 5.0.11(@types/react@19.2.14)(react@19.2.4)(use-sync-external-store@1.6.0(react@19.2.4))
     devDependencies:
+      '@stakload/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
       '@tailwindcss/vite':
         specifier: ^4.2.1
         version: 4.2.1(vite@7.3.1(@types/node@22.19.11)(jiti@2.6.1)(lightningcss@1.31.1))
@@ -229,9 +211,45 @@ importers:
 
   packages/contracts:
     devDependencies:
+      '@stakload/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
       '@types/react':
         specifier: ^19.2.7
         version: 19.2.14
+
+  packages/eslint-config:
+    dependencies:
+      '@electron-toolkit/eslint-config-prettier':
+        specifier: ^3.0.0
+        version: 3.0.0(eslint@9.39.3(jiti@2.6.1))(prettier@3.8.1)
+      '@electron-toolkit/eslint-config-ts':
+        specifier: ^3.1.0
+        version: 3.1.0(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
+      eslint:
+        specifier: ^9.0.0
+        version: 9.39.3(jiti@2.6.1)
+      eslint-plugin-perfectionist:
+        specifier: ^5.6.0
+        version: 5.6.0(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3)
+      eslint-plugin-react:
+        specifier: ^7.37.5
+        version: 7.37.5(eslint@9.39.3(jiti@2.6.1))
+      eslint-plugin-react-compiler:
+        specifier: 19.1.0-rc.2
+        version: 19.1.0-rc.2(eslint@9.39.3(jiti@2.6.1))
+      eslint-plugin-react-hooks:
+        specifier: ^7.0.1
+        version: 7.0.1(eslint@9.39.3(jiti@2.6.1))
+      eslint-plugin-react-refresh:
+        specifier: ^0.4.24
+        version: 0.4.26(eslint@9.39.3(jiti@2.6.1))
+      eslint-plugin-unused-imports:
+        specifier: ^4.4.1
+        version: 4.4.1(@typescript-eslint/eslint-plugin@8.56.1(@typescript-eslint/parser@8.56.1(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.3(jiti@2.6.1))
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
 
 packages:
 

@@ -20,6 +20,8 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "dev": "node scripts/dev.mjs",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
     "start": "electron-vite preview --config electron.vite.config.ts",
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   },
@@ -47,6 +49,7 @@
   },
   "devDependencies": {
     "@electron-ipc-bridge/vite-plugin": "^0.1.1",
+    "@stakload/eslint-config": "workspace:*",
     "@swc/core": "^1.15.13",
     "@types/better-sqlite3": "^7.6.13",
     "@types/winreg": "^1.2.36",

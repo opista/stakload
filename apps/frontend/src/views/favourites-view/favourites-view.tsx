@@ -1,14 +1,15 @@
-﻿import { GamesGrid } from "@components/game/games-grid";
+import { IconCategory } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
+import { GamesGrid } from "@components/game/games-grid";
 import { GhostIcon } from "@components/icons/ghost-icon";
 import { SectionHeading } from "@components/layout/desktop/section-heading";
 import { PageTitle } from "@components/layout/page-title";
 import { Button } from "@components/ui/button";
 import { useGamesQuery } from "@hooks/use-games-query";
 import { useGameStore } from "@store/game.store";
-import { IconCategory } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 
 const EmptyView = () => {
   const { t } = useTranslation();

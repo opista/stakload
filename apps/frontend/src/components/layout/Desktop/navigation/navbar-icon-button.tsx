@@ -1,9 +1,10 @@
-import { Tooltip } from "@components/ui/tooltip";
 import type { IconProps } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import type { FC } from "react";
 import { useMemo } from "react";
 import { useLocation, useNavigate } from "react-router";
+
+import { Tooltip } from "@components/ui/tooltip";
+import { cn } from "@util/cn";
 
 type NavbarIconButtonProps = {
   className?: string;

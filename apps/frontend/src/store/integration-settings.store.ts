@@ -1,10 +1,11 @@
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import { createPlatformConf } from "@platform/create-platform-conf";
 import { Library } from "@stakload/contracts/database/games";
 import { IntegrationSettingsActions } from "@stakload/contracts/store/integration-settings";
 import { IntegrationSettingsState } from "@stakload/contracts/store/integration-settings";
 import { createConfStorage } from "@util/create-conf-storage";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 const conf = createPlatformConf();
 

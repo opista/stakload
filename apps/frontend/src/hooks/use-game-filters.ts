@@ -1,9 +1,10 @@
-import { GameFilters, Library } from "@stakload/contracts/database/games";
-import { useGameStore } from "@store/game.store";
 import { ParseKeys } from "i18next";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { GameFilters, Library } from "@stakload/contracts/database/games";
+import { useGameStore } from "@store/game.store";
 
 const ageRatingFilters: { label: ParseKeys; value: string }[] = [
   {

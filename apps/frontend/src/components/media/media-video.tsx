@@ -1,6 +1,7 @@
-import { useModalStore } from "@store/modal.store";
 import { IconPlayerPlayFilled } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
+
+import { useModalStore } from "@store/modal.store";
 
 const getThumbnailUrl = (watchId: string) => `https://img.youtube.com/vi/${watchId}/hqdefault.jpg`;
 

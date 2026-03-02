@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import fastq from "fastq";
+
 import { GAME_ICONS, GameStoreModel, Library } from "@stakload/contracts/database/games";
 import { NOTIFICATION_KEYS } from "@stakload/contracts/store/notification";
 import { GameSyncMessage } from "@stakload/contracts/sync";
-import fastq from "fastq";
 
 import { EVENT_CHANNELS } from "../../preload/channels";
 import { SharedConfigService } from "../config/shared-config.service";

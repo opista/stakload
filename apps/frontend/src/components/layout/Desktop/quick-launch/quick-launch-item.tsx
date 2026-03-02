@@ -1,10 +1,11 @@
 ﻿import { Button } from "@base-ui/react";
-import { GameCover } from "@components/game/game-cover";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { IconDownload, IconPlayerPlay } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { useTranslation } from "react-i18next";
+
+import { GameCover } from "@components/game/game-cover";
+import { cn } from "@util/cn";
 
 import { GameListModel } from "../../../../ipc.types";
 

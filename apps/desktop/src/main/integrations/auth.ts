@@ -1,5 +1,6 @@
-import { Library } from "@stakload/contracts/database/games";
 import { BrowserWindow, session } from "electron";
+
+import { Library } from "@stakload/contracts/database/games";
 
 import { LegendaryService } from "./epic-games-store/legendary/legendary.service";
 import { GogService } from "./gog/gog.service";
@@ -46,7 +47,7 @@ export const authenticateLibraryIntegration = async (library: Library, parent: B
             const tokenResponse = await gogService.getAuthToken(code);
             const games = await gogService.getOwnedGames();
 
-            console.log("GOG Games:", games);
+            console.log("GOG Games:", games, tokenResponse);
 
             integrationWindow.close();
           } catch (error) {

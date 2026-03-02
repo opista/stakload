@@ -1,4 +1,8 @@
 import { Separator } from "@base-ui/react";
+import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
 import { GamesFilter } from "@components/game/games-filter";
 import { ActionIcon } from "@components/ui/action-icon";
 import { Badge } from "@components/ui/badge";
@@ -6,9 +10,6 @@ import { useLibraryFilters } from "@hooks/use-game-filters";
 import { CollectionStoreModel } from "@stakload/contracts/database/collections";
 import { GameFilters } from "@stakload/contracts/database/games";
 import { useCollectionStore } from "@store/collection.store";
-import { IconDeviceFloppy, IconX } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 type FilterControlProps = {
   collection?: CollectionStoreModel;

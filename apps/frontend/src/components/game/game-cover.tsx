@@ -1,7 +1,3 @@
-import { useContextMenu } from "@components/layout/context-menu";
-import { GameListModel } from "@stakload/contracts/database/games";
-import { useGameStore } from "@store/game.store";
-import { useModalStore } from "@store/modal.store";
 import {
   IconBolt,
   IconDownload,
@@ -11,10 +7,15 @@ import {
   IconStar,
   IconTrash,
 } from "@tabler/icons-react";
-import { cn } from "@util/cn";
-import { mapLibraryIcon } from "@util/map-library-icon";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { useContextMenu } from "@components/layout/context-menu";
+import { GameListModel } from "@stakload/contracts/database/games";
+import { useGameStore } from "@store/game.store";
+import { useModalStore } from "@store/modal.store";
+import { cn } from "@util/cn";
+import { mapLibraryIcon } from "@util/map-library-icon";
 
 type GameCoverProps = {
   className?: string;

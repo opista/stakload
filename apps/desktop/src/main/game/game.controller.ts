@@ -1,5 +1,6 @@
 import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
 import { Controller } from "@nestjs/common";
+
 import type { GameFilters } from "@stakload/contracts/database/games";
 
 import { CollectionService } from "../collection/collection.service";

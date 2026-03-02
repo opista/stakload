@@ -1,7 +1,8 @@
+import { useEffect, useMemo, useState } from "react";
+
 import { GameStoreModel } from "@stakload/contracts/database/games";
 import { cn } from "@util/cn";
 import { getHighestRatioMedia } from "@util/get-highest-ratio-media";
-import { useEffect, useMemo, useState } from "react";
 
 type GameHeroProps = {
   className?: string;

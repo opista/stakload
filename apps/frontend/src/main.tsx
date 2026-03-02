@@ -1,10 +1,10 @@
-import "./styles/styles.css";
 import "./i18n";
 
-import { installDemoGlobals } from "@platform/install-demo-globals";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { MemoryRouter, Route, Routes } from "react-router";
+
+import { installDemoGlobals } from "@platform/install-demo-globals";
 
 import { App } from "./app";
 import { DesktopLayout } from "./layouts/desktop-layout";
@@ -14,6 +14,8 @@ import { GameDetailsView } from "./views/game-details-view/game-details-view";
 import { HomeView } from "./views/home-view/home-view";
 import { IntegrationsView } from "./views/integrations-view/integrations-view";
 import { LibraryView } from "./views/library-view/library-view";
+
+import "./styles/styles.css";
 
 installDemoGlobals();
 

@@ -1,6 +1,7 @@
 import { Popover as BasePopover } from "@base-ui/react";
-import { cn } from "@util/cn";
 import { isValidElement, ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 export interface PopoverProps {
   children: ReactNode;

@@ -1,5 +1,6 @@
-import { cn } from "@util/cn";
 import { ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 type ContentCardProps = {
   children: ReactNode;

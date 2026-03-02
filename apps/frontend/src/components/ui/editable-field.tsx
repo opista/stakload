@@ -1,6 +1,7 @@
+import { ElementType, FocusEvent, FormEvent, KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
+
 import { Tooltip } from "@components/ui/tooltip";
 import { cn } from "@util/cn";
-import { ElementType, FocusEvent, FormEvent, KeyboardEvent, MouseEvent, useEffect, useRef, useState } from "react";
 
 type EditableFieldProps = {
   as?: ElementType;

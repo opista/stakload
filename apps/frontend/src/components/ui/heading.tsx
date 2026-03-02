@@ -1,5 +1,6 @@
-import { cn } from "@util/cn";
 import { ElementType, forwardRef, HTMLAttributes } from "react";
+
+import { cn } from "@util/cn";
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 

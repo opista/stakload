@@ -1,6 +1,7 @@
 import { Tooltip as BaseTooltip } from "@base-ui/react";
-import { cn } from "@util/cn";
 import { ComponentProps, isValidElement, ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 export interface TooltipProps extends ComponentProps<typeof BaseTooltip.Root> {
   align?: BaseTooltip.Positioner.Props["align"];

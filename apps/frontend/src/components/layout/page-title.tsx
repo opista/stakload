@@ -1,6 +1,7 @@
-import { Heading } from "@components/ui/heading";
 import clsx from "clsx";
 import { forwardRef, HTMLAttributes } from "react";
+
+import { Heading } from "@components/ui/heading";
 
 export const PageTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (

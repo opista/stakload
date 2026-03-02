@@ -1,6 +1,7 @@
-import { useNotificationStore } from "@store/notification.store";
 import { createPortal } from "react-dom";
 import { useShallow } from "zustand/react/shallow";
+
+import { useNotificationStore } from "@store/notification.store";
 
 import { Toast } from "./toast";
 

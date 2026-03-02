@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+
 import { runApplicationCommand } from "@util/run-application-command";
 
 import { Logger } from "../../../logging/logging.service";

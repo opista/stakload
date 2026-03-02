@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { execAsync } from "@util/exec-async";
 import { app } from "electron";
+
+import { execAsync } from "@util/exec-async";
 
 import { Logger } from "../logging/logging.service";
 

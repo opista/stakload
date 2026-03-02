@@ -1,8 +1,9 @@
 import path from "path";
 
 import { Injectable } from "@nestjs/common";
-import { checkRegistry } from "@util/check-registry";
 import Registry from "winreg";
+
+import { checkRegistry } from "@util/check-registry";
 
 import { Logger } from "../../../../logging/logging.service";
 import { BaseInstalledGamesStrategy } from "./base.strategy";

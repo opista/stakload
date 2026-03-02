@@ -1,5 +1,6 @@
-import { GameSyncMessage } from "@stakload/contracts/sync";
 import { useEffect, useState } from "react";
+
+import { GameSyncMessage } from "@stakload/contracts/sync";
 
 export const useGameSync = () => {
   const [state, setState] = useState<GameSyncMessage | null>(null);

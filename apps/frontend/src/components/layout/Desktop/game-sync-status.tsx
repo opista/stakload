@@ -1,11 +1,12 @@
+import { IconCheck } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
 import { RingProgress } from "@components/ui/ring-progress";
 import { useGameSync } from "@hooks/use-game-sync-status";
 import { GameSyncMessage } from "@stakload/contracts/sync";
 import { useNotificationStore } from "@store/notification.store";
-import { IconCheck } from "@tabler/icons-react";
 import { mapLibraryIcon } from "@util/map-library-icon";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 const Progress = ({ processing, total }: { processing: number; total: number }) => {
   const percentage = (processing / total) * 100;

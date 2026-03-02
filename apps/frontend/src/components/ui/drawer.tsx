@@ -1,6 +1,7 @@
 import { Dialog as BaseDialog } from "@base-ui/react/dialog";
-import { cn } from "@util/cn";
 import { ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 export interface DrawerProps {
   children: ReactNode;

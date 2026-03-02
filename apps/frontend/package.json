@@ -5,6 +5,8 @@
   "scripts": {
     "build": "vite build --config vite.config.ts",
     "dev": "vite --config vite.config.ts",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
     "preview": "vite preview --config vite.config.ts",
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   },
@@ -32,6 +34,7 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@stakload/eslint-config": "workspace:*",
     "@tailwindcss/vite": "^4.2.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",

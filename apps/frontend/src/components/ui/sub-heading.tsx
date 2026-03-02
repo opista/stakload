@@ -1,5 +1,6 @@
-import { cn } from "@util/cn";
 import { ElementType, HTMLAttributes } from "react";
+
+import { cn } from "@util/cn";
 
 export interface SubHeadingProps extends HTMLAttributes<HTMLSpanElement> {
   as?: ElementType;

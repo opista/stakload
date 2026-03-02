@@ -1,7 +1,8 @@
-import { Toast as ToastType } from "@stakload/contracts/store/notification";
 import { IconX } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { useEffect, useState } from "react";
+
+import { Toast as ToastType } from "@stakload/contracts/store/notification";
+import { cn } from "@util/cn";
 
 interface ToastProps {
   onClose: (id: string) => void;

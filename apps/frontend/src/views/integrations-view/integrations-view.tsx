@@ -1,14 +1,15 @@
-﻿import { SettingsCheckbox } from "@components/layout/desktop/settings/settings-checkbox";
+import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
+import { useEffect, useReducer, useState } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+
+import { SettingsCheckbox } from "@components/layout/desktop/settings/settings-checkbox";
 import { SettingsStatusIndicator } from "@components/layout/desktop/settings/settings-status-indicator";
 import { SettingsTitle } from "@components/layout/desktop/settings/settings-title";
 import { Button } from "@components/ui/button";
 import { PasswordInput } from "@components/ui/password-input";
 import { TextInput } from "@components/ui/text-input";
 import { useIntegrationSettingsStore } from "@store/integration-settings.store";
-import { IconSquareRoundedCheckFilled, IconSquareRoundedXFilled } from "@tabler/icons-react";
-import { useEffect, useReducer, useState } from "react";
-import { Trans, useTranslation } from "react-i18next";
-import { useShallow } from "zustand/react/shallow";
 
 import { Library } from "../../ipc.types";
 

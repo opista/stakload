@@ -1,8 +1,9 @@
 import { setupPreload } from "@electron-ipc-bridge/core/preload";
-import { Library } from "@stakload/contracts/database/games";
-import { GameSyncMessage } from "@stakload/contracts/sync";
 import { contextBridge } from "electron";
 import { exposeConf } from "electron-conf/preload";
+
+import { Library } from "@stakload/contracts/database/games";
+import { GameSyncMessage } from "@stakload/contracts/sync";
 
 import { EVENT_CHANNELS } from "./channels";
 import { listenerHandler } from "./util/listener-handler";

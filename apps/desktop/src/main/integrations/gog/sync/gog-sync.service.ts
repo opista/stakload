@@ -1,8 +1,9 @@
 import { Injectable } from "@nestjs/common";
+import { BrowserWindow } from "electron";
+
 import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
-import { BrowserWindow } from "electron";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { GameStore } from "../../../game/game.store";
@@ -31,13 +32,7 @@ export class GogLibraryService implements SyncService {
     this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
-  private async handleAuthenticationResponse(
-    window: BrowserWindow,
-    _event: unknown,
-    url: string,
-    _httpResponseCode: number,
-    _httpStatusText: string,
-  ) {
+  private async handleAuthenticationResponse(window: BrowserWindow, _event: unknown, url: string) {
     this.logger.debug("Handling GOG authentication response", { url });
     if (url.includes("on_login_success")) {
       const code = new URL(url).searchParams.get("code");

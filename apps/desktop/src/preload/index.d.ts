@@ -9,7 +9,7 @@ declare global {
     api: {
       onGamesListUpdated: (listener: (event) => void) => RemoveListenerFunction;
       onIntegrationAuthenticationResult: (
-        listener: (event, { library: Library, success: boolean }) => void,
+        listener: (event, data: { library: Library; success: boolean }) => void,
       ) => RemoveListenerFunction;
       onNotification: (listener: (event, data: Notification) => void) => RemoveListenerFunction;
       onSyncGameStatus: (listener: (event, data: GameSyncMessage) => void) => RemoveListenerFunction;

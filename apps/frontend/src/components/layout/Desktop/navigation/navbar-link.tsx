@@ -1,7 +1,8 @@
 import { IconChevronRight, IconProps } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { Children, FC, isValidElement, ReactNode, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
+
+import { cn } from "@util/cn";
 
 type NavbarLinkProps = {
   children?: ReactNode;

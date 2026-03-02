@@ -1,5 +1,6 @@
-import { cn } from "@util/cn";
 import { ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 type BadgeVariant = "filled" | "light" | "outline";
 type BadgeSize = "xs" | "sm" | "md" | "lg" | "xl";

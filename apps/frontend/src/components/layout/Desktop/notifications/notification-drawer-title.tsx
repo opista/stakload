@@ -1,8 +1,9 @@
-import { Button } from "@components/ui/button";
-import { useNotificationStore } from "@store/notification.store";
 import { IconX } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { Button } from "@components/ui/button";
+import { useNotificationStore } from "@store/notification.store";
 
 export const NotificationDrawerTitle = () => {
   const { clearAllNotifications, closeDrawer } = useNotificationStore(

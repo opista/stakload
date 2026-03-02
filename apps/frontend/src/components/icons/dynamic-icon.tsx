@@ -1,4 +1,5 @@
 import { IconProps } from "@tabler/icons-react";
+
 import { importDynamicIcon } from "@util/import-dynamic-icon";
 
 type DynamicIconProps = IconProps & {

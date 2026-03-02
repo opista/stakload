@@ -1,5 +1,6 @@
 import { IpcController, IpcHandle } from "@electron-ipc-bridge/core";
 import { Controller } from "@nestjs/common";
+
 import type { CollectionStoreModel } from "@stakload/contracts/database/collections";
 
 import { Logger } from "../logging/logging.service";

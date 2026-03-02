@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+
 import { Notification } from "@stakload/contracts/store/notification";
 
 import { EVENT_CHANNELS } from "../../preload/channels";

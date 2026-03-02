@@ -1,7 +1,8 @@
 import { Dialog } from "@base-ui/react/dialog";
 import { IconX } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { ReactNode } from "react";
+
+import { cn } from "@util/cn";
 
 type ModalProps = {
   opened: boolean;

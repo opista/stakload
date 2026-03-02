@@ -1,9 +1,10 @@
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+
 import { createPlatformConf } from "@platform/create-platform-conf";
 import { GameFilters } from "@stakload/contracts/database/games";
 import { GameActions, GameState } from "@stakload/contracts/store/game";
 import { createConfStorage } from "@util/create-conf-storage";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 const conf = createPlatformConf();
 

@@ -1,12 +1,13 @@
+import { IconAdjustmentsAlt } from "@tabler/icons-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+
 import { Button } from "@components/ui/button";
 import { Checkbox } from "@components/ui/checkbox";
 import { MultiSelect } from "@components/ui/multi-select";
 import { Popover } from "@components/ui/popover";
 import { useGameStore } from "@store/game.store";
-import { IconAdjustmentsAlt } from "@tabler/icons-react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useShallow } from "zustand/react/shallow";
 
 import { GameFilters, Library } from "../../ipc.types";
 

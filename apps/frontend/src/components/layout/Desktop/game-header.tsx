@@ -1,10 +1,11 @@
+import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+import { useShallow } from "zustand/react/shallow";
+
 import { ActionIcon } from "@components/ui/action-icon";
 import { GameStoreModel } from "@stakload/contracts/database/games";
 import { useGameStore } from "@store/game.store";
 import { useModalStore } from "@store/modal.store";
-import { IconBolt, IconBoltFilled, IconStar, IconStarFilled, IconTrash } from "@tabler/icons-react";
-import { useTranslation } from "react-i18next";
-import { useShallow } from "zustand/react/shallow";
 
 import { GameControls } from "./game-controls";
 

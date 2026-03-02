@@ -1,7 +1,8 @@
-﻿import { Button } from "@components/ui/button";
+import { useState } from "react";
+
+import { Button } from "@components/ui/button";
 import { Modal } from "@components/ui/modal";
 import { TextInput } from "@components/ui/text-input";
-import { useState } from "react";
 
 type CollectionCreateModalProps = {
   onClose: () => void;

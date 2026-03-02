@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CollectionStoreModel } from "@stakload/contracts/database/collections";
 import { Repository } from "typeorm";
+
+import { CollectionStoreModel } from "@stakload/contracts/database/collections";
 
 import { Logger } from "../logging/logging.service";
 import { CollectionEntity } from "./collection.entity";

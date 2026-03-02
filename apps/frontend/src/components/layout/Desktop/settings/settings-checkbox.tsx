@@ -1,5 +1,6 @@
-import { Tooltip } from "@components/ui/tooltip";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
+
+import { Tooltip } from "@components/ui/tooltip";
 import { cn } from "@util/cn";
 
 type SettingsCheckboxProps = {

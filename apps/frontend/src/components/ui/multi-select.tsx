@@ -1,6 +1,7 @@
 import { Select as BaseSelect } from "@base-ui/react";
-import { Badge } from "@components/ui/badge";
 import { IconChevronDown, IconX } from "@tabler/icons-react";
+
+import { Badge } from "@components/ui/badge";
 import { cn } from "@util/cn";
 
 export interface SelectOption {

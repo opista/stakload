@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
 import { BrowserWindow } from "electron";
+
+import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { GameStore } from "../../../game/game.store";
@@ -31,13 +32,7 @@ export class EpicGamesStoreSyncService implements SyncService {
     this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
-  private async handleAuthenticationResponse(
-    window: BrowserWindow,
-    _event: unknown,
-    url: string,
-    _httpResponseCode: number,
-    _httpStatusText: string,
-  ) {
+  private async handleAuthenticationResponse(window: BrowserWindow, _event: unknown, url: string) {
     if (url.startsWith("https://www.epicgames.com/id/api/redirect")) {
       this.logger.debug("Handling EpicGamesStore authentication response", {
         url,

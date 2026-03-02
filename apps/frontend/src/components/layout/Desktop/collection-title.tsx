@@ -1,7 +1,8 @@
-﻿import { PageTitle } from "@components/layout/page-title";
+import { useShallow } from "zustand/react/shallow";
+
+import { PageTitle } from "@components/layout/page-title";
 import { EditableField } from "@components/ui/editable-field";
 import { useCollectionStore } from "@store/collection.store";
-import { useShallow } from "zustand/react/shallow";
 
 import { CollectionStoreModel } from "../../../ipc.types";
 

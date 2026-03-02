@@ -1,7 +1,8 @@
 import { Checkbox as BaseCheckbox } from "@base-ui/react/checkbox";
 import { IconCheck } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { ComponentPropsWithoutRef } from "react";
+
+import { cn } from "@util/cn";
 
 type CheckboxProps = Omit<ComponentPropsWithoutRef<typeof BaseCheckbox.Root>, "children" | "onChange"> & {
   checked?: boolean;

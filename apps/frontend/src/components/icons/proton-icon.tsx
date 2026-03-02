@@ -1,8 +1,9 @@
-import { TooltipIcon } from "@components/icons/tooltip-icon";
-import { IdAndName } from "@stakload/contracts/database/games";
 import { ParseKeys } from "i18next";
 import { memo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { TooltipIcon } from "@components/icons/tooltip-icon";
+import { IdAndName } from "@stakload/contracts/database/games";
 
 import { IconBrandProtonDb } from "../../icons/icon-brand-proton-db";
 

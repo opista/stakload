@@ -1,6 +1,3 @@
-import { ConditionalWrapper } from "@components/misc/conditional-wrapper";
-import { ActionIcon } from "@components/ui/action-icon";
-import { LikeWebsiteType, Website } from "@stakload/contracts/database/games";
 import {
   IconApps,
   IconBrandAndroid,
@@ -24,6 +21,10 @@ import {
 } from "@tabler/icons-react";
 import { FC, forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { ConditionalWrapper } from "@components/misc/conditional-wrapper";
+import { ActionIcon } from "@components/ui/action-icon";
+import { LikeWebsiteType, Website } from "@stakload/contracts/database/games";
 
 import { IconBrandEpicGames } from "../../icons/icon-brand-epic-games";
 import { IconBrandFandom } from "../../icons/icon-brand-fandom";

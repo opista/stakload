@@ -1,6 +1,7 @@
+import { FC } from "react";
+
 import { IconProps } from "@icons/index";
 import * as Icons from "@icons/index";
-import { FC } from "react";
 
 export const importDynamicIcon = (name: string | undefined): FC<IconProps> | null => {
   if (!name) return null;

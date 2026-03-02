@@ -1,5 +1,6 @@
-import type { GameFilters } from "@stakload/contracts/database/games";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+
+import type { GameFilters } from "@stakload/contracts/database/games";
 
 @Entity("collections")
 export class CollectionEntity {

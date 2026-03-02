@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+
 import { CollectionStoreModel } from "@stakload/contracts/database/collections";
 
 import { CollectionStore } from "../collection/collection.store";

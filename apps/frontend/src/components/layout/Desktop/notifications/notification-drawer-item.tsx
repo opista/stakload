@@ -1,8 +1,9 @@
+import { IconX } from "@tabler/icons-react";
+import { useTranslation } from "react-i18next";
+
 import { DynamicIcon } from "@components/icons/dynamic-icon";
 import { Notification } from "@stakload/contracts/store/notification";
-import { IconX } from "@tabler/icons-react";
 import { cn } from "@util/cn";
-import { useTranslation } from "react-i18next";
 
 type NotificationDrawerItemProps = {
   notification: Notification;

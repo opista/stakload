@@ -1,5 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
+
 import {
   FeaturedGameModel,
   GameFilters,
@@ -7,7 +9,6 @@ import {
   GameStoreModel,
   Library,
 } from "@stakload/contracts/database/games";
-import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
 
 import { Logger } from "../logging/logging.service";
 import { GameEntity } from "./game.entity";

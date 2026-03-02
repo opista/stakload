@@ -1,5 +1,6 @@
-import { CollectionActions, CollectionState } from "@stakload/contracts/store/collection";
 import { create } from "zustand";
+
+import { CollectionActions, CollectionState } from "@stakload/contracts/store/collection";
 
 import { CollectionStoreModel } from "../ipc.types";
 

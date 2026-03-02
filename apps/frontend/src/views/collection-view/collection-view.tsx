@@ -1,3 +1,9 @@
+import { IconTrash } from "@tabler/icons-react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router";
+import { useShallow } from "zustand/react/shallow";
+
 import { GamesGrid } from "@components/game/games-grid";
 import { CollectionTitle } from "@components/layout/desktop/collection-title";
 import { FilterControl } from "@components/layout/desktop/filter-control";
@@ -9,11 +15,6 @@ import { useGamesQuery } from "@hooks/use-games-query";
 import { GameFilters } from "@stakload/contracts/database/games";
 import { useCollectionStore } from "@store/collection.store";
 import { useGameStore } from "@store/game.store";
-import { IconTrash } from "@tabler/icons-react";
-import { useEffect, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router";
-import { useShallow } from "zustand/react/shallow";
 
 export const CollectionView = () => {
   const navigate = useNavigate();

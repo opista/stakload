@@ -1,7 +1,4 @@
 ﻿import { ScrollArea } from "@base-ui/react";
-import { Logo } from "@components/icons/logo";
-import { useCollectionStore } from "@store/collection.store";
-import { useNotificationStore } from "@store/notification.store";
 import {
   IconBell,
   IconBooks,
@@ -13,6 +10,10 @@ import {
 } from "@tabler/icons-react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
+
+import { Logo } from "@components/icons/logo";
+import { useCollectionStore } from "@store/collection.store";
+import { useNotificationStore } from "@store/notification.store";
 
 import { GameSyncStatus } from "../game-sync-status";
 import { QuickLaunchList } from "../quick-launch/quick-launch-list";

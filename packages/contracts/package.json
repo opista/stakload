@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   },
   "devDependencies": {
+    "@stakload/eslint-config": "workspace:*",
     "@types/react": "^19.2.7"
   }
 }

@@ -1,8 +1,9 @@
-import { Notification } from "@stakload/contracts/store/notification";
-import { useNotificationStore } from "@store/notification.store";
 import { IconCheck, IconExclamationCircle, IconInfoCircle, IconX } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { Notification } from "@stakload/contracts/store/notification";
+import { useNotificationStore } from "@store/notification.store";
 
 const notificationIconMap: Record<Notification["type"], any> = {
   error: <IconX size={18} className="text-red-400" />,

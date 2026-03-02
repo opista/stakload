@@ -1,6 +1,7 @@
-import { cn } from "@util/cn";
 import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
+
+import { cn } from "@util/cn";
 
 export interface SpoilerProps {
   children: ReactNode;

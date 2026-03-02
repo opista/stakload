@@ -1,6 +1,7 @@
+import { IconDownload, IconPlayerPlayFilled } from "@tabler/icons-react";
+
 import { Button } from "@components/ui/button";
 import { GameStoreModel } from "@stakload/contracts/database/games";
-import { IconDownload, IconPlayerPlayFilled } from "@tabler/icons-react";
 
 export const GameControls = ({ game }: { game: GameStoreModel }) => {
   return (

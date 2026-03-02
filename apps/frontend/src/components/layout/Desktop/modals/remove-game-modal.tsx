@@ -1,11 +1,12 @@
-import { Button } from "@components/ui/button";
-import { Checkbox } from "@components/ui/checkbox";
-import { Modal } from "@components/ui/modal";
-import { useGameStore } from "@store/game.store";
 import { useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
+
+import { Button } from "@components/ui/button";
+import { Checkbox } from "@components/ui/checkbox";
+import { Modal } from "@components/ui/modal";
+import { useGameStore } from "@store/game.store";
 
 type RemoveGameModalProps = {
   opened: boolean;

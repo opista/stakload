@@ -1,5 +1,6 @@
-import { useModalStore } from "@store/modal.store";
 import { useTranslation } from "react-i18next";
+
+import { useModalStore } from "@store/modal.store";
 
 export type MediaImageProps = {
   src: string;
