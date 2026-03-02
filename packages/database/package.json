@@ -1,0 +1,33 @@
+{
+  "name": "@stakload/database",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.14",
+    "@nestjs/typeorm": "^11.0.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.28"
+  },
+  "devDependencies": {
+    "@nestjs/common": "^11.1.14",
+    "@nestjs/typeorm": "^11.0.0",
+    "@stakload/eslint-config": "workspace:*",
+    "reflect-metadata": "^0.2.2",
+    "rimraf": "^6.0.1",
+    "typeorm": "^0.3.28"
+  }
+}
