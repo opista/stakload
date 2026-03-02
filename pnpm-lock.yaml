@@ -218,6 +218,12 @@ importers:
         specifier: ^19.2.7
         version: 19.2.14
 
+  packages/database:
+    devDependencies:
+      '@stakload/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+
   packages/eslint-config:
     dependencies:
       '@electron-toolkit/eslint-config-prettier':
@@ -250,6 +256,12 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
+
+  packages/igdb-vendor:
+    devDependencies:
+      '@stakload/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
 
 packages:
 

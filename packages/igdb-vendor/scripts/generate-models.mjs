@@ -1,0 +1,219 @@
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const packageRoot = path.resolve(__dirname, "..");
+const protoPath = path.join(packageRoot, "vendor", "igdbapi.proto");
+const outputDir = path.join(packageRoot, "src", "generated");
+const modelsOutputPath = path.join(outputDir, "models.ts");
+const metadataOutputPath = path.join(outputDir, "model-metadata.ts");
+
+const scalarTypeMap = {
+  bool: "boolean",
+  bytes: "Uint8Array | string",
+  double: "number",
+  fixed32: "number",
+  fixed64: "number",
+  float: "number",
+  int32: "number",
+  int64: "number",
+  sfixed32: "number",
+  sfixed64: "number",
+  sint32: "number",
+  sint64: "number",
+  string: "string",
+  uint32: "number",
+  uint64: "number",
+};
+
+const proto = await readFile(protoPath, "utf8");
+
+const blockPattern = /^(message|enum)\s+(\w+)\s*\{([\s\S]*?)^\}/gm;
+const enumValuePattern = /^\s*(\w+)\s*=\s*(-?\d+)\s*(?:\[([^\]]+)\])?;/gm;
+const fieldPattern =
+  /^\s*(repeated\s+)?([A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?)\s+([A-Za-z_]\w*)\s*=\s*(\d+)\s*(?:\[([^\]]+)\])?;/gm;
+
+const messageBlocks = [];
+const enumBlocks = [];
+
+const hasDeprecatedOption = (options) => (options ?? "").includes("deprecated = true");
+
+for (const match of proto.matchAll(blockPattern)) {
+  const [, kind, name, body] = match;
+
+  if (kind === "message") {
+    const fields = [...body.matchAll(fieldPattern)].map((fieldMatch) => {
+      const [, repeatedFlag, fieldType, fieldName, fieldNumber, options] = fieldMatch;
+
+      return {
+        deprecated: hasDeprecatedOption(options),
+        fieldName,
+        fieldNumber: Number(fieldNumber),
+        fieldType,
+        isRepeated: Boolean(repeatedFlag),
+      };
+    });
+
+    messageBlocks.push({
+      fields,
+      name,
+    });
+    continue;
+  }
+
+  const values = [...body.matchAll(enumValuePattern)].map((enumMatch) => {
+    const [, valueName, value, options] = enumMatch;
+
+    return {
+      deprecated: hasDeprecatedOption(options),
+      name: valueName,
+      value: Number(value),
+    };
+  });
+
+  enumBlocks.push({
+    name,
+    values,
+  });
+}
+
+const messageNames = new Set(messageBlocks.map((block) => block.name));
+const enumNames = new Set(enumBlocks.map((block) => block.name));
+
+const toTypeReference = (fieldType) => {
+  if (fieldType === "google.protobuf.Timestamp") {
+    return "IgdbTimestamp";
+  }
+
+  return scalarTypeMap[fieldType] ?? fieldType;
+};
+
+const toFieldKind = (fieldType) => {
+  if (fieldType === "google.protobuf.Timestamp") {
+    return "timestamp";
+  }
+
+  if (fieldType in scalarTypeMap) {
+    return "scalar";
+  }
+
+  if (enumNames.has(fieldType)) {
+    return "enum";
+  }
+
+  if (messageNames.has(fieldType)) {
+    return "message";
+  }
+
+  return "unknown";
+};
+
+const renderEnum = ({ name, values }) => {
+  const lines = [
+    `export const ${name} = {`,
+    ...values.flatMap((value) => {
+      const valueLines = [];
+
+      if (value.deprecated) {
+        valueLines.push("  /** @deprecated */");
+      }
+
+      valueLines.push(`  ${value.name}: ${value.value},`);
+
+      return valueLines;
+    }),
+    "} as const;",
+    `export type ${name} = (typeof ${name})[keyof typeof ${name}];`,
+  ];
+
+  return lines.join("\n");
+};
+
+const renderMessage = ({ fields, name }) => {
+  const lines = [`export interface ${name} {`];
+
+  if (fields.length === 0) {
+    lines.push("}");
+    return lines.join("\n");
+  }
+
+  for (const field of fields) {
+    const typeReference = toTypeReference(field.fieldType);
+    const propertyType = field.isRepeated ? `${typeReference}[]` : typeReference;
+
+    if (field.deprecated) {
+      lines.push("  /** @deprecated */");
+    }
+
+    lines.push(`  "${field.fieldName}"?: ${propertyType};`);
+  }
+
+  lines.push("}");
+
+  return lines.join("\n");
+};
+
+const renderMessageMetadata = ({ fields, name }) => {
+  const lines = [`  ${name}: {`, "    fields: {"];
+
+  for (const field of fields) {
+    lines.push(`      "${field.fieldName}": {`);
+    lines.push(`        deprecated: ${field.deprecated},`);
+    lines.push(`        fieldNumber: ${field.fieldNumber},`);
+    lines.push(`        kind: "${toFieldKind(field.fieldType)}",`);
+    lines.push(`        repeated: ${field.isRepeated},`);
+    lines.push(`        type: "${toTypeReference(field.fieldType)}",`);
+    lines.push("      },");
+  }
+
+  lines.push("    },");
+  lines.push("  },");
+
+  return lines.join("\n");
+};
+
+const renderEnumMetadata = ({ name, values }) => {
+  const lines = [`  ${name}: {`, "    values: {"];
+
+  for (const value of values) {
+    lines.push(`      ${value.name}: {`);
+    lines.push(`        deprecated: ${value.deprecated},`);
+    lines.push(`        value: ${value.value},`);
+    lines.push("      },");
+  }
+
+  lines.push("    },");
+  lines.push("  },");
+
+  return lines.join("\n");
+};
+
+const modelsGenerated = `// This file is auto-generated by scripts/generate-models.mjs.
+// Do not edit it manually. Update vendor/igdbapi.proto and rerun \`pnpm --dir packages/igdb-vendor generate\`.
+
+export interface IgdbTimestamp {
+  "nanos"?: number;
+  "seconds"?: number;
+}
+
+${enumBlocks.map(renderEnum).join("\n\n")}
+
+${messageBlocks.map(renderMessage).join("\n\n")}
+`;
+
+const metadataGenerated = `// This file is auto-generated by scripts/generate-models.mjs.
+// Do not edit it manually. Update vendor/igdbapi.proto and rerun \`pnpm --dir packages/igdb-vendor generate\`.
+
+export const IGDB_MESSAGE_METADATA = {
+${messageBlocks.map(renderMessageMetadata).join("\n")}
+} as const;
+
+export const IGDB_ENUM_METADATA = {
+${enumBlocks.map(renderEnumMetadata).join("\n")}
+} as const;
+`;
+
+await mkdir(outputDir, { recursive: true });
+await writeFile(modelsOutputPath, modelsGenerated);
+await writeFile(metadataOutputPath, metadataGenerated);

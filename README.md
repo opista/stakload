@@ -22,7 +22,7 @@ An AIO games library manager.
 ### Install
 
 ```bash
-$ npm install
+$ pnpm install
 ```
 
 ### Development
@@ -30,6 +30,16 @@ $ npm install
 ```bash
 $ npm run dev
 ```
+
+### Workspace Changes
+
+When adding a new workspace package:
+
+```bash
+$ pnpm install
+```
+
+Run it from the repository root after creating the package and declaring any `workspace:*` dependencies so `pnpm-lock.yaml` and workspace links are updated before package-local scripts import shared workspace packages.
 
 ### Build
 

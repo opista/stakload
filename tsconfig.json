@@ -2,6 +2,8 @@
   "files": [],
   "references": [
     { "path": "./packages/contracts" },
+    { "path": "./packages/igdb-vendor" },
+    { "path": "./packages/database" },
     { "path": "./apps/frontend" },
     { "path": "./apps/desktop" }
   ]
