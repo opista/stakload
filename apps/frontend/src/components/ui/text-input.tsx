@@ -14,7 +14,7 @@ export const TextInput = ({ className, description, error, label, rightSection, 
   return (
     <Field.Root className={cn("flex flex-col gap-1.5", className)} invalid={!!error}>
       {label && (
-        <Field.Label className="text-[11px] font-black uppercase tracking-wider text-neutral-400">{label}</Field.Label>
+        <Field.Label className="text-[11px] font-black tracking-wider text-neutral-400 uppercase">{label}</Field.Label>
       )}
       {description && <Field.Description className="text-[10px] text-neutral-500">{description}</Field.Description>}
       <div className="relative">
@@ -27,7 +27,7 @@ export const TextInput = ({ className, description, error, label, rightSection, 
           {...props}
         />
         {rightSection && (
-          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400">{rightSection}</div>
+          <div className="absolute top-1/2 right-3 -translate-y-1/2 text-neutral-400">{rightSection}</div>
         )}
       </div>
       {error && <Field.Error className="text-[10px] font-bold text-red-500">{error}</Field.Error>}

@@ -1,7 +1,8 @@
-import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
-import { defineConfig, swcPlugin } from "electron-vite";
 import { resolve } from "path";
 import { fileURLToPath } from "url";
+
+import { electronIpcBridge } from "@electron-ipc-bridge/vite-plugin";
+import { defineConfig, swcPlugin } from "electron-vite";
 import graphqlLoader from "vite-plugin-graphql-loader";
 
 const desktopDir = fileURLToPath(new URL(".", import.meta.url));

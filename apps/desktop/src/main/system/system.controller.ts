@@ -2,7 +2,6 @@ import { IpcController, IpcHandle, IpcOn } from "@electron-ipc-bridge/core";
 import { Controller } from "@nestjs/common";
 
 import { Logger } from "../logging/logging.service";
-
 import { SystemService } from "./system.service";
 
 @IpcController()

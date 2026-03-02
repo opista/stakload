@@ -10,7 +10,6 @@ import { GameStore } from "../game/game.store";
 import { Logger } from "../logging/logging.service";
 import { NotificationService } from "../notification/notification.service";
 import { WindowService } from "../window/window.service";
-
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
 

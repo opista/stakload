@@ -25,7 +25,7 @@ const EmptyView = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-6">
       <GhostIcon />
-      <span className="text-neutral-500 font-medium">{t("library.noGamesFound")}</span>
+      <span className="font-medium text-neutral-500">{t("library.noGamesFound")}</span>
       <Button leftIcon={IconSquareRoundedPlus} onClick={onImportClick} size="sm">
         {t("library.importGames")}
       </Button>
@@ -61,8 +61,8 @@ export const LibraryView = () => {
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4 pt-12 px-12">
-        <SectionHeading className="flex-col items-start pl-2 gap-4">
+      <div className="flex h-full w-full flex-col gap-4 px-12 pt-12">
+        <SectionHeading className="flex-col items-start gap-4 pl-2">
           <PageTitle>{t("library.title")}</PageTitle>
           <FilterControl onChange={setFilters} onCreate={() => setOpenedCreate(true)} />
         </SectionHeading>

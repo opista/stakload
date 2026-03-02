@@ -17,9 +17,13 @@ export class SteamClientService implements LibraryClientService {
     this.logger.log("Initiating Steam installation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}install/${game.gameId}`);
-      this.logger.debug("Steam installation initiated successfully", { gameId: game.gameId });
+      this.logger.debug("Steam installation initiated successfully", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to initiate Steam installation", error, { gameId: game.gameId });
+      this.logger.error("Failed to initiate Steam installation", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
@@ -28,9 +32,13 @@ export class SteamClientService implements LibraryClientService {
     this.logger.log("Launching game via Steam", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}run/${game.gameId}`);
-      this.logger.debug("Game launched successfully via Steam", { gameId: game.gameId });
+      this.logger.debug("Game launched successfully via Steam", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to launch game via Steam", error, { gameId: game.gameId });
+      this.logger.error("Failed to launch game via Steam", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
@@ -39,9 +47,13 @@ export class SteamClientService implements LibraryClientService {
     this.logger.log("Initiating Steam uninstallation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${STEAM_LAUNCHER_BASE_URL}uninstall/${game.gameId}`);
-      this.logger.debug("Steam uninstallation initiated successfully", { gameId: game.gameId });
+      this.logger.debug("Steam uninstallation initiated successfully", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to initiate Steam uninstallation", error, { gameId: game.gameId });
+      this.logger.error("Failed to initiate Steam uninstallation", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }

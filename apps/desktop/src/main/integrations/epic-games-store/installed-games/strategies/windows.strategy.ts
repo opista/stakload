@@ -1,10 +1,10 @@
+import path from "path";
+
 import { Injectable } from "@nestjs/common";
 import { checkRegistry } from "@util/check-registry";
-import path from "path";
 import Registry from "winreg";
 
 import { Logger } from "../../../../logging/logging.service";
-
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Injectable()

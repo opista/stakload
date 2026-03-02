@@ -1,6 +1,10 @@
 import { Conf } from "electron-conf/renderer";
 
-type ConfStore = Pick<Conf, "delete" | "get" | "set">;
+type ConfStore = {
+  delete: (key: string) => Promise<void> | void;
+  get: (key: string) => Promise<unknown> | unknown;
+  set: (key: string, value: unknown) => Promise<void> | void;
+};
 
 class BrowserConf implements ConfStore {
   constructor(private readonly name = "config") {}
@@ -40,7 +44,12 @@ const hasElectronConfBridge = (): boolean => {
 
 export function createPlatformConf(name?: string): ConfStore {
   if (hasElectronConfBridge()) {
-    return new Conf(name ? { name } : undefined);
+    const conf = new Conf(name ? { name } : undefined);
+    return {
+      delete: (key) => conf.delete(key),
+      get: (key) => conf.get(key),
+      set: (key, value) => conf.set(key, value),
+    };
   }
 
   return new BrowserConf(name);

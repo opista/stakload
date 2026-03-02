@@ -16,7 +16,6 @@ import { useShallow } from "zustand/react/shallow";
 
 import { GameSyncStatus } from "../game-sync-status";
 import { QuickLaunchList } from "../quick-launch/quick-launch-list";
-
 import { NavbarIconButton } from "./navbar-icon-button";
 import { NavbarLink } from "./navbar-link";
 
@@ -31,12 +30,12 @@ export const Navbar = () => {
   );
 
   return (
-    <aside className="flex flex-col h-full w-[260px] shrink-0 p-6 bg-stone-950 border-r border-white/5">
+    <aside className="flex h-full w-[260px] shrink-0 flex-col border-r border-white/5 bg-stone-950 p-6">
       <div className="flex shrink-0 items-center justify-center pb-8">
         <Logo />
       </div>
 
-      <ScrollArea.Root className="flex-1 overflow-hidden flex flex-col">
+      <ScrollArea.Root className="flex flex-1 flex-col overflow-hidden">
         <ScrollArea.Viewport className="h-full w-full outline-none">
           <nav className="flex flex-col space-y-2 pb-4">
             <NavbarLink href="/" icon={IconHome} label={t("navigation.home")} />
@@ -55,15 +54,15 @@ export const Navbar = () => {
             </NavbarLink>
           </nav>
         </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar className="flex touch-none select-none p-0.5 bg-black/10 hover:bg-black/20 w-1.5 transition-colors rounded-full mt-2 mb-2">
-          <ScrollArea.Thumb className="flex-1 bg-white/10 hover:bg-white/20 rounded-full relative" />
+        <ScrollArea.Scrollbar className="mt-2 mb-2 flex w-1.5 touch-none rounded-full bg-black/10 p-0.5 transition-colors select-none hover:bg-black/20">
+          <ScrollArea.Thumb className="relative flex-1 rounded-full bg-white/10 hover:bg-white/20" />
         </ScrollArea.Scrollbar>
       </ScrollArea.Root>
       <QuickLaunchList className="mt-8" />
 
       <GameSyncStatus />
 
-      <div className="pt-6 mt-6 border-t border-white/5 flex gap-2">
+      <div className="mt-6 flex gap-2 border-t border-white/5 pt-6">
         <NavbarIconButton className="grow" href="/integrations" label="Integrations" icon={IconLayersIntersect} />
         <NavbarIconButton className="grow" label="Settings" icon={IconSettings} />
         <NavbarIconButton

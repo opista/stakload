@@ -1,5 +1,6 @@
-import { platform } from "@electron-toolkit/utils";
 import { spawn } from "child_process";
+
+import { platform } from "@electron-toolkit/utils";
 
 import { BIN_DIR } from "../constants";
 
@@ -14,7 +15,10 @@ export const runApplicationCommand = async (
 
     const applicationPath = [!platform.isWindows && "./", application].filter(Boolean).join("");
 
-    const process = spawn(`${applicationPath} ${command}`, args, { cwd: BIN_DIR, shell: true });
+    const process = spawn(`${applicationPath} ${command}`, args, {
+      cwd: BIN_DIR,
+      shell: true,
+    });
 
     process.stdout.setEncoding("utf8");
     process.stdout.on("data", (data) => {

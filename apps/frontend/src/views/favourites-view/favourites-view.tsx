@@ -20,8 +20,8 @@ const EmptyView = () => {
     <div className="flex h-full w-full flex-col items-center justify-center gap-6">
       <GhostIcon />
       <div className="text-center">
-        <p className="text-neutral-500 font-medium">{t("favourites.notFoundTitle")}</p>
-        <p className="text-neutral-500 text-sm">{t("favourites.notFoundDescription")}</p>
+        <p className="font-medium text-neutral-500">{t("favourites.notFoundTitle")}</p>
+        <p className="text-sm text-neutral-500">{t("favourites.notFoundDescription")}</p>
       </div>
       <Button leftIcon={IconCategory} onClick={onLibraryClick} size="sm">
         {t("favourites.libraryButton")}
@@ -36,8 +36,8 @@ export const FavouritesView = () => {
   const { data: games } = useGamesQuery(() => fetchFilteredGames({ isFavourite: true }));
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 pt-12 px-12">
-      <SectionHeading className="flex-col items-start pl-2 gap-4">
+    <div className="flex h-full w-full flex-col gap-4 px-12 pt-12">
+      <SectionHeading className="flex-col items-start gap-4 pl-2">
         <PageTitle>{t("favourites.title")}</PageTitle>
       </SectionHeading>
       {games?.length ? <GamesGrid games={games} /> : <EmptyView />}

@@ -17,7 +17,7 @@ export const HomeView = () => {
 
   if (!hasNewGames) {
     return (
-      <div className="flex min-h-full w-full flex-col p-8 bg-zinc-950">
+      <div className="flex min-h-full w-full flex-col bg-zinc-950 p-8">
         <Heading level={1} className="text-4xl font-black text-white/70">
           TODO: Something here when you have no games
         </Heading>
@@ -26,11 +26,11 @@ export const HomeView = () => {
   }
 
   return (
-    <main className="relative flex h-full flex-1 flex-col overflow-y-auto overflow-x-hidden custom-scrollbar bg-zinc-950 font-sans text-slate-100">
+    <main className="custom-scrollbar relative flex h-full flex-1 flex-col overflow-x-hidden overflow-y-auto bg-zinc-950 font-sans text-slate-100">
       {currentActiveGame && (
         <HomeHero game={currentActiveGame}>
-          <div className="w-full relative z-20">
-            <SubHeading as="h3" className="text-slate-500 mb-6 px-12">
+          <div className="relative z-20 w-full">
+            <SubHeading as="h3" className="mb-6 px-12 text-slate-500">
               Recently Played
             </SubHeading>
             <GamesCarousel games={newGames} onGameActive={setActiveGame} />

@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { runApplicationCommand } from "@util/run-application-command";
 
 import { Logger } from "../../../logging/logging.service";
-
 import { AuthResultModel, OwnedGame } from "./types";
 
 /**
@@ -34,7 +33,9 @@ export class LegendaryService {
       this.logger.log("Fetched owned games", { count: ownedGames.length });
       return ownedGames;
     } catch (error: unknown) {
-      this.logger.error("Failed to fetch owned games using Legendary", { error });
+      this.logger.error("Failed to fetch owned games using Legendary", {
+        error,
+      });
       return [];
     }
   }

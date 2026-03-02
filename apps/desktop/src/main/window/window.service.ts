@@ -1,10 +1,10 @@
+import { join } from "path";
+
 import { is } from "@electron-toolkit/utils";
 import { Injectable } from "@nestjs/common";
 import { app, BrowserWindow, session, shell } from "electron";
-import { join } from "path";
 
 import { Logger } from "../logging/logging.service";
-
 import { ChildWindowOptions } from "./types";
 
 @Injectable()
@@ -36,7 +36,12 @@ export class WindowService {
     width,
   }: ChildWindowOptions) {
     try {
-      this.logger.debug("Creating child window", { height, sessionId, url, width });
+      this.logger.debug("Creating child window", {
+        height,
+        sessionId,
+        url,
+        width,
+      });
       const integrationSession = session.fromPartition(sessionId);
       if (clearCookies) {
         await integrationSession.clearStorageData({ storages: ["cookies"] });
@@ -73,7 +78,11 @@ export class WindowService {
 
       return integrationWindow;
     } catch (error: unknown) {
-      this.logger.error("Error creating child window", { error, sessionId, url });
+      this.logger.error("Error creating child window", {
+        error,
+        sessionId,
+        url,
+      });
       throw error;
     }
   }

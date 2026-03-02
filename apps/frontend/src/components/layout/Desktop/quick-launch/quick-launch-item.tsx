@@ -52,11 +52,11 @@ export const QuickLaunchItem = ({ editMode, game }: QuickLaunchItemProps) => {
         )}
       >
         <GameCover className="w-9 shrink-0 rounded-md" game={game} showGameTitle={false} />
-        <div className="relative flex items-start w-full min-w-0 flex-col text-left text-xs font-bold uppercase">
+        <div className="relative flex w-full min-w-0 flex-col items-start text-left text-xs font-bold uppercase">
           <span className="w-full truncate tracking-wider transition-all duration-300 ease-in-out group-hover:-translate-y-1/2 group-focus-visible:-translate-y-1/2">
             {game.name}
           </span>
-          <div className="absolute bottom-0 flex translate-y-full items-center gap-1 opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-1/2 group-hover:opacity-100 group-focus-visible:translate-y-1/2 group-focus-visible:opacity-100 text-white">
+          <div className="absolute bottom-0 flex translate-y-full items-center gap-1 text-white opacity-0 transition-all duration-300 ease-in-out group-hover:translate-y-1/2 group-hover:opacity-100 group-focus-visible:translate-y-1/2 group-focus-visible:opacity-100">
             {game.isInstalled ? <IconPlayerPlay size={12} /> : <IconDownload size={12} />}
             <span>{game.isInstalled ? t("quickLaunch.launch") : t("quickLaunch.install")}</span>
           </div>

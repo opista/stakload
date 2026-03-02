@@ -19,7 +19,7 @@ export const MediaCarousel = ({ images = [], videos = [] }: MediaCarouselProps) 
 
   return (
     <Carousel
-      className="rounded-[2.5rem] overflow-hidden"
+      className="overflow-hidden rounded-[2.5rem]"
       slideClassName="w-full"
       options={{ align: "start", loop: true }}
       autoplay

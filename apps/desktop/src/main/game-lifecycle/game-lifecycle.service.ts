@@ -8,7 +8,6 @@ import { NotificationService } from "../notification/notification.service";
 import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
 import { ProcessMonitorStrategy } from "../process-monitor/types";
 import { WindowService } from "../window/window.service";
-
 import { LibraryClientRegistryService } from "./library-client-registry/library-client-registry.service";
 import { LaunchResult, LibraryClientService } from "./types";
 
@@ -39,7 +38,10 @@ export class GameLifecycleService {
   private watchGameProcess(pid: number, gameName: string) {
     this.logger.debug("Setting up game process watch", { gameName, pid });
     this.processMonitor.watchProcess(pid, () => {
-      this.logger.log("Game process terminated, restoring window", { gameName, pid });
+      this.logger.log("Game process terminated, restoring window", {
+        gameName,
+        pid,
+      });
       this.windowService.restore();
       this.windowService.focus();
     });
@@ -55,11 +57,18 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.log("Installing game", { id, library: game.library, name: game.name });
+      this.logger.log("Installing game", {
+        id,
+        library: game.library,
+        name: game.name,
+      });
       await this.getLauncher(game.library).install(game);
       this.logger.log("Game installation initiated", { id, name: game.name });
     } catch (error) {
-      this.logger.error("Game installation failed", error, { id, name: game.name });
+      this.logger.error("Game installation failed", error, {
+        id,
+        name: game.name,
+      });
       this.notificationService.error({
         message: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_MESSAGE,
         title: NOTIFICATION_KEYS.GAME_INSTALLATION_FAILED_TITLE,
@@ -78,7 +87,11 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.log("Launching game", { id, library: game.library, name: game.name });
+      this.logger.log("Launching game", {
+        id,
+        library: game.library,
+        name: game.name,
+      });
       await this.getLauncher(game.library).launch(game);
 
       if (!game.installationDetails?.installLocation) {
@@ -95,14 +108,21 @@ export class GameLifecycleService {
       });
 
       if (!pid) {
-        this.logger.error("Game launch failed - process not found", { id, name: game.name });
+        this.logger.error("Game launch failed - process not found", {
+          id,
+          name: game.name,
+        });
         return {
           error: "Game process not found after 60 seconds. The game may have failed to launch.",
           success: false,
         };
       }
 
-      this.logger.log("Game launched successfully", { id, name: game.name, pid });
+      this.logger.log("Game launched successfully", {
+        id,
+        name: game.name,
+        pid,
+      });
       this.windowService.minimize();
       this.watchGameProcess(pid, game.name);
       return { success: true };
@@ -129,11 +149,18 @@ export class GameLifecycleService {
     }
 
     try {
-      this.logger.log("Uninstalling game", { id, library: game.library, name: game.name });
+      this.logger.log("Uninstalling game", {
+        id,
+        library: game.library,
+        name: game.name,
+      });
       await this.getLauncher(game.library).uninstall(game);
       this.logger.log("Game uninstallation initiated", { id, name: game.name });
     } catch (error) {
-      this.logger.error("Game uninstallation failed", error, { id, name: game.name });
+      this.logger.error("Game uninstallation failed", error, {
+        id,
+        name: game.name,
+      });
       this.notificationService.error({
         message: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_MESSAGE,
         title: NOTIFICATION_KEYS.GAME_UNINSTALLATION_FAILED_TITLE,

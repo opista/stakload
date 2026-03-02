@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
 import { exec } from "child_process";
 import { promisify } from "util";
+
+import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../logging/logging.service";
 import { ProcessMonitorStrategy } from "../types";
@@ -36,7 +37,9 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
       this.logger.debug("No process found for directory", { directory });
       return null;
     } catch (error) {
-      this.logger.error("Failed to find process by directory", error, { directory });
+      this.logger.error("Failed to find process by directory", error, {
+        directory,
+      });
       return null;
     }
   }
@@ -55,7 +58,9 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
   }
 
   stopWatching() {
-    this.logger.debug("Stopping process monitor", { watchedCount: this.watchedProcesses.size });
+    this.logger.debug("Stopping process monitor", {
+      watchedCount: this.watchedProcesses.size,
+    });
     if (this.processCheckInterval) {
       clearTimeout(this.processCheckInterval);
       this.processCheckInterval = null;
@@ -81,12 +86,18 @@ export class MacProcessMonitor implements ProcessMonitorStrategy {
       await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
     }
 
-    this.logger.warn("Process not found after timeout", { directory, timeoutMs: options.maxPollingTime });
+    this.logger.warn("Process not found after timeout", {
+      directory,
+      timeoutMs: options.maxPollingTime,
+    });
     return null;
   }
 
   async watchProcess(pid: number, onExit: () => void) {
-    this.logger.debug("Setting up process watch", { pid, watchedCount: this.watchedProcesses.size });
+    this.logger.debug("Setting up process watch", {
+      pid,
+      watchedCount: this.watchedProcesses.size,
+    });
     this.watchedProcesses.set(pid, onExit);
 
     if (this.processCheckInterval) return;

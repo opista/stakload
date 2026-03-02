@@ -3,7 +3,6 @@ import { decryptString, encryptString } from "@util/safe-storage";
 import { Conf } from "electron-conf/main";
 
 import { Logger } from "../logging/logging.service";
-
 import { Config } from "./types";
 
 type NestedKeyOf<ObjectType extends object> = {

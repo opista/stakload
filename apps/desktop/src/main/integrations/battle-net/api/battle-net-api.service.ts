@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../../logging/logging.service";
 import { WindowService } from "../../../window/window.service";
-
 import { BattleNetGame, GameAccounts } from "./types";
 
 const BATTLE_NET_API_URL = "https://account.battle.net";

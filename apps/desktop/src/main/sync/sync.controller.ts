@@ -3,7 +3,6 @@ import { Controller } from "@nestjs/common";
 import type { Library } from "@stakload/contracts/database/games";
 
 import { Logger } from "../logging/logging.service";
-
 import { SyncService } from "./sync.service";
 
 @IpcController()

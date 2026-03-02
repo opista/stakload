@@ -1,7 +1,9 @@
 import { FeaturedGameModel, GameFilters, GameListModel, GameStoreModel } from "../database/games";
 
 export type GameState = {
-  gameFilters: { [key in keyof GameStoreModel]?: { label: string; value: string }[] };
+  gameFilters: {
+    [key in keyof GameStoreModel]?: { label: string; value: string }[];
+  };
   gamesDetails: Record<string, GameStoreModel>;
   gamesList: GameListModel[];
   newGames: FeaturedGameModel[];

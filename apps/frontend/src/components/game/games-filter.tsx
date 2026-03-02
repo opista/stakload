@@ -4,7 +4,6 @@ import { MultiSelect } from "@components/ui/multi-select";
 import { Popover } from "@components/ui/popover";
 import { useGameStore } from "@store/game.store";
 import { IconAdjustmentsAlt } from "@tabler/icons-react";
-import { cn } from "@util/cn";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useShallow } from "zustand/react/shallow";
@@ -51,7 +50,7 @@ export const GamesFilter = ({ disabled, filters, onChange }: GamesFilterProps) =
               <Checkbox
                 label={t("filters.isInstalled")}
                 checked={filters.isInstalled || false}
-                onChange={(checked) => onFilterChange("isInstalled")(checked ? true : null)}
+                onChange={(checked) => onFilterChange("isInstalled")(checked || null)}
               />
             </div>
 

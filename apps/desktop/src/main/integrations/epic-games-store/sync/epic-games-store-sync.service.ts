@@ -12,7 +12,6 @@ import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
 import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
-
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
 @Injectable()
 export class EpicGamesStoreSyncService implements SyncService {
@@ -40,7 +39,9 @@ export class EpicGamesStoreSyncService implements SyncService {
     _httpStatusText: string,
   ) {
     if (url.startsWith("https://www.epicgames.com/id/api/redirect")) {
-      this.logger.debug("Handling EpicGamesStore authentication response", { url });
+      this.logger.debug("Handling EpicGamesStore authentication response", {
+        url,
+      });
       const bodyText = await window.webContents.executeJavaScript("document.body.innerText");
       const parsed = JSON.parse(bodyText);
       const { authorizationCode } = parsed;
@@ -50,7 +51,9 @@ export class EpicGamesStoreSyncService implements SyncService {
       await this.legendaryService.logout();
       this.logger.debug("Logged out from LegendaryService for authentication refresh");
       const result = await this.legendaryService.login(authorizationCode);
-      this.logger.log("LegendaryService authentication result", { success: result.success });
+      this.logger.log("LegendaryService authentication result", {
+        success: result.success,
+      });
       this.windowService.sendEvent(EVENT_CHANNELS.INTEGRATION_AUTH_RESULT, {
         library: this.library,
         success: result.success,
@@ -61,7 +64,9 @@ export class EpicGamesStoreSyncService implements SyncService {
   async addNewGames() {
     this.logger.debug("Adding new games from EpicGamesStore integration");
     const ownedGames = await this.legendaryService.getOwnedGames();
-    this.logger.log("Fetched owned games from LegendaryService", { count: ownedGames.length });
+    this.logger.log("Fetched owned games from LegendaryService", {
+      count: ownedGames.length,
+    });
     const existingGames = await this.gameStore.findGamesByEpicNamespace(
       ownedGames.map(({ metadata: { namespace } }) => namespace),
     );
@@ -127,9 +132,13 @@ export class EpicGamesStoreSyncService implements SyncService {
   }
 
   async updateInstalledGames() {
-    this.logger.debug("Updating installed games status", { library: this.library });
+    this.logger.debug("Updating installed games status", {
+      library: this.library,
+    });
     const installedGames = await this.installedGameStrategy.getInstalledGames();
-    this.logger.log("Retrieved installed games", { count: installedGames.length });
+    this.logger.log("Retrieved installed games", {
+      count: installedGames.length,
+    });
     const installedGameAppNames = installedGames.map((game) => game.appName);
 
     const currentlyInstalledGames = await this.gameStore.findFilteredGames(
@@ -143,14 +152,24 @@ export class EpicGamesStoreSyncService implements SyncService {
       .map((game) => game.libraryMeta?.appName)
       .filter((appName): appName is string => !!appName && !installedGameAppNames.includes(appName));
 
-    this.logger.log("Games to mark as uninstalled", { uninstalledCount: uninstalledAppNames.length });
+    this.logger.log("Games to mark as uninstalled", {
+      uninstalledCount: uninstalledAppNames.length,
+    });
     const gamesToMarkUninstalled = uninstalledAppNames.map((appName) =>
-      this.gameStore.updateGameByEpicAppName(appName, { installationDetails: undefined, isInstalled: false }),
+      this.gameStore.updateGameByEpicAppName(appName, {
+        installationDetails: undefined,
+        isInstalled: false,
+      }),
     );
 
-    this.logger.log("Games to mark as installed", { installedCount: installedGames.length });
+    this.logger.log("Games to mark as installed", {
+      installedCount: installedGames.length,
+    });
     const gamesToMarkInstalled = installedGames.map(({ appName, installationDetails }) =>
-      this.gameStore.updateGameByEpicAppName(appName, { installationDetails, isInstalled: true }),
+      this.gameStore.updateGameByEpicAppName(appName, {
+        installationDetails,
+        isInstalled: true,
+      }),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);

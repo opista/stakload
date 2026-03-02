@@ -4,7 +4,6 @@ import { CollectionStoreModel } from "@stakload/contracts/database/collections";
 import { Repository } from "typeorm";
 
 import { Logger } from "../logging/logging.service";
-
 import { CollectionEntity } from "./collection.entity";
 
 @Injectable()
@@ -22,7 +21,10 @@ export class CollectionStore {
     try {
       const created = this.repository.create(collection);
       await this.repository.save(created);
-      this.logger.debug("Collection created in database", { id: created._id, name: created.name });
+      this.logger.debug("Collection created in database", {
+        id: created._id,
+        name: created.name,
+      });
       return created;
     } catch (error) {
       this.logger.error("Database error while creating collection", error, collection);
@@ -37,7 +39,9 @@ export class CollectionStore {
       this.logger.debug("Collection deleted from database", { id });
       return true;
     } catch (error) {
-      this.logger.error("Database error while deleting collection", error, { id });
+      this.logger.error("Database error while deleting collection", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -51,7 +55,9 @@ export class CollectionStore {
       }
       return collection;
     } catch (error) {
-      this.logger.error("Database error while finding collection", error, { id });
+      this.logger.error("Database error while finding collection", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -59,8 +65,12 @@ export class CollectionStore {
   async getCollections() {
     this.logger.debug("Fetching all collections from database");
     try {
-      const collections = await this.repository.find({ order: { name: "ASC" } });
-      this.logger.debug("Collections fetched from database", { count: collections.length });
+      const collections = await this.repository.find({
+        order: { name: "ASC" },
+      });
+      this.logger.debug("Collections fetched from database", {
+        count: collections.length,
+      });
       return collections;
     } catch (error) {
       this.logger.error("Database error while fetching collections", error);
@@ -78,7 +88,9 @@ export class CollectionStore {
       }
       return updated;
     } catch (error) {
-      this.logger.error("Database error while updating collection", error, { id });
+      this.logger.error("Database error while updating collection", error, {
+        id,
+      });
       throw error;
     }
   }

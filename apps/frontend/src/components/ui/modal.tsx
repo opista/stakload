@@ -24,7 +24,7 @@ export const Modal = ({ centered = true, children, onClose, opened, size = "md",
   return (
     <Dialog.Root open={opened} onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm transition-opacity animate-in fade-in duration-200" />
+        <Dialog.Backdrop className="animate-in fade-in fixed inset-0 z-[1000] bg-black/60 backdrop-blur-sm transition-opacity duration-200" />
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
           <Dialog.Popup
             className={cn(
@@ -36,7 +36,7 @@ export const Modal = ({ centered = true, children, onClose, opened, size = "md",
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/5 p-8 pb-4">
               <Dialog.Title className="text-2xl font-black tracking-tight">{title}</Dialog.Title>
-              <Dialog.Close className="rounded-full p-2 text-neutral-400 hover:bg-white/5 hover:text-white transition-colors focus:outline-none">
+              <Dialog.Close className="rounded-full p-2 text-neutral-400 transition-colors hover:bg-white/5 hover:text-white focus:outline-none">
                 <IconX size={24} stroke={2} />
               </Dialog.Close>
             </div>

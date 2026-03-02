@@ -28,7 +28,9 @@ export const CollectionView = () => {
   );
   const fetchFilteredGames = useGameStore(useShallow((state) => state.fetchFilteredGames));
 
-  const [filters, setFilters] = useState<GameFilters>({ ...collection?.filters });
+  const [filters, setFilters] = useState<GameFilters>({
+    ...collection?.filters,
+  });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { data: games = [] } = useGamesQuery(() => fetchFilteredGames(filters), [filters]);
@@ -53,8 +55,8 @@ export const CollectionView = () => {
 
   return (
     <>
-      <div className="flex h-full w-full flex-col gap-4 pt-12 px-12 overflow-hidden" ref={containerRef}>
-        <SectionHeading className="flex-col items-start pl-2 gap-4">
+      <div className="flex h-full w-full flex-col gap-4 overflow-hidden px-12 pt-12" ref={containerRef}>
+        <SectionHeading className="flex-col items-start gap-4 pl-2">
           <div className="flex items-center justify-between">
             <CollectionTitle collection={collection} />
           </div>
@@ -80,7 +82,7 @@ export const CollectionView = () => {
         size="sm"
       >
         <div className="flex flex-col gap-6">
-          <p className="text-sm font-medium leading-relaxed text-neutral-300">
+          <p className="text-sm leading-relaxed font-medium text-neutral-300">
             Are you sure you want to delete this collection? This action is irreversible.
           </p>
           <div className="flex justify-end gap-3">

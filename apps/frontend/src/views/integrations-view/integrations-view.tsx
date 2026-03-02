@@ -53,7 +53,7 @@ const GeneralSettings = () => {
   return (
     <div className="flex flex-col gap-4">
       <h3 className="text-xl font-black text-white">{t("settings.library.general")}</h3>
-      <div className="flex items-center justify-between py-2 border-b border-white/5">
+      <div className="flex items-center justify-between border-b border-white/5 py-2">
         <div className="flex flex-col">
           <label className="text-sm font-semibold text-[#a0a7a9]">{t("settings.library.syncLibrary")} </label>
           <span className="text-[10px] text-neutral-500 italic">
@@ -164,7 +164,7 @@ const SteamSettings = ({ isValid }: { isValid: boolean | null }) => {
         />
       </div>
 
-      <div className="flex items-center justify-between mt-2">
+      <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <SettingsStatusIndicator
             icon={IconSquareRoundedCheckFilled}
@@ -228,7 +228,7 @@ const EpicGamesSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("epic-game-store")}
       />
-      <div className="flex items-center justify-between mt-2">
+      <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <SettingsStatusIndicator
             icon={IconSquareRoundedCheckFilled}
@@ -287,7 +287,7 @@ const GogSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("gog")}
       />
-      <div className="flex items-center justify-between mt-2">
+      <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <SettingsStatusIndicator
             icon={IconSquareRoundedCheckFilled}
@@ -346,7 +346,7 @@ const BattleNetSettings = ({ isValid }: { isValid: boolean | null }) => {
         label={t("common.enabled")}
         onCheckboxChange={() => toggleIntegrationEnabled("battle-net")}
       />
-      <div className="flex items-center justify-between mt-2">
+      <div className="mt-2 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <SettingsStatusIndicator
             icon={IconSquareRoundedCheckFilled}
@@ -386,7 +386,7 @@ export const IntegrationsView = () => {
   }, []);
 
   return (
-    <div className="flex flex-col gap-8 pb-12 pr-4">
+    <div className="flex flex-col gap-8 pr-4 pb-12">
       <GeneralSettings />
       <hr className="border-white/5" />
       <SteamSettings isValid={validationState.steam} />

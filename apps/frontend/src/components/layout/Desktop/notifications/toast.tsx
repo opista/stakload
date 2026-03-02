@@ -42,7 +42,7 @@ export const Toast = ({ onClose, toast }: ToastProps) => {
       </div>
       <button
         onClick={handleClose}
-        className="mt-1 shrink-0 rounded-full p-1 text-neutral-500 hover:bg-white/5 hover:text-white transition-colors"
+        className="mt-1 shrink-0 rounded-full p-1 text-neutral-500 transition-colors hover:bg-white/5 hover:text-white"
       >
         <IconX size={16} />
       </button>

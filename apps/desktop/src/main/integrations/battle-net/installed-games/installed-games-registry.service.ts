@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../../logging/logging.service";
-
 import { MacInstalledGamesStrategy } from "./strategies/mac.strategy";
 import { WindowsInstalledGamesStrategy } from "./strategies/windows.strategy";
 import { InstalledGamesStrategy } from "./types";

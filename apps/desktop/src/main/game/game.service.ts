@@ -5,7 +5,6 @@ import { EVENT_CHANNELS } from "../../preload/channels";
 import { Logger } from "../logging/logging.service";
 import { ProtondbApiClient } from "../protondb/protondb-api.client";
 import { WindowService } from "../window/window.service";
-
 import { GameStore } from "./game.store";
 
 @Injectable()
@@ -22,7 +21,9 @@ export class GameService {
   async archiveGame(id: string) {
     this.logger.debug("Processing game archive", { id });
     try {
-      const result = await this.gameStore.updateGameById(id, { archivedAt: new Date() });
+      const result = await this.gameStore.updateGameById(id, {
+        archivedAt: new Date(),
+      });
       if (result) {
         this.logger.log("Game archived successfully", { id });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
@@ -53,7 +54,10 @@ export class GameService {
     this.logger.debug("Processing filtered games request", { filters });
     try {
       const games = await this.gameStore.findFilteredGames(filters, "list");
-      this.logger.debug("Filtered games retrieved successfully", { count: games.length, filters });
+      this.logger.debug("Filtered games retrieved successfully", {
+        count: games.length,
+        filters,
+      });
       return games;
     } catch (error) {
       this.logger.error("Failed to get filtered games", error, { filters });
@@ -107,7 +111,9 @@ export class GameService {
             .sort((a, b) => a.label.localeCompare(b.label));
           return acc;
         },
-        {} as { [key in keyof GameStoreModel]?: { label: string; value: string }[] },
+        {} as {
+          [key in keyof GameStoreModel]?: { label: string; value: string }[];
+        },
       );
 
       this.logger.debug("Game filters retrieved successfully");
@@ -122,7 +128,9 @@ export class GameService {
     this.logger.debug("Processing games list request");
     try {
       const games = await this.gameStore.findFilteredGames({}, "list");
-      this.logger.debug("Games list retrieved successfully", { count: games.length });
+      this.logger.debug("Games list retrieved successfully", {
+        count: games.length,
+      });
       return games;
     } catch (error) {
       this.logger.error("Failed to get games list", error);
@@ -142,7 +150,9 @@ export class GameService {
         },
         10,
       );
-      this.logger.debug("New games retrieved successfully", { count: games.length });
+      this.logger.debug("New games retrieved successfully", {
+        count: games.length,
+      });
       return games;
     } catch (error) {
       this.logger.error("Failed to get new games", error);
@@ -159,7 +169,9 @@ export class GameService {
     this.logger.debug("Processing quick launch games request");
     try {
       const games = await this.gameStore.findFilteredGames({ isQuickLaunch: true }, "list");
-      this.logger.debug("Quick launch games retrieved successfully", { count: games.length });
+      this.logger.debug("Quick launch games retrieved successfully", {
+        count: games.length,
+      });
       return games;
     } catch (error) {
       this.logger.error("Failed to get quick launch games", error);
@@ -177,7 +189,9 @@ export class GameService {
       }
       return result;
     } catch (error) {
-      this.logger.error("Failed to toggle game favourite status", error, { id });
+      this.logger.error("Failed to toggle game favourite status", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -187,12 +201,16 @@ export class GameService {
     try {
       const result = await this.gameStore.toggleQuickLaunchGame(id);
       if (result) {
-        this.logger.log("Game quick launch status toggled successfully", { id });
+        this.logger.log("Game quick launch status toggled successfully", {
+          id,
+        });
         this.windowService.sendEvent(EVENT_CHANNELS.GAMES_LIST_UPDATED);
       }
       return result;
     } catch (error) {
-      this.logger.error("Failed to toggle game quick launch status", error, { id });
+      this.logger.error("Failed to toggle game quick launch status", error, {
+        id,
+      });
       throw error;
     }
   }

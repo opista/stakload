@@ -24,7 +24,11 @@ const TIER_MAP: { [key: string]: TierMetadata } = {
   gold: { background: "#cfb53b", color: "#000", label: "protondb.gold" },
   native: { background: "#008000", color: "#fff", label: "protondb.native" },
   pending: { background: "#444", color: "#000", label: "protondb.pending" },
-  platinum: { background: "#b4c7dc", color: "#000", label: "protondb.platinum" },
+  platinum: {
+    background: "#b4c7dc",
+    color: "#000",
+    label: "protondb.platinum",
+  },
   silver: { background: "#a6a6a6", color: "#000", label: "protondb.silver" },
   unknown: { background: "#444", color: "#000", label: "protondb.unknown" },
 } as const;
@@ -70,8 +74,13 @@ const ProtonIcon = memo(({ gameId, platforms, size }: ProtonIndicatorProps) => {
         icon={IconBrandProtonDb}
         iconProps={{ style: { color: metadata.color } }}
         loading={isLoading}
-        themeIconProps={{ size, style: { background: metadata.background, color: metadata.color } }}
-        tooltipProps={{ label: t("protondb.tier", { tier: `$t(${metadata.label})` }) }}
+        themeIconProps={{
+          size,
+          style: { background: metadata.background, color: metadata.color },
+        }}
+        tooltipProps={{
+          label: t("protondb.tier", { tier: `$t(${metadata.label})` }),
+        }}
       />
     </a>
   );

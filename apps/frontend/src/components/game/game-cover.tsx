@@ -103,17 +103,20 @@ export const GameCover = ({
           color: "red",
           icon: <IconSquareRoundedMinus size={16} />,
           key: "delete",
-          onClick: () => openModal("removeGame", { innerProps: { id: game._id, name: game.name } }),
+          onClick: () =>
+            openModal("removeGame", {
+              innerProps: { id: game._id, name: game.name },
+            }),
           title: t("gameCover.removeFromLibrary"),
         },
       ])}
       title={game.name}
     >
-      <div className="w-full h-full transition-transform duration-400 group-hover:scale-110 group-focus-within:scale-110 group-data-[active=true]:scale-110">
+      <div className="h-full w-full transition-transform duration-400 group-focus-within:scale-110 group-hover:scale-110 group-data-[active=true]:scale-110">
         {game.cover ? (
-          <img src={game.cover} alt={game.name} className="w-full h-full object-cover" />
+          <img src={game.cover} alt={game.name} className="h-full w-full object-cover" />
         ) : (
-          <div className="flex flex-col items-center justify-end h-full relative overflow-hidden w-full">
+          <div className="relative flex h-full w-full flex-col items-center justify-end overflow-hidden">
             <IconPercentage0
               className={cn(
                 "absolute left-1/2 -translate-x-1/2 opacity-20 w-[70%] h-[70%]",
@@ -134,10 +137,10 @@ export const GameCover = ({
             },
           )}
         >
-          <h4 className="font-serif text-sm font-bold tracking-wider text-white group-hover:text-primary group-focus-within:text-primary group-data-[active=true]:text-primary truncate mb-1">
+          <h4 className="group-hover:text-primary group-focus-within:text-primary group-data-[active=true]:text-primary mb-1 truncate font-serif text-sm font-bold tracking-wider text-white">
             {game.name}
           </h4>
-          <div className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+          <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
             <SourceIcon size={14} />
             {libraryName}
           </div>

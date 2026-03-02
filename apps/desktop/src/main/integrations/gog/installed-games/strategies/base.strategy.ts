@@ -1,6 +1,7 @@
+import path from "path";
+
 import { Injectable } from "@nestjs/common";
 import Database from "better-sqlite3";
-import path from "path";
 
 import { Logger } from "../../../../logging/logging.service";
 import { mapAppManifestToGameInstallationDetails } from "../mappers/map-app-manifest-to-installed-game-data";

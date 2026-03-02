@@ -1,6 +1,6 @@
 import { ContextMenu } from "@base-ui/react/context-menu";
 import { cn } from "@util/cn";
-import { createContext, ReactNode, useCallback, useContext, useState } from "react";
+import { createContext, MouseEvent as ReactMouseEvent, ReactNode, useCallback, useContext, useState } from "react";
 
 export interface ContextMenuItem {
   color?: string;
@@ -13,7 +13,7 @@ export interface ContextMenuItem {
 }
 
 interface ContextMenuContextType {
-  showContextMenu: (items: ContextMenuItem[]) => (e: MouseEvent) => void;
+  showContextMenu: (items: ContextMenuItem[]) => (e: ReactMouseEvent<HTMLElement>) => void;
 }
 
 const ContextMenuContext = createContext<ContextMenuContextType | null>(null);
@@ -30,7 +30,7 @@ export const ContextMenuProvider = ({ children }: { children: ReactNode }) => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const showContextMenu = useCallback(
-    (newItems: ContextMenuItem[]) => (e: MouseEvent) => {
+    (newItems: ContextMenuItem[]) => (e: ReactMouseEvent<HTMLElement>) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -48,7 +48,7 @@ export const ContextMenuProvider = ({ children }: { children: ReactNode }) => {
         <ContextMenu.Trigger render={<div style={{ left: position.x, position: "fixed", top: position.y }} />} />
         <ContextMenu.Portal>
           <ContextMenu.Positioner side="right" align="start">
-            <ContextMenu.Popup className="z-[9999] min-w-[200px] overflow-hidden rounded-xl bg-[#2b2b2b] p-1.5 shadow-2xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-200">
+            <ContextMenu.Popup className="animate-in fade-in zoom-in-95 z-[9999] min-w-[200px] overflow-hidden rounded-xl bg-[#2b2b2b] p-1.5 shadow-2xl ring-1 ring-white/10 duration-200 outline-none">
               {items.map((item) => {
                 if (item.key.includes("divider")) {
                   return <ContextMenu.Separator key={item.key} className="my-1 h-px bg-white/5" />;

@@ -17,8 +17,8 @@ const createDemoIpc = (): IpcApi => ({
     createCollection: async (collection: CollectionStoreModel) => {
       const collections = readCollections();
       const nextCollection = {
-        _id: crypto.randomUUID(),
         ...collection,
+        _id: collection._id || crypto.randomUUID(),
       };
 
       writeCollections([...collections, nextCollection]);

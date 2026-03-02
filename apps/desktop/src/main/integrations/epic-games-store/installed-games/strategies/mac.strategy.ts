@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
 import path from "path";
 
-import { Logger } from "../../../../logging/logging.service";
+import { Injectable } from "@nestjs/common";
 
+import { Logger } from "../../../../logging/logging.service";
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Injectable()
@@ -24,7 +24,9 @@ export class MacInstalledGamesStrategy extends BaseInstalledGamesStrategy {
     const homeDir = process.env.HOME;
     const applicationPath = path.join(homeDir!, "Library/Application Support/Epic");
     this.applicationPath = applicationPath;
-    this.logger.log("Determined Mac installed games application path", { applicationPath });
+    this.logger.log("Determined Mac installed games application path", {
+      applicationPath,
+    });
     return applicationPath;
   }
 }

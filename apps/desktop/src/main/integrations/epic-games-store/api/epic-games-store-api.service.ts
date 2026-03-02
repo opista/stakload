@@ -2,7 +2,6 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../../logging/logging.service";
-
 import CatalogQuery from "./catalog-query.graphql";
 import { Catalog } from "./types";
 
@@ -42,11 +41,16 @@ export class EpicGamesStoreApiService {
           namespace,
         });
       } else {
-        this.logger.warn("No game found matching BASE_GAME offer type", { namespace });
+        this.logger.warn("No game found matching BASE_GAME offer type", {
+          namespace,
+        });
       }
       return game?.id ?? null;
     } catch (error: unknown) {
-      this.logger.error("Error fetching game ID from EpicGamesStore API", { error, namespace });
+      this.logger.error("Error fetching game ID from EpicGamesStore API", {
+        error,
+        namespace,
+      });
       throw error;
     }
   }

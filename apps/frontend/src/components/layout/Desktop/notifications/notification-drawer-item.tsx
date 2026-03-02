@@ -22,12 +22,12 @@ export const NotificationDrawerItem = ({ notification, onClose }: NotificationDr
   return (
     <div className="rounded-2xl border border-white/5 bg-white/5 p-4 transition-colors hover:bg-white/10">
       <div className="mb-3 flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-500">
+        <span className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase">
           {new Date(notification.timestamp).toLocaleString()}
         </span>
         <button
           onClick={() => onClose?.(notification.id)}
-          className="text-neutral-500 hover:text-white transition-colors focus:outline-none"
+          className="text-neutral-500 transition-colors hover:text-white focus:outline-none"
         >
           <IconX size={16} />
         </button>
@@ -36,9 +36,9 @@ export const NotificationDrawerItem = ({ notification, onClose }: NotificationDr
         <div className={cn("w-1 shrink-0 rounded-full", indiciatorColorMap[notification.type])} />
         {notification.icon && <DynamicIcon className="shrink-0" icon={notification.icon} size={32} />}
 
-        <div className="max-w-full overflow-hidden flex flex-col gap-0.5">
+        <div className="flex max-w-full flex-col gap-0.5 overflow-hidden">
           <span className="text-sm font-black text-white">{t(notification.title as any)}</span>
-          <p className="text-[12px] font-medium leading-relaxed text-neutral-400 truncate-2-lines">
+          <p className="truncate-2-lines text-[12px] leading-relaxed font-medium text-neutral-400">
             {t(notification.message as any)}
           </p>
         </div>

@@ -30,7 +30,9 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
 
       return isNaN(pid) ? null : pid;
     } catch (error) {
-      this.logger.error("Failed to find process by directory", error, { directory });
+      this.logger.error("Failed to find process by directory", error, {
+        directory,
+      });
       return null;
     }
   }
@@ -49,7 +51,9 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
   }
 
   stopWatching() {
-    this.logger.debug("Stopping process monitor", { watchedCount: this.watchedProcesses.size });
+    this.logger.debug("Stopping process monitor", {
+      watchedCount: this.watchedProcesses.size,
+    });
     if (this.processCheckInterval) {
       clearTimeout(this.processCheckInterval);
       this.processCheckInterval = null;
@@ -75,12 +79,18 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
       await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
     }
 
-    this.logger.warn("Process not found after timeout", { directory, timeoutMs: options.maxPollingTime });
+    this.logger.warn("Process not found after timeout", {
+      directory,
+      timeoutMs: options.maxPollingTime,
+    });
     return null;
   }
 
   async watchProcess(pid: number, onExit: () => void) {
-    this.logger.debug("Setting up process watch", { pid, watchedCount: this.watchedProcesses.size });
+    this.logger.debug("Setting up process watch", {
+      pid,
+      watchedCount: this.watchedProcesses.size,
+    });
     this.watchedProcesses.set(pid, onExit);
 
     if (this.processCheckInterval) return;
@@ -94,7 +104,9 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
           return;
         }
 
-        this.logger.debug("Checking watched processes", { pids: pids.join(",") });
+        this.logger.debug("Checking watched processes", {
+          pids: pids.join(","),
+        });
         const { stdout } = await execAsync(`tasklist /FI "PID eq ${pids.join(",")}" /NH /FO CSV`);
 
         const runningPids = stdout

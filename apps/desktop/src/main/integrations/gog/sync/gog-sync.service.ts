@@ -111,7 +111,9 @@ export class GogLibraryService implements SyncService {
   }
 
   async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external GOG endpoint", { gameId: game.gameId });
+    this.logger.debug("Fetching game metadata from external GOG endpoint", {
+      gameId: game.gameId,
+    });
     return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Gog);
   }
 
@@ -143,11 +145,17 @@ export class GogLibraryService implements SyncService {
       .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
 
     const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+      this.gameStore.updateGameByGameId(gameId, {
+        installationDetails: undefined,
+        isInstalled: false,
+      }),
     );
 
     const gamesToMarkInstalled = installedGames.map(({ gameId, installationDetails }) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails, isInstalled: true }),
+      this.gameStore.updateGameByGameId(gameId, {
+        installationDetails,
+        isInstalled: true,
+      }),
     );
 
     await Promise.all([...gamesToMarkUninstalled, ...gamesToMarkInstalled]);

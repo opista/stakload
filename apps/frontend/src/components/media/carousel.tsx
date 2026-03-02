@@ -124,7 +124,7 @@ export const Carousel = ({
               }}
               tabIndex={-1}
               className={cn("flex-none min-w-0 focus:outline-none", slideClassName)}
-              onFocus={(e) => {
+              onFocus={() => {
                 setFocusedIndex(index);
                 onSlideChange?.(index); // Explicitly notify parent of focus
 
@@ -149,7 +149,7 @@ export const Carousel = ({
       </div>
 
       {withControls && !bothButtonsDisabled && (
-        <div className="absolute bottom-full mb-6 right-12 flex gap-2">
+        <div className="absolute right-12 bottom-full mb-6 flex gap-2">
           <ControlButton onClick={scrollPrev} disabled={prevBtnDisabled} icon={IconChevronLeft} />
           <ControlButton onClick={scrollNext} disabled={nextBtnDisabled} icon={IconChevronRight} />
         </div>

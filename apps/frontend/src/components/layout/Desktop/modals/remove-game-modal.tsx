@@ -47,16 +47,12 @@ export const RemoveGameModal = ({ innerProps: { id, name, navigateTo }, onClose,
     <Modal opened={opened} onClose={onClose} title={t("removeGameModal.title")} size="sm">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium leading-relaxed text-neutral-200">
+          <p className="text-sm leading-relaxed font-medium text-neutral-200">
             <Trans i18nKey="removeGameModal.areYouSure" values={{ name }}></Trans>
           </p>
-          <p className="text-sm font-medium leading-relaxed text-neutral-200">{t("removeGameModal.installedInfo")}</p>
+          <p className="text-sm leading-relaxed font-medium text-neutral-200">{t("removeGameModal.installedInfo")}</p>
         </div>
-        <Checkbox
-          checked={preventReadd}
-          label={t("removeGameModal.preventReadd")}
-          onChange={(event) => setPreventReadd(event.currentTarget.checked)}
-        />
+        <Checkbox checked={preventReadd} label={t("removeGameModal.preventReadd")} onChange={setPreventReadd} />
         <div className="mt-4 flex justify-end gap-3">
           <Button onClick={onClose} variant="default">
             {t("removeGameModal.cancel")}

@@ -3,7 +3,6 @@ import { Controller } from "@nestjs/common";
 import type { CollectionStoreModel } from "@stakload/contracts/database/collections";
 
 import { Logger } from "../logging/logging.service";
-
 import { CollectionService } from "./collection.service";
 
 @IpcController()
@@ -22,7 +21,9 @@ export class CollectionController {
     try {
       return await this.collectionService.createCollection(collection);
     } catch (error) {
-      this.logger.error("Failed to create collection", error, { name: collection.name });
+      this.logger.error("Failed to create collection", error, {
+        name: collection.name,
+      });
       throw error;
     }
   }

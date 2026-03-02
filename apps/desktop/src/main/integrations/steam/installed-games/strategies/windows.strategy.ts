@@ -3,7 +3,6 @@ import { checkRegistry } from "@util/check-registry";
 import Registry from "winreg";
 
 import { Logger } from "../../../../logging/logging.service";
-
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Injectable()
@@ -25,7 +24,9 @@ export class WindowsInstalledGamesStrategy extends BaseInstalledGamesStrategy {
       });
       if (result) {
         this.applicationPath = result;
-        this.logger.debug("Determined Windows Steam installation path", { applicationPath: result });
+        this.logger.debug("Determined Windows Steam installation path", {
+          applicationPath: result,
+        });
         return result;
       }
     } catch (err) {

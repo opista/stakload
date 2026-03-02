@@ -14,7 +14,7 @@ export const PasswordInput = (props: ComponentPropsWithoutRef<typeof TextInput>)
       rightSection={
         <BaseButton
           onClick={() => setVisible(!visible)}
-          className="rounded-md p-1 hover:bg-white/5 transition-colors focus:outline-none"
+          className="rounded-md p-1 transition-colors hover:bg-white/5 focus:outline-none"
           aria-label={visible ? "Hide password" : "Show password"}
         >
           {visible ? <IconEyeOff size={16} /> : <IconEye size={16} />}

@@ -7,6 +7,24 @@
   "printWidth": 120,
   "semi": true,
   "singleQuote": false,
+  "sortImports": {
+    "groups": ["side_effect", "builtin", "external", "internal", ["parent", "sibling", "index"], "style", "unknown"],
+    "internalPattern": [
+      "^@api/.*",
+      "^@components/.*",
+      "^@constants/.*",
+      "^@hooks/.*",
+      "^@icons/.*",
+      "^@platform/.*",
+      "^@stakload/.*",
+      "^@store/.*",
+      "^@util/.*",
+    ],
+  },
+  "sortTailwindcss": {
+    "tailwindFunctions": ["clsx", "cn"],
+    "tailwindStylesheet": "./apps/frontend/src/styles/styles.css",
+  },
   "tabWidth": 2,
   "trailingComma": "all",
 }

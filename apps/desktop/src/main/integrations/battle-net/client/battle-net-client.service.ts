@@ -16,12 +16,18 @@ export class BattleNetClientService implements LibraryClientService {
   }
 
   async install(game: GameStoreModel): Promise<void> {
-    this.logger.log("Initiating Battle.net installation", { gameId: game.gameId });
+    this.logger.log("Initiating Battle.net installation", {
+      gameId: game.gameId,
+    });
     try {
       await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}install=${game.gameId}`);
-      this.logger.debug("Battle.net installation launched successfully", { gameId: game.gameId });
+      this.logger.debug("Battle.net installation launched successfully", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to open Battle.net installer", error, { gameId: game.gameId });
+      this.logger.error("Failed to open Battle.net installer", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
@@ -30,20 +36,30 @@ export class BattleNetClientService implements LibraryClientService {
     this.logger.log("Launching game via Battle.net", { gameId: game.gameId });
     try {
       await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}${game.gameId}`);
-      this.logger.debug("Game launched successfully via Battle.net", { gameId: game.gameId });
+      this.logger.debug("Game launched successfully via Battle.net", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to launch game via Battle.net", error, { gameId: game.gameId });
+      this.logger.error("Failed to launch game via Battle.net", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
 
   async uninstall(game: GameStoreModel): Promise<void> {
-    this.logger.log("Initiating Battle.net uninstallation", { gameId: game.gameId });
+    this.logger.log("Initiating Battle.net uninstallation", {
+      gameId: game.gameId,
+    });
     try {
       await shell.openExternal(`${BATTLE_NET_LAUNCHER_BASE_URL}games`);
-      this.logger.debug("Battle.net uninstallation window opened", { gameId: game.gameId });
+      this.logger.debug("Battle.net uninstallation window opened", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to open Battle.net uninstaller", error, { gameId: game.gameId });
+      this.logger.error("Failed to open Battle.net uninstaller", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }

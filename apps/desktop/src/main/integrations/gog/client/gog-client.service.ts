@@ -17,9 +17,13 @@ export class GogClientService implements LibraryClientService {
     this.logger.log("Initiating GOG installation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}openStore/games/${game.gameId}`);
-      this.logger.debug("GOG installation launched successfully", { gameId: game.gameId });
+      this.logger.debug("GOG installation launched successfully", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to open GOG installer", error, { gameId: game.gameId });
+      this.logger.error("Failed to open GOG installer", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
@@ -28,9 +32,13 @@ export class GogClientService implements LibraryClientService {
     this.logger.log("Launching game via GOG", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}launchGame/${game.gameId}`);
-      this.logger.debug("Game launched successfully via GOG", { gameId: game.gameId });
+      this.logger.debug("Game launched successfully via GOG", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to launch game via GOG", error, { gameId: game.gameId });
+      this.logger.error("Failed to launch game via GOG", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }
@@ -39,9 +47,13 @@ export class GogClientService implements LibraryClientService {
     this.logger.log("Initiating GOG uninstallation", { gameId: game.gameId });
     try {
       await shell.openExternal(`${GOG_LAUNCHER_BASE_URL}openStore/games/${game.gameId}`);
-      this.logger.debug("GOG uninstallation launched successfully", { gameId: game.gameId });
+      this.logger.debug("GOG uninstallation launched successfully", {
+        gameId: game.gameId,
+      });
     } catch (error) {
-      this.logger.error("Failed to open GOG uninstaller", error, { gameId: game.gameId });
+      this.logger.error("Failed to open GOG uninstaller", error, {
+        gameId: game.gameId,
+      });
       throw error;
     }
   }

@@ -49,10 +49,20 @@ export const GamesGrid = ({ games }: GamesGridProps) => {
   const calculateCellSize = (
     width: number,
     columnCount: number,
-  ): { columnCount: number; columnWidth: number; rowCount: number; rowHeight: number } => {
+  ): {
+    columnCount: number;
+    columnWidth: number;
+    rowCount: number;
+    rowHeight: number;
+  } => {
     // If width is 0 (initial render), return fallback values
     if (width === 0) {
-      return { columnCount: 1, columnWidth: 0, rowCount: Math.ceil(games?.length || 0), rowHeight: 0 };
+      return {
+        columnCount: 1,
+        columnWidth: 0,
+        rowCount: Math.ceil(games?.length || 0),
+        rowHeight: 0,
+      };
     }
     const columnWidth = (width - SCROLLBAR_WIDTH) / columnCount;
 

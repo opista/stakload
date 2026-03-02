@@ -63,7 +63,10 @@ export class CollectionService {
     this.logger.debug("Fetching collection by id", { id });
     try {
       const collection = await this.collectionStore.findCollectionById(id);
-      this.logger.debug("Collection fetched successfully", { id, name: collection?.name });
+      this.logger.debug("Collection fetched successfully", {
+        id,
+        name: collection?.name,
+      });
       return collection;
     } catch (error) {
       this.logger.error("Failed to fetch collection", error, { id });
@@ -75,7 +78,9 @@ export class CollectionService {
     this.logger.debug("Fetching all collections");
     try {
       const collections = await this.collectionStore.getCollections();
-      this.logger.debug("Collections fetched successfully", { count: collections.length });
+      this.logger.debug("Collections fetched successfully", {
+        count: collections.length,
+      });
       return collections;
     } catch (error) {
       this.logger.error("Failed to fetch collections", error);
@@ -92,7 +97,10 @@ export class CollectionService {
         ...(formattedName && { name: formattedName }),
       });
       if (updated) {
-        this.logger.log("Collection updated successfully", { id, name: updated.name });
+        this.logger.log("Collection updated successfully", {
+          id,
+          name: updated.name,
+        });
       }
       return updated;
     } catch (error) {

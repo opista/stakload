@@ -5,7 +5,6 @@ import type { GameFilters } from "@stakload/contracts/database/games";
 import { CollectionService } from "../collection/collection.service";
 import { GameLifecycleService } from "../game-lifecycle/game-lifecycle.service";
 import { Logger } from "../logging/logging.service";
-
 import { GameService } from "./game.service";
 
 @IpcController()
@@ -110,7 +109,9 @@ export class GameController {
     try {
       return await this.gameService.toggleFavouriteGame(id);
     } catch (error) {
-      this.logger.error("Failed to toggle game favourite status", error, { id });
+      this.logger.error("Failed to toggle game favourite status", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -121,7 +122,9 @@ export class GameController {
     try {
       return await this.gameService.toggleQuickLaunchGame(id);
     } catch (error) {
-      this.logger.error("Failed to toggle game quick launch status", error, { id });
+      this.logger.error("Failed to toggle game quick launch status", error, {
+        id,
+      });
       throw error;
     }
   }

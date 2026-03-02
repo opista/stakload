@@ -1,6 +1,7 @@
-import { Injectable } from "@nestjs/common";
 import fs from "fs/promises";
 import path from "path";
+
+import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../../../logging/logging.service";
 import { EpicInstallationData, InstalledGameData, InstalledGamesStrategy } from "../types";
@@ -21,7 +22,9 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
 
     try {
       const content = await fs.readFile(manifestPath, "utf-8");
-      const parsed = JSON.parse(content) as { InstallationList: EpicInstallationData[] };
+      const parsed = JSON.parse(content) as {
+        InstallationList: EpicInstallationData[];
+      };
       this.logger.log("Fetched installed Epic games", { manifestPath });
       return parsed.InstallationList.map((install) => ({
         appName: install.AppName,
@@ -31,7 +34,10 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
         },
       }));
     } catch (error: unknown) {
-      this.logger.error("Failed to get installed Epic games", { error, manifestPath });
+      this.logger.error("Failed to get installed Epic games", {
+        error,
+        manifestPath,
+      });
       return [];
     }
   }

@@ -7,7 +7,7 @@ type NavbarLinkProps = {
   children?: ReactNode;
   disabled?: boolean;
   href?: string;
-  icon: FC<IconProps>;
+  icon?: FC<IconProps>;
   label: string;
   isSubItem?: boolean;
 };
@@ -84,8 +84,8 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
         onClick={onClick}
         type="button"
       >
-        <Icon className="shrink-0" size={20} />
-        <span className="flex-1 truncate text-left text-xs font-bold uppercase tracking-wider">{label}</span>
+        {Icon && <Icon className="shrink-0" size={20} />}
+        <span className="flex-1 truncate text-left text-xs font-bold tracking-wider uppercase">{label}</span>
         {hasChildren && (
           <IconChevronRight
             className={cn("shrink-0 transition-transform duration-200", isOpen && "rotate-90")}
@@ -94,7 +94,7 @@ export const NavbarLink = ({ children, disabled, href, icon: Icon, isSubItem, la
         )}
       </button>
 
-      {hasChildren && isOpen && <div className="ml-8 mt-1 flex flex-col space-y-1">{children}</div>}
+      {hasChildren && isOpen && <div className="mt-1 ml-8 flex flex-col space-y-1">{children}</div>}
     </div>
   );
 };

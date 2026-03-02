@@ -53,7 +53,9 @@ export class BattleNetLibraryService implements SyncService {
         });
 
       await this.gameStore.bulkInsertGames(mappedGames);
-      this.logger.log("New Battle.net games added", { count: mappedGames.length });
+      this.logger.log("New Battle.net games added", {
+        count: mappedGames.length,
+      });
       return mappedGames.length;
     } catch (err) {
       console.log({ err });
@@ -102,7 +104,10 @@ export class BattleNetLibraryService implements SyncService {
       .filter((gameId): gameId is string => !!gameId && !installedGameIds.includes(gameId));
 
     const gamesToMarkUninstalled = uninstalledGameIds.map((gameId) =>
-      this.gameStore.updateGameByGameId(gameId, { installationDetails: undefined, isInstalled: false }),
+      this.gameStore.updateGameByGameId(gameId, {
+        installationDetails: undefined,
+        isInstalled: false,
+      }),
     );
 
     // TODO: Maybe rather than upsert, we should check if the game already exists and update it if it does. If it doesn't, we should insert it.

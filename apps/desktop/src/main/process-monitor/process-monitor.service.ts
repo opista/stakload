@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../logging/logging.service";
-
 import { MacProcessMonitor } from "./strategies/mac.strategy";
 import { WindowsProcessMonitor } from "./strategies/windows.strategy";
 import { ProcessMonitorStrategy } from "./types";

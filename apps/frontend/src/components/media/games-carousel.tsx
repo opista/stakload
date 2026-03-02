@@ -12,7 +12,11 @@ type GamesCarouselProps<T> = {
 };
 
 export const GamesCarousel = <
-  T extends Partial<GameListModel> & { _id: string; name: string; screenshots?: string[] },
+  T extends Partial<GameListModel> & {
+    _id: string;
+    name: string;
+    screenshots?: string[];
+  },
 >({
   games,
   loop,

@@ -7,7 +7,6 @@ import { EpicGamesStoreClientService } from "../../integrations/epic-games-store
 import { GogClientService } from "../../integrations/gog/client/gog-client.service";
 import { SteamClientService } from "../../integrations/steam/client/steam-client.service";
 import { Logger } from "../../logging/logging.service";
-
 import { LibraryClientService } from "./types";
 
 @Injectable()

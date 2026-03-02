@@ -19,7 +19,10 @@ export class EpicGamesStoreClientService implements LibraryClientService {
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=install`);
     } catch (error: unknown) {
-      this.logger.error("Failed to install game via EpicGameStore", { appName, error });
+      this.logger.error("Failed to install game via EpicGameStore", {
+        appName,
+        error,
+      });
       throw error;
     }
   }
@@ -30,7 +33,10 @@ export class EpicGamesStoreClientService implements LibraryClientService {
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}apps/${appName}?action=launch&silent=true`);
     } catch (error: unknown) {
-      this.logger.error("Failed to launch game via EpicGameStore", { appName, error });
+      this.logger.error("Failed to launch game via EpicGameStore", {
+        appName,
+        error,
+      });
       throw error;
     }
   }
@@ -40,7 +46,9 @@ export class EpicGamesStoreClientService implements LibraryClientService {
     try {
       await shell.openExternal(`${EPIC_LAUNCHER_BASE_URL}store/library`);
     } catch (error: unknown) {
-      this.logger.error("Failed to uninstall game via EpicGameStore", { error });
+      this.logger.error("Failed to uninstall game via EpicGameStore", {
+        error,
+      });
       throw error;
     }
   }

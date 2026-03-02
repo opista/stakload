@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
 import path from "path";
 
-import { Logger } from "../../../../logging/logging.service";
+import { Injectable } from "@nestjs/common";
 
+import { Logger } from "../../../../logging/logging.service";
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Injectable()

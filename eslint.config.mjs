@@ -1,13 +1,12 @@
-import { defineConfig } from "eslint/config";
-import tseslint from "@electron-toolkit/eslint-config-ts";
 import eslintConfigPrettier from "@electron-toolkit/eslint-config-prettier";
-import eslintPluginReact from "eslint-plugin-react";
-import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
-import unusedImports from "eslint-plugin-unused-imports";
+import tseslint from "@electron-toolkit/eslint-config-ts";
 import perfectionist from "eslint-plugin-perfectionist";
-import reactHooks from "eslint-plugin-react-hooks";
+import eslintPluginReact from "eslint-plugin-react";
 import reactCompiler from "eslint-plugin-react-compiler";
+import reactHooks from "eslint-plugin-react-hooks";
+import eslintPluginReactRefresh from "eslint-plugin-react-refresh";
+import unusedImports from "eslint-plugin-unused-imports";
+import { defineConfig } from "eslint/config";
 
 export default defineConfig(
   { ignores: ["**/node_modules", "**/dist", "**/out"] },
@@ -37,16 +36,37 @@ export default defineConfig(
     },
     plugins: {
       "react-refresh": eslintPluginReactRefresh,
-      "simple-import-sort": simpleImportSort,
       "unused-imports": unusedImports,
       perfectionist,
     },
     rules: {
       ...eslintPluginReactRefresh.configs.vite.rules,
-      "simple-import-sort/imports": [
+      "perfectionist/sort-imports": [
         "error",
         {
-          groups: [["^\\u0000"], ["^@?\\w"], ["^@", "^"], ["^\\./"]],
+          type: "natural",
+          order: "asc",
+          groups: [
+            "side-effect",
+            "builtin",
+            "external",
+            "internal",
+            ["parent", "sibling", "index"],
+            "side-effect-style",
+            "unknown",
+          ],
+          newlinesBetween: 1,
+          internalPattern: [
+            "^@api/.*",
+            "^@components/.*",
+            "^@constants/.*",
+            "^@hooks/.*",
+            "^@icons/.*",
+            "^@platform/.*",
+            "^@stakload/.*",
+            "^@store/.*",
+            "^@util/.*",
+          ],
         },
       ],
       "@typescript-eslint/explicit-function-return-type": "off",

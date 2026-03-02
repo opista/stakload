@@ -12,11 +12,11 @@ type SettingsCheckboxProps = {
 
 export const SettingsCheckbox = ({ checked, disabled, label, labelInfo, onCheckboxChange }: SettingsCheckboxProps) => (
   <div className={cn("flex items-center justify-between py-1 mb-2", disabled && "opacity-50 pointer-events-none")}>
-    <div className="flex items-center gap-1.5 flex-1">
+    <div className="flex flex-1 items-center gap-1.5">
       <span className="text-sm font-semibold text-[#a0a7a9]">{label}</span>
       {labelInfo && (
         <Tooltip label={labelInfo}>
-          <IconInfoSquareRounded className="text-neutral-500 hover:text-neutral-400 shrink-0" size={14} />
+          <IconInfoSquareRounded className="shrink-0 text-neutral-500 hover:text-neutral-400" size={14} />
         </Tooltip>
       )}
     </div>

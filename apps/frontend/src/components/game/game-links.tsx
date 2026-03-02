@@ -78,7 +78,7 @@ const Dropdown = ({ deepLink, icon, label, url }: DropdownProps) => {
       {isOpen && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
-          <div className="absolute left-0 top-full z-50 mt-2 w-48 rounded-lg bg-[#1b2c3b] p-1 shadow-xl ring-1 ring-white/10">
+          <div className="absolute top-full left-0 z-50 mt-2 w-48 rounded-lg bg-[#1b2c3b] p-1 shadow-xl ring-1 ring-white/10">
             <a
               className="flex items-center gap-2 rounded-md px-3 py-2 text-xs font-bold hover:bg-neutral-700/50"
               href={deepLink}

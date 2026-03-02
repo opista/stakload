@@ -1,5 +1,6 @@
 import { Dialog } from "@base-ui/react/dialog";
 import { GameCover } from "@components/game/game-cover";
+import { SHORTCUT_KEYS } from "@constants/shortcuts";
 import { useCommandPaletteStore } from "@store/command-palette.store";
 import { useGameStore } from "@store/game.store";
 import { IconSearch } from "@tabler/icons-react";
@@ -11,7 +12,7 @@ import { useNavigate } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
 export const CommandPalette = () => {
-  const { close, isOpen } = useCommandPaletteStore();
+  const { close, isOpen, open } = useCommandPaletteStore();
   const games = useGameStore(useShallow((state) => state.gamesList));
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -30,6 +31,18 @@ export const CommandPalette = () => {
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === SHORTCUT_KEYS.SEARCH[1].toLowerCase()) {
+        event.preventDefault();
+        open();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [open]);
+
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === "ArrowDown") {
       setSelectedIndex((prev) => (prev + 1) % filteredGames.length);
@@ -46,7 +59,7 @@ export const CommandPalette = () => {
       <Dialog.Portal>
         <Dialog.Backdrop className="fixed inset-0 z-[1000] bg-black/50 backdrop-blur-md" />
         <Dialog.Popup
-          className="fixed left-1/2 top-[20%] z-[1001] w-full max-w-2xl -translate-x-1/2 overflow-hidden rounded-2xl bg-[#1b2c3b] shadow-2xl ring-1 ring-white/10"
+          className="fixed top-[20%] left-1/2 z-[1001] w-full max-w-2xl -translate-x-1/2 overflow-hidden rounded-2xl bg-[#1b2c3b] shadow-2xl ring-1 ring-white/10"
           onKeyDown={handleKeyDown}
         >
           <div className="flex items-center gap-3 border-b border-white/5 p-4">
@@ -80,7 +93,7 @@ export const CommandPalette = () => {
                     }}
                     onMouseEnter={() => setSelectedIndex(index)}
                   >
-                    <GameCover game={game} showGameTitle={false} className="h-10 w-8 rounded shrink-0" />
+                    <GameCover game={game} showGameTitle={false} className="h-10 w-8 shrink-0 rounded" />
                     <span
                       className={cn(
                         "flex-1 text-left font-semibold",

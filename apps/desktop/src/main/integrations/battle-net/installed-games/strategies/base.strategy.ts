@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { mapSortableName } from "@util/map-sortable-name";
 import fs from "fs/promises";
 import path from "path";
+
+import { Injectable } from "@nestjs/common";
+import { mapSortableName } from "@util/map-sortable-name";
 import protobuf from "protobufjs";
 
 import { Logger } from "../../../../logging/logging.service";
@@ -33,7 +34,9 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
         longs: Number,
       });
 
-      this.logger.debug("Found Battle.net installations", { installations: message.productInstall.length });
+      this.logger.debug("Found Battle.net installations", {
+        installations: message.productInstall.length,
+      });
 
       return message.productInstall
         .filter((product) => !["agent", "bna"].includes(product.productCode))
@@ -41,7 +44,9 @@ export abstract class BaseInstalledGamesStrategy implements InstalledGamesStrate
           const game = getBattleNetGameByProductId(product.productCode);
 
           if (!game) {
-            this.logger.warn("Game not found for product code", { productCode: product.productCode });
+            this.logger.warn("Game not found for product code", {
+              productCode: product.productCode,
+            });
             return null;
           }
 

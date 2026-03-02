@@ -26,7 +26,7 @@ export const Spoiler = ({ children, initialState = false, maxHeight }: SpoilerPr
       </div>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="self-start text-xs font-bold text-cyan-500 hover:text-cyan-400 transition-colors"
+        className="self-start text-xs font-bold text-cyan-500 transition-colors hover:text-cyan-400"
       >
         {expanded ? t("spoiler.hide") : t("spoiler.showMore")}
       </button>

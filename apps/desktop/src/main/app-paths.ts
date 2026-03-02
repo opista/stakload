@@ -1,5 +1,6 @@
-import { app } from "electron";
 import { join } from "path";
+
+import { app } from "electron";
 
 const APP_DIR_NAME = "stakload";
 const userDataPath = join(app.getPath("appData"), APP_DIR_NAME);

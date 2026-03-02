@@ -6,7 +6,6 @@ import { GameLifecycleModule } from "../game-lifecycle/game-lifecycle.module";
 import { ProtonDBModule } from "../protondb/protondb.module";
 import { StackloadAPIModule } from "../stackload-api/stackload-api.module";
 import { WindowModule } from "../window/window.module";
-
 import { GameController } from "./game.controller";
 import { GameEntity } from "./game.entity";
 import { GameService } from "./game.service";

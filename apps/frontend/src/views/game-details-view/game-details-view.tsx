@@ -65,11 +65,11 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement |
   return (
     <>
       <GameHeader game={game} />
-      <div className="h-full overflow-y-auto scrollbar-hide" ref={containerRef}>
-        <div className="mb-[50px] mt-[100px]">
+      <div className="scrollbar-hide h-full overflow-y-auto" ref={containerRef}>
+        <div className="mt-[100px] mb-[50px]">
           <div className="mx-auto max-w-screen-2xl px-6">
             <h1
-              className="mb-4 line-clamp-3 max-w-[900px] text-[50px] font-black leading-[1.1] text-white/70 drop-shadow-[0_0_10px_rgba(0,0,0,1)]"
+              className="mb-4 line-clamp-3 max-w-[900px] text-[50px] leading-[1.1] font-black text-white/70 drop-shadow-[0_0_10px_rgba(0,0,0,1)]"
               title={game.name}
             >
               {game.name}
@@ -111,16 +111,16 @@ const Game = ({ containerRef, game }: { containerRef: RefObject<HTMLDivElement |
                     <div className="flex justify-end pr-4">
                       <div className="min-w-[200px]">
                         <div className="flex justify-between gap-8 py-0.5">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                          <span className="text-[10px] font-bold tracking-widest text-neutral-500 uppercase">
                             {t("game.gameId")}
                           </span>
-                          <span className="select-all font-mono text-[10px] text-neutral-400">{game.gameId}</span>
+                          <span className="font-mono text-[10px] text-neutral-400 select-all">{game.gameId}</span>
                         </div>
                         <div className="flex justify-between gap-8 py-0.5">
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                          <span className="text-[10px] font-bold tracking-widest text-neutral-500 uppercase">
                             {t("game.igdbId")}
                           </span>
-                          <span className="select-all font-mono text-[10px] text-neutral-400">{game.igdbId}</span>
+                          <span className="font-mono text-[10px] text-neutral-400 select-all">{game.igdbId}</span>
                         </div>
                       </div>
                     </div>

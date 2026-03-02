@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 
 import { SharedConfigService } from "../../../config/shared-config.service";
 import { Logger } from "../../../logging/logging.service";
-
 import { GogTokenConfig, LibraryData, LibraryProduct, TokenResponse } from "./types";
 
 export const CLIENT_ID = "46899977096215655";
@@ -61,7 +60,9 @@ export class GogApiService {
   }
 
   async getOwnedGames(token: string): Promise<LibraryProduct[]> {
-    this.logger.debug("Fetching owned games from GOG", { tokenProvided: !!token });
+    this.logger.debug("Fetching owned games from GOG", {
+      tokenProvided: !!token,
+    });
     const firstPage = await this.getProductsOnPage(1, token);
 
     if (!firstPage?.products) {
@@ -104,7 +105,10 @@ export class GogApiService {
     );
 
     const libraryData: LibraryData = await response.json();
-    this.logger.debug("Fetched GOG products on page", { page, totalProducts: libraryData.totalProducts });
+    this.logger.debug("Fetched GOG products on page", {
+      page,
+      totalProducts: libraryData.totalProducts,
+    });
     return libraryData;
   }
 
@@ -118,7 +122,9 @@ export class GogApiService {
     }
 
     if (Date.now() >= config.expiresAt) {
-      this.logger.log("GOG token expired; attempting to refresh", { expiresAt: config.expiresAt });
+      this.logger.log("GOG token expired; attempting to refresh", {
+        expiresAt: config.expiresAt,
+      });
       const newTokens = await this.refreshAccessToken(config.refreshToken);
 
       if (!newTokens || newTokens.error) {
@@ -161,7 +167,9 @@ export class GogApiService {
         return null;
       }
 
-      this.logger.debug("GOG token refreshed", { accessToken: data.access_token });
+      this.logger.debug("GOG token refreshed", {
+        accessToken: data.access_token,
+      });
       return data;
     } catch (err) {
       this.logger.error("Failed to refresh GOG token", err);

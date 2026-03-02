@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
 import path from "path";
 
-import { Logger } from "../../../../logging/logging.service";
+import { Injectable } from "@nestjs/common";
 
+import { Logger } from "../../../../logging/logging.service";
 import { BaseInstalledGamesStrategy } from "./base.strategy";
 
 @Injectable()
@@ -19,7 +19,9 @@ export class MacInstalledGamesStrategy extends BaseInstalledGamesStrategy {
     const homeDir = process.env.HOME;
     const applicationPath = path.join(homeDir!, "Library/Application Support/Steam");
     this.applicationPath = applicationPath;
-    this.logger.debug("Determined Mac Steam installation path", { applicationPath });
+    this.logger.debug("Determined Mac Steam installation path", {
+      applicationPath,
+    });
     return applicationPath;
   }
 }

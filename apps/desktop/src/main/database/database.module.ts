@@ -1,7 +1,8 @@
+import path from "path";
+
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { app } from "electron";
-import path from "path";
 
 import { CollectionEntity } from "../collection/collection.entity";
 import { GameEntity } from "../game/game.entity";

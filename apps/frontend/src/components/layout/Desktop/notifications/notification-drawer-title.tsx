@@ -19,7 +19,7 @@ export const NotificationDrawerTitle = () => {
         <h3 className="text-2xl font-black">{t("notificationDrawer.title")}</h3>
         <button
           onClick={closeDrawer}
-          className="rounded-full p-2 text-neutral-500 hover:bg-white/5 hover:text-white transition-colors focus:outline-none"
+          className="rounded-full p-2 text-neutral-500 transition-colors hover:bg-white/5 hover:text-white focus:outline-none"
         >
           <IconX size={24} />
         </button>

@@ -42,10 +42,10 @@ export const NavbarIconButton = ({ className, href, icon: Icon, indicator, label
         onClick={handleOnClick}
         type="button"
       >
-        <div className="relative shrink-0 flex items-center justify-center">
+        <div className="relative flex shrink-0 items-center justify-center">
           <Icon size={20} />
           {indicator && (
-            <div className="absolute -bottom-1 -right-1 h-2.5 w-2.5 rounded-full border border-neutral-900 bg-red-500 ring-2 ring-red-500/50 animate-pulse" />
+            <div className="absolute -right-1 -bottom-1 h-2.5 w-2.5 animate-pulse rounded-full border border-neutral-900 bg-red-500 ring-2 ring-red-500/50" />
           )}
         </div>
       </button>

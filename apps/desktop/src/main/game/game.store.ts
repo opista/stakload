@@ -10,7 +10,6 @@ import {
 import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
 
 import { Logger } from "../logging/logging.service";
-
 import { GameEntity } from "./game.entity";
 
 type FieldsType = "all" | "featured" | "list";
@@ -52,7 +51,10 @@ export class GameStore {
     switch (dateRange) {
       case "CUSTOM":
         if (startDate && endDate)
-          query.andWhere(`game.${field} BETWEEN :startDate AND :endDate`, { endDate, startDate });
+          query.andWhere(`game.${field} BETWEEN :startDate AND :endDate`, {
+            endDate,
+            startDate,
+          });
         else if (startDate) query.andWhere(`game.${field} >= :startDate`, { startDate });
         else if (endDate) query.andWhere(`game.${field} <= :endDate`, { endDate });
         break;
@@ -96,14 +98,20 @@ export class GameStore {
   }
 
   async bulkInsertGames(games: Partial<GameStoreModel>[]) {
-    this.logger.debug("Attempting bulk insert of games", { count: games.length });
+    this.logger.debug("Attempting bulk insert of games", {
+      count: games.length,
+    });
     try {
       const entities = this.repository.create(games);
       const result = await this.repository.save(entities);
-      this.logger.debug("Successfully bulk inserted games", { count: result.length });
+      this.logger.debug("Successfully bulk inserted games", {
+        count: result.length,
+      });
       return result;
     } catch (error) {
-      this.logger.error("Database error while bulk inserting games", error, { count: games.length });
+      this.logger.error("Database error while bulk inserting games", error, {
+        count: games.length,
+      });
       throw error;
     }
   }
@@ -118,10 +126,18 @@ export class GameStore {
     try {
       const qb = this.repository.createQueryBuilder("game").where("(game.archivedAt IS NULL)");
 
-      if (filters.isFavourite !== undefined) qb.andWhere("game.isFavourite = :isFav", { isFav: filters.isFavourite });
-      if (filters.isInstalled !== undefined) qb.andWhere("game.isInstalled = :isInst", { isInst: filters.isInstalled });
+      if (filters.isFavourite !== undefined)
+        qb.andWhere("game.isFavourite = :isFav", {
+          isFav: filters.isFavourite,
+        });
+      if (filters.isInstalled !== undefined)
+        qb.andWhere("game.isInstalled = :isInst", {
+          isInst: filters.isInstalled,
+        });
       if (filters.isQuickLaunch !== undefined)
-        qb.andWhere("game.isQuickLaunch = :isQL", { isQL: filters.isQuickLaunch });
+        qb.andWhere("game.isQuickLaunch = :isQL", {
+          isQL: filters.isQuickLaunch,
+        });
       if (filters.libraries?.length) qb.andWhere("game.library IN (:...libs)", { libs: filters.libraries });
 
       if (filters.createdAt) {
@@ -156,14 +172,19 @@ export class GameStore {
 
       const results = await qb.getMany();
 
-      this.logger.debug("Successfully retrieved filtered games", { count: results.length });
+      this.logger.debug("Successfully retrieved filtered games", {
+        count: results.length,
+      });
       return results as unknown as T extends "list"
         ? GameListModel[]
         : T extends "featured"
           ? FeaturedGameModel[]
           : GameStoreModel[];
     } catch (error) {
-      this.logger.error("Database error while finding filtered games", error, { filters, type });
+      this.logger.error("Database error while finding filtered games", error, {
+        filters,
+        type,
+      });
       throw error;
     }
   }
@@ -172,7 +193,10 @@ export class GameStore {
     try {
       return await this.repository.findOneBy({ gameId, library });
     } catch (error) {
-      this.logger.error("Database error while finding game by game id", error, { gameId, library });
+      this.logger.error("Database error while finding game by game id", error, {
+        gameId,
+        library,
+      });
       throw error;
     }
   }
@@ -199,7 +223,9 @@ export class GameStore {
     return await this.repository
       .createQueryBuilder("game")
       .where("game.library = 'epic-game-store'")
-      .andWhere("json_extract(game.libraryMeta, '$.namespace') IN (:...ids)", { ids })
+      .andWhere("json_extract(game.libraryMeta, '$.namespace') IN (:...ids)", {
+        ids,
+      })
       .getMany();
   }
 
@@ -208,16 +234,24 @@ export class GameStore {
       if (!gameIds.length) return [];
       return await this.repository.findBy({ gameId: In(gameIds), library });
     } catch (error) {
-      this.logger.error("Database error while finding games by ids", error, { gameIds, library });
+      this.logger.error("Database error while finding games by ids", error, {
+        gameIds,
+        library,
+      });
       throw error;
     }
   }
 
   async findRecentGames(limit: number) {
     try {
-      return await this.repository.find({ order: { createdAt: "DESC" }, take: limit });
+      return await this.repository.find({
+        order: { createdAt: "DESC" },
+        take: limit,
+      });
     } catch (error) {
-      this.logger.error("Database error while finding recent games", error, { limit });
+      this.logger.error("Database error while finding recent games", error, {
+        limit,
+      });
       throw error;
     }
   }
@@ -253,7 +287,9 @@ export class GameStore {
       }
       return await this.updateGameById(id, { isFavourite: !game.isFavourite });
     } catch (error) {
-      this.logger.error("Database error while toggling favourite", error, { id });
+      this.logger.error("Database error while toggling favourite", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -265,9 +301,13 @@ export class GameStore {
         this.logger.warn("Game not found for quick launch toggle", { id });
         return;
       }
-      return await this.updateGameById(id, { isQuickLaunch: !game.isQuickLaunch });
+      return await this.updateGameById(id, {
+        isQuickLaunch: !game.isQuickLaunch,
+      });
     } catch (error) {
-      this.logger.error("Database error while toggling quick launch", error, { id });
+      this.logger.error("Database error while toggling quick launch", error, {
+        id,
+      });
       throw error;
     }
   }
@@ -275,7 +315,9 @@ export class GameStore {
   async updateGameByEpicAppName(appName: string, updates: Partial<Omit<GameStoreModel, "createdAt">>) {
     const games = await this.repository
       .createQueryBuilder("game")
-      .where("json_extract(game.libraryMeta, '$.appName') = :appName", { appName })
+      .where("json_extract(game.libraryMeta, '$.appName') = :appName", {
+        appName,
+      })
       .getMany();
 
     if (!games.length) return 0;

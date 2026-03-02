@@ -15,7 +15,10 @@ export const CollectionTitle = ({ collection }: CollectionTitleProps) => {
   const onTitleUpdate = async (value: string) => {
     if (!collection || !value) return;
 
-    await updateCollection(collection._id, { filters: collection.filters, name: value });
+    await updateCollection(collection._id, {
+      filters: collection.filters,
+      name: value,
+    });
   };
 
   return (

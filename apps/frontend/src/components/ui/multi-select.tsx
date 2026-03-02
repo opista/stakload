@@ -39,13 +39,13 @@ export const MultiSelect = ({
 
   return (
     <div className={cn("flex flex-col gap-1.5", className)}>
-      {label && <label className="text-xs font-bold text-neutral-500 uppercase tracking-wider">{label}</label>}
+      {label && <label className="text-xs font-bold tracking-wider text-neutral-500 uppercase">{label}</label>}
 
       <BaseSelect.Root multiple value={value} onValueChange={(newVal: any) => onChange?.(newVal as string[])}>
         <BaseSelect.Trigger
           render={<div />}
           nativeButton={false}
-          className="flex min-h-[42px] w-full flex-wrap items-center gap-1.5 rounded-xl bg-neutral-800/50 p-2 text-sm text-white ring-1 ring-white/10 transition-all hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 cursor-pointer"
+          className="flex min-h-[42px] w-full cursor-pointer flex-wrap items-center gap-1.5 rounded-xl bg-neutral-800/50 p-2 text-sm text-white ring-1 ring-white/10 transition-all hover:bg-neutral-800 focus:ring-2 focus:ring-cyan-500/50 focus:outline-none"
         >
           {value.length > 0 ? (
             <div className="flex flex-wrap gap-1.5">
@@ -68,7 +68,7 @@ export const MultiSelect = ({
               })}
             </div>
           ) : (
-            <span className="text-neutral-500 pl-1">{placeholder || "Select items..."}</span>
+            <span className="pl-1 text-neutral-500">{placeholder || "Select items..."}</span>
           )}
           <div className="ml-auto flex items-center gap-1 pr-1">
             {clearable && value.length > 0 && (
@@ -90,13 +90,13 @@ export const MultiSelect = ({
 
         <BaseSelect.Portal>
           <BaseSelect.Positioner sideOffset={8} className="z-[2000] w-[var(--trigger-width)]">
-            <BaseSelect.Popup className="max-h-[300px] overflow-y-auto rounded-xl bg-neutral-900 p-1 shadow-2xl ring-1 ring-white/10 outline-none animate-in fade-in zoom-in-95 duration-150">
+            <BaseSelect.Popup className="animate-in fade-in zoom-in-95 max-h-[300px] overflow-y-auto rounded-xl bg-neutral-900 p-1 shadow-2xl ring-1 ring-white/10 duration-150 outline-none">
               <BaseSelect.List>
                 {options.map((option) => (
                   <BaseSelect.Item
                     key={option.value}
                     value={option.value}
-                    className="flex cursor-pointer select-none items-center rounded-lg px-3 py-2 text-sm text-neutral-300 outline-none hover:bg-white/5 data-[highlighted]:bg-cyan-500 data-[selected]:bg-cyan-500 data-[selected]:text-white data-[highlighted]:text-white"
+                    className="flex cursor-pointer items-center rounded-lg px-3 py-2 text-sm text-neutral-300 outline-none select-none hover:bg-white/5 data-[highlighted]:bg-cyan-500 data-[highlighted]:text-white data-[selected]:bg-cyan-500 data-[selected]:text-white"
                   >
                     <BaseSelect.ItemText>{option.label}</BaseSelect.ItemText>
                   </BaseSelect.Item>
