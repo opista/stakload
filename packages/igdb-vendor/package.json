@@ -1,8 +1,15 @@
 {
   "name": "@stakload/igdb-vendor",
   "private": true,
-  "type": "module",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
+    "build": "pnpm run clean && tsc -b tsconfig.build.json --force",
+    "clean": "rimraf dist",
     "generate": "pnpm run generate:resources && pnpm run generate:models",
     "generate:models": "node scripts/generate-models.mjs",
     "generate:resources": "node scripts/generate-resources.mjs",
@@ -13,6 +20,7 @@
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   },
   "devDependencies": {
-    "@stakload/eslint-config": "workspace:*"
+    "@stakload/eslint-config": "workspace:*",
+    "rimraf": "^6.0.1"
   }
 }
