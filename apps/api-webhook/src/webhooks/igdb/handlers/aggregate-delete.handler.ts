@@ -3,6 +3,8 @@ import { createHash } from "node:crypto";
 import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
 
+import { PinoLogger } from "@stakload/nestjs-logging";
+
 import { IgdbTombstoneService } from "../services/igdb-tombstone.service";
 import type { AggregateResourceDefinition, WebhookDispatchResult } from "../types/igdb-webhook.types";
 
@@ -11,7 +13,10 @@ export class AggregateDeleteHandler {
   constructor(
     private readonly dataSource: DataSource,
     private readonly tombstoneService: IgdbTombstoneService,
-  ) {}
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   private async acquireAdvisoryLock(queryRunner: QueryRunner, resource: string, igdbId: number): Promise<void> {
     await queryRunner.query("SELECT pg_advisory_xact_lock($1, $2)", [this.hashResource(resource), igdbId]);
@@ -37,6 +42,7 @@ export class AggregateDeleteHandler {
       });
       await queryRunner.manager.delete(definition.entity, { igdbId } as never);
       await this.tombstoneService.recordDeletion(definition.resource, igdbId, queryRunner.manager);
+      this.logger.info({ igdbId, resource: definition.resource }, "Processed aggregate delete webhook");
 
       await queryRunner.commitTransaction();
 

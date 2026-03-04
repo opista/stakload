@@ -1,10 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import type { DeepPartial, EntityManager, EntityTarget, ObjectLiteral, QueryRunner, Repository } from "typeorm";
 
+import { PinoLogger } from "@stakload/nestjs-logging";
+
 import type { StaleProtectionMode } from "../types/igdb-webhook.types";
 
 @Injectable()
 export class IgdbUpsertService {
+  constructor(private readonly logger: PinoLogger) {
+    this.logger.setContext(this.constructor.name);
+  }
+
   private resolveRepository<TEntity extends ObjectLiteral>(
     entity: EntityTarget<TEntity>,
     context: EntityManager | QueryRunner | Repository<TEntity>,
@@ -32,6 +38,10 @@ export class IgdbUpsertService {
 
     if (staleProtection !== "stale_protected" || sourceUpdatedAt == null) {
       await repository.save(repository.create(payload));
+      this.logger.debug(
+        { staleProtection, tableName: repository.metadata.tablePath },
+        "Saved entity without stale protection",
+      );
       return true;
     }
 
@@ -45,6 +55,10 @@ export class IgdbUpsertService {
     );
 
     if (columns.length === 0) {
+      this.logger.warn(
+        { tableName: repository.metadata.tablePath },
+        "Rejected stale-protected upsert with no writable columns",
+      );
       return false;
     }
 
@@ -58,6 +72,7 @@ export class IgdbUpsertService {
 
     if (!sourceUpdatedColumn) {
       await repository.save(repository.create(payload));
+      this.logger.warn({ tableName }, "Fell back to repository save because sourceUpdatedAt column is missing");
       return true;
     }
 
@@ -74,7 +89,10 @@ export class IgdbUpsertService {
       `RETURNING ${primaryColumns}`,
     ].join(" ");
     const result = await repository.query(sql, values);
+    const applied = result.length > 0;
 
-    return result.length > 0;
+    this.logger.debug({ applied, staleProtection, tableName }, "Completed stale-protected upsert");
+
+    return applied;
   }
 }

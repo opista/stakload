@@ -121,7 +121,7 @@ const replaceGameRelations = async (
   if (relations.themes.length > 0) {
     await manager.insert(GameThemeEntity, relations.themes);
   }
-}
+};
 
 const simpleDefinitions = [
   {
@@ -299,7 +299,8 @@ export const SUPPORTED_RESOURCE_DEFINITIONS: readonly ResourceDefinition[] = [
   ...aggregateDefinitions,
 ];
 export const RESOURCE_DEFINITION_MAP: ReadonlyMap<WebhookResource, ResourceDefinition> = new Map(
-  SUPPORTED_RESOURCE_DEFINITIONS.map(
-    (definition): [WebhookResource, ResourceDefinition] => [definition.resource, definition],
-  ),
+  SUPPORTED_RESOURCE_DEFINITIONS.map((definition): [WebhookResource, ResourceDefinition] => [
+    definition.resource,
+    definition,
+  ]),
 );

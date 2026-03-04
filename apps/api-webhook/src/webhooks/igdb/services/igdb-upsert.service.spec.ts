@@ -1,5 +1,7 @@
 import type { ObjectLiteral, Repository } from "typeorm";
 
+import type { PinoLogger } from "@stakload/nestjs-logging";
+
 import { IgdbUpsertService } from "./igdb-upsert.service";
 
 const createRepository = <TEntity extends ObjectLiteral>() =>
@@ -60,7 +62,11 @@ describe("IgdbUpsertService", () => {
   let service: IgdbUpsertService;
 
   beforeEach(() => {
-    service = new IgdbUpsertService();
+    service = new IgdbUpsertService({
+      debug: vi.fn(),
+      setContext: vi.fn(),
+      warn: vi.fn(),
+    } as unknown as PinoLogger);
   });
 
   it("should use repository.save when stale protection is not enabled", async () => {

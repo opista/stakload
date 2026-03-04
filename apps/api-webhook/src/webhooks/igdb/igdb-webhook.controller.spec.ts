@@ -23,7 +23,7 @@ describe("IgdbWebhookController", () => {
   });
 
   it("should dispatch valid webhook requests and apply the returned status code", async () => {
-    handlerResolver.resolve.mockResolvedValue({
+    void handlerResolver.resolve.mockResolvedValue({
       outcome: "handled",
       statusCode: 204,
     });
@@ -35,5 +35,4 @@ describe("IgdbWebhookController", () => {
     expect(handlerResolver.resolve).toHaveBeenCalledWith("platforms", "create", payload);
     expect(response.status).toHaveBeenCalledWith(204);
   });
-
 });

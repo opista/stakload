@@ -42,12 +42,7 @@ describe("SimpleUpsertHandler", () => {
 
     expect(dataSource.getRepository).toHaveBeenCalledWith(definition.entity);
     expect(definition.map).toHaveBeenCalledWith(payload);
-    expect(upsert).toHaveBeenCalledWith(
-      definition.entity,
-      { igdbId: 42, name: "Game" },
-      "best_effort",
-      repository,
-    );
+    expect(upsert).toHaveBeenCalledWith(definition.entity, { igdbId: 42, name: "Game" }, "best_effort", repository);
   });
 
   it("should return rejected_stale when the upsert is not applied", async () => {

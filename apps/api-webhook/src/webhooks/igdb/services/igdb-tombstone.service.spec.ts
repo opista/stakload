@@ -49,7 +49,7 @@ describe("IgdbTombstoneService", () => {
   });
 
   it("should report no tombstone when the repository returns null", async () => {
-    vi.mocked(repository.findOneBy).mockResolvedValue(null);
+    void vi.mocked(repository.findOneBy).mockResolvedValue(null);
 
     await expect(service.isTombstoned("games", 42)).resolves.toBe(false);
   });

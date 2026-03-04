@@ -3,19 +3,20 @@ import { createHash } from "node:crypto";
 import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
 
+import { PinoLogger } from "@stakload/nestjs-logging";
+
 import { IgdbUpsertService } from "../services/igdb-upsert.service";
-import type {
-  AggregateResourceDefinition,
-  RawIgdbPayload,
-  WebhookDispatchResult,
-} from "../types/igdb-webhook.types";
+import type { AggregateResourceDefinition, RawIgdbPayload, WebhookDispatchResult } from "../types/igdb-webhook.types";
 
 @Injectable()
 export class AggregateUpsertHandler {
   constructor(
     private readonly dataSource: DataSource,
     private readonly upsertService: IgdbUpsertService,
-  ) {}
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   private async acquireAdvisoryLock(queryRunner: QueryRunner, resource: string, igdbId: number): Promise<void> {
     await queryRunner.query("SELECT pg_advisory_xact_lock($1, $2)", [this.hashResource(resource), igdbId]);
@@ -36,6 +37,7 @@ export class AggregateUpsertHandler {
       const igdbId = mappedPayload.igdbId;
 
       if (typeof igdbId !== "number") {
+        this.logger.error({ resource: definition.resource }, "Aggregate payload is missing igdbId");
         throw new Error(`Missing igdbId for aggregate resource ${definition.resource}`);
       }
 
@@ -56,6 +58,11 @@ export class AggregateUpsertHandler {
           rootId: igdbId,
         });
       }
+
+      this.logger.info(
+        { igdbId, outcome: applied ? "handled" : "rejected_stale", resource: definition.resource },
+        "Processed aggregate upsert webhook",
+      );
 
       await queryRunner.commitTransaction();
 

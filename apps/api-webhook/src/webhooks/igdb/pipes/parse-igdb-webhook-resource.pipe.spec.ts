@@ -1,12 +1,17 @@
 import { BadRequestException } from "@nestjs/common";
 
+import type { PinoLogger } from "@stakload/nestjs-logging";
+
 import { ParseIgdbWebhookResourcePipe } from "./parse-igdb-webhook-resource.pipe";
 
 describe("ParseIgdbWebhookResourcePipe", () => {
   let pipe: ParseIgdbWebhookResourcePipe;
 
   beforeEach(() => {
-    pipe = new ParseIgdbWebhookResourcePipe();
+    pipe = new ParseIgdbWebhookResourcePipe({
+      setContext: vi.fn(),
+      warn: vi.fn(),
+    } as unknown as PinoLogger);
   });
 
   it("should accept known IGDB resources", () => {

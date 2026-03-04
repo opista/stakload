@@ -16,7 +16,7 @@ async function bootstrap(): Promise<void> {
 
   await app.listen(3001);
 
-  logger.info('api-webhook started', "Bootstrap");
+  logger.info("api-webhook started", "Bootstrap");
 }
 
 void bootstrap().catch((error: unknown) => {

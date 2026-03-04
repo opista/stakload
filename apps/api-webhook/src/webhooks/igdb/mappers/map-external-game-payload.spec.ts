@@ -1,7 +1,7 @@
 vi.mock("./shared/mapper-utils", () => ({
   readDate: vi.fn(() => new Date("2024-01-01T00:00:00.000Z")),
-  readIds: vi.fn(() => [1, 2]),
   readId: vi.fn(() => 99),
+  readIds: vi.fn(() => [1, 2]),
   readNumber: vi.fn(() => 2024),
   readOptionalId: vi.fn((value: unknown) => `${String(value)}-id`),
   readString: vi.fn((value: unknown) => `${String(value)}-text`),

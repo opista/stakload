@@ -31,7 +31,7 @@ describe("IgdbTombstoneInterceptor", () => {
   });
 
   it("should short-circuit create and update requests for tombstoned records", async () => {
-    service.isTombstoned.mockResolvedValue(true);
+    void service.isTombstoned.mockResolvedValue(true);
     const handler: CallHandler = {
       handle: () => of("next"),
     };

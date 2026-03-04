@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable, Type } from "@nestjs/common";
 import { ModuleRef } from "@nestjs/core";
 
+import { PinoLogger } from "@stakload/nestjs-logging";
+
 import { AggregateDeleteHandler } from "../handlers/aggregate-delete.handler";
 import { AggregateUpsertHandler } from "../handlers/aggregate-upsert.handler";
 import { SimpleDeleteHandler } from "../handlers/simple-delete.handler";
@@ -30,7 +32,12 @@ const HANDLER_MAP = {
 
 @Injectable()
 export class IgdbWebhookHandlerResolver {
-  constructor(private readonly moduleRef: ModuleRef) {}
+  constructor(
+    private readonly moduleRef: ModuleRef,
+    private readonly logger: PinoLogger,
+  ) {
+    this.logger.setContext(this.constructor.name);
+  }
 
   private getHandler<THandler>(handler: Type<THandler>): THandler {
     return this.moduleRef.get<THandler>(handler, {
@@ -42,16 +49,14 @@ export class IgdbWebhookHandlerResolver {
     const value = payload.id;
 
     if (typeof value !== "number" || Number.isInteger(value) === false) {
+      this.logger.warn("Rejected delete webhook payload without an integer id");
       throw new BadRequestException("Webhook payload must include an integer id");
     }
 
     return value;
   }
 
-  private resolveDelete(
-    definition: ResourceDefinition,
-    igdbId: number,
-  ): Promise<WebhookDispatchResult> {
+  private resolveDelete(definition: ResourceDefinition, igdbId: number): Promise<WebhookDispatchResult> {
     if (definition.kind === "aggregate") {
       const handler = this.getHandler(HANDLER_MAP.aggregate.delete);
 
@@ -85,11 +90,14 @@ export class IgdbWebhookHandlerResolver {
     const definition = RESOURCE_DEFINITION_MAP.get(resource);
 
     if (!definition) {
+      this.logger.info({ action, igdbId: payload.id, resource }, "Ignoring unsupported IGDB resource");
       return {
         outcome: "ignored_unsupported",
         statusCode: 202,
       };
     }
+
+    this.logger.debug({ action, kind: definition.kind, resource }, "Resolved IGDB webhook handler");
 
     if (action === "delete") {
       const igdbId = this.requireId(payload);
