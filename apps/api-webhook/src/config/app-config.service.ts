@@ -12,6 +12,10 @@ export class AppConfigService {
     this.logger.setContext(this.constructor.name);
   }
 
+  get databaseSynchronize(): boolean {
+    return this.configService.getOrThrow<boolean>("DATABASE_SYNCHRONIZE");
+  }
+
   get databaseUrl(): string {
     return this.configService.getOrThrow<string>("DATABASE_URL");
   }

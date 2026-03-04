@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: stakload-postgres
+    environment:
+      POSTGRES_DB: stakload
+      POSTGRES_PASSWORD: stakload
+      POSTGRES_USER: stakload
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U stakload -d stakload"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  api-webhook:
+    build:
+      context: .
+      dockerfile: apps/api-webhook/Dockerfile
+    container_name: stakload-api-webhook
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_SYNCHRONIZE: "true"
+      DATABASE_URL: postgresql://stakload:stakload@postgres:5432/stakload
+      IGDB_WEBHOOK_SECRET: local-dev-secret
+      LOG_LEVEL: info
+      NODE_ENV: development
+    ports:
+      - "3001:3001"
+
+volumes:
+  postgres-data:

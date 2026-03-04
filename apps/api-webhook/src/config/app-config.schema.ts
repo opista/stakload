@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 export const APP_CONFIG_SCHEMA = Joi.object({
+  DATABASE_SYNCHRONIZE: Joi.boolean().truthy("true").falsy("false").default(false),
   DATABASE_URL: Joi.string()
     .uri({ scheme: [/postgres/, /postgresql/] })
     .required(),

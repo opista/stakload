@@ -14,7 +14,7 @@ import { IgdbTombstoneEntity } from "./entities/igdb-tombstone.entity";
       inject: [AppConfigService],
       useFactory: (configService: AppConfigService) => ({
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: configService.databaseSynchronize,
         type: "postgres",
         url: configService.databaseUrl,
       }),

@@ -254,3 +254,43 @@ Not implemented yet:
 - production health/readiness endpoints
 - migrations for the webhook app schema
 - empirical confirmation of which webhook payloads reliably include `updated_at`
+
+## Local Docker
+
+For local webhook testing, the repo now includes:
+
+- [`docker-compose.yml`](/c:/Users/Beau/projects/stakload/docker-compose.yml)
+- [`apps/api-webhook/Dockerfile`](/c:/Users/Beau/projects/stakload/apps/api-webhook/Dockerfile)
+
+Start the stack:
+
+```sh
+docker compose up --build
+```
+
+That boots:
+
+- `postgres` on `localhost:5432`
+- `api-webhook` on `localhost:3001`
+
+Local Docker uses:
+
+- `DATABASE_SYNCHRONIZE=true`
+- `IGDB_WEBHOOK_SECRET=local-dev-secret`
+
+That sync flag is intended for local container testing only so the schema exists without migrations.
+
+Example webhook request:
+
+```sh
+curl -X POST http://localhost:3001/webhooks/igdb/platforms/create \
+  -H "Content-Type: application/json" \
+  -H "X-Secret: local-dev-secret" \
+  -d "{\"id\": 48, \"name\": \"PlayStation 4\", \"slug\": \"playstation4\"}"
+```
+
+Example Postgres check:
+
+```sh
+docker exec -it stakload-postgres psql -U stakload -d stakload -c "select * from platforms order by igdb_id desc limit 10;"
+```
