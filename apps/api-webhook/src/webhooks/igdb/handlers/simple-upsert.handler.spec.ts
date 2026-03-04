@@ -27,9 +27,13 @@ describe("SimpleUpsertHandler", () => {
       staleProtection: "best_effort" as const,
     };
     const payload = { id: 42, name: "Game" };
+    const upsert = vi.fn().mockResolvedValue(true);
 
     dataSource.getRepository.mockReturnValue(repository as never);
-    void vi.spyOn(upsertService, "upsert").mockResolvedValue(true);
+    Object.defineProperty(upsertService, "upsert", {
+      configurable: true,
+      value: upsert,
+    });
 
     await expect(handler.handle(definition, payload)).resolves.toEqual({
       outcome: "handled",
@@ -38,7 +42,7 @@ describe("SimpleUpsertHandler", () => {
 
     expect(dataSource.getRepository).toHaveBeenCalledWith(definition.entity);
     expect(definition.map).toHaveBeenCalledWith(payload);
-    expect(upsertService.upsert).toHaveBeenCalledWith(
+    expect(upsert).toHaveBeenCalledWith(
       definition.entity,
       { igdbId: 42, name: "Game" },
       "best_effort",
@@ -55,9 +59,13 @@ describe("SimpleUpsertHandler", () => {
       resource: "platforms" as const,
       staleProtection: "stale_protected" as const,
     };
+    const upsert = vi.fn().mockResolvedValue(false);
 
     dataSource.getRepository.mockReturnValue(repository as never);
-    void vi.spyOn(upsertService, "upsert").mockResolvedValue(false);
+    Object.defineProperty(upsertService, "upsert", {
+      configurable: true,
+      value: upsert,
+    });
 
     await expect(handler.handle(definition, { id: 42 })).resolves.toEqual({
       outcome: "rejected_stale",

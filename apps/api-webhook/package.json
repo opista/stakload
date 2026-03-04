@@ -20,6 +20,7 @@
     "@nestjs/typeorm": "^11.0.0",
     "@stakload/database": "workspace:*",
     "@stakload/igdb-vendor": "workspace:*",
+    "@stakload/nestjs-logging": "workspace:*",
     "joi": "^17.13.3",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",

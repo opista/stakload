@@ -1,20 +1,25 @@
 import "reflect-metadata";
 
-import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
+import { getPinoLogger, Logger, PinoLogger } from "@stakload/nestjs-logging";
+
 import { AppModule } from "./app.module";
-import { AppConfigService } from "./config/app-config.service";
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
-  const configService = app.get(AppConfigService);
-  const host = configService.host;
-  const port = configService.port;
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+  app.useLogger(app.get(Logger));
 
-  await app.listen(port, host);
+  const logger = await app.resolve(PinoLogger);
 
-  Logger.log(`api-webhook listening on http://${host}:${port}`, "Bootstrap");
+  await app.listen(3001);
+
+  logger.info('api-webhook started', "Bootstrap");
 }
 
-void bootstrap();
+void bootstrap().catch((error: unknown) => {
+  getPinoLogger().error(error, "api-webhook bootstrap failed");
+  process.exit(1);
+});

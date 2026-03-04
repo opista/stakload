@@ -38,9 +38,13 @@ describe("AggregateUpsertHandler", () => {
       resource: "games" as const,
       staleProtection: "stale_protected" as const,
     };
+    const upsert = vi.fn().mockResolvedValue(true);
 
     dataSource.createQueryRunner.mockReturnValue(queryRunner as never);
-    void vi.spyOn(upsertService, "upsert").mockResolvedValue(true);
+    Object.defineProperty(upsertService, "upsert", {
+      configurable: true,
+      value: upsert,
+    });
 
     await expect(handler.handle(definition, payload)).resolves.toEqual({
       outcome: "handled",
@@ -50,7 +54,7 @@ describe("AggregateUpsertHandler", () => {
     expect(queryRunner.connect).toHaveBeenCalledTimes(1);
     expect(queryRunner.startTransaction).toHaveBeenCalledTimes(1);
     expect(queryRunner.query).toHaveBeenCalledTimes(1);
-    expect(upsertService.upsert).toHaveBeenCalledWith(
+    expect(upsert).toHaveBeenCalledWith(
       definition.entity,
       { igdbId: 42, name: "Game" },
       "stale_protected",
@@ -76,9 +80,13 @@ describe("AggregateUpsertHandler", () => {
       resource: "games" as const,
       staleProtection: "stale_protected" as const,
     };
+    const upsert = vi.fn().mockResolvedValue(false);
 
     dataSource.createQueryRunner.mockReturnValue(queryRunner as never);
-    void vi.spyOn(upsertService, "upsert").mockResolvedValue(false);
+    Object.defineProperty(upsertService, "upsert", {
+      configurable: true,
+      value: upsert,
+    });
 
     await expect(handler.handle(definition, { id: 42 })).resolves.toEqual({
       outcome: "rejected_stale",
