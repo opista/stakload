@@ -4,6 +4,7 @@
     { "path": "./packages/contracts" },
     { "path": "./packages/igdb-vendor" },
     { "path": "./packages/database" },
+    { "path": "./apps/api-webhook" },
     { "path": "./apps/frontend" },
     { "path": "./apps/desktop" }
   ]

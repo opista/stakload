@@ -11,6 +11,9 @@ export abstract class TimestampedEntity {
 export abstract class IgdbEntity extends TimestampedEntity {
   @PrimaryColumn({ type: "integer" })
   igdbId!: number;
+
+  @Column({ nullable: true, type: "timestamptz" })
+  sourceUpdatedAt?: Date | null;
 }
 
 export abstract class ImageAssetEntity extends IgdbEntity {

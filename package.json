@@ -21,6 +21,7 @@
     "format:check": "oxfmt --check",
     "lint": "pnpm -r --if-present lint",
     "lint:fix": "pnpm -r --if-present lint:fix",
+    "build:packages": "pnpm -r --filter \"./packages/*\" --if-present build",
     "typecheck": "pnpm -r --if-present --filter \"./apps/*\" --filter \"./packages/*\" typecheck",
     "start": "pnpm --dir apps/desktop start",
     "dev": "node apps/desktop/scripts/workspace-dev.mjs",
