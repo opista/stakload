@@ -4,7 +4,7 @@ import type { EntityManager, Repository } from "typeorm";
 
 import { PinoLogger } from "@stakload/nestjs-logging";
 
-import { IgdbTombstoneEntity } from "../../../database/entities/igdb-tombstone.entity";
+import { IgdbTombstoneEntity } from "../../database/entities/igdb-tombstone.entity";
 
 @Injectable()
 export class IgdbTombstoneService {

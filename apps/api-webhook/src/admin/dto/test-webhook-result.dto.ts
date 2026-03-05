@@ -1,4 +1,4 @@
-import type { WebhookResource } from "../../webhooks/igdb/types/igdb-webhook.types";
+import type { WebhookResource } from "../../webhooks/types/igdb-webhook.types";
 
 export class TestWebhookResultDto {
   entityId!: number;

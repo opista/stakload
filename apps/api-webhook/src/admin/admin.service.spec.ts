@@ -112,7 +112,9 @@ describe("AdminService", () => {
   });
 
   it("should map IGDB conflicts to a Nest conflict exception", async () => {
-    void apiService.createWebhook.mockRejectedValue(new IgdbApiError("Already exists", 409, { message: "Already exists" }));
+    void apiService.createWebhook.mockRejectedValue(
+      new IgdbApiError("Already exists", 409, { message: "Already exists" }),
+    );
 
     await expect(service.createWebhook("games", "update")).rejects.toBeInstanceOf(ConflictException);
   });

@@ -33,7 +33,11 @@ export class IgdbApiService {
   }
 
   deleteWebhook(webhookId: number): Promise<IgdbDeleteWebhookResponse> {
-    return this.apiClient.requestJson<IgdbDeleteWebhookResponse>(`/webhooks/${webhookId}`, { method: "DELETE" }, "deleteWebhook");
+    return this.apiClient.requestJson<IgdbDeleteWebhookResponse>(
+      `/webhooks/${webhookId}`,
+      { method: "DELETE" },
+      "deleteWebhook",
+    );
   }
 
   getWebhook(webhookId: number): Promise<IgdbWebhookRecord> {

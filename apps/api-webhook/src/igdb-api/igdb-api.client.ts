@@ -103,12 +103,7 @@ export class IgdbApiClient {
     }
   }
 
-  async requestJson<T>(
-    path: string,
-    init: RequestInit,
-    operation: string,
-    retryOnUnauthorized = true,
-  ): Promise<T> {
+  async requestJson<T>(path: string, init: RequestInit, operation: string, retryOnUnauthorized = true): Promise<T> {
     const token = await this.getAccessToken();
     const response = await fetch(`${IGDB_API_BASE_URL}${path}`, {
       ...init,

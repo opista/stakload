@@ -4,7 +4,7 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 
 import { PinoLogger } from "@stakload/nestjs-logging";
 
-import { AppConfigService } from "../../../config/app-config.service";
+import { AppConfigService } from "../../config/app-config.service";
 
 @Injectable()
 export class IgdbWebhookSecretGuard implements CanActivate {

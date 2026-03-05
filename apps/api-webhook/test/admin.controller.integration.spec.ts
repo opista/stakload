@@ -9,7 +9,7 @@ import { PinoLogger } from "@stakload/nestjs-logging";
 import { AdminController } from "../src/admin/admin.controller";
 import { AdminService } from "../src/admin/admin.service";
 import { AppConfigService } from "../src/config/app-config.service";
-import { IgdbWebhookSecretGuard } from "../src/webhooks/igdb/guards/igdb-webhook-secret.guard";
+import { IgdbWebhookSecretGuard } from "../src/webhooks/guards/igdb-webhook-secret.guard";
 
 describe("AdminController (integration)", () => {
   let app: INestApplication;
@@ -58,10 +58,7 @@ describe("AdminController (integration)", () => {
   const getServer = (): Parameters<typeof request>[0] => app.getHttpServer() as Parameters<typeof request>[0];
 
   it("should reject requests with an invalid admin secret", async () => {
-    await request(getServer())
-      .get("/admin/igdb/webhooks")
-      .set("x-secret", "wrong-secret")
-      .expect(401);
+    await request(getServer()).get("/admin/igdb/webhooks").set("x-secret", "wrong-secret").expect(401);
   });
 
   it("should list webhooks with a valid admin secret", async () => {
@@ -80,7 +77,21 @@ describe("AdminController (integration)", () => {
   });
 
   it("should create webhooks with a valid payload", async () => {
-    void adminService.createWebhook.mockResolvedValue({ id: 42 });
+    void adminService.createWebhook.mockResolvedValue({
+      action: "update",
+      active: true,
+      apiKey: "client-id",
+      category: 8,
+      createdAt: "2026-03-04T00:00:00.000Z",
+      id: 42,
+      managedByService: true,
+      resource: "games",
+      secret: "secret",
+      subCategory: 2,
+      supportedByService: true,
+      updatedAt: "2026-03-04T00:00:00.000Z",
+      url: "https://hooks.example.com/webhooks/igdb/games/update",
+    });
 
     await request(getServer())
       .post("/admin/igdb/webhooks")
@@ -92,19 +103,13 @@ describe("AdminController (integration)", () => {
   });
 
   it("should reject invalid webhook ids for delete", async () => {
-    await request(getServer())
-      .delete("/admin/igdb/webhooks/not-an-int")
-      .set("x-secret", "webhook-secret")
-      .expect(400);
+    await request(getServer()).delete("/admin/igdb/webhooks/not-an-int").set("x-secret", "webhook-secret").expect(400);
   });
 
   it("should delete webhooks by id", async () => {
     void adminService.deleteWebhook.mockResolvedValue({ id: 42 });
 
-    await request(getServer())
-      .delete("/admin/igdb/webhooks/42")
-      .set("x-secret", "webhook-secret")
-      .expect(200);
+    await request(getServer()).delete("/admin/igdb/webhooks/42").set("x-secret", "webhook-secret").expect(200);
 
     expect(adminService.deleteWebhook).toHaveBeenCalledWith(42);
   });
@@ -118,7 +123,12 @@ describe("AdminController (integration)", () => {
   });
 
   it("should trigger webhook tests with a valid payload", async () => {
-    void adminService.testWebhook.mockResolvedValue({ ok: true });
+    void adminService.testWebhook.mockResolvedValue({
+      entityId: 1337,
+      resource: "games",
+      result: { ok: true },
+      webhookId: 42,
+    });
 
     await request(getServer())
       .post("/admin/igdb/webhooks/42/test")

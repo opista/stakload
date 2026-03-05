@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { DatabaseModule } from "../../database/database.module";
+import { DatabaseModule } from "../database/database.module";
 import { IgdbWebhookSecretGuard } from "./guards/igdb-webhook-secret.guard";
 import { AggregateDeleteHandler } from "./handlers/aggregate-delete.handler";
 import { AggregateUpsertHandler } from "./handlers/aggregate-upsert.handler";

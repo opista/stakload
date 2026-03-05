@@ -11,7 +11,7 @@ import { PinoLogger } from "@stakload/nestjs-logging";
 import { AppConfigService } from "../config/app-config.service";
 import { IgdbApiService } from "../igdb-api/igdb-api.service";
 import { IgdbApiError } from "../igdb-api/types/igdb-api.types";
-import type { WebhookAction, WebhookResource } from "../webhooks/igdb/types/igdb-webhook.types";
+import type { WebhookAction, WebhookResource } from "../webhooks/types/igdb-webhook.types";
 import { DeleteWebhookResultDto } from "./dto/delete-webhook-result.dto";
 import { TestWebhookResultDto } from "./dto/test-webhook-result.dto";
 import { WebhookDto } from "./dto/webhook.dto";
@@ -93,7 +93,9 @@ export class AdminService {
     try {
       const webhooks = await this.igdbApiService.listWebhooks();
 
-      return webhooks.map((webhook) => mapIgdbWebhookRecordToWebhookDto(webhook, this.configService.publicWebhookBaseUrl));
+      return webhooks.map((webhook) =>
+        mapIgdbWebhookRecordToWebhookDto(webhook, this.configService.publicWebhookBaseUrl),
+      );
     } catch (error) {
       throw this.mapIgdbApiError(error);
     }

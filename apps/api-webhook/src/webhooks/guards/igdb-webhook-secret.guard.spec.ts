@@ -1,7 +1,7 @@
 import type { ExecutionContext } from "@nestjs/common";
 import { Mocked, TestBed } from "@suites/unit";
 
-import { AppConfigService } from "../../../config/app-config.service";
+import { AppConfigService } from "../../config/app-config.service";
 import { IgdbWebhookSecretGuard } from "./igdb-webhook-secret.guard";
 
 const createContext = (secret?: string): ExecutionContext =>

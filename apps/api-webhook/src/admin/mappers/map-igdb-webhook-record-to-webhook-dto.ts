@@ -1,7 +1,7 @@
 import type { IgdbWebhookRecord } from "../../igdb-api/types/igdb-api.types";
-import { RESOURCE_DEFINITION_MAP } from "../../webhooks/igdb/resource-definitions/igdb-resource-definitions";
-import { WEBHOOK_ACTION_SET } from "../../webhooks/igdb/types/igdb-webhook.types";
-import type { WebhookAction, WebhookResource } from "../../webhooks/igdb/types/igdb-webhook.types";
+import { RESOURCE_DEFINITION_MAP } from "../../webhooks/resource-definitions/igdb-resource-definitions";
+import { WEBHOOK_ACTION_SET } from "../../webhooks/types/igdb-webhook.types";
+import type { WebhookAction, WebhookResource } from "../../webhooks/types/igdb-webhook.types";
 import { WebhookDto } from "../dto/webhook.dto";
 
 const parseManagedWebhookUrl = (

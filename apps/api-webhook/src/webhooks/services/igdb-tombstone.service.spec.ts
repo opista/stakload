@@ -2,7 +2,7 @@ import { getRepositoryToken } from "@nestjs/typeorm";
 import { Mocked, TestBed } from "@suites/unit";
 import type { EntityManager, Repository } from "typeorm";
 
-import { IgdbTombstoneEntity } from "../../../database/entities/igdb-tombstone.entity";
+import { IgdbTombstoneEntity } from "../../database/entities/igdb-tombstone.entity";
 import { IgdbTombstoneService } from "./igdb-tombstone.service";
 
 const createInsertQueryBuilder = () => ({

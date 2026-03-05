@@ -1,4 +1,4 @@
-import type { WebhookAction, WebhookResource } from "../../webhooks/igdb/types/igdb-webhook.types";
+import type { WebhookAction, WebhookResource } from "../../webhooks/types/igdb-webhook.types";
 
 export class WebhookDto {
   action!: WebhookAction | null;

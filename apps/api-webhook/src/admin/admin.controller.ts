@@ -12,7 +12,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 
-import { IgdbWebhookSecretGuard } from "../webhooks/igdb/guards/igdb-webhook-secret.guard";
+import { IgdbWebhookSecretGuard } from "../webhooks/guards/igdb-webhook-secret.guard";
 import { AdminService } from "./admin.service";
 import { CreateWebhookInputDto } from "./dto/create-webhook-input.dto";
 import { DeleteWebhookResultDto } from "./dto/delete-webhook-result.dto";
