@@ -5,6 +5,11 @@ export const APP_CONFIG_SCHEMA = Joi.object({
   DATABASE_URL: Joi.string()
     .uri({ scheme: [/postgres/, /postgresql/] })
     .required(),
+  IGDB_CLIENT_ID: Joi.string().min(1).required(),
+  IGDB_CLIENT_SECRET: Joi.string().min(1).required(),
   IGDB_WEBHOOK_SECRET: Joi.string().min(1).required(),
   NODE_ENV: Joi.string().valid("development", "production", "test").default("development"),
+  PUBLIC_WEBHOOK_BASE_URL: Joi.string()
+    .uri({ scheme: ["http", "https"] })
+    .required(),
 }).unknown(true);

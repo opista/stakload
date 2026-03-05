@@ -27,9 +27,12 @@ services:
     environment:
       DATABASE_SYNCHRONIZE: "true"
       DATABASE_URL: postgresql://stakload:stakload@postgres:5432/stakload
+      IGDB_CLIENT_ID: local-client-id
+      IGDB_CLIENT_SECRET: local-client-secret
       IGDB_WEBHOOK_SECRET: local-dev-secret
       LOG_LEVEL: info
       NODE_ENV: development
+      PUBLIC_WEBHOOK_BASE_URL: http://localhost:3001
     ports:
       - "3001:3001"
 

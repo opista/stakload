@@ -20,11 +20,25 @@ export class AppConfigService {
     return this.configService.getOrThrow<string>("DATABASE_URL");
   }
 
+  get igdbClientId(): string {
+    return this.configService.getOrThrow<string>("IGDB_CLIENT_ID");
+  }
+
+  get igdbClientSecret(): string {
+    return this.configService.getOrThrow<string>("IGDB_CLIENT_SECRET");
+  }
+
   get igdbWebhookSecret(): string {
     return this.configService.getOrThrow<string>("IGDB_WEBHOOK_SECRET");
   }
 
   get nodeEnv(): string {
     return this.configService.getOrThrow<string>("NODE_ENV");
+  }
+
+  get publicWebhookBaseUrl(): string {
+    const url = this.configService.getOrThrow<string>("PUBLIC_WEBHOOK_BASE_URL");
+
+    return url.replace(/\/+$/, "");
   }
 }

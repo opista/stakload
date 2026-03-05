@@ -304,3 +304,5 @@ export const RESOURCE_DEFINITION_MAP: ReadonlyMap<WebhookResource, ResourceDefin
     definition,
   ]),
 );
+
+export const SUPPORTED_WEBHOOK_RESOURCES = Object.freeze([...RESOURCE_DEFINITION_MAP.keys()]);

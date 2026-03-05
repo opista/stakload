@@ -5,6 +5,7 @@ This app is the write-side ingress for IGDB webhooks.
 Its current responsibilities are:
 
 - accept `POST /webhooks/igdb/:resource/:action`
+- expose admin endpoints to register and manage IGDB webhooks
 - reject invalid secrets early
 - validate `resource` and `action` route params with custom pipes
 - ignore create/update events for tombstoned records
@@ -249,11 +250,68 @@ Not implemented yet:
 
 - BullMQ integration
 - Redis/cache invalidation
-- webhook registration tooling
 - replay tooling
 - production health/readiness endpoints
 - migrations for the webhook app schema
 - empirical confirmation of which webhook payloads reliably include `updated_at`
+
+## Admin API
+
+Admin endpoints are now available for webhook management:
+
+- `GET /admin/igdb/webhooks`
+- `POST /admin/igdb/webhooks`
+- `DELETE /admin/igdb/webhooks/:webhookId`
+- `POST /admin/igdb/webhooks/:webhookId/test`
+
+All admin endpoints require:
+
+- `x-secret: <IGDB_WEBHOOK_SECRET>`
+
+Create requests take this payload:
+
+```json
+{
+  "resource": "games",
+  "action": "update"
+}
+```
+
+The callback URL is derived automatically as:
+
+```txt
+${PUBLIC_WEBHOOK_BASE_URL}/webhooks/igdb/:resource/:action
+```
+
+The service is stateless for registration and does not auto-reconcile webhooks on startup.
+
+Example admin calls:
+
+```sh
+curl http://localhost:3001/admin/igdb/webhooks \
+  -H "x-secret: local-dev-secret"
+```
+
+```sh
+curl -X POST http://localhost:3001/admin/igdb/webhooks \
+  -H "Content-Type: application/json" \
+  -H "x-secret: local-dev-secret" \
+  -d "{\"resource\":\"games\",\"action\":\"update\"}"
+```
+
+```sh
+curl -X DELETE http://localhost:3001/admin/igdb/webhooks/42 \
+  -H "x-secret: local-dev-secret"
+```
+
+```sh
+curl -X POST http://localhost:3001/admin/igdb/webhooks/42/test \
+  -H "Content-Type: application/json" \
+  -H "x-secret: local-dev-secret" \
+  -d "{\"resource\":\"games\",\"entityId\":1337}"
+```
+
+IGDB deactivates webhooks after repeated failed deliveries, so `PUBLIC_WEBHOOK_BASE_URL` must be publicly reachable.
 
 ## Local Docker
 
@@ -276,7 +334,10 @@ That boots:
 Local Docker uses:
 
 - `DATABASE_SYNCHRONIZE=true`
+- `IGDB_CLIENT_ID=local-client-id`
+- `IGDB_CLIENT_SECRET=local-client-secret`
 - `IGDB_WEBHOOK_SECRET=local-dev-secret`
+- `PUBLIC_WEBHOOK_BASE_URL=http://localhost:3001`
 
 That sync flag is intended for local container testing only so the schema exists without migrations.
 
