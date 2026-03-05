@@ -10,7 +10,7 @@ import { ParseIgdbWebhookResourcePipe } from "./pipes/parse-igdb-webhook-resourc
 import { IgdbWebhookHandlerResolver } from "./services/igdb-webhook-handler.resolver";
 import type { RawIgdbPayload, WebhookAction, WebhookResource } from "./types/igdb-webhook.types";
 
-@Controller("webhooks/igdb")
+@Controller("webhooks")
 @UseGuards(IgdbWebhookSecretGuard)
 @UseInterceptors(IgdbTombstoneInterceptor)
 export class IgdbWebhookController {

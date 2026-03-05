@@ -20,7 +20,7 @@ import { TestWebhookInputDto } from "./dto/test-webhook-input.dto";
 import { TestWebhookResultDto } from "./dto/test-webhook-result.dto";
 import { WebhookDto } from "./dto/webhook.dto";
 
-@Controller("admin/igdb/webhooks")
+@Controller("admin/webhooks")
 @UseGuards(IgdbWebhookSecretGuard)
 @UsePipes(
   new ValidationPipe({

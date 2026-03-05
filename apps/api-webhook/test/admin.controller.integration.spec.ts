@@ -58,19 +58,19 @@ describe("AdminController (integration)", () => {
   const getServer = (): Parameters<typeof request>[0] => app.getHttpServer() as Parameters<typeof request>[0];
 
   it("should reject requests with an invalid admin secret", async () => {
-    await request(getServer()).get("/admin/igdb/webhooks").set("x-secret", "wrong-secret").expect(401);
+    await request(getServer()).get("/admin/webhooks").set("x-secret", "wrong-secret").expect(401);
   });
 
   it("should list webhooks with a valid admin secret", async () => {
     void adminService.listWebhooks.mockResolvedValue([]);
 
-    await request(getServer()).get("/admin/igdb/webhooks").set("x-secret", "webhook-secret").expect(200);
+    await request(getServer()).get("/admin/webhooks").set("x-secret", "webhook-secret").expect(200);
     expect(adminService.listWebhooks).toHaveBeenCalledOnce();
   });
 
   it("should reject invalid create payloads", async () => {
     await request(getServer())
-      .post("/admin/igdb/webhooks")
+      .post("/admin/webhooks")
       .set("x-secret", "webhook-secret")
       .send({ action: "update", resource: "search" })
       .expect(400);
@@ -90,11 +90,11 @@ describe("AdminController (integration)", () => {
       subCategory: 2,
       supportedByService: true,
       updatedAt: "2026-03-04T00:00:00.000Z",
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
 
     await request(getServer())
-      .post("/admin/igdb/webhooks")
+      .post("/admin/webhooks")
       .set("x-secret", "webhook-secret")
       .send({ action: "update", resource: "games" })
       .expect(201);
@@ -103,20 +103,20 @@ describe("AdminController (integration)", () => {
   });
 
   it("should reject invalid webhook ids for delete", async () => {
-    await request(getServer()).delete("/admin/igdb/webhooks/not-an-int").set("x-secret", "webhook-secret").expect(400);
+    await request(getServer()).delete("/admin/webhooks/not-an-int").set("x-secret", "webhook-secret").expect(400);
   });
 
   it("should delete webhooks by id", async () => {
     void adminService.deleteWebhook.mockResolvedValue({ id: 42 });
 
-    await request(getServer()).delete("/admin/igdb/webhooks/42").set("x-secret", "webhook-secret").expect(200);
+    await request(getServer()).delete("/admin/webhooks/42").set("x-secret", "webhook-secret").expect(200);
 
     expect(adminService.deleteWebhook).toHaveBeenCalledWith(42);
   });
 
   it("should reject invalid test payloads", async () => {
     await request(getServer())
-      .post("/admin/igdb/webhooks/42/test")
+      .post("/admin/webhooks/42/test")
       .set("x-secret", "webhook-secret")
       .send({ entityId: -1, resource: "games" })
       .expect(400);
@@ -131,7 +131,7 @@ describe("AdminController (integration)", () => {
     });
 
     await request(getServer())
-      .post("/admin/igdb/webhooks/42/test")
+      .post("/admin/webhooks/42/test")
       .set("x-secret", "webhook-secret")
       .send({ entityId: 1337, resource: "games" })
       .expect(200);
