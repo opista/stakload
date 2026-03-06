@@ -270,6 +270,8 @@ All admin endpoints require:
 
 - `x-secret: <IGDB_WEBHOOK_SECRET>`
 
+The service currently uses a shared-secret model: the same `x-secret` / `IGDB_WEBHOOK_SECRET` protects both inbound webhook delivery and admin operations.
+
 Create requests take this payload:
 
 ```json
@@ -325,6 +327,12 @@ curl -X POST "http://localhost:3001/admin/webhooks/purge?confirm=true" \
 
 Purge requests without `confirm=true` are rejected with `400`.
 
+Admin status codes:
+
+- `POST /admin/webhooks` -> `201`
+- `POST /admin/webhooks/sync` -> `200` (or `202` when skipped due to lock contention)
+- `POST /admin/webhooks/purge?confirm=true` -> `200`
+
 Webhook registration is stateless. Scheduled reconciliation is optional via `IGDB_SCHEDULED_SYNC_ENABLED`.
 When enabled, a sync-only cron runs every 30 minutes with a shared advisory lock so it cannot overlap with manual sync calls.
 No startup sync is executed automatically.
@@ -379,3 +387,5 @@ Example Postgres check:
 ```sh
 docker exec -it stakload-postgres psql -U stakload -d stakload -c "select * from platforms order by igdb_id desc limit 10;"
 ```
+
+

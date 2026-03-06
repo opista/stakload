@@ -61,6 +61,7 @@ export class AdminController {
   }
 
   @Post("purge")
+  @HttpCode(200)
   async purgeWebhooks(
     @Query("confirm", new DefaultValuePipe(false), ParseBoolPipe) confirm: boolean,
   ): Promise<PurgeWebhooksResultDto> {
@@ -68,6 +69,7 @@ export class AdminController {
   }
 
   @Post("sync")
+  @HttpCode(200)
   async syncWebhooks(
     @Res({ passthrough: true }) response: Response,
   ): Promise<SyncWebhooksResultDto | SyncWebhooksSkippedResultDto> {
@@ -94,7 +96,3 @@ export class AdminController {
     return this.adminService.testWebhook(webhookId, body.resource, body.entityId);
   }
 }
-
-
-
-

@@ -60,7 +60,17 @@ export class SyncRunnerService {
 
       return result;
     } finally {
-      await this.releaseLock();
+      try {
+        await this.releaseLock();
+      } catch (error) {
+        this.logger.error(
+          {
+            error,
+            reason,
+          },
+          "Failed to release managed webhook sync advisory lock",
+        );
+      }
     }
   }
 }

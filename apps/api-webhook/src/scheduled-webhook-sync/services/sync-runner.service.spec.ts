@@ -2,6 +2,8 @@ import { Mocked, TestBed } from "@suites/unit";
 import { DataSource } from "typeorm";
 import { vi } from "vitest";
 
+import { PinoLogger } from "@stakload/nestjs-logging";
+
 import { AdminService } from "../../admin/admin.service";
 import { SyncRunnerService } from "./sync-runner.service";
 
@@ -12,6 +14,7 @@ type DataSourceLike = {
 describe("SyncRunnerService", () => {
   let adminService: Mocked<AdminService>;
   let dataSource: DataSourceLike;
+  let logger: Mocked<PinoLogger>;
   let service: SyncRunnerService;
 
   beforeEach(async () => {
@@ -20,6 +23,7 @@ describe("SyncRunnerService", () => {
     service = unit;
     adminService = unitRef.get(AdminService);
     dataSource = unitRef.get(DataSource);
+    logger = unitRef.get(PinoLogger);
   });
 
   it("should skip sync when lock is not acquired", async () => {
@@ -45,6 +49,21 @@ describe("SyncRunnerService", () => {
     await expect(service.runManagedSync("manual")).resolves.toMatchObject({ desiredCount: 1 });
     expect(adminService.syncWebhooks).toHaveBeenCalledOnce();
     expect(dataSource.query).toHaveBeenCalledTimes(2);
+  });
+
+  it("should log and continue when releasing the lock fails", async () => {
+    void dataSource.query.mockResolvedValueOnce([{ locked: true }]).mockRejectedValueOnce(new Error("unlock failed"));
+    void adminService.syncWebhooks.mockResolvedValue({
+      created: [],
+      deduplicated: [],
+      desiredCount: 1,
+      errors: [],
+      existingManagedCount: 1,
+      keptCount: 1,
+    });
+
+    await expect(service.runManagedSync("scheduled")).resolves.toMatchObject({ desiredCount: 1 });
+    expect(logger.error).toHaveBeenCalled();
   });
 
   it("should always release lock after sync failure", async () => {

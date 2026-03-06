@@ -154,7 +154,7 @@ describe("AdminController (integration)", () => {
       keptCount: 1,
     });
 
-    await request(getServer()).post("/admin/webhooks/sync").set("x-secret", "webhook-secret").expect(201);
+    await request(getServer()).post("/admin/webhooks/sync").set("x-secret", "webhook-secret").expect(200);
 
     expect(syncRunnerService.runManagedSync).toHaveBeenCalledWith("manual");
   });
@@ -181,10 +181,8 @@ describe("AdminController (integration)", () => {
     await request(getServer())
       .post("/admin/webhooks/purge?confirm=true")
       .set("x-secret", "webhook-secret")
-      .expect(201);
+      .expect(200);
 
     expect(adminService.purgeWebhooks).toHaveBeenCalledWith(true);
   });
 });
-
-
