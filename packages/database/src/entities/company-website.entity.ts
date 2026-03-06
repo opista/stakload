@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Website records associated with companies.
+ */
 @Entity("company_websites")
 export class CompanyWebsiteEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })

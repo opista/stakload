@@ -1,5 +1,8 @@
 import { Entity, Index, PrimaryColumn } from "typeorm";
 
+/**
+ * Join table linking games to genres.
+ */
 @Entity("game_genres")
 @Index(["genreId"])
 export class GameGenreEntity {

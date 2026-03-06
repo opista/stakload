@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Rating category definitions used by age rating organisations.
+ */
 @Entity("age_rating_categories")
 export class AgeRatingCategoryEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })

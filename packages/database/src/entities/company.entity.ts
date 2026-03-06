@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { SluggedNamedEntity } from "./base.entity";
 
+/**
+ * Video game companies involved in development and publishing.
+ */
 @Entity("companies")
 export class CompanyEntity extends SluggedNamedEntity {
   @Column({ nullable: true, type: "integer" })

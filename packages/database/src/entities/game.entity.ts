@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Core game records from IGDB.
+ */
 @Entity("games")
 export class GameEntity extends IgdbEntity {
   @Column({ nullable: true, type: "simple-json" })

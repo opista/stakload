@@ -2,6 +2,9 @@ import { Column, Entity, Index } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Company involvement records for specific games.
+ */
 @Entity("involved_companies")
 @Index(["companyId"])
 @Index(["gameId"])

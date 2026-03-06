@@ -2,6 +2,9 @@ import { Column, Entity, Index } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Detailed multiplayer capability records for games and platforms.
+ */
 @Entity("multiplayer_modes")
 @Index(["gameId"])
 @Index(["platformId"])

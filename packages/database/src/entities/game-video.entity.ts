@@ -2,6 +2,9 @@ import { Column, Entity, Index } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Video records associated with games.
+ */
 @Entity("game_videos")
 @Index(["gameId"])
 export class GameVideoEntity extends IgdbEntity {

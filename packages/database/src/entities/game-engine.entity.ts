@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { SluggedNamedEntity } from "./base.entity";
 
+/**
+ * Game engine records and linked metadata.
+ */
 @Entity("game_engines")
 export class GameEngineEntity extends SluggedNamedEntity {
   @Column({ nullable: true, type: "simple-json" })

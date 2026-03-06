@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { SluggedNamedEntity } from "./base.entity";
 
+/**
+ * Platform records for hardware and operating environments.
+ */
 @Entity("platforms")
 export class PlatformEntity extends SluggedNamedEntity {
   @Column({ nullable: true, type: "text" })

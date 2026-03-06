@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Alternative names and titles for games.
+ */
 @Entity("alternative_names")
 export class AlternativeNameEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })

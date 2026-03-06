@@ -2,6 +2,9 @@ import { Column, Entity, Index } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Website records associated with games.
+ */
 @Entity("websites")
 @Index(["gameId"])
 @Index(["typeId"])

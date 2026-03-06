@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Per-game language support capability records.
+ */
 @Entity("language_supports")
 export class LanguageSupportEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })

@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Content descriptors attached to age ratings.
+ */
 @Entity("age_rating_content_descriptions_v2")
 export class AgeRatingContentDescriptionV2Entity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })

@@ -2,6 +2,9 @@ import { Column, Entity } from "typeorm";
 
 import { IgdbEntity } from "./base.entity";
 
+/**
+ * Logo media assets for game engines.
+ */
 @Entity("game_engine_logos")
 export class GameEngineLogoEntity extends IgdbEntity {
   @Column({ nullable: true, type: "boolean" })
