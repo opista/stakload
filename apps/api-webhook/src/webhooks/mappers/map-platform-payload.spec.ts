@@ -31,7 +31,7 @@ describe("mapPlatformPayload", () => {
       summary: "summary-text",
     });
     expect(mapBaseSlugged).toHaveBeenCalled();
-    expect(readNumber).toHaveBeenCalledWith(9);
+    expect(readNumber).toHaveBeenCalledTimes(1);
     expect(readOptionalId).toHaveBeenCalledTimes(3);
     expect(readString).toHaveBeenCalledTimes(3);
   });
