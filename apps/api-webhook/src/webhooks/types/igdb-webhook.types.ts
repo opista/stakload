@@ -13,7 +13,6 @@ import type {
   Company,
   CompanyLogo,
   CompanyStatus,
-  CompanyWebsite,
   Cover,
   DateFormat,
   ExternalGame,
@@ -71,7 +70,6 @@ export type ArtworkTypeWebhookPayload = IgdbWebhookPayload<ArtworkType>;
 export type CollectionWebhookPayload = IgdbWebhookPayload<Collection>;
 export type CompanyLogoWebhookPayload = IgdbWebhookPayload<CompanyLogo>;
 export type CompanyStatusWebhookPayload = IgdbWebhookPayload<CompanyStatus>;
-export type CompanyWebsiteWebhookPayload = IgdbWebhookPayload<CompanyWebsite>;
 export type CompanyWebhookPayload = IgdbWebhookPayload<Company>;
 export type CoverWebhookPayload = IgdbWebhookPayload<Cover>;
 export type DateFormatWebhookPayload = IgdbWebhookPayload<DateFormat>;
@@ -117,7 +115,6 @@ export type RawIgdbPayload =
   | CollectionWebhookPayload
   | CompanyLogoWebhookPayload
   | CompanyStatusWebhookPayload
-  | CompanyWebsiteWebhookPayload
   | CompanyWebhookPayload
   | CoverWebhookPayload
   | DateFormatWebhookPayload

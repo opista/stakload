@@ -3,7 +3,7 @@ import type {
   GameFranchiseEntity,
   GameGenreEntity,
   GameKeywordEntity,
-  GameModeEntity,
+  GameGameModeEntity,
   GamePlatformEntity,
   GamePlayerPerspectiveEntity,
   GameThemeEntity,
@@ -20,7 +20,7 @@ export const buildGameRelationRows = (
   franchises: GameFranchiseEntity[];
   genres: GameGenreEntity[];
   keywords: GameKeywordEntity[];
-  modes: GameModeEntity[];
+  modes: GameGameModeEntity[];
   platforms: GamePlatformEntity[];
   playerPerspectives: GamePlayerPerspectiveEntity[];
   themes: GameThemeEntity[];
@@ -37,3 +37,4 @@ export const buildGameRelationRows = (
   })),
   themes: readIds(payload.themes).map((themeId) => ({ gameId, themeId })),
 });
+

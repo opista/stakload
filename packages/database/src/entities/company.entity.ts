@@ -39,7 +39,4 @@ export class CompanyEntity extends SluggedNamedEntity {
 
   @Column({ nullable: true, type: "integer" })
   statusId?: number | null;
-
-  @Column({ nullable: true, type: "simple-json" })
-  websiteIds?: number[] | null;
 }

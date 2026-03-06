@@ -1,14 +1,10 @@
-import { Entity, Index, PrimaryColumn } from "typeorm";
+import { Entity } from "typeorm";
+
+import { SluggedNamedEntity } from "./base.entity";
 
 /**
- * Join table linking games to game mode definitions.
+ * Game mode definitions such as single-player or multiplayer.
  */
 @Entity("game_modes")
-@Index(["modeId"])
-export class GameModeEntity {
-  @PrimaryColumn({ type: "integer" })
-  gameId!: number;
+export class GameModeEntity extends SluggedNamedEntity {}
 
-  @PrimaryColumn({ type: "integer" })
-  modeId!: number;
-}

@@ -24,7 +24,6 @@ describe("mapCompanyPayload", () => {
       start_date: 1_704_067_200,
       start_date_format: 7,
       status: 8,
-      websites: [{ id: 11 }],
     };
 
     expect(mapCompanyPayload(payload as never)).toEqual({
@@ -40,11 +39,10 @@ describe("mapCompanyPayload", () => {
       startDate: new Date("2024-01-01T00:00:00.000Z"),
       startDateFormatId: "7-id",
       statusId: "8-id",
-      websiteIds: [101, 102],
     });
     expect(mapBaseSlugged).toHaveBeenCalled();
     expect(readDate).toHaveBeenCalledWith(1_704_067_200);
-    expect(readIds).toHaveBeenCalledTimes(3);
+    expect(readIds).toHaveBeenCalledTimes(2);
     expect(readNumber).toHaveBeenCalledWith(4);
     expect(readString).toHaveBeenCalledWith("desc");
     expect(readOptionalId).toHaveBeenCalledTimes(6);

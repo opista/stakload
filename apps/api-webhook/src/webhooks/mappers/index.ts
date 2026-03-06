@@ -8,7 +8,6 @@ export * from "./map-collection-payload";
 export * from "./map-company-logo-payload";
 export * from "./map-company-payload";
 export * from "./map-company-status-payload";
-export * from "./map-company-website-payload";
 export * from "./map-cover-payload";
 export * from "./map-date-format-payload";
 export * from "./map-external-game-payload";

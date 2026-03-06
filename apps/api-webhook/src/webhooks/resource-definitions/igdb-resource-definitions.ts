@@ -12,7 +12,6 @@ import {
   CompanyEntity,
   CompanyLogoEntity,
   CompanyStatusEntity,
-  CompanyWebsiteEntity,
   CoverEntity,
   DateFormatEntity,
   ExternalGameEntity,
@@ -26,9 +25,9 @@ import {
   GameGenreEntity,
   GameKeywordEntity,
   GameModeEntity,
+  GameGameModeEntity,
   GameReleaseFormatEntity,
   GameStatusEntity,
-  GameModeLookupEntity,
   GamePlatformEntity,
   GamePlayerPerspectiveEntity,
   GameThemeEntity,
@@ -67,7 +66,6 @@ import {
   mapCompanyLogoPayload,
   mapCompanyPayload,
   mapCompanyStatusPayload,
-  mapCompanyWebsitePayload,
   mapCoverPayload,
   mapDateFormatPayload,
   mapExternalGamePayload,
@@ -119,7 +117,7 @@ const replaceGameRelations = async (
   await manager.delete(GameFranchiseEntity, { gameId: rootId });
   await manager.delete(GameGenreEntity, { gameId: rootId });
   await manager.delete(GameKeywordEntity, { gameId: rootId });
-  await manager.delete(GameModeEntity, { gameId: rootId });
+  await manager.delete(GameGameModeEntity, { gameId: rootId });
   await manager.delete(GamePlatformEntity, { gameId: rootId });
   await manager.delete(GamePlayerPerspectiveEntity, { gameId: rootId });
   await manager.delete(GameThemeEntity, { gameId: rootId });
@@ -141,7 +139,7 @@ const replaceGameRelations = async (
   }
 
   if (relations.modes.length > 0) {
-    await manager.insert(GameModeEntity, relations.modes);
+    await manager.insert(GameGameModeEntity, relations.modes);
   }
 
   if (relations.platforms.length > 0) {
@@ -235,13 +233,6 @@ const simpleDefinitions = [
     resource: "company_statuses",
     staleProtection: "best_effort",
   },
-  {
-    entity: CompanyWebsiteEntity,
-    kind: "simple",
-    map: mapCompanyWebsitePayload,
-    resource: "company_websites",
-    staleProtection: "best_effort",
-  },
   { entity: CoverEntity, kind: "simple", map: mapCoverPayload, resource: "covers", staleProtection: "best_effort" },
   {
     entity: DateFormatEntity,
@@ -286,7 +277,7 @@ const simpleDefinitions = [
     staleProtection: "best_effort",
   },
   {
-    entity: GameModeLookupEntity,
+    entity: GameModeEntity,
     kind: "simple",
     map: mapGameModePayload,
     resource: "game_modes",
@@ -459,3 +450,4 @@ export const RESOURCE_DEFINITION_MAP: ReadonlyMap<WebhookResource, ResourceDefin
 );
 
 export const SUPPORTED_WEBHOOK_RESOURCES = Object.freeze([...RESOURCE_DEFINITION_MAP.keys()]);
+

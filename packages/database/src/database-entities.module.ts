@@ -13,7 +13,6 @@ import {
   CompanyEntity,
   CompanyLogoEntity,
   CompanyStatusEntity,
-  CompanyWebsiteEntity,
   CoverEntity,
   DateFormatEntity,
   ExternalGameEntity,
@@ -27,7 +26,7 @@ import {
   GameGenreEntity,
   GameKeywordEntity,
   GameModeEntity,
-  GameModeLookupEntity,
+  GameGameModeEntity,
   GamePlatformEntity,
   GamePlayerPerspectiveEntity,
   GameReleaseFormatEntity,
@@ -70,7 +69,6 @@ import {
       CompanyEntity,
       CompanyLogoEntity,
       CompanyStatusEntity,
-      CompanyWebsiteEntity,
       CoverEntity,
       DateFormatEntity,
       ExternalGameEntity,
@@ -84,7 +82,7 @@ import {
       GameGenreEntity,
       GameKeywordEntity,
       GameModeEntity,
-      GameModeLookupEntity,
+      GameGameModeEntity,
       GamePlatformEntity,
       GamePlayerPerspectiveEntity,
       GameReleaseFormatEntity,
@@ -114,3 +112,4 @@ import {
   ],
 })
 export class DatabaseEntitiesModule {}
+
