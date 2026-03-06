@@ -1,4 +1,4 @@
-import type { INestApplication } from "@nestjs/common";
+import { BadRequestException, type INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { mock, type Mocked } from "@suites/doubles.vitest";
 import request from "supertest";
@@ -80,13 +80,11 @@ describe("AdminController (integration)", () => {
     void adminService.createWebhook.mockResolvedValue({
       action: "update",
       active: true,
-      apiKey: "client-id",
       category: 8,
       createdAt: "2026-03-04T00:00:00.000Z",
       id: 42,
       managedByService: true,
       resource: "games",
-      secret: "secret",
       subCategory: 2,
       supportedByService: true,
       updatedAt: "2026-03-04T00:00:00.000Z",
@@ -137,5 +135,41 @@ describe("AdminController (integration)", () => {
       .expect(200);
 
     expect(adminService.testWebhook).toHaveBeenCalledWith(42, "games", 1337);
+  });
+
+  it("should sync webhooks", async () => {
+    void adminService.syncWebhooks.mockResolvedValue({
+      created: [],
+      deduplicated: [],
+      desiredCount: 3,
+      errors: [],
+      existingManagedCount: 1,
+      keptCount: 1,
+    });
+
+    await request(getServer()).post("/admin/webhooks/sync").set("x-secret", "webhook-secret").expect(201);
+
+    expect(adminService.syncWebhooks).toHaveBeenCalledOnce();
+  });
+
+  it("should reject purge when confirm is missing", async () => {
+    void adminService.purgeWebhooks.mockRejectedValue(new BadRequestException("The purge operation requires confirm=true"));
+
+    await request(getServer()).post("/admin/webhooks/purge").set("x-secret", "webhook-secret").expect(400);
+  });
+
+  it("should purge webhooks when confirm=true", async () => {
+    void adminService.purgeWebhooks.mockResolvedValue({
+      deleted: [{ id: 42 }],
+      errors: [],
+      totalCandidates: 1,
+    });
+
+    await request(getServer())
+      .post("/admin/webhooks/purge?confirm=true")
+      .set("x-secret", "webhook-secret")
+      .expect(201);
+
+    expect(adminService.purgeWebhooks).toHaveBeenCalledWith(true);
   });
 });

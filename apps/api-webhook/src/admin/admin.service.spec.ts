@@ -40,7 +40,7 @@ describe("AdminService", () => {
       secret: "webhook-secret",
       sub_category: 2,
       updated_at: "2026-03-04T00:00:00.000Z",
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
 
     await expect(service.createWebhook("games", "update")).resolves.toMatchObject({
@@ -49,14 +49,14 @@ describe("AdminService", () => {
       managedByService: true,
       resource: "games",
       supportedByService: true,
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
 
     expect(apiService.createWebhook).toHaveBeenCalledWith({
       action: "update",
       resource: "games",
       secret: "webhook-secret",
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
   });
 
@@ -79,13 +79,11 @@ describe("AdminService", () => {
       {
         action: null,
         active: true,
-        apiKey: "client-id",
         category: 8,
         createdAt: "2026-03-04T00:00:00.000Z",
         id: 42,
         managedByService: false,
         resource: null,
-        secret: "webhook-secret",
         subCategory: 2,
         supportedByService: false,
         updatedAt: "2026-03-04T00:00:00.000Z",
@@ -117,5 +115,121 @@ describe("AdminService", () => {
     );
 
     await expect(service.createWebhook("games", "update")).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it("should sync missing managed webhooks", async () => {
+    void apiService.listWebhooks.mockResolvedValue([]);
+    void apiService.createWebhook.mockResolvedValue({
+      active: true,
+      api_key: "client-id",
+      category: 8,
+      created_at: "2026-03-04T00:00:00.000Z",
+      id: 42,
+      secret: "webhook-secret",
+      sub_category: 2,
+      updated_at: "2026-03-04T00:00:00.000Z",
+      url: "https://hooks.example.com/webhooks/games/create",
+    });
+
+    const result = await service.syncWebhooks();
+
+    expect(result.desiredCount).toBeGreaterThan(0);
+    expect(result.created.length).toBeGreaterThan(0);
+    expect(result.errors).toEqual([]);
+  });
+
+  it("should deduplicate duplicate managed webhooks during sync", async () => {
+    void apiService.listWebhooks.mockResolvedValue([
+      {
+        active: true,
+        api_key: "client-id",
+        category: 8,
+        created_at: "2026-03-04T00:00:00.000Z",
+        id: 41,
+        secret: "webhook-secret",
+        sub_category: 2,
+        updated_at: "2026-03-04T00:00:00.000Z",
+        url: "https://hooks.example.com/webhooks/games/update",
+      },
+      {
+        active: true,
+        api_key: "client-id",
+        category: 8,
+        created_at: "2026-03-05T00:00:00.000Z",
+        id: 42,
+        secret: "webhook-secret",
+        sub_category: 2,
+        updated_at: "2026-03-05T00:00:00.000Z",
+        url: "https://hooks.example.com/webhooks/games/update",
+      },
+      {
+        active: true,
+        api_key: "client-id",
+        category: 8,
+        created_at: "2026-03-05T00:00:00.000Z",
+        id: 99,
+        secret: "webhook-secret",
+        sub_category: 2,
+        updated_at: "2026-03-05T00:00:00.000Z",
+        url: "https://legacy.example.com/igdb",
+      },
+    ]);
+    void apiService.deleteWebhook.mockResolvedValue({ id: "42" });
+    void apiService.createWebhook.mockResolvedValue({
+      active: true,
+      api_key: "client-id",
+      category: 8,
+      created_at: "2026-03-04T00:00:00.000Z",
+      id: 100,
+      secret: "webhook-secret",
+      sub_category: 2,
+      updated_at: "2026-03-04T00:00:00.000Z",
+      url: "https://hooks.example.com/webhooks/games/create",
+    });
+
+    const result = await service.syncWebhooks();
+
+    expect(result.deduplicated).toContainEqual({ id: 42 });
+    expect(apiService.deleteWebhook).toHaveBeenCalledWith(42);
+  });
+
+  it("should require confirm=true to purge managed webhooks", async () => {
+    await expect(service.purgeWebhooks(false)).rejects.toThrow("confirm=true");
+  });
+
+  it("should purge only managed webhooks", async () => {
+    void apiService.listWebhooks.mockResolvedValue([
+      {
+        active: true,
+        api_key: "client-id",
+        category: 8,
+        created_at: "2026-03-04T00:00:00.000Z",
+        id: 42,
+        secret: "webhook-secret",
+        sub_category: 2,
+        updated_at: "2026-03-04T00:00:00.000Z",
+        url: "https://hooks.example.com/webhooks/games/update",
+      },
+      {
+        active: true,
+        api_key: "client-id",
+        category: 8,
+        created_at: "2026-03-04T00:00:00.000Z",
+        id: 43,
+        secret: "webhook-secret",
+        sub_category: 2,
+        updated_at: "2026-03-04T00:00:00.000Z",
+        url: "https://legacy.example.com/webhooks/games/update",
+      },
+    ]);
+    void apiService.deleteWebhook.mockResolvedValue({ id: "42" });
+
+    await expect(service.purgeWebhooks(true)).resolves.toEqual({
+      deleted: [{ id: 42 }],
+      errors: [],
+      totalCandidates: 1,
+    });
+
+    expect(apiService.deleteWebhook).toHaveBeenCalledTimes(1);
   });
 });

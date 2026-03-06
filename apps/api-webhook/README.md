@@ -4,7 +4,7 @@ This app is the write-side ingress for IGDB webhooks.
 
 Its current responsibilities are:
 
-- accept `POST /webhooks/igdb/:resource/:action`
+- accept `POST /webhooks/:resource/:action`
 - expose admin endpoints to register and manage IGDB webhooks
 - reject invalid secrets early
 - validate `resource` and `action` route params with custom pipes
@@ -17,7 +17,7 @@ Its current responsibilities are:
 
 ```mermaid
 flowchart TD
-  A[POST /webhooks/igdb/:resource/:action] --> B[IgdbWebhookSecretGuard]
+  A[POST /webhooks/:resource/:action] --> B[IgdbWebhookSecretGuard]
   B -->|invalid X-Secret| X1[401 Unauthorized]
   B --> C[IgdbTombstoneInterceptor]
   C -->|delete action| D[IgdbWebhookController]
@@ -157,7 +157,7 @@ Used for aggregate resources that need:
 
 ## Resource Definitions
 
-[`src/webhooks/igdb/resource-definitions/igdb-resource-definitions.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/igdb/resource-definitions/igdb-resource-definitions.ts)
+[`src/webhooks/resource-definitions/igdb-resource-definitions.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/resource-definitions/igdb-resource-definitions.ts)
 is the registry for supported resources.
 
 Each definition declares:
@@ -182,9 +182,9 @@ Structure:
 
 - one mapper file per payload type
 - shared parsing helpers in
-  [`src/webhooks/igdb/mappers/shared/mapper-utils.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/igdb/mappers/shared/mapper-utils.ts)
+  [`src/webhooks/mappers/shared/mapper-utils.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/mappers/shared/mapper-utils.ts)
 - relation row builder in
-  [`src/webhooks/igdb/mappers/build-game-relation-rows.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/igdb/mappers/build-game-relation-rows.ts)
+  [`src/webhooks/mappers/build-game-relation-rows.ts`](/c:/Users/Beau/projects/stakload/apps/api-webhook/src/webhooks/mappers/build-game-relation-rows.ts)
 
 Examples:
 
@@ -259,10 +259,12 @@ Not implemented yet:
 
 Admin endpoints are now available for webhook management:
 
-- `GET /admin/igdb/webhooks`
-- `POST /admin/igdb/webhooks`
-- `DELETE /admin/igdb/webhooks/:webhookId`
-- `POST /admin/igdb/webhooks/:webhookId/test`
+- `GET /admin/webhooks`
+- `POST /admin/webhooks`
+- `DELETE /admin/webhooks/:webhookId`
+- `POST /admin/webhooks/:webhookId/test`
+- `POST /admin/webhooks/sync`
+- `POST /admin/webhooks/purge?confirm=true`
 
 All admin endpoints require:
 
@@ -280,7 +282,7 @@ Create requests take this payload:
 The callback URL is derived automatically as:
 
 ```txt
-${PUBLIC_WEBHOOK_BASE_URL}/webhooks/igdb/:resource/:action
+${PUBLIC_WEBHOOK_BASE_URL}/webhooks/:resource/:action
 ```
 
 The service is stateless for registration and does not auto-reconcile webhooks on startup.
@@ -288,28 +290,42 @@ The service is stateless for registration and does not auto-reconcile webhooks o
 Example admin calls:
 
 ```sh
-curl http://localhost:3001/admin/igdb/webhooks \
+curl http://localhost:3001/admin/webhooks \
   -H "x-secret: local-dev-secret"
 ```
 
 ```sh
-curl -X POST http://localhost:3001/admin/igdb/webhooks \
+curl -X POST http://localhost:3001/admin/webhooks \
   -H "Content-Type: application/json" \
   -H "x-secret: local-dev-secret" \
   -d "{\"resource\":\"games\",\"action\":\"update\"}"
 ```
 
 ```sh
-curl -X DELETE http://localhost:3001/admin/igdb/webhooks/42 \
+curl -X DELETE http://localhost:3001/admin/webhooks/42 \
   -H "x-secret: local-dev-secret"
 ```
 
 ```sh
-curl -X POST http://localhost:3001/admin/igdb/webhooks/42/test \
+curl -X POST http://localhost:3001/admin/webhooks/42/test \
   -H "Content-Type: application/json" \
   -H "x-secret: local-dev-secret" \
   -d "{\"resource\":\"games\",\"entityId\":1337}"
 ```
+
+```sh
+curl -X POST http://localhost:3001/admin/webhooks/sync \
+  -H "x-secret: local-dev-secret"
+```
+
+```sh
+curl -X POST "http://localhost:3001/admin/webhooks/purge?confirm=true" \
+  -H "x-secret: local-dev-secret"
+```
+
+Purge requests without `confirm=true` are rejected with `400`.
+
+Webhook registration is stateless and manual in this cut; no background cron reconciliation is running.
 
 IGDB deactivates webhooks after repeated failed deliveries, so `PUBLIC_WEBHOOK_BASE_URL` must be publicly reachable.
 
@@ -326,25 +342,30 @@ Start the stack:
 docker compose up --build
 ```
 
+Docker Compose reads variables from the repo-level `.env`. Start from:
+
+```sh
+cp .env.example .env
+```
+
 That boots:
 
-- `postgres` on `localhost:5432`
-- `api-webhook` on `localhost:3001`
+- `postgres` on `localhost:${POSTGRES_PORT}`
+- `api-webhook` on `localhost:${API_WEBHOOK_PORT}`
 
-Local Docker uses:
+Required IGDB values in `.env`:
 
-- `DATABASE_SYNCHRONIZE=true`
-- `IGDB_CLIENT_ID=local-client-id`
-- `IGDB_CLIENT_SECRET=local-client-secret`
-- `IGDB_WEBHOOK_SECRET=local-dev-secret`
-- `PUBLIC_WEBHOOK_BASE_URL=http://localhost:3001`
+- `IGDB_CLIENT_ID`
+- `IGDB_CLIENT_SECRET`
+- `IGDB_WEBHOOK_SECRET`
 
-That sync flag is intended for local container testing only so the schema exists without migrations.
+Other local defaults are provided in `.env.example` (`POSTGRES_*`, ports, `DATABASE_SYNCHRONIZE`, `PUBLIC_WEBHOOK_BASE_URL`, etc.).
+`DATABASE_SYNCHRONIZE=true` is still intended for local container testing only so the schema exists without migrations.
 
 Example webhook request:
 
 ```sh
-curl -X POST http://localhost:3001/webhooks/igdb/platforms/create \
+curl -X POST http://localhost:3001/webhooks/platforms/create \
   -H "Content-Type: application/json" \
   -H "X-Secret: local-dev-secret" \
   -d "{\"id\": 48, \"name\": \"PlayStation 4\", \"slug\": \"playstation4\"}"

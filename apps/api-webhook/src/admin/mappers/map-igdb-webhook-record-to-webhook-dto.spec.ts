@@ -16,7 +16,7 @@ describe("mapIgdbWebhookRecordToWebhookDto", () => {
     const result = mapIgdbWebhookRecordToWebhookDto(
       {
         ...baseWebhook,
-        url: "https://hooks.example.com/webhooks/igdb/games/update",
+        url: "https://hooks.example.com/webhooks/games/update",
       },
       "https://hooks.example.com",
     );
@@ -24,17 +24,15 @@ describe("mapIgdbWebhookRecordToWebhookDto", () => {
     expect(result).toEqual({
       action: "update",
       active: true,
-      apiKey: "client-id",
       category: 8,
       createdAt: "2026-03-04T00:00:00.000Z",
       id: 42,
       managedByService: true,
       resource: "games",
-      secret: "webhook-secret",
       subCategory: 2,
       supportedByService: true,
       updatedAt: "2026-03-04T00:00:00.000Z",
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
   });
 
@@ -50,13 +48,11 @@ describe("mapIgdbWebhookRecordToWebhookDto", () => {
     expect(result).toEqual({
       action: null,
       active: true,
-      apiKey: "client-id",
       category: 8,
       createdAt: "2026-03-04T00:00:00.000Z",
       id: 42,
       managedByService: false,
       resource: null,
-      secret: "webhook-secret",
       subCategory: 2,
       supportedByService: false,
       updatedAt: "2026-03-04T00:00:00.000Z",

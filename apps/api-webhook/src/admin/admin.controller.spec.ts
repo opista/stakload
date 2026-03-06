@@ -24,17 +24,15 @@ describe("AdminController", () => {
     void service.createWebhook.mockResolvedValue({
       action: "update",
       active: true,
-      apiKey: "client-id",
       category: 1,
       createdAt: "2026-03-04T00:00:00.000Z",
       id: 42,
       managedByService: true,
       resource: "games",
-      secret: "secret",
       subCategory: 2,
       supportedByService: true,
       updatedAt: "2026-03-04T00:00:00.000Z",
-      url: "https://hooks.example.com/webhooks/igdb/games/update",
+      url: "https://hooks.example.com/webhooks/games/update",
     });
 
     await expect(controller.createWebhook({ action: "update", resource: "games" })).resolves.toMatchObject({
@@ -63,6 +61,40 @@ describe("AdminController", () => {
       resource: "games",
       result: { ok: true },
       webhookId: 42,
+    });
+  });
+
+  it("should sync webhooks", async () => {
+    void service.syncWebhooks.mockResolvedValue({
+      created: [],
+      deduplicated: [],
+      desiredCount: 3,
+      errors: [],
+      existingManagedCount: 1,
+      keptCount: 1,
+    });
+
+    await expect(controller.syncWebhooks()).resolves.toEqual({
+      created: [],
+      deduplicated: [],
+      desiredCount: 3,
+      errors: [],
+      existingManagedCount: 1,
+      keptCount: 1,
+    });
+  });
+
+  it("should purge webhooks", async () => {
+    void service.purgeWebhooks.mockResolvedValue({
+      deleted: [{ id: 42 }],
+      errors: [],
+      totalCandidates: 1,
+    });
+
+    await expect(controller.purgeWebhooks(true)).resolves.toEqual({
+      deleted: [{ id: 42 }],
+      errors: [],
+      totalCandidates: 1,
     });
   });
 });
