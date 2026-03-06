@@ -387,5 +387,3 @@ Example Postgres check:
 ```sh
 docker exec -it stakload-postgres psql -U stakload -d stakload -c "select * from platforms order by igdb_id desc limit 10;"
 ```
-
-

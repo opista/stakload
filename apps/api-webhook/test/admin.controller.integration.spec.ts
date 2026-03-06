@@ -166,7 +166,9 @@ describe("AdminController (integration)", () => {
   });
 
   it("should reject purge when confirm is missing", async () => {
-    void adminService.purgeWebhooks.mockRejectedValue(new BadRequestException("The purge operation requires confirm=true"));
+    void adminService.purgeWebhooks.mockRejectedValue(
+      new BadRequestException("The purge operation requires confirm=true"),
+    );
 
     await request(getServer()).post("/admin/webhooks/purge").set("x-secret", "webhook-secret").expect(400);
   });
@@ -178,10 +180,7 @@ describe("AdminController (integration)", () => {
       totalCandidates: 1,
     });
 
-    await request(getServer())
-      .post("/admin/webhooks/purge?confirm=true")
-      .set("x-secret", "webhook-secret")
-      .expect(200);
+    await request(getServer()).post("/admin/webhooks/purge?confirm=true").set("x-secret", "webhook-secret").expect(200);
 
     expect(adminService.purgeWebhooks).toHaveBeenCalledWith(true);
   });
