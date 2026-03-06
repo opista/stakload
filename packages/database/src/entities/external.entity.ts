@@ -1,6 +1,6 @@
 import { Column, Entity } from "typeorm";
 
-import { IgdbEntity, NamedEntity } from "./base.entity";
+import { IgdbEntity } from "./base.entity";
 
 @Entity("external_games")
 export class ExternalGameEntity extends IgdbEntity {
@@ -34,6 +34,3 @@ export class ExternalGameEntity extends IgdbEntity {
   @Column({ nullable: true, type: "integer" })
   year?: number | null;
 }
-
-@Entity("external_game_sources")
-export class ExternalGameSourceEntity extends NamedEntity {}

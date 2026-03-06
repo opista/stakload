@@ -1,6 +1,6 @@
 import { Column, Entity } from "typeorm";
 
-import { ImageAssetEntity, NamedEntity, SluggedNamedEntity } from "./base.entity";
+import { SluggedNamedEntity } from "./base.entity";
 
 @Entity("companies")
 export class CompanyEntity extends SluggedNamedEntity {
@@ -34,9 +34,3 @@ export class CompanyEntity extends SluggedNamedEntity {
   @Column({ nullable: true, type: "integer" })
   statusId?: number | null;
 }
-
-@Entity("company_logos")
-export class CompanyLogoEntity extends ImageAssetEntity {}
-
-@Entity("company_statuses")
-export class CompanyStatusEntity extends NamedEntity {}
