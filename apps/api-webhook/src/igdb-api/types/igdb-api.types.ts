@@ -10,11 +10,11 @@ export interface IgdbWebhookRecord {
   active: boolean;
   api_key: string;
   category: number;
-  created_at: string;
+  created_at: number;
   id: number;
   secret: string;
   sub_category: number;
-  updated_at: string;
+  updated_at: number;
   url: string;
 }
 
@@ -31,9 +31,8 @@ export interface TestIgdbWebhookInput {
   webhookId: number;
 }
 
-export interface IgdbDeleteWebhookResponse {
-  id: number | string;
-}
+export type IgdbCreateWebhookResponse = IgdbWebhookRecord[] | IgdbWebhookRecord;
+export type IgdbDeleteWebhookResponse = IgdbWebhookRecord[] | IgdbWebhookRecord;
 
 export class IgdbApiError extends Error {
   constructor(

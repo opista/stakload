@@ -28,6 +28,10 @@ export class AppConfigService {
     return this.configService.getOrThrow<string>("IGDB_CLIENT_SECRET");
   }
 
+  get igdbScheduledSyncEnabled(): boolean {
+    return this.configService.getOrThrow<boolean>("IGDB_SCHEDULED_SYNC_ENABLED");
+  }
+
   get igdbWebhookSecret(): string {
     return this.configService.getOrThrow<string>("IGDB_WEBHOOK_SECRET");
   }

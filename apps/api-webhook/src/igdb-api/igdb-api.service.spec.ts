@@ -1,3 +1,4 @@
+import { InternalServerErrorException } from "@nestjs/common";
 import { Mocked, TestBed } from "@suites/unit";
 
 import { IgdbApiClient } from "./igdb-api.client";
@@ -53,5 +54,43 @@ describe("IgdbApiService", () => {
       },
       "createWebhook",
     );
+  });
+
+  it("should normalise array webhook responses when creating a webhook", async () => {
+    void apiClient.requestJson.mockResolvedValue([
+      {
+        active: true,
+        api_key: "client-id",
+        category: 1,
+        created_at: 1772794546,
+        id: 1,
+        secret: "secret",
+        sub_category: 2,
+        updated_at: 1772794546,
+        url: "https://example.com/webhooks/games/update",
+      },
+    ]);
+
+    await expect(
+      service.createWebhook({
+        action: "update",
+        resource: "games",
+        secret: "secret",
+        url: "https://example.com/webhooks/games/update",
+      }),
+    ).resolves.toMatchObject({ id: 1, url: "https://example.com/webhooks/games/update" });
+  });
+
+  it("should throw when create response does not contain a webhook record", async () => {
+    void apiClient.requestJson.mockResolvedValue([]);
+
+    await expect(
+      service.createWebhook({
+        action: "update",
+        resource: "games",
+        secret: "secret",
+        url: "https://example.com/webhooks/games/update",
+      }),
+    ).rejects.toBeInstanceOf(InternalServerErrorException);
   });
 });

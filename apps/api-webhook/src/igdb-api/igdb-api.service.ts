@@ -1,25 +1,27 @@
-import { Injectable } from "@nestjs/common";
+import { InternalServerErrorException, Injectable } from "@nestjs/common";
 
 import { IgdbApiClient } from "./igdb-api.client";
 import type {
   CreateIgdbWebhookInput,
+  IgdbCreateWebhookResponse,
   IgdbDeleteWebhookResponse,
   IgdbWebhookRecord,
   TestIgdbWebhookInput,
 } from "./types/igdb-api.types";
+import { isValidWebhookRecord } from "./utils/is-valid-webhook-record";
 
 @Injectable()
 export class IgdbApiService {
   constructor(private readonly apiClient: IgdbApiClient) {}
 
-  createWebhook(input: CreateIgdbWebhookInput): Promise<IgdbWebhookRecord> {
+  async createWebhook(input: CreateIgdbWebhookInput): Promise<IgdbWebhookRecord> {
     const body = new URLSearchParams({
       method: input.action,
       secret: input.secret,
       url: input.url,
     });
 
-    return this.apiClient.requestJson<IgdbWebhookRecord>(
+    const response = await this.apiClient.requestJson<IgdbCreateWebhookResponse>(
       `/${input.resource}/webhooks/`,
       {
         body: body.toString(),
@@ -30,6 +32,14 @@ export class IgdbApiService {
       },
       "createWebhook",
     );
+
+    const webhook = Array.isArray(response) ? response[0] : response;
+
+    if (isValidWebhookRecord(webhook) === false) {
+      throw new InternalServerErrorException("IGDB create webhook response did not include a valid webhook record");
+    }
+
+    return webhook;
   }
 
   deleteWebhook(webhookId: number): Promise<IgdbDeleteWebhookResponse> {

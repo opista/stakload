@@ -1,17 +1,20 @@
 import { Mocked, TestBed } from "@suites/unit";
 
+import { SyncRunnerService } from "../scheduled-webhook-sync/services/sync-runner.service";
 import { AdminController } from "./admin.controller";
 import { AdminService } from "./admin.service";
 
 describe("AdminController", () => {
   let controller: AdminController;
   let service: Mocked<AdminService>;
+  let syncRunnerService: Mocked<SyncRunnerService>;
 
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(AdminController).compile();
 
     controller = unit;
     service = unitRef.get(AdminService);
+    syncRunnerService = unitRef.get(SyncRunnerService);
   });
 
   it("should list webhooks", async () => {
@@ -25,13 +28,13 @@ describe("AdminController", () => {
       action: "update",
       active: true,
       category: 1,
-      createdAt: "2026-03-04T00:00:00.000Z",
+      createdAt: 1772668800,
       id: 42,
       managedByService: true,
       resource: "games",
       subCategory: 2,
       supportedByService: true,
-      updatedAt: "2026-03-04T00:00:00.000Z",
+      updatedAt: 1772668800,
       url: "https://hooks.example.com/webhooks/games/update",
     });
 
@@ -43,9 +46,9 @@ describe("AdminController", () => {
   });
 
   it("should delete a webhook", async () => {
-    void service.deleteWebhook.mockResolvedValue({ id: 42 });
+    void service.deleteWebhook.mockResolvedValue({ success: true });
 
-    await expect(controller.deleteWebhook(42)).resolves.toEqual({ id: 42 });
+    await expect(controller.deleteWebhook(42)).resolves.toEqual({ success: true });
   });
 
   it("should trigger a webhook test", async () => {
@@ -65,7 +68,7 @@ describe("AdminController", () => {
   });
 
   it("should sync webhooks", async () => {
-    void service.syncWebhooks.mockResolvedValue({
+    void syncRunnerService.runManagedSync.mockResolvedValue({
       created: [],
       deduplicated: [],
       desiredCount: 3,
@@ -73,8 +76,9 @@ describe("AdminController", () => {
       existingManagedCount: 1,
       keptCount: 1,
     });
+    const response = { status: vi.fn() };
 
-    await expect(controller.syncWebhooks()).resolves.toEqual({
+    await expect(controller.syncWebhooks(response as never)).resolves.toEqual({
       created: [],
       deduplicated: [],
       desiredCount: 3,
@@ -82,6 +86,18 @@ describe("AdminController", () => {
       existingManagedCount: 1,
       keptCount: 1,
     });
+    expect(syncRunnerService.runManagedSync).toHaveBeenCalledWith("manual");
+  });
+
+  it("should return a skipped response when sync lock is busy", async () => {
+    void syncRunnerService.runManagedSync.mockResolvedValue(null);
+    const response = { status: vi.fn() };
+
+    await expect(controller.syncWebhooks(response as never)).resolves.toEqual({
+      reason: "sync_already_running",
+      status: "skipped",
+    });
+    expect(response.status).toHaveBeenCalledWith(202);
   });
 
   it("should purge webhooks", async () => {
@@ -98,3 +114,6 @@ describe("AdminController", () => {
     });
   });
 });
+
+
+

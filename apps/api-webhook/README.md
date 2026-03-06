@@ -325,7 +325,9 @@ curl -X POST "http://localhost:3001/admin/webhooks/purge?confirm=true" \
 
 Purge requests without `confirm=true` are rejected with `400`.
 
-Webhook registration is stateless and manual in this cut; no background cron reconciliation is running.
+Webhook registration is stateless. Scheduled reconciliation is optional via `IGDB_SCHEDULED_SYNC_ENABLED`.
+When enabled, a sync-only cron runs every 30 minutes with a shared advisory lock so it cannot overlap with manual sync calls.
+No startup sync is executed automatically.
 
 IGDB deactivates webhooks after repeated failed deliveries, so `PUBLIC_WEBHOOK_BASE_URL` must be publicly reachable.
 
@@ -358,6 +360,7 @@ Required IGDB values in `.env`:
 - `IGDB_CLIENT_ID`
 - `IGDB_CLIENT_SECRET`
 - `IGDB_WEBHOOK_SECRET`
+- `IGDB_SCHEDULED_SYNC_ENABLED` (optional, default `false`)
 
 Other local defaults are provided in `.env.example` (`POSTGRES_*`, ports, `DATABASE_SYNCHRONIZE`, `PUBLIC_WEBHOOK_BASE_URL`, etc.).
 `DATABASE_SYNCHRONIZE=true` is still intended for local container testing only so the schema exists without migrations.

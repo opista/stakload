@@ -4,12 +4,12 @@ export class WebhookDto {
   action!: WebhookAction | null;
   active!: boolean;
   category!: number;
-  createdAt!: string;
+  createdAt!: number;
   id!: number;
   managedByService!: boolean;
   resource!: WebhookResource | null;
   subCategory!: number;
   supportedByService!: boolean;
-  updatedAt!: string;
+  updatedAt!: number;
   url!: string;
 }

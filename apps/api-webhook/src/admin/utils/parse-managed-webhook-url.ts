@@ -5,9 +5,13 @@ import { buildManagedWebhookUrl } from "./build-managed-webhook-url";
 import type { ManagedWebhookIdentity } from "./managed-webhook-identity";
 
 export const parseManagedWebhookUrl = (
-  url: string,
+  url: string | null | undefined,
   publicWebhookBaseUrl: string,
 ): ManagedWebhookIdentity | null => {
+  if (typeof url !== "string" || url.length === 0) {
+    return null;
+  }
+
   if (url.startsWith(`${publicWebhookBaseUrl}/webhooks/`) === false) {
     return null;
   }

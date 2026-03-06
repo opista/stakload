@@ -9,6 +9,7 @@ import { PinoLogger } from "@stakload/nestjs-logging";
 import { AdminController } from "../src/admin/admin.controller";
 import { AdminService } from "../src/admin/admin.service";
 import { AppConfigService } from "../src/config/app-config.service";
+import { SyncRunnerService } from "../src/scheduled-webhook-sync/services/sync-runner.service";
 import { IgdbWebhookSecretGuard } from "../src/webhooks/guards/igdb-webhook-secret.guard";
 
 describe("AdminController (integration)", () => {
@@ -16,11 +17,13 @@ describe("AdminController (integration)", () => {
   let adminService: Mocked<AdminService>;
   let configService: Mocked<AppConfigService>;
   let logger: Mocked<PinoLogger>;
+  let syncRunnerService: Mocked<SyncRunnerService>;
 
   beforeEach(async () => {
     adminService = mock<AdminService>();
     configService = mock<AppConfigService>();
     logger = mock<PinoLogger>();
+    syncRunnerService = mock<SyncRunnerService>();
 
     Object.defineProperty(configService, "igdbWebhookSecret", {
       configurable: true,
@@ -42,6 +45,10 @@ describe("AdminController (integration)", () => {
         {
           provide: PinoLogger,
           useValue: logger,
+        },
+        {
+          provide: SyncRunnerService,
+          useValue: syncRunnerService,
         },
       ],
     }).compile();
@@ -81,13 +88,13 @@ describe("AdminController (integration)", () => {
       action: "update",
       active: true,
       category: 8,
-      createdAt: "2026-03-04T00:00:00.000Z",
+      createdAt: new Date("2026-03-04T00:00:00.000Z").getTime(),
       id: 42,
       managedByService: true,
       resource: "games",
       subCategory: 2,
       supportedByService: true,
-      updatedAt: "2026-03-04T00:00:00.000Z",
+      updatedAt: new Date("2026-03-04T00:00:00.000Z").getTime(),
       url: "https://hooks.example.com/webhooks/games/update",
     });
 
@@ -105,7 +112,7 @@ describe("AdminController (integration)", () => {
   });
 
   it("should delete webhooks by id", async () => {
-    void adminService.deleteWebhook.mockResolvedValue({ id: 42 });
+    void adminService.deleteWebhook.mockResolvedValue({ success: true });
 
     await request(getServer()).delete("/admin/webhooks/42").set("x-secret", "webhook-secret").expect(200);
 
@@ -138,7 +145,7 @@ describe("AdminController (integration)", () => {
   });
 
   it("should sync webhooks", async () => {
-    void adminService.syncWebhooks.mockResolvedValue({
+    void syncRunnerService.runManagedSync.mockResolvedValue({
       created: [],
       deduplicated: [],
       desiredCount: 3,
@@ -149,7 +156,13 @@ describe("AdminController (integration)", () => {
 
     await request(getServer()).post("/admin/webhooks/sync").set("x-secret", "webhook-secret").expect(201);
 
-    expect(adminService.syncWebhooks).toHaveBeenCalledOnce();
+    expect(syncRunnerService.runManagedSync).toHaveBeenCalledWith("manual");
+  });
+
+  it("should return 202 when manual sync is skipped due to lock contention", async () => {
+    void syncRunnerService.runManagedSync.mockResolvedValue(null);
+
+    await request(getServer()).post("/admin/webhooks/sync").set("x-secret", "webhook-secret").expect(202);
   });
 
   it("should reject purge when confirm is missing", async () => {
@@ -173,3 +186,5 @@ describe("AdminController (integration)", () => {
     expect(adminService.purgeWebhooks).toHaveBeenCalledWith(true);
   });
 });
+
+

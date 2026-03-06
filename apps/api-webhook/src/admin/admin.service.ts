@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-} from "@nestjs/common";
+import { BadRequestException, Injectable } from "@nestjs/common";
 
 import { PinoLogger } from "@stakload/nestjs-logging";
 
@@ -13,6 +9,7 @@ import type { WebhookAction, WebhookResource } from "../webhooks/types/igdb-webh
 import { DESIRED_MANAGED_WEBHOOK_IDENTITIES } from "./constants/desired-managed-webhook-identities.const";
 import { DeleteWebhookResultDto } from "./dto/delete-webhook-result.dto";
 import { PurgeWebhooksResultDto } from "./dto/purge-webhooks-result.dto";
+import { SuccessResponseDto } from "./dto/success-response.dto";
 import { SyncWebhooksResultDto } from "./dto/sync-webhooks-result.dto";
 import { TestWebhookResultDto } from "./dto/test-webhook-result.dto";
 import { WebhookOperationErrorDto } from "./dto/webhook-operation-error.dto";
@@ -53,18 +50,12 @@ export class AdminService {
     }
   }
 
-  async deleteWebhook(webhookId: number): Promise<DeleteWebhookResultDto> {
+  async deleteWebhook(webhookId: number): Promise<SuccessResponseDto> {
     this.logger.info({ webhookId }, "Deleting IGDB webhook");
 
     try {
-      const response = await this.igdbApiService.deleteWebhook(webhookId);
-      const id = Number(response.id);
-
-      if (Number.isInteger(id) === false) {
-        throw new InternalServerErrorException("IGDB delete webhook response did not include a valid id");
-      }
-
-      return { id };
+      await this.igdbApiService.deleteWebhook(webhookId);
+      return { success: true };
     } catch (error) {
       throw mapIgdbApiError(error);
     }
@@ -103,8 +94,8 @@ export class AdminService {
         const managedIdentity = parseManagedWebhookUrl(webhook.url, this.configService.publicWebhookBaseUrl);
 
         try {
-          const result = await this.deleteWebhook(webhook.id);
-          deleted.push(result);
+          await this.deleteWebhook(webhook.id);
+          deleted.push({ id: webhook.id });
         } catch (error) {
           errors.push(
             buildWebhookOperationError({
@@ -180,8 +171,8 @@ export class AdminService {
 
         for (const duplicate of existing.slice(1)) {
           try {
-            const result = await this.deleteWebhook(duplicate.id);
-            deduplicated.push(result);
+            await this.deleteWebhook(duplicate.id);
+            deduplicated.push({ id: duplicate.id });
           } catch (error) {
             errors.push(
               buildWebhookOperationError({
