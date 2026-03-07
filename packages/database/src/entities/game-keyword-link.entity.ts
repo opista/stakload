@@ -4,11 +4,11 @@ import { Entity, Index, PrimaryColumn } from "typeorm";
  * Join table linking games to keywords.
  */
 @Entity("game_keywords")
-@Index(["keywordId"])
-export class GameKeywordEntity {
+@Index(["keyword"])
+export class GameKeywordLinkEntity {
   @PrimaryColumn({ type: "integer" })
-  gameId!: number;
+  game!: number;
 
   @PrimaryColumn({ type: "integer" })
-  keywordId!: number;
+  keyword!: number;
 }

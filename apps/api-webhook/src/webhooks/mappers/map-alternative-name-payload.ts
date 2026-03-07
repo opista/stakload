@@ -6,7 +6,7 @@ import { readDate, readId, readOptionalId, readString } from "./shared/mapper-ut
 export const mapAlternativeNamePayload = (payload: AlternativeNameWebhookPayload): Partial<AlternativeNameEntity> => ({
   checksum: readString(payload.checksum),
   comment: readString(payload.comment),
-  gameId: readOptionalId(payload.game),
+  game: readOptionalId(payload.game),
   igdbId: readId(payload.id) ?? 0,
   name: readString(payload.name) ?? "",
   sourceUpdatedAt: readDate(payload.updated_at),

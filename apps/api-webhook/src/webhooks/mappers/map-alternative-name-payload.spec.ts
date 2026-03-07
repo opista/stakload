@@ -15,7 +15,7 @@ describe("mapAlternativeNamePayload", () => {
     expect(mapAlternativeNamePayload(payload as never)).toEqual({
       checksum: "sum-text",
       comment: "c-text",
-      gameId: "4-id",
+      game: "4-id",
       igdbId: 71,
       name: "alt-text",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),

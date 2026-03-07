@@ -23,11 +23,11 @@ describe("mapWebsitePayload", () => {
 
     expect(mapWebsitePayload(payload as never)).toEqual({
       checksum: "checksum-text",
-      gameId: "2-id",
+      game: "2-id",
       igdbId: 66,
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),
       trusted: true,
-      typeId: "4-id",
+      type: "4-id",
       url: "url-text",
     });
     expect(readString).toHaveBeenCalledTimes(2);

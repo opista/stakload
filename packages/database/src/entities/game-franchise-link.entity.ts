@@ -4,11 +4,11 @@ import { Entity, Index, PrimaryColumn } from "typeorm";
  * Join table linking games to franchises.
  */
 @Entity("game_franchises")
-@Index(["franchiseId"])
-export class GameFranchiseEntity {
+@Index(["franchise"])
+export class GameFranchiseLinkEntity {
   @PrimaryColumn({ type: "integer" })
-  franchiseId!: number;
+  franchise!: number;
 
   @PrimaryColumn({ type: "integer" })
-  gameId!: number;
+  game!: number;
 }

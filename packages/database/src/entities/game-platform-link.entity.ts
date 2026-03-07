@@ -4,11 +4,11 @@ import { Entity, Index, PrimaryColumn } from "typeorm";
  * Join table linking games to platforms.
  */
 @Entity("game_platforms")
-@Index(["platformId"])
-export class GamePlatformEntity {
+@Index(["platform"])
+export class GamePlatformLinkEntity {
   @PrimaryColumn({ type: "integer" })
-  gameId!: number;
+  game!: number;
 
   @PrimaryColumn({ type: "integer" })
-  platformId!: number;
+  platform!: number;
 }

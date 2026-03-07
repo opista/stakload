@@ -6,9 +6,9 @@ import { readDate, readId, readIds, readOptionalId, readString } from "./shared/
 export const mapAgeRatingPayload = (payload: AgeRatingWebhookPayload): Partial<AgeRatingEntity> => ({
   checksum: readString(payload.checksum),
   igdbId: readId(payload.id) ?? 0,
-  organizationId: readOptionalId(payload.organization),
-  ratingCategoryId: readOptionalId(payload.rating_category),
-  ratingContentDescriptionIds: readIds(payload.rating_content_descriptions),
+  organization: readOptionalId(payload.organization),
+  ratingCategory: readOptionalId(payload.rating_category),
+  ratingContentDescriptions: readIds(payload.rating_content_descriptions),
   ratingCoverUrl: readString(payload.rating_cover_url),
   sourceUpdatedAt: readDate(payload.updated_at),
   synopsis: readString(payload.synopsis),

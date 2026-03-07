@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { SluggedNamedEntity } from "./base.entity";
 
 /**
- * Franchise groupings for related games.
+ * Franchise.
  */
 @Entity("franchises")
 export class FranchiseEntity extends SluggedNamedEntity {}

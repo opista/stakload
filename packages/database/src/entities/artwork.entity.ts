@@ -3,13 +3,15 @@ import { Column, Entity } from "typeorm";
 import { ImageAssetEntity } from "./base.entity";
 
 /**
- * Artwork media assets associated with games.
+ * Artwork.
  */
 @Entity("artworks")
 export class ArtworkEntity extends ImageAssetEntity {
   @Column({ nullable: true, type: "integer" })
-  artworkTypeId?: number | null;
+  /** The type of artwork */
+  artworkType?: number | null;
 
   @Column({ type: "integer" })
-  gameId!: number;
+  /** The game this artwork is associated with */
+  game!: number;
 }

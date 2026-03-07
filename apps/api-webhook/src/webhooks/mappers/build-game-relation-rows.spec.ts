@@ -19,14 +19,14 @@ describe("buildGameRelationRows", () => {
     };
 
     expect(buildGameRelationRows(payload as never, 99)).toEqual({
-      collections: [{ collectionId: 1, gameId: 99 }],
-      franchises: [{ franchiseId: 2, gameId: 99 }],
-      genres: [{ gameId: 99, genreId: 4 }],
-      keywords: [{ gameId: 99, keywordId: 5 }],
-      modes: [{ gameId: 99, modeId: 3 }],
-      platforms: [{ gameId: 99, platformId: 6 }],
-      playerPerspectives: [{ gameId: 99, playerPerspectiveId: 7 }],
-      themes: [{ gameId: 99, themeId: 8 }],
+      collections: [{ collection: 1, game: 99 }],
+      franchises: [{ franchise: 2, game: 99 }],
+      genres: [{ game: 99, genre: 4 }],
+      keywords: [{ game: 99, keyword: 5 }],
+      modes: [{ game: 99, gameMode: 3 }],
+      platforms: [{ game: 99, platform: 6 }],
+      playerPerspectives: [{ game: 99, playerPerspective: 7 }],
+      themes: [{ game: 99, theme: 8 }],
     });
     expect(readIds).toHaveBeenCalledTimes(8);
   });

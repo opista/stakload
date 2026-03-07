@@ -4,11 +4,11 @@ import { Entity, Index, PrimaryColumn } from "typeorm";
  * Join table linking games to player perspectives.
  */
 @Entity("game_player_perspectives")
-@Index(["playerPerspectiveId"])
-export class GamePlayerPerspectiveEntity {
+@Index(["playerPerspective"])
+export class GamePlayerPerspectiveLinkEntity {
   @PrimaryColumn({ type: "integer" })
-  gameId!: number;
+  game!: number;
 
   @PrimaryColumn({ type: "integer" })
-  playerPerspectiveId!: number;
+  playerPerspective!: number;
 }

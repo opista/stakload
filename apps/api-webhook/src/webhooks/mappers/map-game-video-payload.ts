@@ -5,7 +5,7 @@ import { readDate, readId, readOptionalId, readString } from "./shared/mapper-ut
 
 export const mapGameVideoPayload = (payload: GameVideoWebhookPayload): Partial<GameVideoEntity> => ({
   checksum: readString(payload.checksum),
-  gameId: readOptionalId(payload.game),
+  game: readOptionalId(payload.game),
   igdbId: readId(payload.id) ?? 0,
   name: readString(payload.name),
   sourceUpdatedAt: readDate(payload.updated_at),

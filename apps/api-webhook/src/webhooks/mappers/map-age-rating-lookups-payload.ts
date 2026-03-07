@@ -20,7 +20,7 @@ export const mapAgeRatingCategoryPayload = (
 ): Partial<AgeRatingCategoryEntity> => ({
   checksum: readString(payload.checksum),
   igdbId: readId(payload.id) ?? 0,
-  organizationId: readOptionalId(payload.organization),
+  organization: readOptionalId(payload.organization),
   rating: readString(payload.rating),
   sourceUpdatedAt: readDate(payload.updated_at),
 });
@@ -31,6 +31,6 @@ export const mapAgeRatingContentDescriptionV2Payload = (
   checksum: readString(payload.checksum),
   description: readString(payload.description),
   igdbId: readId(payload.id) ?? 0,
-  organizationId: readOptionalId(payload.organization),
+  organization: readOptionalId(payload.organization),
   sourceUpdatedAt: readDate(payload.updated_at),
 });

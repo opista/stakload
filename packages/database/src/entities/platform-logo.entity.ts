@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { ImageAssetEntity } from "./base.entity";
 
 /**
- * Logo media assets for platforms.
+ * Platform Logo.
  */
 @Entity("platform_logos")
 export class PlatformLogoEntity extends ImageAssetEntity {}

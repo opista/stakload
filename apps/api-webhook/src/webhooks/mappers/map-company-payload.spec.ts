@@ -28,17 +28,17 @@ describe("mapCompanyPayload", () => {
 
     expect(mapCompanyPayload(payload as never)).toEqual({
       base: "slugged",
-      changeDateFormatId: "1-id",
-      changedCompanyId: "2-id",
+      changeDateFormat: "1-id",
+      changedCompany: "2-id",
       country: 44,
       description: "desc-text",
-      developedGameIds: [101, 102],
-      logoId: "5-id",
-      parentId: "6-id",
-      publishedGameIds: [101, 102],
+      developed: [101, 102],
+      logo: "5-id",
+      parent: "6-id",
+      published: [101, 102],
       startDate: new Date("2024-01-01T00:00:00.000Z"),
-      startDateFormatId: "7-id",
-      statusId: "8-id",
+      startDateFormat: "7-id",
+      status: "8-id",
     });
     expect(mapBaseSlugged).toHaveBeenCalled();
     expect(readDate).toHaveBeenCalledWith(1_704_067_200);

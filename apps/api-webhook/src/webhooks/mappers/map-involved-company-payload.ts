@@ -5,9 +5,9 @@ import { readBoolean, readDate, readId, readString } from "./shared/mapper-utils
 
 export const mapInvolvedCompanyPayload = (payload: InvolvedCompanyWebhookPayload): Partial<InvolvedCompanyEntity> => ({
   checksum: readString(payload.checksum),
-  companyId: readId(payload.company) ?? 0,
+  company: readId(payload.company) ?? 0,
   developer: readBoolean(payload.developer),
-  gameId: readId(payload.game) ?? 0,
+  game: readId(payload.game) ?? 0,
   igdbId: readId(payload.id) ?? 0,
   porting: readBoolean(payload.porting),
   publisher: readBoolean(payload.publisher),

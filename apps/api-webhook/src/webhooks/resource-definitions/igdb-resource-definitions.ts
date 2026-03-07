@@ -17,20 +17,20 @@ import {
   ExternalGameEntity,
   ExternalGameSourceEntity,
   FranchiseEntity,
-  GameCollectionEntity,
+  GameCollectionLinkEntity,
   GameEngineEntity,
   GameEngineLogoEntity,
   GameEntity,
-  GameFranchiseEntity,
-  GameGenreEntity,
-  GameKeywordEntity,
+  GameFranchiseLinkEntity,
+  GameGenreLinkEntity,
+  GameKeywordLinkEntity,
   GameModeEntity,
-  GameGameModeEntity,
+  GameGameModeLinkEntity,
   GameReleaseFormatEntity,
   GameStatusEntity,
-  GamePlatformEntity,
-  GamePlayerPerspectiveEntity,
-  GameThemeEntity,
+  GamePlatformLinkEntity,
+  GamePlayerPerspectiveLinkEntity,
+  GameThemeLinkEntity,
   GameTypeEntity,
   GameVideoEntity,
   GenreEntity,
@@ -113,45 +113,45 @@ const replaceGameRelations = async (
 ): Promise<void> => {
   const relations = buildGameRelationRows(payload, rootId);
 
-  await manager.delete(GameCollectionEntity, { gameId: rootId });
-  await manager.delete(GameFranchiseEntity, { gameId: rootId });
-  await manager.delete(GameGenreEntity, { gameId: rootId });
-  await manager.delete(GameKeywordEntity, { gameId: rootId });
-  await manager.delete(GameGameModeEntity, { gameId: rootId });
-  await manager.delete(GamePlatformEntity, { gameId: rootId });
-  await manager.delete(GamePlayerPerspectiveEntity, { gameId: rootId });
-  await manager.delete(GameThemeEntity, { gameId: rootId });
+  await manager.delete(GameCollectionLinkEntity, { game: rootId });
+  await manager.delete(GameFranchiseLinkEntity, { game: rootId });
+  await manager.delete(GameGenreLinkEntity, { game: rootId });
+  await manager.delete(GameKeywordLinkEntity, { game: rootId });
+  await manager.delete(GameGameModeLinkEntity, { game: rootId });
+  await manager.delete(GamePlatformLinkEntity, { game: rootId });
+  await manager.delete(GamePlayerPerspectiveLinkEntity, { game: rootId });
+  await manager.delete(GameThemeLinkEntity, { game: rootId });
 
   if (relations.collections.length > 0) {
-    await manager.insert(GameCollectionEntity, relations.collections);
+    await manager.insert(GameCollectionLinkEntity, relations.collections);
   }
 
   if (relations.franchises.length > 0) {
-    await manager.insert(GameFranchiseEntity, relations.franchises);
+    await manager.insert(GameFranchiseLinkEntity, relations.franchises);
   }
 
   if (relations.genres.length > 0) {
-    await manager.insert(GameGenreEntity, relations.genres);
+    await manager.insert(GameGenreLinkEntity, relations.genres);
   }
 
   if (relations.keywords.length > 0) {
-    await manager.insert(GameKeywordEntity, relations.keywords);
+    await manager.insert(GameKeywordLinkEntity, relations.keywords);
   }
 
   if (relations.modes.length > 0) {
-    await manager.insert(GameGameModeEntity, relations.modes);
+    await manager.insert(GameGameModeLinkEntity, relations.modes);
   }
 
   if (relations.platforms.length > 0) {
-    await manager.insert(GamePlatformEntity, relations.platforms);
+    await manager.insert(GamePlatformLinkEntity, relations.platforms);
   }
 
   if (relations.playerPerspectives.length > 0) {
-    await manager.insert(GamePlayerPerspectiveEntity, relations.playerPerspectives);
+    await manager.insert(GamePlayerPerspectiveLinkEntity, relations.playerPerspectives);
   }
 
   if (relations.themes.length > 0) {
-    await manager.insert(GameThemeEntity, relations.themes);
+    await manager.insert(GameThemeLinkEntity, relations.themes);
   }
 };
 
@@ -450,4 +450,3 @@ export const RESOURCE_DEFINITION_MAP: ReadonlyMap<WebhookResource, ResourceDefin
 );
 
 export const SUPPORTED_WEBHOOK_RESOURCES = Object.freeze([...RESOURCE_DEFINITION_MAP.keys()]);
-

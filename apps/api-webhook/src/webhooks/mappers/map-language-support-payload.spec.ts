@@ -10,14 +10,21 @@ import { readDate, readId, readOptionalId, readString } from "./shared/mapper-ut
 
 describe("mapLanguageSupportPayload", () => {
   it("should map language support payloads", () => {
-    const payload = { checksum: "sum", game: 3, id: 81, language: 4, language_support_type: 5, updated_at: 1_704_067_200 };
+    const payload = {
+      checksum: "sum",
+      game: 3,
+      id: 81,
+      language: 4,
+      language_support_type: 5,
+      updated_at: 1_704_067_200,
+    };
 
     expect(mapLanguageSupportPayload(payload as never)).toEqual({
       checksum: "sum-text",
-      gameId: "3-id",
+      game: "3-id",
       igdbId: 81,
-      languageId: "4-id",
-      languageSupportTypeId: "5-id",
+      language: "4-id",
+      languageSupportType: "5-id",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),
     });
     expect(readString).toHaveBeenCalledWith("sum");
