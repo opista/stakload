@@ -12,14 +12,6 @@ export class AppConfigService {
     this.logger.setContext(this.constructor.name);
   }
 
-  get logLevel(): string {
-    return this.configService.getOrThrow<string>("LOG_LEVEL");
-  }
-
-  get nodeEnv(): string {
-    return this.configService.getOrThrow<string>("NODE_ENV");
-  }
-
   get redisHost(): string {
     return this.configService.getOrThrow<string>("REDIS_HOST");
   }
@@ -30,9 +22,5 @@ export class AppConfigService {
 
   get redisPort(): number {
     return this.configService.getOrThrow<number>("REDIS_PORT");
-  }
-
-  get workerBuilderConcurrency(): number {
-    return this.configService.getOrThrow<number>("WORKER_BUILDER_CONCURRENCY");
   }
 }

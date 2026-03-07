@@ -5,10 +5,8 @@ import { AppConfigModule } from "./config/app-config.module";
 import { AppConfigService } from "./config/app-config.service";
 import { GAME_BUILD_QUEUE_NAME } from "./constants";
 import { GameBuildProcessor } from "./game-build.processor";
-import { GameBuildService } from "./game-build.service";
 
 @Module({
-  exports: [GameBuildService],
   imports: [
     AppConfigModule,
     BullModule.forRootAsync({
@@ -25,6 +23,6 @@ import { GameBuildService } from "./game-build.service";
       name: GAME_BUILD_QUEUE_NAME,
     }),
   ],
-  providers: [GameBuildProcessor, GameBuildService],
+  providers: [GameBuildProcessor],
 })
 export class AppModule {}
