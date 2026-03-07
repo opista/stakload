@@ -1,5 +1,3 @@
-import type { EntityManager } from "typeorm";
-
 import {
   AgeRatingCategoryEntity,
   AgeRatingContentDescriptionV2Entity,
@@ -17,21 +15,13 @@ import {
   ExternalGameEntity,
   ExternalGameSourceEntity,
   FranchiseEntity,
-  GameCollectionLinkEntity,
   GameEngineEntity,
   GameEngineLogoEntity,
   GameEntity,
-  GameFranchiseLinkEntity,
-  GameGenreLinkEntity,
-  GameKeywordLinkEntity,
   GameModeEntity,
-  GameGameModeLinkEntity,
   GameReleaseFormatEntity,
   GameStatusEntity,
   GameTimeToBeatEntity,
-  GamePlatformLinkEntity,
-  GamePlayerPerspectiveLinkEntity,
-  GameThemeLinkEntity,
   GameTypeEntity,
   GameVideoEntity,
   GenreEntity,
@@ -55,7 +45,6 @@ import {
 } from "@stakload/database";
 
 import {
-  buildGameRelationRows,
   mapAgeRatingCategoryPayload,
   mapAgeRatingContentDescriptionV2Payload,
   mapAgeRatingOrganizationPayload,
@@ -100,62 +89,7 @@ import {
   mapWebsitePayload,
   mapWebsiteTypePayload,
 } from "../mappers";
-import type {
-  AggregateResourceDefinition,
-  GameWebhookPayload,
-  ResourceDefinition,
-  SimpleResourceDefinition,
-  WebhookResource,
-} from "../types/igdb-webhook.types";
-
-const replaceGameRelations = async (
-  manager: EntityManager,
-  payload: GameWebhookPayload,
-  rootId: number,
-): Promise<void> => {
-  const relations = buildGameRelationRows(payload, rootId);
-
-  await manager.delete(GameCollectionLinkEntity, { game: rootId });
-  await manager.delete(GameFranchiseLinkEntity, { game: rootId });
-  await manager.delete(GameGenreLinkEntity, { game: rootId });
-  await manager.delete(GameKeywordLinkEntity, { game: rootId });
-  await manager.delete(GameGameModeLinkEntity, { game: rootId });
-  await manager.delete(GamePlatformLinkEntity, { game: rootId });
-  await manager.delete(GamePlayerPerspectiveLinkEntity, { game: rootId });
-  await manager.delete(GameThemeLinkEntity, { game: rootId });
-
-  if (relations.collections.length > 0) {
-    await manager.insert(GameCollectionLinkEntity, relations.collections);
-  }
-
-  if (relations.franchises.length > 0) {
-    await manager.insert(GameFranchiseLinkEntity, relations.franchises);
-  }
-
-  if (relations.genres.length > 0) {
-    await manager.insert(GameGenreLinkEntity, relations.genres);
-  }
-
-  if (relations.keywords.length > 0) {
-    await manager.insert(GameKeywordLinkEntity, relations.keywords);
-  }
-
-  if (relations.modes.length > 0) {
-    await manager.insert(GameGameModeLinkEntity, relations.modes);
-  }
-
-  if (relations.platforms.length > 0) {
-    await manager.insert(GamePlatformLinkEntity, relations.platforms);
-  }
-
-  if (relations.playerPerspectives.length > 0) {
-    await manager.insert(GamePlayerPerspectiveLinkEntity, relations.playerPerspectives);
-  }
-
-  if (relations.themes.length > 0) {
-    await manager.insert(GameThemeLinkEntity, relations.themes);
-  }
-};
+import type { ResourceDefinition, SimpleResourceDefinition, WebhookResource } from "../types/igdb-webhook.types";
 
 const simpleDefinitions = [
   {
@@ -300,6 +234,13 @@ const simpleDefinitions = [
     staleProtection: "best_effort",
   },
   {
+    entity: GameEntity,
+    kind: "simple",
+    map: mapGamePayload,
+    resource: "games",
+    staleProtection: "stale_protected",
+  },
+  {
     entity: GameTimeToBeatEntity,
     kind: "simple",
     map: mapGameTimeToBeatPayload,
@@ -435,22 +376,7 @@ const simpleDefinitions = [
     staleProtection: "best_effort",
   },
 ] satisfies SimpleResourceDefinition[];
-
-const aggregateDefinitions = [
-  {
-    entity: GameEntity,
-    kind: "aggregate",
-    map: mapGamePayload,
-    replaceRelations: async ({ manager, payload, rootId }) => replaceGameRelations(manager, payload, rootId),
-    resource: "games",
-    staleProtection: "stale_protected",
-  },
-] satisfies AggregateResourceDefinition<GameWebhookPayload, GameEntity>[];
-
-export const SUPPORTED_RESOURCE_DEFINITIONS: readonly ResourceDefinition[] = [
-  ...simpleDefinitions,
-  ...aggregateDefinitions,
-];
+export const SUPPORTED_RESOURCE_DEFINITIONS: readonly ResourceDefinition[] = [...simpleDefinitions];
 export const RESOURCE_DEFINITION_MAP: ReadonlyMap<WebhookResource, ResourceDefinition> = new Map(
   SUPPORTED_RESOURCE_DEFINITIONS.map((definition): [WebhookResource, ResourceDefinition] => [
     definition.resource,

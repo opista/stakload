@@ -1,4 +1,3 @@
-export * from "./build-game-relation-rows";
 export * from "./map-age-rating-lookups-payload";
 export * from "./map-age-rating-payload";
 export * from "./map-alternative-name-payload";
