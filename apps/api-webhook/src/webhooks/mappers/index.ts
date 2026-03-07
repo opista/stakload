@@ -19,6 +19,7 @@ export * from "./map-game-mode-payload";
 export * from "./map-game-payload";
 export * from "./map-game-release-format-payload";
 export * from "./map-game-status-payload";
+export * from "./map-game-time-to-beat-payload";
 export * from "./map-game-type-payload";
 export * from "./map-game-video-payload";
 export * from "./map-genre-payload";

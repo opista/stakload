@@ -28,6 +28,7 @@ export * from "./game-player-perspective-link.entity";
 export * from "./game-release-format.entity";
 export * from "./game-status.entity";
 export * from "./game-theme-link.entity";
+export * from "./game-time-to-beat.entity";
 export * from "./game-type.entity";
 export * from "./game-video.entity";
 export * from "./game.entity";
