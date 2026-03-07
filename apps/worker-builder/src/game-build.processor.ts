@@ -1,7 +1,7 @@
 import { Processor, WorkerHost, OnWorkerEvent } from "@nestjs/bullmq";
 import { Job } from "bullmq";
 
-import { Logger } from "@stakload/nestjs-logging";
+import { PinoLogger } from "@stakload/nestjs-logging";
 
 import { GAME_BUILD_QUEUE_NAME } from "./constants";
 
@@ -15,26 +15,27 @@ export interface GameBuildJobPayload {
     : 4,
 })
 export class GameBuildProcessor extends WorkerHost {
-  constructor(private readonly logger: Logger) {
+  constructor(private readonly logger: PinoLogger) {
     super();
+    this.logger.setContext(this.constructor.name);
   }
 
   @OnWorkerEvent("completed")
   onCompleted(job: Job<GameBuildJobPayload, void, string>): void {
-    this.logger.log(`Successfully completed build job for gameId: ${job.data.gameId}`, GameBuildProcessor.name);
+    this.logger.info({ gameId: job.data.gameId }, "Successfully completed build job");
   }
 
   @OnWorkerEvent("failed")
   onFailed(job: Job<GameBuildJobPayload, void, string> | undefined, error: Error): void {
     if (job) {
-      this.logger.error(`Failed to build gameId: ${job.data.gameId}. Error: ${error.message}`, error.stack, GameBuildProcessor.name);
+      this.logger.error({ err: error, gameId: job.data.gameId }, "Failed to build game");
     } else {
-      this.logger.error(`Job failed: ${error.message}`, error.stack, GameBuildProcessor.name);
+      this.logger.error({ err: error }, "Job failed");
     }
   }
 
   async process(job: Job<GameBuildJobPayload, void, string>): Promise<void> {
-    this.logger.log(`Processing build job for gameId: ${job.data.gameId}`, GameBuildProcessor.name);
+    this.logger.info({ gameId: job.data.gameId }, "Processing build job");
     // Placeholder for actual game build logic
   }
 }

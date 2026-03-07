@@ -5,10 +5,7 @@ import { base, ignores, node } from "@stakload/eslint-config";
 const basePath = import.meta.dirname;
 
 export default defineConfig(
-  ...ignores({
-    basePath,
-    patterns: ["coverage/**"],
-  }),
+  ...ignores({ basePath }),
   ...base({
     basePath,
     files: ["src/**/*.ts", "test/**/*.ts", "vitest.config.ts"],
