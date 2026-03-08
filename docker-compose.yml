@@ -31,6 +31,7 @@ services:
       retries: 10
 
   api-webhook:
+    image: stakload/api-webhook
     build:
       context: .
       dockerfile: apps/api-webhook/Dockerfile
@@ -52,6 +53,7 @@ services:
       - "${API_WEBHOOK_PORT:-3001}:3001"
 
   worker-builder:
+    image: stakload/worker-builder
     build:
       context: .
       dockerfile: apps/worker-builder/Dockerfile
