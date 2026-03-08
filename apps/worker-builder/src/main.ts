@@ -10,9 +10,9 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.createApplicationContext(AppModule, {
     bufferLogs: true,
   });
-  app.useLogger(app.get<Logger>(Logger));
+  app.useLogger(app.get(Logger));
 
-  const logger = await app.resolve<PinoLogger>(PinoLogger);
+  const logger = await app.resolve(PinoLogger);
 
   logger.setContext("Bootstrap");
   logger.info("worker-builder started");
