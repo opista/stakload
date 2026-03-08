@@ -38,7 +38,8 @@ docker_compose('./docker-compose.yml')
 docker_build(
     'stakload/api-webhook',
     context='.',
-    dockerfile='apps/api-webhook/Dockerfile.dev',
+    dockerfile='docker/Dockerfile.nest.dev',
+    build_args={'APP_NAME': 'api-webhook'},
     # `only` limits both the Docker build context sent to the
     # daemon AND the set of paths Tilt watches for changes.
     # Anything outside this list is invisible to this resource.
@@ -104,7 +105,8 @@ docker_build(
 docker_build(
     'stakload/worker-builder',
     context='.',
-    dockerfile='apps/worker-builder/Dockerfile.dev',
+    dockerfile='docker/Dockerfile.nest.dev',
+    build_args={'APP_NAME': 'worker-builder'},
     only=[
         'package.json',
         'pnpm-lock.yaml',
