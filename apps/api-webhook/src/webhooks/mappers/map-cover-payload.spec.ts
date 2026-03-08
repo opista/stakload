@@ -10,7 +10,7 @@ describe("mapCoverPayload", () => {
   it("should map cover payloads", () => {
     expect(mapCoverPayload({ game: { id: 77 } } as never)).toEqual({
       base: "image",
-      gameId: 77,
+      game: 77,
     });
     expect(mapBaseImageAsset).toHaveBeenCalled();
     expect(readId).toHaveBeenCalledWith({ id: 77 });

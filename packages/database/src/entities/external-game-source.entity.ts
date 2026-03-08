@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { NamedEntity } from "./base.entity";
 
 /**
- * Source definitions for external game identifiers.
+ * External Game Source.
  */
 @Entity("external_game_sources")
 export class ExternalGameSourceEntity extends NamedEntity {}

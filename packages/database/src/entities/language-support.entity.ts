@@ -3,19 +3,23 @@ import { Column, Entity } from "typeorm";
 import { IgdbEntity } from "./base.entity";
 
 /**
- * Per-game language support capability records.
+ * Language Support.
  */
 @Entity("language_supports")
 export class LanguageSupportEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })
+  /** Hash of the object */
   checksum?: string | null;
 
   @Column({ nullable: true, type: "integer" })
-  gameId?: number | null;
+  /** The game this language support entry is associated with */
+  game?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  languageId?: number | null;
+  /** The language supported by the game */
+  language?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  languageSupportTypeId?: number | null;
+  /** The type of language support */
+  languageSupportType?: number | null;
 }

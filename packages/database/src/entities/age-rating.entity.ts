@@ -3,25 +3,31 @@ import { Column, Entity } from "typeorm";
 import { IgdbEntity } from "./base.entity";
 
 /**
- * Age ratings assigned to games by rating organisations.
+ * Age Rating according to various rating organisations.
  */
 @Entity("age_ratings")
 export class AgeRatingEntity extends IgdbEntity {
   @Column({ nullable: true, type: "text" })
+  /** Hash of the object */
   checksum?: string | null;
 
   @Column({ nullable: true, type: "integer" })
-  organizationId?: number | null;
+  /** The organisation that issued this rating */
+  organization?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  ratingCategoryId?: number | null;
+  /** The category of this rating */
+  ratingCategory?: number | null;
 
   @Column({ nullable: true, type: "simple-json" })
-  ratingContentDescriptionIds?: number[] | null;
+  /** The rating content descriptions */
+  ratingContentDescriptions?: number[] | null;
 
   @Column({ nullable: true, type: "text" })
+  /** The url for the image of a age rating */
   ratingCoverUrl?: string | null;
 
   @Column({ nullable: true, type: "text" })
+  /** A free text motivating a rating */
   synopsis?: string | null;
 }

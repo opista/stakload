@@ -25,9 +25,9 @@ describe("mapAgeRatingPayload", () => {
     expect(mapAgeRatingPayload(payload as never)).toEqual({
       checksum: "sum-text",
       igdbId: 91,
-      organizationId: "7-id",
-      ratingCategoryId: "8-id",
-      ratingContentDescriptionIds: [11, 12],
+      organization: "7-id",
+      ratingCategory: "8-id",
+      ratingContentDescriptions: [11, 12],
       ratingCoverUrl: "cover-text",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),
       synopsis: "text-text",

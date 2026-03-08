@@ -10,9 +10,9 @@ import { mapBaseImageAsset, readId, readOptionalId } from "./shared/mapper-utils
 describe("mapArtworkPayload", () => {
   it("should map artwork payloads", () => {
     expect(mapArtworkPayload({ artwork_type: 12, game: { id: 55 } } as never)).toEqual({
-      artworkTypeId: 12,
+      artworkType: 12,
       base: "image",
-      gameId: 55,
+      game: 55,
     });
     expect(mapBaseImageAsset).toHaveBeenCalled();
     expect(readOptionalId).toHaveBeenCalledWith(12);

@@ -24,6 +24,7 @@ import type {
   GameMode,
   GameReleaseFormat,
   GameStatus,
+  GameTimeToBeat,
   GameType,
   GameVideo,
   Genre,
@@ -79,6 +80,7 @@ export type FranchiseWebhookPayload = IgdbWebhookPayload<Franchise>;
 export type GameModeWebhookPayload = IgdbWebhookPayload<GameMode>;
 export type GameReleaseFormatWebhookPayload = IgdbWebhookPayload<GameReleaseFormat>;
 export type GameStatusWebhookPayload = IgdbWebhookPayload<GameStatus>;
+export type GameTimeToBeatWebhookPayload = IgdbWebhookPayload<GameTimeToBeat>;
 export type GameTypeWebhookPayload = IgdbWebhookPayload<GameType>;
 export type GameVideoWebhookPayload = IgdbWebhookPayload<GameVideo>;
 export type GameWebhookPayload = IgdbWebhookPayload<Game>;
@@ -124,6 +126,7 @@ export type RawIgdbPayload =
   | GameModeWebhookPayload
   | GameReleaseFormatWebhookPayload
   | GameStatusWebhookPayload
+  | GameTimeToBeatWebhookPayload
   | GameTypeWebhookPayload
   | GameVideoWebhookPayload
   | GameWebhookPayload

@@ -5,9 +5,9 @@ import { readDate, readId, readOptionalId, readString } from "./shared/mapper-ut
 
 export const mapLanguageSupportPayload = (payload: LanguageSupportWebhookPayload): Partial<LanguageSupportEntity> => ({
   checksum: readString(payload.checksum),
-  gameId: readOptionalId(payload.game),
+  game: readOptionalId(payload.game),
   igdbId: readId(payload.id) ?? 0,
-  languageId: readOptionalId(payload.language),
-  languageSupportTypeId: readOptionalId(payload.language_support_type),
+  language: readOptionalId(payload.language),
+  languageSupportType: readOptionalId(payload.language_support_type),
   sourceUpdatedAt: readDate(payload.updated_at),
 });

@@ -10,7 +10,7 @@ describe("mapScreenshotPayload", () => {
   it("should map screenshot payloads", () => {
     expect(mapScreenshotPayload({ game: { id: 21 } } as never)).toEqual({
       base: "image",
-      gameId: 21,
+      game: 21,
     });
     expect(mapBaseImageAsset).toHaveBeenCalled();
     expect(readId).toHaveBeenCalledWith({ id: 21 });
