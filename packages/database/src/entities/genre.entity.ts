@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { SluggedNamedEntity } from "./base.entity";
 
 /**
- * Genre.
+ * Genre definitions used to classify games.
  */
 @Entity("genres")
 export class GenreEntity extends SluggedNamedEntity {}

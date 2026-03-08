@@ -5,5 +5,5 @@ import { mapBaseImageAsset, readId } from "./shared/mapper-utils";
 
 export const mapCoverPayload = (payload: CoverWebhookPayload): Partial<CoverEntity> => ({
   ...mapBaseImageAsset(payload),
-  game: readId(payload.game) ?? 0,
+  gameId: readId(payload.game) ?? 0,
 });

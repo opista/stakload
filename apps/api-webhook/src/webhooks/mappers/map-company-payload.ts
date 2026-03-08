@@ -5,15 +5,15 @@ import { mapBaseSlugged, readDate, readIds, readNumber, readOptionalId, readStri
 
 export const mapCompanyPayload = (payload: CompanyWebhookPayload): Partial<CompanyEntity> => ({
   ...mapBaseSlugged(payload),
-  changeDateFormat: readOptionalId(payload.change_date_format),
-  changedCompany: readOptionalId(payload.changed_company),
+  changeDateFormatId: readOptionalId(payload.change_date_format),
+  changedCompanyId: readOptionalId(payload.changed_company),
   country: readNumber(payload.country),
   description: readString(payload.description),
-  developed: readIds(payload.developed),
-  logo: readOptionalId(payload.logo),
-  parent: readOptionalId(payload.parent),
-  published: readIds(payload.published),
+  developedGameIds: readIds(payload.developed),
+  logoId: readOptionalId(payload.logo),
+  parentId: readOptionalId(payload.parent),
+  publishedGameIds: readIds(payload.published),
   startDate: readDate(payload.start_date),
-  startDateFormat: readOptionalId(payload.start_date_format),
-  status: readOptionalId(payload.status),
+  startDateFormatId: readOptionalId(payload.start_date_format),
+  statusId: readOptionalId(payload.status),
 });

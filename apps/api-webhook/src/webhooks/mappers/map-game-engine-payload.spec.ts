@@ -14,10 +14,10 @@ describe("mapGameEnginePayload", () => {
 
     expect(mapGameEnginePayload(payload as never)).toEqual({
       base: "slugged",
-      companies: [1, 2],
+      companyIds: [1, 2],
       description: "desc-text",
-      logo: "5-id",
-      platforms: [1, 2],
+      logoId: "5-id",
+      platformIds: [1, 2],
     });
     expect(mapBaseSlugged).toHaveBeenCalled();
     expect(readIds).toHaveBeenCalledTimes(2);

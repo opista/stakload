@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { SluggedNamedEntity } from "./base.entity";
 
 /**
- * Keyword.
+ * Keyword definitions used to tag games.
  */
 @Entity("keywords")
 export class KeywordEntity extends SluggedNamedEntity {}

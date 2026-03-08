@@ -9,14 +9,7 @@ import { readDate, readId, readString } from "./shared/mapper-utils";
 
 describe("mapLanguagePayload", () => {
   it("should map language payloads", () => {
-    const payload = {
-      checksum: "sum",
-      id: 82,
-      locale: "en-GB",
-      name: "English",
-      native_name: "English",
-      updated_at: 1_704_067_200,
-    };
+    const payload = { checksum: "sum", id: 82, locale: "en-GB", name: "English", native_name: "English", updated_at: 1_704_067_200 };
 
     expect(mapLanguagePayload(payload as never)).toEqual({
       checksum: "sum-text",

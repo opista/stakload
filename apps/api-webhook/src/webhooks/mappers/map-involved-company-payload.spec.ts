@@ -24,9 +24,9 @@ describe("mapInvolvedCompanyPayload", () => {
 
     expect(mapInvolvedCompanyPayload(payload as never)).toEqual({
       checksum: "checksum-text",
-      company: 12,
+      companyId: 12,
       developer: true,
-      game: 12,
+      gameId: 12,
       igdbId: 12,
       porting: false,
       publisher: true,

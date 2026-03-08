@@ -3,51 +3,40 @@ import { Column, Entity } from "typeorm";
 import { SluggedNamedEntity } from "./base.entity";
 
 /**
- * Video game companies. Both publishers & developers.
+ * Video game companies involved in development and publishing.
  */
 @Entity("companies")
 export class CompanyEntity extends SluggedNamedEntity {
   @Column({ nullable: true, type: "integer" })
-  /** The format of the change date */
-  changeDateFormat?: number | null;
+  changeDateFormatId?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** The new ID for a company that has gone through a merger or restructuring */
-  changedCompany?: number | null;
+  changedCompanyId?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** ISO 3166-1 country code */
   country?: number | null;
 
   @Column({ nullable: true, type: "text" })
-  /** A free text description of a company */
   description?: string | null;
 
   @Column({ nullable: true, type: "simple-json" })
-  /** An array of games that a company has developed */
-  developed?: number[] | null;
+  developedGameIds?: number[] | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** The company’s logo */
-  logo?: number | null;
+  logoId?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** A company with a controlling interest in a specific company */
-  parent?: number | null;
+  parentId?: number | null;
 
   @Column({ nullable: true, type: "simple-json" })
-  /** An array of games that a company has published */
-  published?: number[] | null;
+  publishedGameIds?: number[] | null;
 
   @Column({ nullable: true, type: "timestamptz" })
-  /** The date a company was founded */
   startDate?: Date | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** The format of the start date */
-  startDateFormat?: number | null;
+  startDateFormatId?: number | null;
 
   @Column({ nullable: true, type: "integer" })
-  /** The status of the company */
-  status?: number | null;
+  statusId?: number | null;
 }

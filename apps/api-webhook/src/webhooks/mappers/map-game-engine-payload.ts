@@ -5,8 +5,8 @@ import { mapBaseSlugged, readIds, readOptionalId, readString } from "./shared/ma
 
 export const mapGameEnginePayload = (payload: GameEngineWebhookPayload): Partial<GameEngineEntity> => ({
   ...mapBaseSlugged(payload),
-  companies: readIds(payload.companies),
+  companyIds: readIds(payload.companies),
   description: readString(payload.description),
-  logo: readOptionalId(payload.logo),
-  platforms: readIds(payload.platforms),
+  logoId: readOptionalId(payload.logo),
+  platformIds: readIds(payload.platforms),
 });

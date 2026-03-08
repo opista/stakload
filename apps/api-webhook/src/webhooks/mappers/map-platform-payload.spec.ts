@@ -25,9 +25,9 @@ describe("mapPlatformPayload", () => {
       alternativeName: "alt-text",
       base: "slugged",
       generation: 4,
-      platformFamily: "1-id",
-      platformLogo: "2-id",
-      platformType: "3-id",
+      platformFamilyId: "1-id",
+      platformLogoId: "2-id",
+      platformTypeId: "3-id",
       summary: "summary-text",
     });
     expect(mapBaseSlugged).toHaveBeenCalled();

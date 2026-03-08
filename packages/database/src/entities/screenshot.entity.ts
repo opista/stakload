@@ -3,11 +3,10 @@ import { Column, Entity } from "typeorm";
 import { ImageAssetEntity } from "./base.entity";
 
 /**
- * Screenshot.
+ * Screenshot media assets associated with games.
  */
 @Entity("screenshots")
 export class ScreenshotEntity extends ImageAssetEntity {
   @Column({ type: "integer" })
-  /** The game this screenshot is associated with */
-  game!: number;
+  gameId!: number;
 }

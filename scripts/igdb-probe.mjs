@@ -133,7 +133,10 @@ function loadEnvFile(filePath) {
     const key = trimmed.slice(0, separatorIndex).trim();
     let value = trimmed.slice(separatorIndex + 1).trim();
 
-    if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    if (
+      (value.startsWith("\"") && value.endsWith("\"")) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
       value = value.slice(1, -1);
     }
 
@@ -212,7 +215,8 @@ async function queryIgdb({ accessToken, clientId, query, resource }) {
   } catch {}
 
   if (response.ok === false) {
-    const errorBody = typeof parsedBody === "string" ? parsedBody : JSON.stringify(parsedBody, null, 2);
+    const errorBody =
+      typeof parsedBody === "string" ? parsedBody : JSON.stringify(parsedBody, null, 2);
     throw new Error(`IGDB request failed (status ${response.status})\n${errorBody}`);
   }
 
@@ -232,7 +236,9 @@ async function main() {
   const clientSecret = resolveEnvVariable("IGDB_CLIENT_SECRET", envFileValues);
 
   if (clientId === null || clientSecret === null) {
-    console.error("Missing IGDB credentials. Set IGDB_CLIENT_ID and IGDB_CLIENT_SECRET in env or .env.");
+    console.error(
+      "Missing IGDB credentials. Set IGDB_CLIENT_ID and IGDB_CLIENT_SECRET in env or .env.",
+    );
     process.exit(1);
   }
 

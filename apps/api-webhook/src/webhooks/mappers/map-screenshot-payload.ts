@@ -5,5 +5,5 @@ import { mapBaseImageAsset, readId } from "./shared/mapper-utils";
 
 export const mapScreenshotPayload = (payload: ScreenshotWebhookPayload): Partial<ScreenshotEntity> => ({
   ...mapBaseImageAsset(payload),
-  game: readId(payload.game) ?? 0,
+  gameId: readId(payload.game) ?? 0,
 });

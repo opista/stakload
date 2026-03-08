@@ -8,8 +8,8 @@ export const mapPlatformPayload = (payload: PlatformWebhookPayload): Partial<Pla
   abbreviation: readString(payload.abbreviation),
   alternativeName: readString(payload.alternative_name),
   generation: readNumber(payload.generation),
-  platformFamily: readOptionalId(payload.platform_family),
-  platformLogo: readOptionalId(payload.platform_logo),
-  platformType: readOptionalId(payload.platform_type),
+  platformFamilyId: readOptionalId(payload.platform_family),
+  platformLogoId: readOptionalId(payload.platform_logo),
+  platformTypeId: readOptionalId(payload.platform_type),
   summary: readString(payload.summary),
 });

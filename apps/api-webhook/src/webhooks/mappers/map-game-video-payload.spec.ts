@@ -14,7 +14,7 @@ describe("mapGameVideoPayload", () => {
 
     expect(mapGameVideoPayload(payload as never)).toEqual({
       checksum: "sum-text",
-      game: "5-id",
+      gameId: "5-id",
       igdbId: 78,
       name: "Trailer-text",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),

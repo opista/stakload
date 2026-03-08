@@ -5,10 +5,10 @@ import { readBoolean, readDate, readId, readOptionalId, readString } from "./sha
 
 export const mapWebsitePayload = (payload: WebsiteWebhookPayload): Partial<WebsiteEntity> => ({
   checksum: readString(payload.checksum),
-  game: readOptionalId(payload.game),
+  gameId: readOptionalId(payload.game),
   igdbId: readId(payload.id) ?? 0,
   sourceUpdatedAt: readDate(payload.updated_at),
   trusted: readBoolean(payload.trusted),
-  type: readOptionalId(payload.type),
+  typeId: readOptionalId(payload.type),
   url: readString(payload.url) ?? "",
 });

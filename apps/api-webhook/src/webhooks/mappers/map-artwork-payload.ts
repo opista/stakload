@@ -5,6 +5,6 @@ import { mapBaseImageAsset, readId, readOptionalId } from "./shared/mapper-utils
 
 export const mapArtworkPayload = (payload: ArtworkWebhookPayload): Partial<ArtworkEntity> => ({
   ...mapBaseImageAsset(payload),
-  artworkType: readOptionalId(payload.artwork_type),
-  game: readId(payload.game) ?? 0,
+  artworkTypeId: readOptionalId(payload.artwork_type),
+  gameId: readId(payload.game) ?? 0,
 });

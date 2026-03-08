@@ -24,7 +24,7 @@ describe("mapAgeRatingLookupPayloads", () => {
     expect(mapAgeRatingCategoryPayload(payload as never)).toEqual({
       checksum: "sum-text",
       igdbId: 92,
-      organization: "4-id",
+      organizationId: "4-id",
       rating: "M-text",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),
     });
@@ -36,7 +36,7 @@ describe("mapAgeRatingLookupPayloads", () => {
       checksum: "sum-text",
       description: "desc-text",
       igdbId: 92,
-      organization: "5-id",
+      organizationId: "5-id",
       sourceUpdatedAt: new Date("2024-01-01T00:00:00.000Z"),
     });
     expect(readString).toHaveBeenCalled();

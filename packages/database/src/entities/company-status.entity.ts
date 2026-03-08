@@ -3,7 +3,7 @@ import { Entity } from "typeorm";
 import { NamedEntity } from "./base.entity";
 
 /**
- * Company Status.
+ * Status definitions for companies.
  */
 @Entity("company_statuses")
 export class CompanyStatusEntity extends NamedEntity {}

@@ -14,8 +14,7 @@ async function bootstrap(): Promise<void> {
 
   const logger = await app.resolve(PinoLogger);
 
-  logger.setContext("Bootstrap");
-  logger.info("worker-builder started");
+  logger.info("worker-builder started", "Bootstrap");
 }
 
 void bootstrap().catch((error: unknown) => {
