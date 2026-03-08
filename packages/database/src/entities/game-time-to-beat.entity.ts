@@ -21,6 +21,7 @@ export class GameTimeToBeatEntity extends IgdbEntity {
   count?: number | null;
 
   @Column({ nullable: true, type: "integer" })
+  /** The ID of the game associated with the time to beat data */
   gameId?: number | null;
 
   @Column({ nullable: true, type: "integer" })

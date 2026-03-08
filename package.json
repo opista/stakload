@@ -30,11 +30,11 @@
     "build:unpack": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --dir",
     "build:win": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --win",
     "build:mac": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --mac",
-    "build:linux": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --linux",
-    "igdb:probe": "node scripts/igdb-probe.mjs"
+    "build:linux": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --linux"
   },
   "devDependencies": {
     "@electron-toolkit/tsconfig": "^2.0.0",
+    "@go-task/cli": "^3.49.0",
     "@types/node": "^22.19.1",
     "electron": "^39.2.6",
     "eslint": "^9.39.1",

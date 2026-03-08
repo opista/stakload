@@ -1,0 +1,23 @@
+version: "3"
+
+tasks:
+  igdb:extract:
+    desc: Extract IGDB resource and field descriptions into scripts/igdb/data.
+    cmds:
+      - node scripts/igdb/extract-field-descriptions.mjs {{.CLI_ARGS}}
+
+  igdb:apply:
+    desc: Apply extracted IGDB descriptions to database entities.
+    cmds:
+      - node scripts/igdb/apply-field-descriptions.mjs
+
+  igdb:refresh-descriptions:
+    desc: Re-extract and apply IGDB descriptions in one run.
+    cmds:
+      - task: igdb:extract
+      - task: igdb:apply
+
+  igdb:probe:
+    desc: Probe an IGDB resource using the local utility script.
+    cmds:
+      - node scripts/igdb/probe-igdb.mjs {{.CLI_ARGS}}
