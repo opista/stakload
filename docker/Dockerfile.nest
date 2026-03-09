@@ -30,6 +30,12 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 RUN pnpm -r --filter "./packages/*" --if-present build
 RUN pnpm --dir apps/${APP_NAME} build
 
+# Strip devDependencies from node_modules before copying to the runner.
+# This is done in the builder (not the runner) so the prune has access
+# to the full lockfile and workspace graph, and the runner never sees
+# any dev tooling at all.
+RUN pnpm prune --prod
+
 # ---- runner --------------------------------------------------------
 FROM node:24-bookworm-slim AS runner
 
