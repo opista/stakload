@@ -19,27 +19,76 @@ An AIO games library manager.
 
 ## Project Setup
 
+### Prerequisites
+
+- [pnpm](https://pnpm.io/installation)
+- [Docker](https://docs.docker.com/get-docker/) with the Compose plugin
+- [Tilt](https://docs.tilt.dev/install.html)
+
 ### Install
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
 ### Development
 
+Development is now orchestrated by **Tilt** instead of a single `pnpm dev`
+command. Tilt starts every service in the right order, streams their logs in
+one dashboard, and handles live-reloading for each layer of the stack.
+
 ```bash
-$ npm run dev
+tilt up
 ```
+
+Open the Tilt UI at <http://localhost:10350> to see the status of every service.
+
+#### What Tilt starts
+
+| Label | Service | URL | Live-update mechanism |
+|---|---|---|---|
+| `infrastructure` | Postgres 17 | `localhost:5432` | Docker Compose (health-checked) |
+| `infrastructure` | Redis 7 | `localhost:6379` | Docker Compose (health-checked) |
+| `backend` | `api-webhook` | <http://localhost:3001> | Docker rebuild + `restart_container` on src change |
+| `backend` | `worker-builder` | — | Docker rebuild + `restart_container` on src change |
+| `frontend` | React / Vite | <http://localhost:5173> | Vite HMR (Tilt just owns the process) |
+| `desktop` | Electron | — | electron-vite (starts after `frontend` and APIs are ready) |
+
+#### Environment variables
+
+Copy `.env.example` to `.env` and fill in the required values before running
+`tilt up`. The Docker Compose services read variables from this file. The
+defaults work for local development except for secrets:
+
+| Variable | Required | Description |
+|---|---|---|
+| `IGDB_CLIENT_ID` | Yes | Twitch/IGDB OAuth client ID |
+| `IGDB_CLIENT_SECRET` | Yes | Twitch/IGDB OAuth client secret |
+| `IGDB_WEBHOOK_SECRET` | Yes | Arbitrary secret used to verify IGDB webhook payloads |
+| `PUBLIC_WEBHOOK_BASE_URL` | No | Public URL exposed for IGDB callbacks (default `http://localhost:3001`) |
+
+#### Stopping
+
+```bash
+tilt down
+```
+
+Docker Compose volumes (Postgres data, Redis data) are preserved between sessions.
 
 ### Workspace Changes
 
 When adding a new workspace package:
 
 ```bash
-$ pnpm install
+pnpm install
 ```
 
-Run it from the repository root after creating the package and declaring any `workspace:*` dependencies so `pnpm-lock.yaml` and workspace links are updated before package-local scripts import shared workspace packages.
+Run it from the repository root after creating the package and declaring any
+`workspace:*` dependencies so `pnpm-lock.yaml` and workspace links are updated
+before package-local scripts import shared workspace packages.
+
+When adding a new **NestJS backend service**, also add a `nestjs_service()` call
+at the bottom of the `Tiltfile` and a corresponding entry in `docker-compose.yml`.
 
 ### Build
 
