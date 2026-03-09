@@ -21,11 +21,17 @@
 docker_compose('./docker-compose.yml')
 
 # ============================================================
-# NestJS API — api-webhook
+# nestjs_service(name, shared_packages)
 #
-# docker_build() overrides the compose `build:` section for
-# this service because its image name matches
-# `image: stakload/api-webhook` in docker-compose.yml.
+# Registers a NestJS app as a Tilt docker_build resource with
+# live_update. Call once per service; adding a new service only
+# requires a new call at the bottom of this section.
+#
+# Args:
+#   name            - directory name under apps/ and the suffix
+#                     of the Docker Compose image (stakload/<name>)
+#   shared_packages - list of package names under packages/ whose
+#                     src/ the service depends on at runtime
 #
 # Live-update flow (fastest possible inner loop):
 #   pnpm-lock.yaml / pnpm-workspace.yaml change
@@ -35,117 +41,73 @@ docker_compose('./docker-compose.yml')
 #   src / shared-package src change
 #     → sync files → tsc rebuild → restart_container()
 # ============================================================
-docker_build(
-    'stakload/api-webhook',
-    context='.',
-    dockerfile='docker/Dockerfile.nest.dev',
-    build_args={'APP_NAME': 'api-webhook'},
-    # `only` limits both the Docker build context sent to the
-    # daemon AND the set of paths Tilt watches for changes.
-    # Anything outside this list is invisible to this resource.
-    only=[
+def nestjs_service(name, shared_packages):
+    pkg_src_paths = ['packages/%s/src' % p for p in shared_packages]
+
+    # `only` limits both the Docker build context sent to the daemon
+    # AND the set of paths Tilt watches for changes for this resource.
+    only = [
         'package.json',
         'pnpm-lock.yaml',
         'pnpm-workspace.yaml',
         'tsconfig.json',
         'tsconfig.base.json',
-        'packages/database/src',
-        'packages/igdb-vendor/src',
-        'packages/nestjs-logging/src',
-        'apps/api-webhook/src',
-        'apps/api-webhook/package.json',
-        'apps/api-webhook/tsconfig.json',
-    ],
-    live_update=[
-        # Lock file or workspace manifest changed → full rebuild.
-        # Running `pnpm install` in the container is not enough
-        # when the resolved dep tree changes; we need a fresh image.
-        fall_back_on([
-            'pnpm-lock.yaml',
-            'pnpm-workspace.yaml',
-        ]),
+        'apps/%s/src' % name,
+        'apps/%s/package.json' % name,
+        'apps/%s/tsconfig.json' % name,
+    ] + pkg_src_paths
 
-        # Sync package manifests so the conditional install below
-        # sees the latest versions before it runs.
-        sync('package.json', '/app/package.json'),
-        sync('apps/api-webhook/package.json', '/app/apps/api-webhook/package.json'),
+    # Rebuild each shared package then the app, using pnpm's
+    # workspace-aware --dir flag so the commands run from /app.
+    build_cmd = ' && '.join(
+        ['pnpm --dir /app/packages/%s build' % p for p in shared_packages] +
+        ['pnpm --dir /app/apps/%s build' % name]
+    )
 
-        # Re-install dependencies only when package files changed.
-        # pnpm-lock.yaml is covered by fall_back_on above, so
-        # --frozen-lockfile is safe here (lockfile already matches).
-        run(
-            'pnpm install --frozen-lockfile',
-            trigger=['package.json', 'apps/api-webhook/package.json'],
-        ),
+    docker_build(
+        'stakload/%s' % name,
+        context='.',
+        dockerfile='docker/Dockerfile.nest.dev',
+        build_args={'APP_NAME': name},
+        only=only,
+        live_update=[
+            # Lock file or workspace manifest changed → full rebuild.
+            # Running `pnpm install` in the container is not sufficient
+            # when the resolved dep tree changes; a fresh image is needed.
+            fall_back_on([
+                'pnpm-lock.yaml',
+                'pnpm-workspace.yaml',
+            ]),
 
-        # Sync shared package sources and the app's own source.
-        sync('packages/database/src', '/app/packages/database/src'),
-        sync('packages/igdb-vendor/src', '/app/packages/igdb-vendor/src'),
-        sync('packages/nestjs-logging/src', '/app/packages/nestjs-logging/src'),
-        sync('apps/api-webhook/src', '/app/apps/api-webhook/src'),
+            # Sync the root and app-level package manifests so the
+            # conditional install below sees the latest versions.
+            sync('package.json', '/app/package.json'),
+            sync('apps/%s/package.json' % name, '/app/apps/%s/package.json' % name),
 
-        # Rebuild shared packages in dependency order, then the app.
-        # tsc is available in the dev image (devDeps are installed).
-        run(
-            'pnpm --dir /app/packages/database build'
-            ' && pnpm --dir /app/packages/igdb-vendor build'
-            ' && pnpm --dir /app/packages/nestjs-logging build'
-            ' && pnpm --dir /app/apps/api-webhook build',
-        ),
+            # Re-install dependencies only when package files changed.
+            # pnpm-lock.yaml is covered by fall_back_on above, so
+            # --frozen-lockfile is safe here (lockfile already matches).
+            run(
+                'pnpm install --frozen-lockfile',
+                trigger=['package.json', 'apps/%s/package.json' % name],
+            ),
 
-        # Restart the container's main process (PID 1 / node) without
-        # tearing down and recreating the container.
-        restart_container(),
-    ],
-)
+            # Sync shared package sources then the app's own source.
+        ] + [sync('packages/%s/src' % p, '/app/packages/%s/src' % p) for p in shared_packages] + [
+            sync('apps/%s/src' % name, '/app/apps/%s/src' % name),
 
-# ============================================================
-# NestJS Worker — worker-builder
-# ============================================================
-docker_build(
-    'stakload/worker-builder',
-    context='.',
-    dockerfile='docker/Dockerfile.nest.dev',
-    build_args={'APP_NAME': 'worker-builder'},
-    only=[
-        'package.json',
-        'pnpm-lock.yaml',
-        'pnpm-workspace.yaml',
-        'tsconfig.json',
-        'tsconfig.base.json',
-        'packages/database/src',
-        'packages/nestjs-logging/src',
-        'apps/worker-builder/src',
-        'apps/worker-builder/package.json',
-        'apps/worker-builder/tsconfig.json',
-    ],
-    live_update=[
-        fall_back_on([
-            'pnpm-lock.yaml',
-            'pnpm-workspace.yaml',
-        ]),
+            # Rebuild shared packages in dependency order, then the app.
+            # tsc is available in the dev image (devDeps are installed).
+            run(build_cmd),
 
-        sync('package.json', '/app/package.json'),
-        sync('apps/worker-builder/package.json', '/app/apps/worker-builder/package.json'),
+            # Restart the container's main process (PID 1 / node) without
+            # tearing down and recreating the container.
+            restart_container(),
+        ],
+    )
 
-        run(
-            'pnpm install --frozen-lockfile',
-            trigger=['package.json', 'apps/worker-builder/package.json'],
-        ),
-
-        sync('packages/database/src', '/app/packages/database/src'),
-        sync('packages/nestjs-logging/src', '/app/packages/nestjs-logging/src'),
-        sync('apps/worker-builder/src', '/app/apps/worker-builder/src'),
-
-        run(
-            'pnpm --dir /app/packages/database build'
-            ' && pnpm --dir /app/packages/nestjs-logging build'
-            ' && pnpm --dir /app/apps/worker-builder build',
-        ),
-
-        restart_container(),
-    ],
-)
+nestjs_service('api-webhook',    shared_packages=['database', 'igdb-vendor', 'nestjs-logging'])
+nestjs_service('worker-builder', shared_packages=['database', 'nestjs-logging'])
 
 # ============================================================
 # Resource configuration & dependency ordering
