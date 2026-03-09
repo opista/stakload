@@ -71,13 +71,15 @@ and restarts any containers whose configuration changed.
 | `IGDB_CLIENT_SECRET` | Twitch/IGDB OAuth client secret |
 | `IGDB_WEBHOOK_SECRET` | Arbitrary secret used to verify IGDB webhook payloads |
 
-**Ports** — override any of these to avoid conflicts with other local services:
+**Ports** — these control the **host-side** port only. The internal container
+port is fixed and never changes, so inter-service communication is unaffected.
+Override them to avoid conflicts with other services already running on your machine:
 
-| Variable | Default | Service |
-|---|---|---|
-| `POSTGRES_PORT` | `5432` | Postgres |
-| `REDIS_PORT` | `6379` | Redis |
-| `API_WEBHOOK_PORT` | `3001` | `api-webhook` |
+| Variable | Default | Container port | Service |
+|---|---|---|---|
+| `POSTGRES_PORT` | `5432` | `5432` | Postgres |
+| `REDIS_PORT` | `6379` | `6379` | Redis |
+| `API_WEBHOOK_PORT` | `3001` | `3001` | `api-webhook` |
 
 **Other**
 
