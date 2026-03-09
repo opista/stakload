@@ -93,10 +93,18 @@ def nestjs_service(name, shared_packages):
                 'pnpm-workspace.yaml',
             ]),
 
-            # Sync the root and app-level package manifests so the
-            # conditional install below sees the latest versions.
+            # --- Syncs (must all precede run steps) ---
+
+            # Sync package manifests so the install run below sees the
+            # latest versions before it executes.
             sync('package.json', '/app/package.json'),
             sync('apps/%s/package.json' % name, '/app/apps/%s/package.json' % name),
+
+            # Sync shared package sources then the app's own source.
+        ] + [sync('packages/%s/src' % p, '/app/packages/%s/src' % p) for p in shared_packages] + [
+            sync('apps/%s/src' % name, '/app/apps/%s/src' % name),
+
+            # --- Runs (must all follow sync steps) ---
 
             # Re-install dependencies only when package files changed.
             # pnpm-lock.yaml is covered by fall_back_on above, so
@@ -105,10 +113,6 @@ def nestjs_service(name, shared_packages):
                 'pnpm install --frozen-lockfile',
                 trigger=['package.json', 'apps/%s/package.json' % name],
             ),
-
-            # Sync shared package sources then the app's own source.
-        ] + [sync('packages/%s/src' % p, '/app/packages/%s/src' % p) for p in shared_packages] + [
-            sync('apps/%s/src' % name, '/app/apps/%s/src' % name),
 
             # Rebuild shared packages in dependency order, then the app.
             # tsc is available in the dev image (devDeps are installed).
