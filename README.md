@@ -33,7 +33,7 @@ pnpm install
 
 ### Development
 
-Development is now orchestrated by **Tilt** instead of a single `pnpm dev`
+Development is orchestrated by **Tilt** instead of a single `pnpm dev`
 command. Tilt starts every service in the right order, streams their logs in
 one dashboard, and handles live-reloading for each layer of the stack.
 
