@@ -25,13 +25,14 @@ COPY apps/${APP_NAME} ./apps/${APP_NAME}
 # --ignore-scripts skips lifecycle scripts for a faster, safer install.
 RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Build all workspace packages in topological order, then the app.
-# pnpm -r respects the dependency graph so shared packages are always
-# compiled before the app that imports them. The --filter is intentionally
-# omitted: with only one app directory present, pnpm builds that app and
-# all packages/ automatically without needing a path glob that can fail
-# to match when the workspace is partially populated.
-RUN pnpm -r --if-present build
+# Build each shared package, then the app.
+# We iterate explicitly rather than using `pnpm -r` because pnpm's
+# workspace member discovery is unreliable when the workspace is only
+# partially present (a single app directory, not all apps). A direct
+# `pnpm --dir` call works regardless of workspace state.
+# Shared packages have no cross-dependencies so filesystem order is fine.
+RUN for pkg in packages/*/; do pnpm --dir "${pkg%/}" run --if-present build; done
+RUN pnpm --dir apps/${APP_NAME} build
 
 # Strip devDependencies from node_modules before copying to the runner.
 # This is done in the builder (not the runner) so the prune has access
