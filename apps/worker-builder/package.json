@@ -17,12 +17,15 @@
     "@nestjs/common": "^11.1.14",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.14",
+    "@nestjs/typeorm": "^11.0.0",
     "@stakload/nestjs-logging": "workspace:*",
     "@stakload/nestjs-redis": "workspace:*",
     "bullmq": "^5.41.6",
     "joi": "^17.13.3",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "typeorm": "^0.3.28"
   },
   "devDependencies": {
     "@nestjs/testing": "^11.1.14",

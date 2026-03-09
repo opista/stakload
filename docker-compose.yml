@@ -63,9 +63,12 @@ services:
         APP_NAME: worker-builder
     container_name: stakload-worker-builder
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
     environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-stakload}:${POSTGRES_PASSWORD:-stakload}@postgres:5432/${POSTGRES_DB:-stakload}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       NODE_ENV: ${NODE_ENV:-development}
       REDIS_HOST: ${REDIS_HOST:-redis}

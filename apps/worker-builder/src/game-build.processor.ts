@@ -5,6 +5,8 @@ import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
 import { GAME_BUILD_IN_PROGRESS_SET_KEY, GAME_BUILD_QUEUE_NAME } from "./constants";
+import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
+import { GameCacheWriteService } from "./game-build/services/game-cache-write.service";
 
 export interface GameBuildJobPayload {
   gameId: number;
@@ -15,6 +17,8 @@ export interface GameBuildJobPayload {
 })
 export class GameBuildProcessor extends WorkerHost {
   constructor(
+    private readonly gameAggregateQueryService: GameAggregateQueryService,
+    private readonly gameCacheWriteService: GameCacheWriteService,
     private readonly logger: PinoLogger,
     private readonly redisService: RedisService,
   ) {
@@ -37,8 +41,27 @@ export class GameBuildProcessor extends WorkerHost {
   }
 
   async process(job: Job<GameBuildJobPayload, void, string>): Promise<void> {
-    await this.redisService.sadd(GAME_BUILD_IN_PROGRESS_SET_KEY, job.data.gameId);
-    this.logger.info({ gameId: job.data.gameId }, "Processing build job");
-    // Placeholder for actual game build logic
+    const { gameId } = job.data;
+
+    await this.redisService.sadd(GAME_BUILD_IN_PROGRESS_SET_KEY, gameId);
+    this.logger.info({ gameId }, "Processing build job");
+
+    try {
+      const game = await this.gameAggregateQueryService.fetchByGameId(gameId);
+
+      if (!game) {
+        this.logger.warn({ gameId }, "Game not found in database, skipping build");
+        return;
+      }
+
+      await this.gameCacheWriteService.cacheGameAndGenreDependencies(game);
+      this.logger.debug({ gameId, genreCount: game.genres.length }, "Prepared game aggregate for cache build");
+    } finally {
+      try {
+        await this.redisService.srem(GAME_BUILD_IN_PROGRESS_SET_KEY, gameId);
+      } catch (error) {
+        this.logger.error({ err: error, gameId }, "Failed to remove game from in-progress set");
+      }
+    }
   }
 }

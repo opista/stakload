@@ -12,6 +12,10 @@ export class AppConfigService {
     this.logger.setContext(this.constructor.name);
   }
 
+  get databaseUrl(): string {
+    return this.configService.getOrThrow<string>("DATABASE_URL");
+  }
+
   get redisHost(): string {
     return this.configService.getOrThrow<string>("REDIS_HOST");
   }
