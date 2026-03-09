@@ -45,14 +45,14 @@ Open the Tilt UI at <http://localhost:10350> to see the status of every service.
 
 #### What Tilt starts
 
-| Label | Service | URL | Live-update mechanism |
-|---|---|---|---|
-| `infrastructure` | Postgres 17 | `localhost:5432` | Docker Compose (health-checked) |
-| `infrastructure` | Redis 7 | `localhost:6379` | Docker Compose (health-checked) |
-| `backend` | `api-webhook` | <http://localhost:3001> | Docker rebuild + `restart_container` on src change |
-| `backend` | `worker-builder` | — | Docker rebuild + `restart_container` on src change |
-| `frontend` | React / Vite | <http://localhost:5173> | Vite HMR (Tilt just owns the process) |
-| `desktop` | Electron | — | electron-vite (starts after `frontend` and APIs are ready) |
+| Label            | Service          | URL                     | Live-update mechanism                                      |
+| ---------------- | ---------------- | ----------------------- | ---------------------------------------------------------- |
+| `infrastructure` | Postgres 17      | `localhost:5432`        | Docker Compose (health-checked)                            |
+| `infrastructure` | Redis 7          | `localhost:6379`        | Docker Compose (health-checked)                            |
+| `backend`        | `api-webhook`    | <http://localhost:3001> | Docker rebuild + `restart_container` on src change         |
+| `backend`        | `worker-builder` | —                       | Docker rebuild + `restart_container` on src change         |
+| `frontend`       | React / Vite     | <http://localhost:5173> | Vite HMR (Tilt just owns the process)                      |
+| `desktop`        | Electron         | —                       | electron-vite (starts after `frontend` and APIs are ready) |
 
 #### Environment variables
 
@@ -65,29 +65,29 @@ and restarts any containers whose configuration changed.
 
 **Secrets**
 
-| Variable | Description |
-|---|---|
-| `IGDB_CLIENT_ID` | Twitch/IGDB OAuth client ID |
-| `IGDB_CLIENT_SECRET` | Twitch/IGDB OAuth client secret |
+| Variable              | Description                                           |
+| --------------------- | ----------------------------------------------------- |
+| `IGDB_CLIENT_ID`      | Twitch/IGDB OAuth client ID                           |
+| `IGDB_CLIENT_SECRET`  | Twitch/IGDB OAuth client secret                       |
 | `IGDB_WEBHOOK_SECRET` | Arbitrary secret used to verify IGDB webhook payloads |
 
 **Ports** — these control the **host-side** port only. The internal container
 port is fixed and never changes, so inter-service communication is unaffected.
 Override them to avoid conflicts with other services already running on your machine:
 
-| Variable | Default | Container port | Service |
-|---|---|---|---|
-| `POSTGRES_PORT` | `5432` | `5432` | Postgres |
-| `REDIS_PORT` | `6379` | `6379` | Redis |
-| `API_WEBHOOK_PORT` | `3001` | `3001` | `api-webhook` |
+| Variable           | Default | Container port | Service       |
+| ------------------ | ------- | -------------- | ------------- |
+| `POSTGRES_PORT`    | `5432`  | `5432`         | Postgres      |
+| `REDIS_PORT`       | `6379`  | `6379`         | Redis         |
+| `API_WEBHOOK_PORT` | `3001`  | `3001`         | `api-webhook` |
 
 **Other**
 
-| Variable | Default | Description |
-|---|---|---|
-| `PUBLIC_WEBHOOK_BASE_URL` | `http://localhost:3001` | Public URL for IGDB webhook callbacks |
-| `NODE_ENV` | `development` | Node environment |
-| `LOG_LEVEL` | `info` | Log verbosity (`debug`, `info`, `warn`, `error`) |
+| Variable                  | Default                 | Description                                      |
+| ------------------------- | ----------------------- | ------------------------------------------------ |
+| `PUBLIC_WEBHOOK_BASE_URL` | `http://localhost:3001` | Public URL for IGDB webhook callbacks            |
+| `NODE_ENV`                | `development`           | Node environment                                 |
+| `LOG_LEVEL`               | `info`                  | Log verbosity (`debug`, `info`, `warn`, `error`) |
 
 #### Stopping
 

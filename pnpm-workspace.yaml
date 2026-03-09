@@ -6,5 +6,6 @@ onlyBuiltDependencies:
   - "@nestjs/core"
   - better-sqlite3
   - electron
+  - electron-builder
   - esbuild
   - protobufjs
