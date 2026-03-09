@@ -13,7 +13,7 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
     },
     globals: true,
-    include: ["**/*.test.ts"],
+    include: ["src/**/*.spec.ts", "test/**/*.spec.ts"],
     passWithNoTests: true,
     root: "./",
   },
