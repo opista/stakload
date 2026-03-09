@@ -31,9 +31,12 @@ services:
       retries: 10
 
   api-webhook:
+    image: stakload/api-webhook
     build:
       context: .
-      dockerfile: apps/api-webhook/Dockerfile
+      dockerfile: docker/Dockerfile.nest
+      args:
+        APP_NAME: api-webhook
     container_name: stakload-api-webhook
     depends_on:
       postgres:
@@ -52,9 +55,12 @@ services:
       - "${API_WEBHOOK_PORT:-3001}:3001"
 
   worker-builder:
+    image: stakload/worker-builder
     build:
       context: .
-      dockerfile: apps/worker-builder/Dockerfile
+      dockerfile: docker/Dockerfile.nest
+      args:
+        APP_NAME: worker-builder
     container_name: stakload-worker-builder
     depends_on:
       redis:

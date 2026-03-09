@@ -1,0 +1,45 @@
+# Generic development Dockerfile for all NestJS services.
+# Used exclusively by Tilt's docker_build() with live_update.
+#
+# Key difference from the production image: single stage that retains
+# devDependencies so tsc is available inside the running container,
+# allowing Tilt's live_update run() steps to rebuild TypeScript without
+# tearing down and recreating the container.
+#
+# Usage (via Tiltfile — not typically invoked manually):
+#   docker build --build-arg APP_NAME=api-webhook -f docker/Dockerfile.nest.dev .
+#
+# Adding a new service: no changes needed here — just add a docker_build()
+# block in the Tiltfile with build_args={'APP_NAME': '<service-name>'}.
+
+ARG APP_NAME
+
+FROM node:24-bookworm-slim
+
+ARG APP_NAME
+
+WORKDIR /app
+
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.json tsconfig.base.json ./
+COPY packages ./packages
+COPY apps/${APP_NAME} ./apps/${APP_NAME}
+
+# Install ALL dependencies including devDeps (tsc is required at
+# container runtime so live_update's run() can rebuild the app).
+RUN pnpm install --frozen-lockfile
+
+# Build each shared package, then the app.
+# We iterate explicitly rather than using `pnpm -r` because pnpm's
+# workspace member discovery is unreliable when the workspace is only
+# partially present (a single app directory, not all apps). A direct
+# `pnpm --dir` call works regardless of workspace state.
+# Shared packages have no cross-dependencies so filesystem order is fine.
+RUN for pkg in packages/*/; do pnpm --dir "${pkg%/}" run --if-present build; done
+RUN pnpm --dir apps/${APP_NAME} build
+
+WORKDIR /app/apps/${APP_NAME}
+
+CMD ["node", "dist/src/main.js"]

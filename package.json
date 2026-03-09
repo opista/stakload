@@ -26,7 +26,6 @@
     "start": "pnpm --dir apps/desktop start",
     "dev": "node apps/desktop/scripts/workspace-dev.mjs",
     "build": "pnpm run typecheck && pnpm --dir apps/frontend build && pnpm --dir apps/desktop build",
-    "postinstall": "pnpm --dir apps/desktop exec electron-builder install-app-deps",
     "build:unpack": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --dir",
     "build:win": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --win",
     "build:mac": "pnpm run build && pnpm --dir apps/desktop exec electron-builder --projectDir . --config electron-builder.yml --mac",

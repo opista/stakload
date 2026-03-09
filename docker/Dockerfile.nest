@@ -1,0 +1,67 @@
+# Generic multi-stage production Dockerfile for all NestJS services.
+#
+# Usage:
+#   docker build --build-arg APP_NAME=api-webhook -f docker/Dockerfile.nest .
+#
+# Adding a new service: no changes needed here — just update
+# docker-compose.yml with the correct APP_NAME build arg.
+
+ARG APP_NAME
+
+# ---- builder -------------------------------------------------------
+FROM node:24-bookworm-slim AS builder
+
+ARG APP_NAME
+
+WORKDIR /workspace
+
+RUN corepack enable
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY tsconfig.json tsconfig.base.json ./
+COPY packages ./packages
+COPY apps/${APP_NAME} ./apps/${APP_NAME}
+
+# --ignore-scripts skips lifecycle scripts for a faster, safer install.
+RUN pnpm install --frozen-lockfile --ignore-scripts
+
+# Build each shared package, then the app.
+# We iterate explicitly rather than using `pnpm -r` because pnpm's
+# workspace member discovery is unreliable when the workspace is only
+# partially present (a single app directory, not all apps). A direct
+# `pnpm --dir` call works regardless of workspace state.
+# Shared packages have no cross-dependencies so filesystem order is fine.
+RUN for pkg in packages/*/; do pnpm --dir "${pkg%/}" run --if-present build; done
+RUN pnpm --dir apps/${APP_NAME} build
+
+# Strip devDependencies from node_modules before copying to the runner.
+# This is done in the builder (not the runner) so the prune has access
+# to the full lockfile and workspace graph, and the runner never sees
+# any dev tooling at all.
+RUN pnpm prune --prod
+
+# ---- runner --------------------------------------------------------
+FROM node:24-bookworm-slim AS runner
+
+ARG APP_NAME
+
+WORKDIR /app
+
+RUN corepack enable
+
+# --chown ensures files are owned by the non-root node user from the
+# outset, so no recursive chown pass is needed at startup.
+COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+# Copy pre-built artefacts from builder — no install step needed.
+COPY --from=builder --chown=node:node /workspace/node_modules ./node_modules
+COPY --from=builder --chown=node:node /workspace/packages ./packages
+COPY --from=builder --chown=node:node /workspace/apps/${APP_NAME} ./apps/${APP_NAME}
+
+# Drop to the non-privileged node user (uid 1000) that ships with the
+# base image. Limits blast radius if the process is ever compromised.
+USER node
+
+WORKDIR /app/apps/${APP_NAME}
+
+CMD ["node", "dist/src/main.js"]
