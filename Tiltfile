@@ -63,7 +63,8 @@ def nestjs_service(name, shared_packages):
     pkg_src_paths = (
         ['packages/%s/src' % p for p in shared_packages] +
         ['packages/%s/package.json' % p for p in shared_packages] +
-        ['packages/%s/tsconfig.json' % p for p in shared_packages]
+        ['packages/%s/tsconfig.json' % p for p in shared_packages] +
+        ['packages/%s/tsconfig.build.json' % p for p in shared_packages if os.path.exists('packages/%s/tsconfig.build.json' % p)]
     )
 
     # `only` limits both the Docker build context sent to the daemon
@@ -77,6 +78,7 @@ def nestjs_service(name, shared_packages):
         'apps/%s/src' % name,
         'apps/%s/package.json' % name,
         'apps/%s/tsconfig.json' % name,
+        'apps/%s/tsconfig.build.json' % name,
     ] + pkg_src_paths
 
     # Rebuild each shared package then the app, using pnpm's

@@ -3,7 +3,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "build": "pnpm run clean && tsc -p tsconfig.build.json",
     "clean": "rimraf dist",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",

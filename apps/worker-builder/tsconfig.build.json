@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "include": ["global.d.ts", "src/**/*.ts"],
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "exclude": ["coverage", "dist", "test", "vitest.config.ts", "src/**/*.spec.ts"]
+}
