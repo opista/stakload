@@ -7,7 +7,7 @@ import { SluggedNamedEntity } from "./base.entity";
  */
 @Entity("game_engines")
 export class GameEngineEntity extends SluggedNamedEntity {
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Companies who used this game engine */
   companies?: number[] | null;
 
@@ -19,7 +19,7 @@ export class GameEngineEntity extends SluggedNamedEntity {
   /** Logo of the game engine */
   logo?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Platforms this game engine was deployed on */
   platforms?: number[] | null;
 }

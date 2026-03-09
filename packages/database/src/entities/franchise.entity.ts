@@ -7,7 +7,7 @@ import { SluggedNamedEntity } from "./base.entity";
  */
 @Entity("franchises")
 export class FranchiseEntity extends SluggedNamedEntity {
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The games that are associated with this franchise */
   games?: number[] | null;
 }

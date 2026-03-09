@@ -23,7 +23,7 @@ export class CompanyEntity extends SluggedNamedEntity {
   /** A free text description of a company */
   description?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** An array of games that a company has developed */
   developed?: number[] | null;
 
@@ -35,7 +35,7 @@ export class CompanyEntity extends SluggedNamedEntity {
   /** A company with a controlling interest in a specific company */
   parent?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** An array of games that a company has published */
   published?: number[] | null;
 

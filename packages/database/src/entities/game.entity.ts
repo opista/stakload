@@ -7,7 +7,7 @@ import { IgdbEntity } from "./base.entity";
  */
 @Entity("games")
 export class GameEntity extends IgdbEntity {
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The PEGI rating */
   ageRatings?: number[] | null;
 
@@ -19,15 +19,15 @@ export class GameEntity extends IgdbEntity {
   /** Number of external critic scores */
   aggregatedRatingCount?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Alternative names for this game */
   alternativeNames?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Artworks of this game */
   artworks?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The bundles this game is a part of */
   bundles?: number[] | null;
 
@@ -35,7 +35,7 @@ export class GameEntity extends IgdbEntity {
   /** Hash of the object */
   checksum?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The collections that this game is in. */
   collections?: number[] | null;
 
@@ -43,7 +43,7 @@ export class GameEntity extends IgdbEntity {
   /** The cover of this game */
   cover?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** External IDs this game has on other services */
   externalGames?: number[] | null;
 
@@ -55,15 +55,15 @@ export class GameEntity extends IgdbEntity {
   /** The main franchise */
   franchise?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Other franchises the game belongs to */
   franchises?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The game engine used in this game */
   gameEngines?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Modes of gameplay */
   gameModes?: number[] | null;
 
@@ -75,19 +75,19 @@ export class GameEntity extends IgdbEntity {
   /** The category of this game */
   gameType?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Genres of the game */
   genres?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Associated keywords */
   keywords?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Supported Languages for this game */
   languageSupports?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Multiplayer modes for this game */
   multiplayerModes?: number[] | null;
 
@@ -99,11 +99,11 @@ export class GameEntity extends IgdbEntity {
   /** If a DLC, expansion or part of a bundle, this is the main game or bundle */
   parentGame?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Platforms this game was released on */
   platforms?: number[] | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The main perspective of the player */
   playerPerspectives?: number[] | null;
 
@@ -115,7 +115,7 @@ export class GameEntity extends IgdbEntity {
   /** Total number of IGDB user ratings */
   ratingCount?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Similar games */
   similarGames?: number[] | null;
 
@@ -131,7 +131,7 @@ export class GameEntity extends IgdbEntity {
   /** A description of the game */
   summary?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Themes of the game */
   themes?: number[] | null;
 
@@ -155,7 +155,7 @@ export class GameEntity extends IgdbEntity {
   /** Title of this version (i.e Gold edition) */
   versionTitle?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** Videos of this game */
   videos?: number[] | null;
 }

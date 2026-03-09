@@ -19,7 +19,7 @@ export class AgeRatingEntity extends IgdbEntity {
   /** The category of this rating */
   ratingCategory?: number | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The rating content descriptions */
   ratingContentDescriptions?: number[] | null;
 

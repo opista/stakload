@@ -11,7 +11,7 @@ export class CollectionEntity extends SluggedNamedEntity {
   /** Description of the collection */
   description?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The games that are associated with this collection */
   games?: number[] | null;
 }

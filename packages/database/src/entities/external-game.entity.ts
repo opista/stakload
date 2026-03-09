@@ -11,7 +11,7 @@ export class ExternalGameEntity extends IgdbEntity {
   /** Hash of the object */
   checksum?: string | null;
 
-  @Column({ nullable: true, type: "simple-json" })
+  @Column({ array: true, nullable: true, type: "int" })
   /** The ISO country code of the external game product. */
   countries?: number[] | null;
 
