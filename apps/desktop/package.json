@@ -23,7 +23,8 @@
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",
     "start": "electron-vite preview --config electron.vite.config.ts",
-    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
     "@apollo/client": "^4.1.6",
