@@ -56,7 +56,15 @@ docker_compose('./docker-compose.yml')
 #     → sync files → tsc rebuild → restart_container()
 # ============================================================
 def nestjs_service(name, shared_packages):
-    pkg_src_paths = ['packages/%s/src' % p for p in shared_packages]
+    # Include the full package directory (src + package.json + tsconfig.json)
+    # so the Dockerfile can run `pnpm --dir packages/<pkg> build` inside
+    # the container. Only src/ is watched for live-update changes but the
+    # manifest and tsconfig are needed to satisfy pnpm and tsc.
+    pkg_src_paths = (
+        ['packages/%s/src' % p for p in shared_packages] +
+        ['packages/%s/package.json' % p for p in shared_packages] +
+        ['packages/%s/tsconfig.json' % p for p in shared_packages]
+    )
 
     # `only` limits both the Docker build context sent to the daemon
     # AND the set of paths Tilt watches for changes for this resource.
