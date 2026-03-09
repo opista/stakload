@@ -39,12 +39,18 @@ WORKDIR /app
 
 RUN corepack enable
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# --chown ensures files are owned by the non-root node user from the
+# outset, so no recursive chown pass is needed at startup.
+COPY --chown=node:node package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 
 # Copy pre-built artefacts from builder — no install step needed.
-COPY --from=builder /workspace/node_modules ./node_modules
-COPY --from=builder /workspace/packages ./packages
-COPY --from=builder /workspace/apps/${APP_NAME} ./apps/${APP_NAME}
+COPY --from=builder --chown=node:node /workspace/node_modules ./node_modules
+COPY --from=builder --chown=node:node /workspace/packages ./packages
+COPY --from=builder --chown=node:node /workspace/apps/${APP_NAME} ./apps/${APP_NAME}
+
+# Drop to the non-privileged node user (uid 1000) that ships with the
+# base image. Limits blast radius if the process is ever compromised.
+USER node
 
 WORKDIR /app/apps/${APP_NAME}
 
