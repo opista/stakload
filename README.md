@@ -58,14 +58,34 @@ Open the Tilt UI at <http://localhost:10350> to see the status of every service.
 
 Copy `.env.example` to `.env` and fill in the required values before running
 `tilt up`. The Docker Compose services read variables from this file. The
-defaults work for local development except for secrets:
+defaults work for local development except for secrets.
 
-| Variable | Required | Description |
+Tilt watches `.env` automatically — saving the file triggers a re-evaluation
+and restarts any containers whose configuration changed.
+
+**Secrets**
+
+| Variable | Description |
+|---|---|
+| `IGDB_CLIENT_ID` | Twitch/IGDB OAuth client ID |
+| `IGDB_CLIENT_SECRET` | Twitch/IGDB OAuth client secret |
+| `IGDB_WEBHOOK_SECRET` | Arbitrary secret used to verify IGDB webhook payloads |
+
+**Ports** — override any of these to avoid conflicts with other local services:
+
+| Variable | Default | Service |
 |---|---|---|
-| `IGDB_CLIENT_ID` | Yes | Twitch/IGDB OAuth client ID |
-| `IGDB_CLIENT_SECRET` | Yes | Twitch/IGDB OAuth client secret |
-| `IGDB_WEBHOOK_SECRET` | Yes | Arbitrary secret used to verify IGDB webhook payloads |
-| `PUBLIC_WEBHOOK_BASE_URL` | No | Public URL exposed for IGDB callbacks (default `http://localhost:3001`) |
+| `POSTGRES_PORT` | `5432` | Postgres |
+| `REDIS_PORT` | `6379` | Redis |
+| `API_WEBHOOK_PORT` | `3001` | `api-webhook` |
+
+**Other**
+
+| Variable | Default | Description |
+|---|---|---|
+| `PUBLIC_WEBHOOK_BASE_URL` | `http://localhost:3001` | Public URL for IGDB webhook callbacks |
+| `NODE_ENV` | `development` | Node environment |
+| `LOG_LEVEL` | `info` | Log verbosity (`debug`, `info`, `warn`, `error`) |
 
 #### Stopping
 

@@ -11,6 +11,20 @@
 # Start: tilt up
 
 # ============================================================
+# Environment
+#
+# Watch .env so Tilt re-evaluates this file (and restarts
+# affected containers) whenever a variable changes. Without
+# this, you would have to run `tilt down && tilt up` manually
+# after editing .env.
+# ============================================================
+watch_file('.env')
+
+# Read overridable ports from the environment so the Tilt UI
+# links stay correct when a developer remaps a port in .env.
+api_webhook_port = os.getenv('API_WEBHOOK_PORT', '3001')
+
+# ============================================================
 # Docker Compose
 #
 # Declares all containerised services. API image names are
@@ -128,7 +142,7 @@ dc_resource(
     'api-webhook',
     resource_deps=['postgres', 'redis'],
     labels=['backend'],
-    links=['http://localhost:3001'],
+    links=['http://localhost:%s' % api_webhook_port],
 )
 
 dc_resource(
