@@ -32,8 +32,12 @@ COPY apps/${APP_NAME} ./apps/${APP_NAME}
 RUN pnpm install --frozen-lockfile
 
 # Build all workspace packages in topological order, then the app.
-RUN pnpm -r --filter "./packages/*" --if-present build
-RUN pnpm --dir apps/${APP_NAME} build
+# pnpm -r respects the dependency graph so shared packages are always
+# compiled before the app that imports them. The --filter is intentionally
+# omitted: with only one app directory present, pnpm builds that app and
+# all packages/ automatically without needing a path glob that can fail
+# to match when the workspace is partially populated.
+RUN pnpm -r --if-present build
 
 WORKDIR /app/apps/${APP_NAME}
 
