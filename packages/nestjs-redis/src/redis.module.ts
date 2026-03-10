@@ -11,7 +11,9 @@ export class RedisModule {
     return {
       inject: options.inject,
       provide: REDIS_CLIENT,
-      useFactory: async (...args: unknown[]) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      useFactory: async (...args: any[]) => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const redisOptions = await options.useFactory(...args);
         return new Redis(redisOptions);
       },

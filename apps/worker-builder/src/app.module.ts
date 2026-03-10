@@ -36,14 +36,11 @@ import { GameCacheWriteService } from "./game-build/services/game-cache-write.se
     }),
     RedisModule.forRootAsync({
       inject: [AppConfigService],
-      useFactory: (...args: unknown[]) => {
-        const config = args[0] as AppConfigService;
-        return {
-          host: config.redisHost,
-          password: config.redisPassword,
-          port: config.redisPort,
-        };
-      },
+      useFactory: (config: AppConfigService) => ({
+        host: config.redisHost,
+        password: config.redisPassword,
+        port: config.redisPort,
+      }),
     }),
   ],
   providers: [GameAggregateQueryService, GameCacheWriteService, GameBuildProcessor],
