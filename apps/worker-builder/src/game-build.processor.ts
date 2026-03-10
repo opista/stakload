@@ -1,9 +1,11 @@
 import { Processor, WorkerHost, OnWorkerEvent } from "@nestjs/bullmq";
+import { OnModuleInit } from "@nestjs/common";
 import { Job } from "bullmq";
 
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
+import { AppConfigService } from "./config/app-config.service";
 import { GAME_BUILD_IN_PROGRESS_SET_KEY, GAME_BUILD_QUEUE_NAME } from "./constants";
 import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
 import { GameCacheWriteService } from "./game-build/services/game-cache-write.service";
@@ -12,11 +14,10 @@ export interface GameBuildJobPayload {
   gameId: number;
 }
 
-@Processor(GAME_BUILD_QUEUE_NAME, {
-  concurrency: process.env.WORKER_BUILDER_CONCURRENCY ? parseInt(process.env.WORKER_BUILDER_CONCURRENCY, 10) : 4,
-})
-export class GameBuildProcessor extends WorkerHost {
+@Processor(GAME_BUILD_QUEUE_NAME)
+export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
   constructor(
+    private readonly appConfigService: AppConfigService,
     private readonly gameAggregateQueryService: GameAggregateQueryService,
     private readonly gameCacheWriteService: GameCacheWriteService,
     private readonly logger: PinoLogger,
@@ -38,6 +39,12 @@ export class GameBuildProcessor extends WorkerHost {
     } else {
       this.logger.error({ err: error }, "Job failed");
     }
+  }
+
+  onModuleInit(): void {
+    const concurrency = this.appConfigService.workerBuilderConcurrency ?? 4;
+    this.worker.concurrency = concurrency;
+    this.logger.info({ concurrency }, "Worker concurrency set");
   }
 
   async process(job: Job<GameBuildJobPayload, void, string>): Promise<void> {

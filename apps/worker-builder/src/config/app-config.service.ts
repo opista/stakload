@@ -27,4 +27,8 @@ export class AppConfigService {
   get redisPort(): number {
     return this.configService.getOrThrow<number>("REDIS_PORT");
   }
+
+  get workerBuilderConcurrency(): number | undefined {
+    return this.configService.get<number>("WORKER_BUILDER_CONCURRENCY");
+  }
 }

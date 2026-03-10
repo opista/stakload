@@ -5,6 +5,7 @@ import type { Mocked } from "vitest";
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
+import { AppConfigService } from "./config/app-config.service";
 import { GAME_BUILD_IN_PROGRESS_SET_KEY } from "./constants";
 import { GameBuildProcessor, type GameBuildJobPayload } from "./game-build.processor";
 import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
@@ -12,6 +13,7 @@ import { GameCacheWriteService } from "./game-build/services/game-cache-write.se
 import type { GameDto } from "./models/dto/game.dto";
 
 describe("GameBuildProcessor", () => {
+  let appConfigService: Mocked<AppConfigService>;
   let gameAggregateQueryService: Mocked<GameAggregateQueryService>;
   let gameCacheWriteService: Mocked<GameCacheWriteService>;
   let logger: Mocked<PinoLogger>;
@@ -38,11 +40,41 @@ describe("GameBuildProcessor", () => {
   beforeEach(async () => {
     const { unit, unitRef } = await TestBed.solitary(GameBuildProcessor).compile();
 
+    appConfigService = unitRef.get(AppConfigService) as unknown as Mocked<AppConfigService>;
     gameAggregateQueryService = unitRef.get(GameAggregateQueryService) as unknown as Mocked<GameAggregateQueryService>;
     gameCacheWriteService = unitRef.get(GameCacheWriteService) as unknown as Mocked<GameCacheWriteService>;
     processor = unit;
     logger = unitRef.get(PinoLogger) as unknown as Mocked<PinoLogger>;
     redisService = unitRef.get(RedisService) as unknown as Mocked<RedisService>;
+  });
+
+  describe("onModuleInit", () => {
+    it("should set worker concurrency to the configured value", () => {
+      // Mock the worker property since it normally requires BullMQ integration to populate
+      Object.defineProperty(processor, "worker", {
+        value: { concurrency: 0 },
+        writable: true,
+      });
+
+      appConfigService.workerBuilderConcurrency = 10;
+      processor.onModuleInit();
+
+      expect(processor.worker.concurrency).toBe(10);
+      expect(logger.info).toHaveBeenCalledWith({ concurrency: 10 }, "Worker concurrency set");
+    });
+
+    it("should default worker concurrency to 4 if not configured", () => {
+      Object.defineProperty(processor, "worker", {
+        value: { concurrency: 0 },
+        writable: true,
+      });
+
+      appConfigService.workerBuilderConcurrency = undefined;
+      processor.onModuleInit();
+
+      expect(processor.worker.concurrency).toBe(4);
+      expect(logger.info).toHaveBeenCalledWith({ concurrency: 4 }, "Worker concurrency set");
+    });
   });
 
   it("should add then remove the game in-progress marker and execute the aggregate query", async () => {
