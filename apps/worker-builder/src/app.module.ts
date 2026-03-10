@@ -19,6 +19,7 @@ import { GameCacheWriteService } from "./game-build/services/game-cache-write.se
       useFactory: (config: AppConfigService) => ({
         type: "postgres",
         url: config.databaseUrl,
+        synchronize: false,
       }),
     }),
     BullModule.forRootAsync({
