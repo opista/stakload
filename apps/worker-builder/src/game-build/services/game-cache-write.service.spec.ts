@@ -13,19 +13,36 @@ describe("GameCacheWriteService", () => {
   let service: GameCacheWriteService;
 
   const createGame = (): GameDto => ({
+    aggregatedRating: null,
+    aggregatedRatingCount: null,
+    artworks: [],
     cover: null,
     firstReleaseDate: 1_704_067_200,
+    gameModes: [],
+    gameStatus: null,
+    gameType: null,
     genres: [
       { id: 3, name: "Adventure" },
       { id: 3, name: "Adventure" },
       { id: 5, name: "Shooter" },
     ],
     id: 42,
+    involvedCompanies: [],
+    keywords: [],
     name: "Example Game",
     platforms: [],
+    playerPerspectives: [],
     rating: 77.4,
+    ratingCount: null,
+    screenshots: [],
+    slug: null,
+    storyline: null,
     summary: "Example summary",
     themes: [],
+    totalRating: null,
+    totalRatingCount: null,
+    url: null,
+    videos: [],
   });
 
   beforeEach(async () => {
@@ -36,7 +53,7 @@ describe("GameCacheWriteService", () => {
     redisService = unitRef.get(RedisService) as unknown as Mocked<RedisService>;
   });
 
-  it("should write the game payload and genre dependency sets in one Redis multi transaction", async () => {
+  it("should write the game payload and dependency sets in one Redis multi transaction", async () => {
     const game = createGame();
     const multi = {
       exec: vi.fn().mockResolvedValue([
@@ -56,7 +73,7 @@ describe("GameCacheWriteService", () => {
       value: client,
     });
 
-    await expect(service.cacheGameAndGenreDependencies(game)).resolves.toBeUndefined();
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
 
     expect(client.multi).toHaveBeenCalledTimes(1);
     expect(multi.set).toHaveBeenCalledWith("game:42", JSON.stringify(game));
@@ -81,7 +98,7 @@ describe("GameCacheWriteService", () => {
       value: client,
     });
 
-    await expect(service.cacheGameAndGenreDependencies(createGame())).rejects.toThrow(
+    await expect(service.cacheGameAndDependencies(createGame())).rejects.toThrow(
       "Redis transaction did not return any results",
     );
   });
@@ -102,7 +119,7 @@ describe("GameCacheWriteService", () => {
       value: client,
     });
 
-    await expect(service.cacheGameAndGenreDependencies(createGame())).rejects.toThrow("set failed");
+    await expect(service.cacheGameAndDependencies(createGame())).rejects.toThrow("set failed");
     expect(logger.error).toHaveBeenCalledWith({ err: writeError, gameId: 42 }, "Failed to cache game build payload");
   });
 });

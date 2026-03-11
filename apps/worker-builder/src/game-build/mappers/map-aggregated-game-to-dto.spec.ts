@@ -3,15 +3,32 @@ import { mapAggregatedGameToDto } from "./map-aggregated-game-to-dto";
 
 describe("mapAggregatedGameToDto", () => {
   const createBaseGame = (): GameDto => ({
+    aggregatedRating: null,
+    aggregatedRatingCount: null,
+    artworks: [],
     cover: null,
     firstReleaseDate: 1_704_067_200,
+    gameModes: [],
+    gameStatus: null,
+    gameType: null,
     genres: [{ id: 5, name: "Shooter" }],
     id: 42,
+    involvedCompanies: [],
+    keywords: [],
     name: "Example Game",
     platforms: [],
+    playerPerspectives: [],
     rating: 81.4,
+    ratingCount: null,
+    screenshots: [],
+    slug: null,
+    storyline: null,
     summary: "Example summary",
     themes: [],
+    totalRating: null,
+    totalRatingCount: null,
+    url: null,
+    videos: [],
   });
 
   it("maps object payloads directly", () => {

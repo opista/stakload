@@ -26,15 +26,32 @@ describe("GameBuildProcessor", () => {
     }) as Job<GameBuildJobPayload, void, string>;
 
   const createGameDto = (): GameDto => ({
+    aggregatedRating: null,
+    aggregatedRatingCount: null,
+    artworks: [],
     cover: null,
     firstReleaseDate: 1_704_067_200,
+    gameModes: [],
+    gameStatus: null,
+    gameType: null,
     genres: [{ id: 1, name: "Role-playing (RPG)" }],
     id: 42,
+    involvedCompanies: [],
+    keywords: [],
     name: "Example Game",
     platforms: [],
+    playerPerspectives: [],
     rating: 82.5,
+    ratingCount: null,
+    screenshots: [],
+    slug: null,
+    storyline: null,
     summary: "Example summary",
     themes: [],
+    totalRating: null,
+    totalRatingCount: null,
+    url: null,
+    videos: [],
   });
 
   beforeEach(async () => {
@@ -72,14 +89,14 @@ describe("GameBuildProcessor", () => {
     void redisService.sadd.mockResolvedValueOnce(1);
     void redisService.srem.mockResolvedValueOnce(1);
     void gameAggregateQueryService.fetchByGameId.mockResolvedValueOnce(createGameDto());
-    void gameCacheWriteService.cacheGameAndGenreDependencies.mockResolvedValueOnce();
+    void gameCacheWriteService.cacheGameAndDependencies.mockResolvedValueOnce();
     const job = createJob(42);
 
     await processor.process(job);
 
     expect(redisService.sadd).toHaveBeenCalledWith(GAME_BUILD_IN_PROGRESS_SET_KEY, 42);
     expect(gameAggregateQueryService.fetchByGameId).toHaveBeenCalledWith(42);
-    expect(gameCacheWriteService.cacheGameAndGenreDependencies).toHaveBeenCalledWith(createGameDto());
+    expect(gameCacheWriteService.cacheGameAndDependencies).toHaveBeenCalledWith(createGameDto());
     expect(redisService.srem).toHaveBeenCalledWith(GAME_BUILD_IN_PROGRESS_SET_KEY, 42);
     expect(logger.info).toHaveBeenCalledWith({ gameId: 42 }, "Processing build job");
   });
@@ -90,7 +107,7 @@ describe("GameBuildProcessor", () => {
     void gameAggregateQueryService.fetchByGameId.mockResolvedValueOnce(null);
 
     await expect(processor.process(createJob(404))).resolves.toBeUndefined();
-    expect(gameCacheWriteService.cacheGameAndGenreDependencies).not.toHaveBeenCalled();
+    expect(gameCacheWriteService.cacheGameAndDependencies).not.toHaveBeenCalled();
     expect(logger.warn).toHaveBeenCalledWith({ gameId: 404 }, "Game not found in database, skipping build");
   });
 
@@ -98,11 +115,11 @@ describe("GameBuildProcessor", () => {
     void redisService.sadd.mockResolvedValueOnce(1);
     void redisService.srem.mockResolvedValueOnce(1);
     void gameAggregateQueryService.fetchByGameId.mockResolvedValueOnce(createGameDto());
-    void gameCacheWriteService.cacheGameAndGenreDependencies.mockResolvedValueOnce();
+    void gameCacheWriteService.cacheGameAndDependencies.mockResolvedValueOnce();
 
     await expect(processor.process(createJob(42))).resolves.toBeUndefined();
-    expect(gameCacheWriteService.cacheGameAndGenreDependencies).toHaveBeenCalledWith(createGameDto());
-    expect(logger.debug).toHaveBeenCalledWith({ gameId: 42, genreCount: 1 }, "Prepared game aggregate for cache build");
+    expect(gameCacheWriteService.cacheGameAndDependencies).toHaveBeenCalledWith(createGameDto());
+    expect(logger.debug).toHaveBeenCalledWith({ gameId: 42 }, "Prepared game aggregate for cache build");
   });
 
   it("should still complete when removing in-progress marker fails", async () => {
