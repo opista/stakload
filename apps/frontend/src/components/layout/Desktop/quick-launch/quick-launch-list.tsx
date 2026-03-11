@@ -60,7 +60,7 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
   );
 
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    sortedGames.length ? <div className={cn("flex flex-col gap-3", className)}>
       <SubHeading className="px-2 text-slate-400">Quick Launch</SubHeading>
 
       <DndContext
@@ -74,5 +74,6 @@ export const QuickLaunchList = ({ className }: QuickLaunchListProps) => {
         </SortableContext>
       </DndContext>
     </div>
+    : null
   );
 };
