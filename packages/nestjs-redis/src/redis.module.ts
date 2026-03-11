@@ -7,17 +7,6 @@ import type { RedisModuleAsyncOptions, RedisModuleOptions } from "./types";
 
 @Module({})
 export class RedisModule {
-  private static createRedisProvider(options: RedisModuleAsyncOptions): Provider {
-    return {
-      inject: options.inject,
-      provide: REDIS_CLIENT,
-      useFactory: async (...args: unknown[]) => {
-        const redisOptions = await options.useFactory(...args);
-        return new Redis(redisOptions);
-      },
-    };
-  }
-
   static forRoot(options: RedisModuleOptions): DynamicModule {
     return {
       exports: [RedisService],
@@ -33,11 +22,19 @@ export class RedisModule {
   }
 
   static forRootAsync(options: RedisModuleAsyncOptions): DynamicModule {
+    const redisProvider: Provider = {
+      inject: options.inject,
+      provide: REDIS_CLIENT,
+      useFactory: async (...args: unknown[]) => {
+        const redisOptions = await options.useFactory(...args);
+        return new Redis(redisOptions);
+      },
+    };
+
     return {
       exports: [RedisService],
-      imports: options.imports,
       module: RedisModule,
-      providers: [RedisService, this.createRedisProvider(options)],
+      providers: [RedisService, redisProvider],
     };
   }
 }

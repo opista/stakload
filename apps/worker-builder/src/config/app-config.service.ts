@@ -12,19 +12,23 @@ export class AppConfigService {
     this.logger.setContext(this.constructor.name);
   }
 
-  get databaseUrl(): string {
+  get databaseUrl() {
     return this.configService.getOrThrow<string>("DATABASE_URL");
   }
 
-  get redisHost(): string {
+  get redisHost() {
     return this.configService.getOrThrow<string>("REDIS_HOST");
   }
 
-  get redisPassword(): string {
+  get redisPassword() {
     return this.configService.getOrThrow<string>("REDIS_PASSWORD");
   }
 
-  get redisPort(): number {
+  get redisPort() {
     return this.configService.getOrThrow<number>("REDIS_PORT");
+  }
+
+  get workerBuilderConcurrency() {
+    return this.configService.getOrThrow<number>("WORKER_BUILDER_CONCURRENCY");
   }
 }
