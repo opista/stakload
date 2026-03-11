@@ -9,18 +9,21 @@ describe("RedisService", () => {
     quit: ReturnType<typeof vi.fn>;
     disconnect: ReturnType<typeof vi.fn>;
     sadd: ReturnType<typeof vi.fn>;
+    srem: ReturnType<typeof vi.fn>;
   } {
     const quit = vi.fn();
     const disconnect = vi.fn();
     const sadd = vi.fn();
+    const srem = vi.fn();
 
     const redisClient = {
       disconnect,
       quit,
       sadd,
+      srem,
     } as unknown as Redis;
 
-    return { disconnect, quit, redisClient, sadd };
+    return { disconnect, quit, redisClient, sadd, srem };
   }
 
   it("quits Redis on module destroy", async () => {
@@ -65,6 +68,28 @@ describe("RedisService", () => {
     expect(result).toBe(2);
     expect(sadd).toHaveBeenCalledTimes(1);
     expect(sadd).toHaveBeenCalledWith("my-set", "one", 2);
+  });
+
+  it("returns 0 for srem with no members", async () => {
+    const { redisClient, srem } = createRedisMock();
+    const service = new RedisService(redisClient);
+
+    const result = await service.srem("my-set");
+
+    expect(result).toBe(0);
+    expect(srem).not.toHaveBeenCalled();
+  });
+
+  it("removes members with srem", async () => {
+    const { redisClient, srem } = createRedisMock();
+    srem.mockResolvedValueOnce(1);
+    const service = new RedisService(redisClient);
+
+    const result = await service.srem("my-set", "one");
+
+    expect(result).toBe(1);
+    expect(srem).toHaveBeenCalledTimes(1);
+    expect(srem).toHaveBeenCalledWith("my-set", "one");
   });
 
   it("exposes the underlying client", () => {

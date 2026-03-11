@@ -1,9 +1,12 @@
-import type { FactoryProvider, ModuleMetadata } from "@nestjs/common";
-import type { RedisOptions } from "ioredis";
+import type { InjectionToken } from "@nestjs/common";
 
-export type RedisModuleOptions = RedisOptions;
+export interface RedisModuleOptions {
+  host: string;
+  password?: string;
+  port: number;
+}
 
-export interface RedisModuleAsyncOptions extends Pick<ModuleMetadata, "imports"> {
-  inject?: FactoryProvider["inject"];
+export interface RedisModuleAsyncOptions {
+  inject?: InjectionToken[];
   useFactory: (...args: unknown[]) => Promise<RedisModuleOptions> | RedisModuleOptions;
 }
