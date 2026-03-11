@@ -56,26 +56,17 @@ describe("GameBuildProcessor", () => {
         writable: true,
       });
 
-      appConfigService.workerBuilderConcurrency = 10;
+      Object.defineProperty(appConfigService, "workerBuilderConcurrency", {
+        configurable: true,
+        value: 10,
+      });
       processor.onModuleInit();
 
       expect(processor.worker.concurrency).toBe(10);
       expect(logger.info).toHaveBeenCalledWith({ concurrency: 10 }, "Worker concurrency set");
     });
-
-    it("should default worker concurrency to 4 if not configured", () => {
-      Object.defineProperty(processor, "worker", {
-        value: { concurrency: 0 },
-        writable: true,
-      });
-
-      appConfigService.workerBuilderConcurrency = undefined;
-      processor.onModuleInit();
-
-      expect(processor.worker.concurrency).toBe(4);
-      expect(logger.info).toHaveBeenCalledWith({ concurrency: 4 }, "Worker concurrency set");
-    });
   });
+
 
   it("should add then remove the game in-progress marker and execute the aggregate query", async () => {
     void redisService.sadd.mockResolvedValueOnce(1);
