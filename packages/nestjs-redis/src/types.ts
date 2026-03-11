@@ -8,5 +8,6 @@ export interface RedisModuleOptions {
 
 export interface RedisModuleAsyncOptions {
   inject?: InjectionToken[];
-  useFactory: (...args: unknown[]) => Promise<RedisModuleOptions> | RedisModuleOptions;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  useFactory: (...args: any[]) => Promise<RedisModuleOptions> | RedisModuleOptions;
 }

@@ -17,9 +17,9 @@ import { GameCacheWriteService } from "./game-build/services/game-cache-write.se
     TypeOrmModule.forRootAsync({
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => ({
+        synchronize: false,
         type: "postgres",
         url: config.databaseUrl,
-        synchronize: false,
       }),
     }),
     BullModule.forRootAsync({

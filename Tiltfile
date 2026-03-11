@@ -35,7 +35,24 @@ api_webhook_port = os.getenv('API_WEBHOOK_PORT', '3001')
 docker_compose('./docker-compose.yml')
 
 # ============================================================
-# nestjs_service(name, shared_packages)
+# discover_shared_packages(app_name)
+#
+# Reads an app's package manifest and returns internal workspace
+# package names (without the @stakload/ scope) that exist under
+# packages/. This keeps Tilt's shared package list in sync with
+# app dependencies automatically.
+# ============================================================
+def discover_shared_packages(app_name):
+    script_path = "scripts/tilt/discover-shared-packages.mjs"
+    cmd = "node %s apps/%s/package.json" % (script_path, app_name)
+    output = str(local(cmd, quiet=True)).strip()
+    if not output:
+        return []
+
+    return [name for name in output.split('\n') if name]
+
+# ============================================================
+# nestjs_service(name)
 #
 # Registers a NestJS app as a Tilt docker_build resource with
 # live_update. Call once per service; adding a new service only
@@ -44,8 +61,6 @@ docker_compose('./docker-compose.yml')
 # Args:
 #   name            - directory name under apps/ and the suffix
 #                     of the Docker Compose image (stakload/<name>)
-#   shared_packages - list of package names under packages/ whose
-#                     src/ the service depends on at runtime
 #
 # Live-update flow (fastest possible inner loop):
 #   pnpm-lock.yaml / pnpm-workspace.yaml change
@@ -55,7 +70,9 @@ docker_compose('./docker-compose.yml')
 #   src / shared-package src change
 #     → sync files → tsc rebuild → restart_container()
 # ============================================================
-def nestjs_service(name, shared_packages):
+def nestjs_service(name):
+    shared_packages = discover_shared_packages(name)
+
     # Include the full package directory (src + package.json + tsconfig.json)
     # so the Dockerfile can run `pnpm --dir packages/<pkg> build` inside
     # the container. Only src/ is watched for live-update changes but the
@@ -134,8 +151,8 @@ def nestjs_service(name, shared_packages):
         ],
     )
 
-nestjs_service('api-webhook',    shared_packages=['database', 'igdb-vendor', 'nestjs-logging'])
-nestjs_service('worker-builder', shared_packages=['database', 'nestjs-logging'])
+nestjs_service('api-webhook')
+nestjs_service('worker-builder')
 
 # ============================================================
 # Resource configuration & dependency ordering
