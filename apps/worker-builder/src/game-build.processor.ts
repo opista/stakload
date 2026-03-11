@@ -42,7 +42,7 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
   }
 
   onModuleInit(): void {
-    const concurrency = this.appConfigService.workerBuilderConcurrency ?? 4;
+    const concurrency = this.appConfigService.workerBuilderConcurrency;
     this.worker.concurrency = concurrency;
     this.logger.info({ concurrency }, "Worker concurrency set");
   }
