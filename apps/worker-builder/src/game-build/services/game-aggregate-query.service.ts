@@ -29,12 +29,12 @@ const GAME_BUILD_QUERY = `
       ELSE FLOOR(EXTRACT(EPOCH FROM g."firstReleaseDate"))::bigint
     END,
     'gameStatus', (
-      SELECT JSON_BUILD_OBJECT('id', gs."igdbId", 'name', gs."name")
+      SELECT JSON_BUILD_OBJECT('id', gs."igdbId", 'name', gs."status")
       FROM game_statuses gs
       WHERE gs."igdbId" = g."gameStatus"
     ),
     'gameType', (
-      SELECT JSON_BUILD_OBJECT('id', gt."igdbId", 'name', gt."name")
+      SELECT JSON_BUILD_OBJECT('id', gt."igdbId", 'name', gt."type")
       FROM game_types gt
       WHERE gt."igdbId" = g."gameType"
     ),
