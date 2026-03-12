@@ -84,7 +84,6 @@ describe("GameBuildProcessor", () => {
     });
   });
 
-
   it("should add then remove the game in-progress marker and execute the aggregate query", async () => {
     void redisService.sadd.mockResolvedValueOnce(1);
     void redisService.srem.mockResolvedValueOnce(1);
