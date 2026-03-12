@@ -30,25 +30,67 @@ describe("GameAggregateQueryService", () => {
     void dataSource.query.mockResolvedValueOnce([
       {
         game: {
+          ageRatings: [
+            {
+              descriptions: ["Violence"],
+              id: 41,
+              name: "Mature 17+",
+              organisation: "ESRB",
+            },
+          ],
+          aggregatedRating: null,
+          aggregatedRatingCount: null,
+          artworks: [],
           cover: null,
           firstReleaseDate: 1_704_067_200,
+          gameModes: [],
+          gameStatus: null,
+          gameType: null,
           genres: [{ id: 3, name: "Adventure" }],
           id: 42,
+          involvedCompanies: [
+            {
+              company: { id: 10, name: "Dev Studio" },
+              developer: true,
+              id: 1,
+              porting: false,
+              publisher: true,
+              supporting: false,
+            },
+          ],
+          keywords: [],
           name: "Example Game",
           platforms: [],
+          playerPerspectives: [],
           rating: 78.9,
+          ratingCount: null,
+          screenshots: [],
+          slug: null,
+          storyline: null,
           summary: "Example summary",
           themes: [],
+          totalRating: null,
+          totalRatingCount: null,
+          url: null,
+          videos: [],
+          websites: [],
         },
       },
     ]);
 
     await expect(service.fetchByGameId(42)).resolves.toMatchObject({
+      ageRatings: [{ id: 41 }],
+      developers: [{ id: 10, name: "Dev Studio" }],
       genres: [{ id: 3, name: "Adventure" }],
       id: 42,
       name: "Example Game",
+      publishers: [{ id: 10, name: "Dev Studio" }],
     });
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain('UNNEST(g."genres")');
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_categories");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_organizations");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_content_descriptions_v2");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("website_types");
   });
 
   it("logs and rethrows mapper failures", async () => {

@@ -61,8 +61,8 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
         return;
       }
 
-      await this.gameCacheWriteService.cacheGameAndGenreDependencies(game);
-      this.logger.debug({ gameId, genreCount: game.genres.length }, "Prepared game aggregate for cache build");
+      await this.gameCacheWriteService.cacheGameAndDependencies(game);
+      this.logger.debug({ gameId }, "Prepared game aggregate for cache build");
     } finally {
       try {
         await this.redisService.srem(GAME_BUILD_IN_PROGRESS_SET_KEY, gameId);
