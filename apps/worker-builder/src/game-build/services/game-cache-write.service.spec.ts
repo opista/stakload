@@ -27,10 +27,19 @@ describe("GameCacheWriteService", () => {
       { id: 5, name: "Shooter" },
     ],
     id: 42,
-    involvedCompanies: [],
+    involvedCompanies: [
+      {
+        id: 1,
+        company: { id: 10, name: "Dev Studio" },
+        developer: true,
+        publisher: false,
+        porting: false,
+        supporting: false,
+      },
+    ],
     keywords: [],
     name: "Example Game",
-    platforms: [],
+    platforms: [{ id: 6, name: "PC" }],
     playerPerspectives: [],
     rating: 77.4,
     ratingCount: null,
@@ -38,7 +47,7 @@ describe("GameCacheWriteService", () => {
     slug: null,
     storyline: null,
     summary: "Example summary",
-    themes: [],
+    themes: [{ id: 18, name: "Sci-fi" }],
     totalRating: null,
     totalRatingCount: null,
     url: null,
@@ -60,6 +69,9 @@ describe("GameCacheWriteService", () => {
         [null, "OK"],
         [null, 1],
         [null, 1],
+        [null, 1],
+        [null, 1],
+        [null, 1],
       ]),
       sadd: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
@@ -77,9 +89,12 @@ describe("GameCacheWriteService", () => {
 
     expect(client.multi).toHaveBeenCalledTimes(1);
     expect(multi.set).toHaveBeenCalledWith("game:42", JSON.stringify(game));
-    expect(multi.sadd).toHaveBeenCalledTimes(2);
-    expect(multi.sadd).toHaveBeenNthCalledWith(1, "genre:3:games", 42);
-    expect(multi.sadd).toHaveBeenNthCalledWith(2, "genre:5:games", 42);
+    expect(multi.sadd).toHaveBeenCalledTimes(5);
+    expect(multi.sadd).toHaveBeenCalledWith("genre:3:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("genre:5:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("platform:6:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("theme:18:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("company:10:games", 42);
     expect(multi.exec).toHaveBeenCalledTimes(1);
   });
 
