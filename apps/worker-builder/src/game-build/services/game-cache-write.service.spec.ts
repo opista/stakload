@@ -13,10 +13,15 @@ describe("GameCacheWriteService", () => {
   let service: GameCacheWriteService;
 
   const createGame = (): GameDto => ({
+    ageRatings: [],
     aggregatedRating: null,
     aggregatedRatingCount: null,
     artworks: [],
     cover: null,
+    developers: [
+      { id: 10, name: "Dev Studio" },
+      { id: 11, name: "Co Dev Studio" },
+    ],
     firstReleaseDate: 1_704_067_200,
     gameModes: [],
     gameStatus: null,
@@ -27,20 +32,14 @@ describe("GameCacheWriteService", () => {
       { id: 5, name: "Shooter" },
     ],
     id: 42,
-    involvedCompanies: [
-      {
-        id: 1,
-        company: { id: 10, name: "Dev Studio" },
-        developer: true,
-        publisher: false,
-        porting: false,
-        supporting: false,
-      },
-    ],
     keywords: [],
     name: "Example Game",
     platforms: [{ id: 6, name: "PC" }],
     playerPerspectives: [],
+    publishers: [
+      { id: 10, name: "Dev Studio" },
+      { id: 12, name: "Publishing House" },
+    ],
     rating: 77.4,
     ratingCount: null,
     screenshots: [],
@@ -52,6 +51,7 @@ describe("GameCacheWriteService", () => {
     totalRatingCount: null,
     url: null,
     videos: [],
+    websites: [],
   });
 
   beforeEach(async () => {
@@ -67,6 +67,8 @@ describe("GameCacheWriteService", () => {
     const multi = {
       exec: vi.fn().mockResolvedValue([
         [null, "OK"],
+        [null, 1],
+        [null, 1],
         [null, 1],
         [null, 1],
         [null, 1],
@@ -89,12 +91,14 @@ describe("GameCacheWriteService", () => {
 
     expect(client.multi).toHaveBeenCalledTimes(1);
     expect(multi.set).toHaveBeenCalledWith("game:42", JSON.stringify(game));
-    expect(multi.sadd).toHaveBeenCalledTimes(5);
+    expect(multi.sadd).toHaveBeenCalledTimes(7);
     expect(multi.sadd).toHaveBeenCalledWith("genre:3:games", 42);
     expect(multi.sadd).toHaveBeenCalledWith("genre:5:games", 42);
     expect(multi.sadd).toHaveBeenCalledWith("platform:6:games", 42);
     expect(multi.sadd).toHaveBeenCalledWith("theme:18:games", 42);
     expect(multi.sadd).toHaveBeenCalledWith("company:10:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("company:11:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("company:12:games", 42);
     expect(multi.exec).toHaveBeenCalledTimes(1);
   });
 

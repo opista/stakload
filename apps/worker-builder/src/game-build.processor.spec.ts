@@ -26,21 +26,23 @@ describe("GameBuildProcessor", () => {
     }) as Job<GameBuildJobPayload, void, string>;
 
   const createGameDto = (): GameDto => ({
+    ageRatings: [],
     aggregatedRating: null,
     aggregatedRatingCount: null,
     artworks: [],
     cover: null,
+    developers: [],
     firstReleaseDate: 1_704_067_200,
     gameModes: [],
     gameStatus: null,
     gameType: null,
     genres: [{ id: 1, name: "Role-playing (RPG)" }],
     id: 42,
-    involvedCompanies: [],
     keywords: [],
     name: "Example Game",
     platforms: [],
     playerPerspectives: [],
+    publishers: [],
     rating: 82.5,
     ratingCount: null,
     screenshots: [],
@@ -52,6 +54,7 @@ describe("GameBuildProcessor", () => {
     totalRatingCount: null,
     url: null,
     videos: [],
+    websites: [],
   });
 
   beforeEach(async () => {

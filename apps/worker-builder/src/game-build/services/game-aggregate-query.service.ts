@@ -24,6 +24,27 @@ const GAME_BUILD_QUERY = `
     'aggregatedRatingCount', g."aggregatedRatingCount",
     'totalRating', g."totalRating",
     'totalRatingCount', g."totalRatingCount",
+    'ageRatings', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', ar."igdbId",
+          'name', arc."rating",
+          'organisation', aro."name",
+          'descriptions', COALESCE(age_rating_descriptions."descriptions", '[]'::json)
+        )
+        ORDER BY ar."igdbId"
+      )
+      FROM UNNEST(g."ageRatings") AS age_rating_id
+      JOIN age_ratings ar ON ar."igdbId" = age_rating_id
+      LEFT JOIN age_rating_categories arc ON arc."igdbId" = ar."ratingCategory"
+      LEFT JOIN age_rating_organizations aro ON aro."igdbId" = ar."organization"
+      LEFT JOIN LATERAL (
+        SELECT JSON_AGG(age_description."description" ORDER BY age_description."igdbId")
+          FILTER (WHERE age_description."description" IS NOT NULL) AS "descriptions"
+        FROM UNNEST(ar."ratingContentDescriptions") AS description_id
+        JOIN age_rating_content_descriptions_v2 age_description ON age_description."igdbId" = description_id
+      ) AS age_rating_descriptions ON true
+    ), '[]'::json),
     'firstReleaseDate', CASE
       WHEN g."firstReleaseDate" IS NULL THEN NULL
       ELSE FLOOR(EXTRACT(EPOCH FROM g."firstReleaseDate"))::bigint
@@ -136,6 +157,26 @@ const GAME_BUILD_QUERY = `
       )
       FROM game_videos v
       WHERE v."game" = g."igdbId"
+    ), '[]'::json),
+    'websites', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', w."igdbId",
+          'url', w."url",
+          'trusted', w."trusted",
+          'websiteType', CASE
+            WHEN wt."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', wt."igdbId",
+              'name', wt."type"
+            )
+          END
+        )
+        ORDER BY w."igdbId"
+      )
+      FROM websites w
+      LEFT JOIN website_types wt ON wt."igdbId" = w."type"
+      WHERE w."game" = g."igdbId"
     ), '[]'::json),
     'involvedCompanies', COALESCE((
       SELECT JSON_AGG(

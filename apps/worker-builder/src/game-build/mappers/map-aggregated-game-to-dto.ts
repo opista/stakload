@@ -1,7 +1,8 @@
-import type { GameDto } from "../../models/dto/game.dto";
+import type { GameDto, InvolvedCompanyDto, ReferenceItemDto } from "../../models/dto/game.dto";
 
-export type RawAggregatedGameDto = Omit<GameDto, "firstReleaseDate"> & {
+export type RawAggregatedGameDto = Omit<GameDto, "developers" | "firstReleaseDate" | "publishers"> & {
   firstReleaseDate: number | string | null;
+  involvedCompanies: InvolvedCompanyDto[];
 };
 
 const parseFirstReleaseDate = (value: number | string | null): number | null => {
@@ -15,6 +16,25 @@ const parseFirstReleaseDate = (value: number | string | null): number | null => 
   }
 
   return null;
+};
+
+const deriveCompanyReferences = (
+  involvedCompanies: InvolvedCompanyDto[],
+  role: "developer" | "publisher",
+): ReferenceItemDto[] => {
+  const referencesById = new Map<number, ReferenceItemDto>();
+
+  for (const involvedCompany of involvedCompanies) {
+    if (!involvedCompany[role]) {
+      continue;
+    }
+
+    if (!referencesById.has(involvedCompany.company.id)) {
+      referencesById.set(involvedCompany.company.id, involvedCompany.company);
+    }
+  }
+
+  return Array.from(referencesById.values()).sort((left, right) => left.id - right.id);
 };
 
 export const mapAggregatedGameToDto = (rawGame: RawAggregatedGameDto | string): GameDto => {
@@ -32,8 +52,14 @@ export const mapAggregatedGameToDto = (rawGame: RawAggregatedGameDto | string): 
     parsedGame = rawGame;
   }
 
+  const { involvedCompanies = [], ...gameWithoutInvolvedCompanies } = parsedGame;
+
   return {
-    ...parsedGame,
+    ...gameWithoutInvolvedCompanies,
+    ageRatings: gameWithoutInvolvedCompanies.ageRatings ?? [],
+    developers: deriveCompanyReferences(involvedCompanies, "developer"),
     firstReleaseDate: parseFirstReleaseDate(parsedGame.firstReleaseDate),
+    publishers: deriveCompanyReferences(involvedCompanies, "publisher"),
+    websites: gameWithoutInvolvedCompanies.websites ?? [],
   };
 };

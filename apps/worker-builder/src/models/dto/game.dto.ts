@@ -17,54 +17,56 @@ export interface VideoDto {
 }
 
 export interface InvolvedCompanyDto {
-  id: number;
   company: ReferenceItemDto;
   developer: boolean;
-  publisher: boolean;
+  id: number;
   porting: boolean;
+  publisher: boolean;
   supporting: boolean;
 }
 
-export interface GameDto {
-  // Identity
+export interface AgeRatingDto {
+  descriptions: string[];
   id: number;
-  name: string;
-  slug: string | null;
-  url: string | null;
+  name: string | null;
+  organisation: string | null;
+}
 
-  // Description
-  summary: string | null;
-  storyline: string | null;
+export interface WebsiteDto {
+  id: number;
+  trusted: boolean | null;
+  url: string;
+  websiteType: ReferenceItemDto | null;
+}
 
-  // Dates
-  firstReleaseDate: number | null;
-
-  // Ratings
-  rating: number | null;
-  ratingCount: number | null;
+export interface GameDto {
+  ageRatings: AgeRatingDto[];
   aggregatedRating: number | null;
   aggregatedRatingCount: number | null;
-  totalRating: number | null;
-  totalRatingCount: number | null;
-
-  // Classification
+  artworks: ImageDto[];
+  cover: ImageDto | null;
+  developers: ReferenceItemDto[];
+  firstReleaseDate: number | null;
+  gameModes: ReferenceItemDto[];
   gameStatus: ReferenceItemDto | null;
   gameType: ReferenceItemDto | null;
-
-  // Reference lookups
   genres: ReferenceItemDto[];
-  platforms: ReferenceItemDto[];
-  themes: ReferenceItemDto[];
-  gameModes: ReferenceItemDto[];
-  playerPerspectives: ReferenceItemDto[];
+  id: number;
   keywords: ReferenceItemDto[];
-
-  // Media
-  cover: ImageDto | null;
-  artworks: ImageDto[];
+  name: string;
+  platforms: ReferenceItemDto[];
+  playerPerspectives: ReferenceItemDto[];
+  publishers: ReferenceItemDto[];
+  rating: number | null;
+  ratingCount: number | null;
   screenshots: ImageDto[];
+  slug: string | null;
+  storyline: string | null;
+  summary: string | null;
+  themes: ReferenceItemDto[];
+  totalRating: number | null;
+  totalRatingCount: number | null;
+  url: string | null;
   videos: VideoDto[];
-
-  // Companies
-  involvedCompanies: InvolvedCompanyDto[];
+  websites: WebsiteDto[];
 }

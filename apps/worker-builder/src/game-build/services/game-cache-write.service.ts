@@ -38,24 +38,19 @@ export class GameCacheWriteService {
     multi.set(`game:${game.id}`, JSON.stringify(game));
 
     const simpleReferenceFields: { prefix: string; items: { id: number }[] }[] = [
-      { prefix: "genre", items: game.genres },
-      { prefix: "platform", items: game.platforms },
-      { prefix: "theme", items: game.themes },
-      { prefix: "gameMode", items: game.gameModes },
-      { prefix: "keyword", items: game.keywords },
-      { prefix: "playerPerspective", items: game.playerPerspectives },
+      { items: game.genres, prefix: "genre" },
+      { items: game.platforms, prefix: "platform" },
+      { items: game.themes, prefix: "theme" },
+      { items: game.gameModes, prefix: "gameMode" },
+      { items: game.keywords, prefix: "keyword" },
+      { items: game.playerPerspectives, prefix: "playerPerspective" },
     ];
 
-    for (const { prefix, items } of simpleReferenceFields) {
+    for (const { items, prefix } of simpleReferenceFields) {
       this.addReferenceItemDependencies(multi, prefix, items, game.id);
     }
 
-    this.addReferenceItemDependencies(
-      multi,
-      "company",
-      game.involvedCompanies.map((ic) => ic.company),
-      game.id,
-    );
+    this.addReferenceItemDependencies(multi, "company", [...game.developers, ...game.publishers], game.id);
 
     const results = await multi.exec();
 
