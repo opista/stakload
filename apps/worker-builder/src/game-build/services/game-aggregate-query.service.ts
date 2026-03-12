@@ -24,6 +24,175 @@ const GAME_BUILD_QUERY = `
     'aggregatedRatingCount', g."aggregatedRatingCount",
     'totalRating', g."totalRating",
     'totalRatingCount', g."totalRatingCount",
+    'checksum', g."checksum",
+    'sourceUpdatedAt', g."sourceUpdatedAt",
+    'createdAt', g."createdAt",
+    'updatedAt', g."updatedAt",
+    'versionTitle', g."versionTitle",
+    'alternativeNames', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', an."igdbId",
+          'checksum', an."checksum",
+          'comment', an."comment",
+          'game', an."game",
+          'name', an."name",
+          'sourceUpdatedAt', an."sourceUpdatedAt",
+          'createdAt', an."createdAt",
+          'updatedAt', an."updatedAt"
+        )
+        ORDER BY an."igdbId"
+      )
+      FROM UNNEST(g."alternativeNames") AS alternative_name_id
+      JOIN alternative_names an ON an."igdbId" = alternative_name_id
+    ), '[]'::json),
+    'bundles', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', bundle_game."igdbId",
+          'name', bundle_game."name",
+          'slug', bundle_game."slug",
+          'url', bundle_game."url"
+        )
+        ORDER BY bundle_game."igdbId"
+      )
+      FROM UNNEST(g."bundles") AS bundle_id
+      JOIN games bundle_game ON bundle_game."igdbId" = bundle_id
+    ), '[]'::json),
+    'collections', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', collection."igdbId",
+          'name', collection."name",
+          'slug', collection."slug",
+          'url', collection."url",
+          'checksum', collection."checksum",
+          'description', collection."description",
+          'games', collection."games",
+          'sourceUpdatedAt', collection."sourceUpdatedAt",
+          'createdAt', collection."createdAt",
+          'updatedAt', collection."updatedAt"
+        )
+        ORDER BY collection."igdbId"
+      )
+      FROM UNNEST(g."collections") AS collection_id
+      JOIN collections collection ON collection."igdbId" = collection_id
+    ), '[]'::json),
+    'externalGames', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', eg."igdbId",
+          'checksum', eg."checksum",
+          'countries', eg."countries",
+          'externalGameSource', eg."externalGameSource",
+          'externalGameSourceDetails', CASE
+            WHEN egs."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', egs."igdbId",
+              'name', egs."name",
+              'checksum', egs."checksum",
+              'sourceUpdatedAt', egs."sourceUpdatedAt",
+              'createdAt', egs."createdAt",
+              'updatedAt', egs."updatedAt"
+            )
+          END,
+          'game', eg."game",
+          'gameReleaseFormat', eg."gameReleaseFormat",
+          'gameReleaseFormatDetails', CASE
+            WHEN grf."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', grf."igdbId",
+              'name', grf."name",
+              'checksum', grf."checksum",
+              'sourceUpdatedAt', grf."sourceUpdatedAt",
+              'createdAt', grf."createdAt",
+              'updatedAt', grf."updatedAt"
+            )
+          END,
+          'name', eg."name",
+          'platform', eg."platform",
+          'platformDetails', CASE
+            WHEN external_platform."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', external_platform."igdbId",
+              'name', external_platform."name",
+              'checksum', external_platform."checksum",
+              'slug', external_platform."slug",
+              'url', external_platform."url",
+              'sourceUpdatedAt', external_platform."sourceUpdatedAt",
+              'createdAt', external_platform."createdAt",
+              'updatedAt', external_platform."updatedAt"
+            )
+          END,
+          'uid', eg."uid",
+          'url', eg."url",
+          'year', eg."year",
+          'sourceUpdatedAt', eg."sourceUpdatedAt",
+          'createdAt', eg."createdAt",
+          'updatedAt', eg."updatedAt"
+        )
+        ORDER BY eg."igdbId"
+      )
+      FROM UNNEST(g."externalGames") AS external_game_id
+      JOIN external_games eg ON eg."igdbId" = external_game_id
+      LEFT JOIN external_game_sources egs ON egs."igdbId" = eg."externalGameSource"
+      LEFT JOIN game_release_formats grf ON grf."igdbId" = eg."gameReleaseFormat"
+      LEFT JOIN platforms external_platform ON external_platform."igdbId" = eg."platform"
+    ), '[]'::json),
+    'franchise', (
+      SELECT JSON_BUILD_OBJECT(
+        'id', f."igdbId",
+        'name', f."name",
+        'slug', f."slug",
+        'url', f."url",
+        'checksum', f."checksum",
+        'games', f."games",
+        'sourceUpdatedAt', f."sourceUpdatedAt",
+        'createdAt', f."createdAt",
+        'updatedAt', f."updatedAt"
+      )
+      FROM franchises f
+      WHERE f."igdbId" = g."franchise"
+    ),
+    'franchises', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', f."igdbId",
+          'name', f."name",
+          'slug', f."slug",
+          'url', f."url",
+          'checksum', f."checksum",
+          'games', f."games",
+          'sourceUpdatedAt', f."sourceUpdatedAt",
+          'createdAt', f."createdAt",
+          'updatedAt', f."updatedAt"
+        )
+        ORDER BY f."igdbId"
+      )
+      FROM UNNEST(g."franchises") AS franchise_id
+      JOIN franchises f ON f."igdbId" = franchise_id
+    ), '[]'::json),
+    'gameEngines', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', ge."igdbId",
+          'name', ge."name",
+          'slug', ge."slug",
+          'url', ge."url",
+          'checksum', ge."checksum",
+          'companies', ge."companies",
+          'description', ge."description",
+          'logo', ge."logo",
+          'platforms', ge."platforms",
+          'sourceUpdatedAt', ge."sourceUpdatedAt",
+          'createdAt', ge."createdAt",
+          'updatedAt', ge."updatedAt"
+        )
+        ORDER BY ge."igdbId"
+      )
+      FROM UNNEST(g."gameEngines") AS game_engine_id
+      JOIN game_engines ge ON ge."igdbId" = game_engine_id
+    ), '[]'::json),
     'ageRatings', COALESCE((
       SELECT JSON_AGG(
         JSON_BUILD_OBJECT(
@@ -49,6 +218,84 @@ const GAME_BUILD_QUERY = `
       WHEN g."firstReleaseDate" IS NULL THEN NULL
       ELSE FLOOR(EXTRACT(EPOCH FROM g."firstReleaseDate"))::bigint
     END,
+    'languageSupports', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', ls."igdbId",
+          'checksum', ls."checksum",
+          'game', ls."game",
+          'language', ls."language",
+          'languageDetails', CASE
+            WHEN language."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', language."igdbId",
+              'name', language."name",
+              'checksum', language."checksum",
+              'sourceUpdatedAt', language."sourceUpdatedAt",
+              'createdAt', language."createdAt",
+              'updatedAt', language."updatedAt"
+            )
+          END,
+          'languageSupportType', ls."languageSupportType",
+          'languageSupportTypeDetails', CASE
+            WHEN language_support_type."igdbId" IS NULL THEN NULL
+            ELSE JSON_BUILD_OBJECT(
+              'id', language_support_type."igdbId",
+              'name', language_support_type."name",
+              'checksum', language_support_type."checksum",
+              'sourceUpdatedAt', language_support_type."sourceUpdatedAt",
+              'createdAt', language_support_type."createdAt",
+              'updatedAt', language_support_type."updatedAt"
+            )
+          END,
+          'sourceUpdatedAt', ls."sourceUpdatedAt",
+          'createdAt', ls."createdAt",
+          'updatedAt', ls."updatedAt"
+        )
+        ORDER BY ls."igdbId"
+      )
+      FROM UNNEST(g."languageSupports") AS language_support_id
+      JOIN language_supports ls ON ls."igdbId" = language_support_id
+      LEFT JOIN languages language ON language."igdbId" = ls."language"
+      LEFT JOIN language_support_types language_support_type ON language_support_type."igdbId" = ls."languageSupportType"
+    ), '[]'::json),
+    'multiplayerModes', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', mm."igdbId",
+          'campaignCoop', mm."campaignCoop",
+          'checksum', mm."checksum",
+          'dropIn', mm."dropIn",
+          'game', mm."game",
+          'lanCoop', mm."lanCoop",
+          'offlineCoop', mm."offlineCoop",
+          'offlineCoopMax', mm."offlineCoopMax",
+          'offlineMax', mm."offlineMax",
+          'onlineCoop', mm."onlineCoop",
+          'onlineCoopMax', mm."onlineCoopMax",
+          'onlineMax', mm."onlineMax",
+          'platform', mm."platform",
+          'splitScreen', mm."splitScreen",
+          'splitScreenOnline', mm."splitScreenOnline",
+          'sourceUpdatedAt', mm."sourceUpdatedAt",
+          'createdAt', mm."createdAt",
+          'updatedAt', mm."updatedAt"
+        )
+        ORDER BY mm."igdbId"
+      )
+      FROM UNNEST(g."multiplayerModes") AS multiplayer_mode_id
+      JOIN multiplayer_modes mm ON mm."igdbId" = multiplayer_mode_id
+    ), '[]'::json),
+    'parentGame', (
+      SELECT JSON_BUILD_OBJECT(
+        'id', parent_game."igdbId",
+        'name', parent_game."name",
+        'slug', parent_game."slug",
+        'url', parent_game."url"
+      )
+      FROM games parent_game
+      WHERE parent_game."igdbId" = g."parentGame"
+    ),
     'gameStatus', (
       SELECT JSON_BUILD_OBJECT('id', gs."igdbId", 'name', gs."status")
       FROM game_statuses gs
@@ -109,6 +356,19 @@ const GAME_BUILD_QUERY = `
       )
       FROM UNNEST(g."keywords") AS keyword_id
       JOIN keywords k ON k."igdbId" = keyword_id
+    ), '[]'::json),
+    'similarGames', COALESCE((
+      SELECT JSON_AGG(
+        JSON_BUILD_OBJECT(
+          'id', similar_game."igdbId",
+          'name', similar_game."name",
+          'slug', similar_game."slug",
+          'url', similar_game."url"
+        )
+        ORDER BY similar_game."igdbId"
+      )
+      FROM UNNEST(g."similarGames") AS similar_game_id
+      JOIN games similar_game ON similar_game."igdbId" = similar_game_id
     ), '[]'::json),
     'cover', (
       SELECT JSON_BUILD_OBJECT(
@@ -196,7 +456,17 @@ const GAME_BUILD_QUERY = `
       FROM involved_companies ic
       JOIN companies co ON co."igdbId" = ic."company"
       WHERE ic."game" = g."igdbId"
-    ), '[]'::json)
+    ), '[]'::json),
+    'versionParent', (
+      SELECT JSON_BUILD_OBJECT(
+        'id', version_parent."igdbId",
+        'name', version_parent."name",
+        'slug', version_parent."slug",
+        'url', version_parent."url"
+      )
+      FROM games version_parent
+      WHERE version_parent."igdbId" = g."versionParent"
+    )
   ) AS game
   FROM games g
   WHERE g."igdbId" = $1

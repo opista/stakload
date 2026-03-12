@@ -2,7 +2,6 @@ import type { GameDto, InvolvedCompanyDto, ReferenceItemDto } from "../../models
 
 export type RawAggregatedGameDto = Omit<GameDto, "developers" | "firstReleaseDate" | "publishers"> & {
   firstReleaseDate: number | string | null;
-  involvedCompanies: InvolvedCompanyDto[];
 };
 
 const parseFirstReleaseDate = (value: number | string | null): number | null => {
@@ -57,9 +56,27 @@ export const mapAggregatedGameToDto = (rawGame: RawAggregatedGameDto | string): 
   return {
     ...gameWithoutInvolvedCompanies,
     ageRatings: gameWithoutInvolvedCompanies.ageRatings ?? [],
+    alternativeNames: gameWithoutInvolvedCompanies.alternativeNames ?? [],
+    bundles: gameWithoutInvolvedCompanies.bundles ?? [],
+    checksum: gameWithoutInvolvedCompanies.checksum ?? null,
+    collections: gameWithoutInvolvedCompanies.collections ?? [],
+    createdAt: gameWithoutInvolvedCompanies.createdAt ?? null,
     developers: deriveCompanyReferences(involvedCompanies, "developer"),
+    externalGames: gameWithoutInvolvedCompanies.externalGames ?? [],
     firstReleaseDate: parseFirstReleaseDate(parsedGame.firstReleaseDate),
+    franchise: gameWithoutInvolvedCompanies.franchise ?? null,
+    franchises: gameWithoutInvolvedCompanies.franchises ?? [],
+    gameEngines: gameWithoutInvolvedCompanies.gameEngines ?? [],
+    involvedCompanies,
+    languageSupports: gameWithoutInvolvedCompanies.languageSupports ?? [],
+    multiplayerModes: gameWithoutInvolvedCompanies.multiplayerModes ?? [],
+    parentGame: gameWithoutInvolvedCompanies.parentGame ?? null,
     publishers: deriveCompanyReferences(involvedCompanies, "publisher"),
+    similarGames: gameWithoutInvolvedCompanies.similarGames ?? [],
+    sourceUpdatedAt: gameWithoutInvolvedCompanies.sourceUpdatedAt ?? null,
+    updatedAt: gameWithoutInvolvedCompanies.updatedAt ?? null,
+    versionParent: gameWithoutInvolvedCompanies.versionParent ?? null,
+    versionTitle: gameWithoutInvolvedCompanies.versionTitle ?? null,
     websites: gameWithoutInvolvedCompanies.websites ?? [],
   };
 };

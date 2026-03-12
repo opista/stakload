@@ -12,9 +12,18 @@ describe("mapAggregatedGameToDto", () => {
     ],
     aggregatedRating: null,
     aggregatedRatingCount: null,
+    alternativeNames: [],
     artworks: [],
+    bundles: [],
+    checksum: null,
+    collections: [],
     cover: null,
+    createdAt: "2026-01-01T00:00:00.000Z",
+    externalGames: [],
     firstReleaseDate: 1_704_067_200,
+    franchise: null,
+    franchises: [],
+    gameEngines: [],
     gameModes: [],
     gameStatus: null,
     gameType: null,
@@ -55,19 +64,27 @@ describe("mapAggregatedGameToDto", () => {
       },
     ],
     keywords: [],
+    languageSupports: [],
+    multiplayerModes: [],
     name: "Example Game",
+    parentGame: null,
     platforms: [],
     playerPerspectives: [],
     rating: 81.4,
     ratingCount: null,
     screenshots: [],
+    similarGames: [],
     slug: null,
+    sourceUpdatedAt: null,
     storyline: null,
     summary: "Example summary",
     themes: [],
     totalRating: null,
     totalRatingCount: null,
+    updatedAt: "2026-01-01T00:00:00.000Z",
     url: null,
+    versionParent: null,
+    versionTitle: null,
     videos: [],
     websites: [
       {
@@ -82,11 +99,9 @@ describe("mapAggregatedGameToDto", () => {
   it("maps object payloads and derives company role arrays", () => {
     const base = createBaseGame();
     const dto = mapAggregatedGameToDto(base);
-    const { involvedCompanies, ...baseWithoutCompanies } = base;
-    void involvedCompanies;
 
     expect(dto).toEqual({
-      ...baseWithoutCompanies,
+      ...base,
       developers: [
         { id: 8, name: "Alpha Works" },
         { id: 12, name: "Gamma Studio" },

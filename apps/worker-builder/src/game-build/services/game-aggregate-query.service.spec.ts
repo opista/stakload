@@ -90,6 +90,10 @@ describe("GameAggregateQueryService", () => {
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_categories");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_organizations");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_content_descriptions_v2");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("alternative_names");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("external_games");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("language_supports");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("multiplayer_modes");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("website_types");
   });
 
