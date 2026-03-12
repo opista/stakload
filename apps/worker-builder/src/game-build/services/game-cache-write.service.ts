@@ -37,12 +37,19 @@ export class GameCacheWriteService {
 
     multi.set(`game:${game.id}`, JSON.stringify(game));
 
-    this.addReferenceItemDependencies(multi, "genre", game.genres, game.id);
-    this.addReferenceItemDependencies(multi, "platform", game.platforms, game.id);
-    this.addReferenceItemDependencies(multi, "theme", game.themes, game.id);
-    this.addReferenceItemDependencies(multi, "gameMode", game.gameModes, game.id);
-    this.addReferenceItemDependencies(multi, "keyword", game.keywords, game.id);
-    this.addReferenceItemDependencies(multi, "playerPerspective", game.playerPerspectives, game.id);
+    const simpleReferenceFields: { prefix: string; items: { id: number }[] }[] = [
+      { prefix: "genre", items: game.genres },
+      { prefix: "platform", items: game.platforms },
+      { prefix: "theme", items: game.themes },
+      { prefix: "gameMode", items: game.gameModes },
+      { prefix: "keyword", items: game.keywords },
+      { prefix: "playerPerspective", items: game.playerPerspectives },
+    ];
+
+    for (const { prefix, items } of simpleReferenceFields) {
+      this.addReferenceItemDependencies(multi, prefix, items, game.id);
+    }
+
     this.addReferenceItemDependencies(
       multi,
       "company",
