@@ -54,7 +54,7 @@
     "@swc/core": "^1.15.13",
     "@types/better-sqlite3": "^7.6.13",
     "@types/winreg": "^1.2.36",
-    "electron": "^39.2.6",
+    "electron": "^39.8.3",
     "electron-builder": "^26.0.12",
     "electron-vite": "^5.0.0",
     "vite-plugin-graphql-loader": "^4.0.4"

@@ -35,7 +35,7 @@
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@go-task/cli": "^3.49.0",
     "@types/node": "^22.19.1",
-    "electron": "^39.2.6",
+    "electron": "^39.8.3",
     "eslint": "^9.39.1",
     "oxfmt": "^0.35.0",
     "typescript": "^5.9.3"
