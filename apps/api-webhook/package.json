@@ -15,7 +15,7 @@
   "dependencies": {
     "@nestjs/common": "^11.1.14",
     "@nestjs/config": "^4.0.2",
-    "@nestjs/core": "^11.1.14",
+    "@nestjs/core": "^11.1.18",
     "@nestjs/platform-express": "^11.1.14",
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/typeorm": "^11.0.0",
@@ -44,7 +44,7 @@
     "rimraf": "^6.0.1",
     "supertest": "^7.1.4",
     "unplugin-swc": "^1.5.9",
-    "vite": "^7.2.6",
+    "vite": "^7.3.2",
     "vitest": "^4.0.0-beta.12"
   }
 }
