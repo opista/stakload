@@ -1,5 +1,11 @@
 import { Injectable } from "@nestjs/common";
 
+import {
+  buildGameCacheKey,
+  buildGameDependencyIndexKey,
+  buildGameDependencySetKey,
+  type GameCacheReferenceKind,
+} from "@stakload/game-cache-contracts";
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
@@ -7,7 +13,11 @@ import type { GameDto } from "../../models/dto/game.dto";
 
 type RedisMultiResult = [Error | null, unknown];
 type RedisDependencyPipeline = {
-  sadd: (key: string, member: number) => unknown;
+  del: (...keys: string[]) => unknown;
+  exec: () => Promise<unknown>;
+  sadd: (key: string, ...members: Array<number | string>) => unknown;
+  set: (key: string, value: string) => unknown;
+  srem: (key: string, ...members: Array<number | string>) => unknown;
 };
 
 @Injectable()
@@ -19,99 +29,126 @@ export class GameCacheWriteService {
     this.logger.setContext(this.constructor.name);
   }
 
-  private addReferenceItemDependencies(
-    multi: RedisDependencyPipeline,
-    prefix: string,
-    items: { id: number }[],
-    gameId: number,
+  private addDependencyKeysFromIds(
+    dependencyKeys: Set<string>,
+    referenceKind: GameCacheReferenceKind,
+    ids: Array<number | null | undefined>,
   ): void {
-    const uniqueIds = new Set(items.map((item) => item.id));
+    for (const id of ids) {
+      if (typeof id !== "number") {
+        continue;
+      }
 
-    for (const id of uniqueIds) {
-      multi.sadd(`${prefix}:${id}:games`, gameId);
+      dependencyKeys.add(buildGameDependencySetKey(referenceKind, id));
     }
   }
 
-  async cacheGameAndDependencies(game: GameDto): Promise<void> {
-    const multi = this.redisService.client.multi();
+  private addDependencyKeysFromItems(
+    dependencyKeys: Set<string>,
+    referenceKind: GameCacheReferenceKind,
+    items: { id: number }[],
+  ): void {
+    for (const item of items) {
+      dependencyKeys.add(buildGameDependencySetKey(referenceKind, item.id));
+    }
+  }
 
-    multi.set(`game:${game.id}`, JSON.stringify(game));
-
+  private buildDependencyKeys(game: GameDto): string[] {
+    const dependencyKeys = new Set<string>();
     const franchiseItems = [...(game.franchise ? [game.franchise] : []), ...game.franchises];
 
-    const simpleReferenceFields: { prefix: string; items: { id: number }[] }[] = [
-      { items: game.genres, prefix: "genre" },
-      { items: game.platforms, prefix: "platform" },
-      { items: game.themes, prefix: "theme" },
-      { items: game.gameModes, prefix: "gameMode" },
-      { items: game.keywords, prefix: "keyword" },
-      { items: game.playerPerspectives, prefix: "playerPerspective" },
-      { items: game.alternativeNames, prefix: "alternativeName" },
-      { items: game.bundles, prefix: "bundleGame" },
-      { items: game.collections, prefix: "collection" },
-      { items: game.externalGames, prefix: "externalGame" },
-      { items: franchiseItems, prefix: "franchise" },
-      { items: game.gameEngines, prefix: "gameEngine" },
-      { items: game.ageRatings, prefix: "ageRating" },
-      { items: game.languageSupports, prefix: "languageSupport" },
-      { items: game.multiplayerModes, prefix: "multiplayerMode" },
-      { items: game.involvedCompanies, prefix: "involvedCompany" },
-      { items: game.similarGames, prefix: "similarGame" },
-      { items: game.websites, prefix: "website" },
-      { items: game.parentGame ? [game.parentGame] : [], prefix: "parentGame" },
-      { items: game.versionParent ? [game.versionParent] : [], prefix: "versionParent" },
-      { items: game.gameStatus ? [game.gameStatus] : [], prefix: "gameStatus" },
-      { items: game.gameType ? [game.gameType] : [], prefix: "gameType" },
+    const referenceFields: Array<{ items: { id: number }[]; referenceKind: GameCacheReferenceKind }> = [
+      { items: game.genres, referenceKind: "genre" },
+      { items: game.platforms, referenceKind: "platform" },
+      { items: game.themes, referenceKind: "theme" },
+      { items: game.gameModes, referenceKind: "gameMode" },
+      { items: game.keywords, referenceKind: "keyword" },
+      { items: game.playerPerspectives, referenceKind: "playerPerspective" },
+      { items: game.alternativeNames, referenceKind: "alternativeName" },
+      { items: game.artworks, referenceKind: "artwork" },
+      { items: game.bundles, referenceKind: "bundleGame" },
+      { items: game.collections, referenceKind: "collection" },
+      { items: game.externalGames, referenceKind: "externalGame" },
+      { items: franchiseItems, referenceKind: "franchise" },
+      { items: game.gameEngines, referenceKind: "gameEngine" },
+      { items: game.ageRatings, referenceKind: "ageRating" },
+      { items: game.languageSupports, referenceKind: "languageSupport" },
+      { items: game.multiplayerModes, referenceKind: "multiplayerMode" },
+      { items: game.involvedCompanies, referenceKind: "involvedCompany" },
+      { items: game.screenshots, referenceKind: "screenshot" },
+      { items: game.similarGames, referenceKind: "similarGame" },
+      { items: game.videos, referenceKind: "gameVideo" },
+      { items: game.websites, referenceKind: "website" },
+      { items: game.parentGame ? [game.parentGame] : [], referenceKind: "parentGame" },
+      { items: game.versionParent ? [game.versionParent] : [], referenceKind: "versionParent" },
+      { items: game.gameStatus ? [game.gameStatus] : [], referenceKind: "gameStatus" },
+      { items: game.gameType ? [game.gameType] : [], referenceKind: "gameType" },
+      { items: game.cover ? [game.cover] : [], referenceKind: "cover" },
     ];
 
-    for (const { items, prefix } of simpleReferenceFields) {
-      this.addReferenceItemDependencies(multi, prefix, items, game.id);
+    for (const { items, referenceKind } of referenceFields) {
+      this.addDependencyKeysFromItems(dependencyKeys, referenceKind, items);
     }
 
-    this.addReferenceItemDependencies(multi, "company", [...game.developers, ...game.publishers], game.id);
+    this.addDependencyKeysFromItems(dependencyKeys, "company", [...game.developers, ...game.publishers]);
 
-    // Nested externalGame sub-dependencies
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
+      "ageRatingCategory",
+      game.ageRatings.map((ageRating) => ageRating.categoryId),
+    );
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
+      "ageRatingOrganisation",
+      game.ageRatings.map((ageRating) => ageRating.organisationId),
+    );
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
+      "ageRatingContentDescription",
+      game.ageRatings.flatMap((ageRating) => ageRating.contentDescriptionIds),
+    );
+
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
       "externalGameSource",
-      game.externalGames.filter((eg) => eg.externalGameSource != null).map((eg) => ({ id: eg.externalGameSource! })),
-      game.id,
+      game.externalGames.map((externalGame) => externalGame.externalGameSource),
     );
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
       "gameReleaseFormat",
-      game.externalGames.filter((eg) => eg.gameReleaseFormat != null).map((eg) => ({ id: eg.gameReleaseFormat! })),
-      game.id,
+      game.externalGames.map((externalGame) => externalGame.gameReleaseFormat),
     );
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
       "platform",
-      game.externalGames.filter((eg) => eg.platform != null).map((eg) => ({ id: eg.platform! })),
-      game.id,
+      game.externalGames.map((externalGame) => externalGame.platform),
     );
 
-    // Nested languageSupport sub-dependencies
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
       "language",
-      game.languageSupports.filter((ls) => ls.language != null).map((ls) => ({ id: ls.language! })),
-      game.id,
+      game.languageSupports.map((languageSupport) => languageSupport.language),
     );
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromIds(
+      dependencyKeys,
       "languageSupportType",
-      game.languageSupports.filter((ls) => ls.languageSupportType != null).map((ls) => ({ id: ls.languageSupportType! })),
-      game.id,
+      game.languageSupports.map((languageSupport) => languageSupport.languageSupportType),
     );
 
-    // Nested website sub-dependencies
-    this.addReferenceItemDependencies(
-      multi,
+    this.addDependencyKeysFromItems(
+      dependencyKeys,
       "websiteType",
-      game.websites.filter((w) => w.websiteType != null).map((w) => w.websiteType!),
-      game.id,
+      game.websites.filter((website) => website.websiteType != null).map((website) => website.websiteType!),
     );
 
+    return Array.from(dependencyKeys);
+  }
+
+  private async executeDependencyTransaction(
+    multi: RedisDependencyPipeline,
+    gameId: number,
+    operation: "cache" | "purge",
+  ): Promise<void> {
     const results = await multi.exec();
 
     if (!results) {
@@ -120,9 +157,52 @@ export class GameCacheWriteService {
 
     for (const [error] of results as RedisMultiResult[]) {
       if (error) {
-        this.logger.error({ err: error, gameId: game.id }, "Failed to cache game build payload");
+        const message =
+          operation === "cache" ? "Failed to cache game build payload" : "Failed to purge game cache payload";
+        this.logger.error({ err: error, gameId }, message);
         throw error;
       }
     }
+  }
+
+  async cacheGameAndDependencies(game: GameDto): Promise<void> {
+    const dependencyIndexKey = buildGameDependencyIndexKey(game.id);
+    const existingDependencyKeys = await this.redisService.client.smembers(dependencyIndexKey);
+    const currentDependencyKeys = this.buildDependencyKeys(game);
+    const multi = this.redisService.client.multi() as unknown as RedisDependencyPipeline;
+
+    multi.set(buildGameCacheKey(game.id), JSON.stringify(game));
+
+    for (const dependencyKey of existingDependencyKeys) {
+      multi.srem(dependencyKey, game.id);
+    }
+
+    multi.del(dependencyIndexKey);
+
+    for (const dependencyKey of currentDependencyKeys) {
+      multi.sadd(dependencyKey, game.id);
+    }
+
+    if (currentDependencyKeys.length > 0) {
+      multi.sadd(dependencyIndexKey, ...currentDependencyKeys);
+    }
+
+    await this.executeDependencyTransaction(multi, game.id, "cache");
+  }
+
+  async purgeGameAndDependencies(gameId: number): Promise<void> {
+    const dependencyIndexKey = buildGameDependencyIndexKey(gameId);
+    const existingDependencyKeys = await this.redisService.client.smembers(dependencyIndexKey);
+    const multi = this.redisService.client.multi() as unknown as RedisDependencyPipeline;
+
+    multi.del(buildGameCacheKey(gameId));
+
+    for (const dependencyKey of existingDependencyKeys) {
+      multi.srem(dependencyKey, gameId);
+    }
+
+    multi.del(dependencyIndexKey);
+
+    await this.executeDependencyTransaction(multi, gameId, "purge");
   }
 }

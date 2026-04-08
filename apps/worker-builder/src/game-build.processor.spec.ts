@@ -2,12 +2,15 @@ import { TestBed } from "@suites/unit";
 import type { Job } from "bullmq";
 import type { Mocked } from "vitest";
 
+import {
+  GAME_BUILD_IN_PROGRESS_SET_KEY,
+  type GameBuildJobPayload,
+} from "@stakload/game-cache-contracts";
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
 import { AppConfigService } from "./config/app-config.service";
-import { GAME_BUILD_IN_PROGRESS_SET_KEY } from "./constants";
-import { GameBuildProcessor, type GameBuildJobPayload } from "./game-build.processor";
+import { GameBuildProcessor } from "./game-build.processor";
 import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
 import { GameCacheWriteService } from "./game-build/services/game-cache-write.service";
 import type { GameDto } from "./models/dto/game.dto";
@@ -124,11 +127,13 @@ describe("GameBuildProcessor", () => {
   it("should warn and skip when the game does not exist in Postgres", async () => {
     void redisService.sadd.mockResolvedValueOnce(1);
     void redisService.srem.mockResolvedValueOnce(1);
+    void gameCacheWriteService.purgeGameAndDependencies.mockResolvedValueOnce();
     void gameAggregateQueryService.fetchByGameId.mockResolvedValueOnce(null);
 
     await expect(processor.process(createJob(404))).resolves.toBeUndefined();
     expect(gameCacheWriteService.cacheGameAndDependencies).not.toHaveBeenCalled();
-    expect(logger.warn).toHaveBeenCalledWith({ gameId: 404 }, "Game not found in database, skipping build");
+    expect(gameCacheWriteService.purgeGameAndDependencies).toHaveBeenCalledWith(404);
+    expect(logger.warn).toHaveBeenCalledWith({ gameId: 404 }, "Game not found in database, purged cached game payload");
   });
 
   it("should log debug output when an aggregated game is returned", async () => {

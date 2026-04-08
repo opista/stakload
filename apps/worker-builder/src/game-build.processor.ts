@@ -2,17 +2,17 @@ import { Processor, WorkerHost, OnWorkerEvent } from "@nestjs/bullmq";
 import { OnModuleInit } from "@nestjs/common";
 import { Job } from "bullmq";
 
+import {
+  GAME_BUILD_IN_PROGRESS_SET_KEY,
+  GAME_BUILD_QUEUE_NAME,
+  type GameBuildJobPayload,
+} from "@stakload/game-cache-contracts";
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
 import { AppConfigService } from "./config/app-config.service";
-import { GAME_BUILD_IN_PROGRESS_SET_KEY, GAME_BUILD_QUEUE_NAME } from "./constants";
 import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
 import { GameCacheWriteService } from "./game-build/services/game-cache-write.service";
-
-export interface GameBuildJobPayload {
-  gameId: number;
-}
 
 @Processor(GAME_BUILD_QUEUE_NAME)
 export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
@@ -57,7 +57,8 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
       const game = await this.gameAggregateQueryService.fetchByGameId(gameId);
 
       if (!game) {
-        this.logger.warn({ gameId }, "Game not found in database, skipping build");
+        await this.gameCacheWriteService.purgeGameAndDependencies(gameId);
+        this.logger.warn({ gameId }, "Game not found in database, purged cached game payload");
         return;
       }
 

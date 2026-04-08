@@ -21,3 +21,23 @@ tasks:
     desc: Probe an IGDB resource using the local utility script.
     cmds:
       - node scripts/igdb/probe-igdb.mjs {{.CLI_ARGS}}
+
+  igdb:e2e:preflight:
+    desc: Validate local env and service connectivity for webhook cache E2E.
+    cmds:
+      - node scripts/igdb/webhook-cache-e2e.mjs --stage preflight {{.CLI_ARGS}}
+
+  igdb:e2e:genres:
+    desc: Run preflight plus genre dump and ingest/idempotence checks.
+    cmds:
+      - node scripts/igdb/webhook-cache-e2e.mjs --stage genres {{.CLI_ARGS}}
+
+  igdb:e2e:create:
+    desc: Run through game create persistence checks (no queue/cache verification).
+    cmds:
+      - node scripts/igdb/webhook-cache-e2e.mjs --stage create {{.CLI_ARGS}}
+
+  igdb:e2e:webhook-cache:
+    desc: Run full local webhook->worker->redis E2E harness.
+    cmds:
+      - node scripts/igdb/webhook-cache-e2e.mjs --stage full {{.CLI_ARGS}}

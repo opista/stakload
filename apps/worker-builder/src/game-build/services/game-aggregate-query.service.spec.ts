@@ -32,9 +32,12 @@ describe("GameAggregateQueryService", () => {
         game: {
           ageRatings: [
             {
+              categoryId: 2,
+              contentDescriptionIds: [55],
               descriptions: ["Violence"],
               id: 41,
               name: "Mature 17+",
+              organisationId: 9,
               organisation: "ESRB",
             },
           ],

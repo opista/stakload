@@ -41,6 +41,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
       DATABASE_SYNCHRONIZE: ${DATABASE_SYNCHRONIZE:-true}
       DATABASE_URL: postgresql://${POSTGRES_USER:-stakload}:${POSTGRES_PASSWORD:-stakload}@postgres:5432/${POSTGRES_DB:-stakload}
@@ -51,6 +53,9 @@ services:
       LOG_LEVEL: ${LOG_LEVEL:-info}
       NODE_ENV: ${NODE_ENV:-development}
       PUBLIC_WEBHOOK_BASE_URL: ${PUBLIC_WEBHOOK_BASE_URL:-http://localhost:3001}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-stakload}
+      REDIS_PORT: ${REDIS_PORT:-6379}
     ports:
       - "${API_WEBHOOK_PORT:-3001}:3001"
 

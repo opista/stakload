@@ -1,6 +1,7 @@
 import { TestBed } from "@suites/unit";
 import type { Mocked } from "vitest";
 
+import { buildGameDependencyIndexKey } from "@stakload/game-cache-contracts";
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
@@ -13,17 +14,49 @@ describe("GameCacheWriteService", () => {
   let service: GameCacheWriteService;
 
   const createGame = (): GameDto => ({
-    ageRatings: [{ descriptions: [], id: 900, name: "18+", organisation: "PEGI" }],
+    ageRatings: [
+      {
+        categoryId: 901,
+        contentDescriptionIds: [902],
+        descriptions: [],
+        id: 900,
+        name: "18+",
+        organisation: "PEGI",
+        organisationId: 903,
+      },
+    ],
     aggregatedRating: null,
     aggregatedRatingCount: null,
     alternativeNames: [
-      { checksum: null, comment: null, createdAt: null, game: 42, id: 101, name: "Alt Name", sourceUpdatedAt: null, updatedAt: null },
+      {
+        checksum: null,
+        comment: null,
+        createdAt: null,
+        game: 42,
+        id: 101,
+        name: "Alt Name",
+        sourceUpdatedAt: null,
+        updatedAt: null,
+      },
     ],
-    artworks: [],
+    artworks: [{ animated: false, height: 200, id: 104, imageId: "art-1", width: 320 }],
     bundles: [{ id: 200, name: "Bundle Game", slug: null, url: null }],
     checksum: null,
-    collections: [{ checksum: null, createdAt: null, description: null, games: null, id: 301, name: "Collection", slug: null, sourceUpdatedAt: null, updatedAt: null, url: null }],
-    cover: null,
+    collections: [
+      {
+        checksum: null,
+        createdAt: null,
+        description: null,
+        games: null,
+        id: 301,
+        name: "Collection",
+        slug: null,
+        sourceUpdatedAt: null,
+        updatedAt: null,
+        url: null,
+      },
+    ],
+    cover: { animated: false, height: 300, id: 102, imageId: "cover-1", width: 200 },
     createdAt: "2026-01-01T00:00:00.000Z",
     developers: [
       { id: 10, name: "Dev Studio" },
@@ -53,7 +86,7 @@ describe("GameCacheWriteService", () => {
     firstReleaseDate: 1_704_067_200,
     franchise: { id: 700, name: "Main Franchise", slug: null, url: null },
     franchises: [{ id: 701, name: "Sub Franchise", slug: null, url: null }],
-    gameEngines: [{ checksum: null, companies: null, createdAt: null, description: null, id: 800, logo: null, name: "Engine", platforms: null, slug: null, sourceUpdatedAt: null, updatedAt: null, url: null }],
+    gameEngines: [{ checksum: null, companies: null, createdAt: null, description: null, id: 800, logo: null, name: "Engine", slug: null, sourceUpdatedAt: null, updatedAt: null, url: null }],
     gameModes: [],
     gameStatus: { id: 1, name: "Released" },
     gameType: { id: 0, name: "Main game" },
@@ -113,7 +146,7 @@ describe("GameCacheWriteService", () => {
     ],
     rating: 77.4,
     ratingCount: null,
-    screenshots: [],
+    screenshots: [{ animated: false, height: 180, id: 103, imageId: "screenshot-1", width: 320 }],
     similarGames: [{ id: 1500, name: "Similar Game", slug: null, url: null }],
     slug: null,
     sourceUpdatedAt: null,
@@ -126,7 +159,7 @@ describe("GameCacheWriteService", () => {
     url: null,
     versionParent: { id: 1900, name: "Version Parent", slug: null, url: null },
     versionTitle: null,
-    videos: [],
+    videos: [{ id: 105, name: "Trailer", videoId: "video-id-1" }],
     websites: [{ id: 1600, trusted: true, url: "https://example.com", websiteType: { id: 1700, name: "Official" } }],
   });
 
@@ -138,15 +171,20 @@ describe("GameCacheWriteService", () => {
     redisService = unitRef.get(RedisService) as unknown as Mocked<RedisService>;
   });
 
-  it("should write the game payload and dependency sets in one Redis multi transaction", async () => {
+  it("should replace stale memberships and write current dependencies in one Redis transaction", async () => {
     const game = createGame();
+    const staleDependencyKey = "genre:999:games";
+    const dependencyIndexKey = buildGameDependencyIndexKey(game.id);
     const multi = {
+      del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue([]),
       sadd: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([staleDependencyKey]),
     };
 
     Object.defineProperty(redisService, "client", {
@@ -157,7 +195,10 @@ describe("GameCacheWriteService", () => {
     await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
 
     expect(client.multi).toHaveBeenCalledTimes(1);
+    expect(client.smembers).toHaveBeenCalledWith(dependencyIndexKey);
     expect(multi.set).toHaveBeenCalledWith("game:42", JSON.stringify(game));
+    expect(multi.srem).toHaveBeenCalledWith(staleDependencyKey, 42);
+    expect(multi.del).toHaveBeenCalledWith(dependencyIndexKey);
     expect(multi.exec).toHaveBeenCalledTimes(1);
 
     // genres (deduped id:3)
@@ -199,6 +240,9 @@ describe("GameCacheWriteService", () => {
 
     // ageRatings
     expect(multi.sadd).toHaveBeenCalledWith("ageRating:900:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("ageRatingCategory:901:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("ageRatingContentDescription:902:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("ageRatingOrganisation:903:games", 42);
 
     // languageSupports
     expect(multi.sadd).toHaveBeenCalledWith("languageSupport:1000:games", 42);
@@ -218,6 +262,12 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).toHaveBeenCalledWith("website:1600:games", 42);
     expect(multi.sadd).toHaveBeenCalledWith("websiteType:1700:games", 42);
 
+    // assets and videos
+    expect(multi.sadd).toHaveBeenCalledWith("artwork:104:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("cover:102:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("screenshot:103:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("gameVideo:105:games", 42);
+
     // parentGame
     expect(multi.sadd).toHaveBeenCalledWith("parentGame:1800:games", 42);
 
@@ -229,16 +279,26 @@ describe("GameCacheWriteService", () => {
 
     // gameType
     expect(multi.sadd).toHaveBeenCalledWith("gameType:0:games", 42);
+
+    // reverse dependency index
+    const dependencyIndexWrite = multi.sadd.mock.calls.find(([key]) => key === dependencyIndexKey);
+    expect(dependencyIndexWrite).toBeDefined();
+    expect(dependencyIndexWrite).toEqual(
+      expect.arrayContaining([dependencyIndexKey, "genre:3:games", "cover:102:games", "gameVideo:105:games"]),
+    );
   });
 
   it("should throw when Redis returns no transaction results", async () => {
     const multi = {
+      del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue(null),
       sadd: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
     };
 
     Object.defineProperty(redisService, "client", {
@@ -254,12 +314,15 @@ describe("GameCacheWriteService", () => {
   it("should log and throw when any command in the transaction fails", async () => {
     const writeError = new Error("set failed");
     const multi = {
+      del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue([[writeError, null]]),
       sadd: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
     };
 
     Object.defineProperty(redisService, "client", {
@@ -269,5 +332,35 @@ describe("GameCacheWriteService", () => {
 
     await expect(service.cacheGameAndDependencies(createGame())).rejects.toThrow("set failed");
     expect(logger.error).toHaveBeenCalledWith({ err: writeError, gameId: 42 }, "Failed to cache game build payload");
+  });
+
+  it("should purge cached payload and remove all dependency memberships", async () => {
+    const gameId = 42;
+    const dependencyIndexKey = buildGameDependencyIndexKey(gameId);
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue(["genre:3:games", "platform:6:games"]),
+    };
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.purgeGameAndDependencies(gameId)).resolves.toBeUndefined();
+
+    expect(client.smembers).toHaveBeenCalledWith(dependencyIndexKey);
+    expect(multi.del).toHaveBeenCalledWith("game:42");
+    expect(multi.srem).toHaveBeenCalledWith("genre:3:games", 42);
+    expect(multi.srem).toHaveBeenCalledWith("platform:6:games", 42);
+    expect(multi.del).toHaveBeenCalledWith(dependencyIndexKey);
+    expect(multi.exec).toHaveBeenCalledTimes(1);
   });
 });

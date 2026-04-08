@@ -15,11 +15,45 @@ Use [Task](https://taskfile.dev/docs/getting-started) from the repository root:
 - `task igdb:apply`
 - `task igdb:refresh-descriptions`
 - `task igdb:probe -- <resource> [options]`
+- `task igdb:e2e:preflight`
+- `task igdb:e2e:genres`
+- `task igdb:e2e:create`
+- `task igdb:e2e:webhook-cache`
 
 Examples:
 
 - `task igdb:extract -- --input-html scripts/igdb/data/igdb-endpoints.html`
 - `task igdb:probe -- games --fields "name,slug" --limit 5`
+- `task igdb:e2e:webhook-cache -- --post-concurrency 20`
+
+## Local Webhook Cache E2E
+
+The webhook cache harness validates this local flow:
+
+1. `api-webhook` receives webhook payloads.
+2. Postgres persistence is checked.
+3. `worker-builder` jobs are enqueued manually via BullMQ.
+4. Redis cache keys are verified.
+
+Stage entry points:
+
+- `task igdb:e2e:preflight`:
+  checks required env values, IGDB auth, Postgres, Redis, and invalid webhook secret (`401`) behaviour.
+- `task igdb:e2e:genres`:
+  pulls full `genres` data from IGDB in pages, writes `scripts/igdb/data/genres.dump.json`, ingests via local webhooks, and verifies idempotent re-ingest.
+- `task igdb:e2e:create`:
+  runs the genres stage, then fetches one real game payload with genres, posts `games/create`, and verifies Postgres fields.
+- `task igdb:e2e:webhook-cache`:
+  full flow: create + queue/cache verification + update + queue/cache verification.
+
+Generated artefacts:
+
+- `scripts/igdb/data/genres.dump.json`
+- `scripts/igdb/data/game.create.payload.json`
+- `scripts/igdb/data/game.update.payload.json`
+- `scripts/igdb/data/webhook-cache-e2e.report.json`
+
+The harness assumes services are already running (Tilt or Docker Compose).
 
 ## Notes
 

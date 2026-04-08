@@ -1,0 +1,23 @@
+{
+  "name": "@stakload/game-cache-contracts",
+  "private": true,
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "clean": "rimraf dist",
+    "lint": "eslint --cache .",
+    "lint:fix": "eslint --cache --fix .",
+    "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
+  },
+  "devDependencies": {
+    "@stakload/eslint-config": "workspace:*",
+    "rimraf": "^6.0.1"
+  }
+}
