@@ -2,6 +2,8 @@
 
 An AIO games library manager.
 
+![Stakload homepage demo](docs/images/homepage-demo.jpg)
+
 ## Workspace Overview
 
 This repository is organised as a `pnpm` workspace with two main areas:
