@@ -2,6 +2,29 @@
 
 An AIO games library manager.
 
+## Workspace Overview
+
+This repository is organised as a `pnpm` workspace with two main areas:
+
+- `apps/` contains runnable applications and services
+- `packages/` contains shared contracts, infrastructure helpers, and tooling
+
+Current apps:
+
+- `apps/frontend` - the React renderer UI
+- `apps/desktop` - the Electron shell and local desktop-side services
+- `apps/api-webhook` - the NestJS service that receives IGDB webhooks and admin requests
+- `apps/worker-builder` - the NestJS worker that builds aggregated game payloads and cache state
+
+Current shared packages:
+
+- `packages/contracts` - shared frontend/desktop contracts
+- `packages/database` - TypeORM entities and database integration
+- `packages/igdb-vendor` - IGDB resource definitions and vendor mapping support
+- `packages/nestjs-logging` - shared NestJS logging module
+- `packages/nestjs-redis` - shared Redis module for NestJS services
+- `packages/eslint-config` - shared lint configuration
+
 ## Features
 
 - Integrate all of the popular games libraries
@@ -12,10 +35,18 @@ An AIO games library manager.
 
 ## Architecture
 
-- Frontend - [React](https://react.dev/git)
-  - State is managed using [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction), and is persisted using [electron-conf](https://github.com/alex8088/electron-conf)
-- Backend - [Electron](https://www.electronjs.org/)
-  - Local-first database with an async fork of [nedb](https://github.com/louischatriot/nedb) - [nedb-promises](https://github.com/bajankristof/nedb-promises/)
+- Frontend - [React](https://react.dev/) + [Vite](https://vite.dev/)
+  - State is managed with [Zustand](https://zustand.docs.pmnd.rs/getting-started/introduction)
+  - The renderer is served locally by Vite during development
+- Desktop shell - [Electron](https://www.electronjs.org/)
+  - Hosts the renderer and local desktop functionality
+  - Built with `electron-vite`
+- Backend services - [NestJS](https://nestjs.com/)
+  - `api-webhook` persists IGDB webhook data into Postgres
+  - `worker-builder` consumes queued jobs to build aggregated game payloads
+- Infrastructure
+  - Postgres for persisted backend data
+  - Redis for queueing and cache-related coordination in local backend development
 
 ## Project Setup
 
@@ -33,15 +64,23 @@ pnpm install
 
 ### Development
 
-Development is orchestrated by **Tilt** instead of a single `pnpm dev`
-command. Tilt starts every service in the right order, streams their logs in
-one dashboard, and handles live-reloading for each layer of the stack.
+For the full local stack, development is orchestrated by **Tilt**. Tilt starts
+the services in the right order, streams their logs in one dashboard, and
+handles live-reloading for each layer of the stack.
 
 ```bash
 tilt up
 ```
 
 Open the Tilt UI at <http://localhost:10350> to see the status of every service.
+
+If you only need the desktop app and frontend loop, there is also a lighter-weight root command:
+
+```bash
+pnpm dev
+```
+
+That starts the frontend dev server and then launches the Electron app once the renderer is ready.
 
 #### What Tilt starts
 
@@ -97,6 +136,16 @@ tilt down
 
 Docker Compose volumes (Postgres data, Redis data) are preserved between sessions.
 
+### Useful Commands
+
+```bash
+pnpm lint
+pnpm typecheck
+pnpm build:packages
+pnpm build
+task --list
+```
+
 ### Workspace Changes
 
 When adding a new workspace package:
@@ -112,17 +161,22 @@ before package-local scripts import shared workspace packages.
 When adding a new **NestJS backend service**, also add a `nestjs_service()` call
 at the bottom of the `Tiltfile` and a corresponding entry in `docker-compose.yml`.
 
+### More Documentation
+
+- [`apps/api-webhook/README.md`](apps/api-webhook/README.md) - webhook service flow, handlers, resources, and admin endpoints
+- [`scripts/README.md`](scripts/README.md) - repository utility scripts and Task-based helpers
+
 ### Build
 
 ```bash
-# For windows
-$ npm run build:win
+# For Windows
+pnpm run build:win
 
 # For macOS
-$ npm run build:mac
+pnpm run build:mac
 
 # For Linux
-$ npm run build:linux
+pnpm run build:linux
 ```
 
 ## TODO
