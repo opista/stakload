@@ -40,7 +40,7 @@
     "electron-updater": "^6.3.9",
     "fastq": "^1.20.1",
     "nest-winston": "^1.10.2",
-    "protobufjs": "^8.0.0",
+    "protobufjs": "^8.0.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.28",
     "vdf": "^0.0.2",
