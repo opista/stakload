@@ -24,7 +24,7 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
 
   useEffect(() => {
     void updateQuery();
-  }, [...dependencies]);
+  }, [query, ...dependencies]);
 
   useEffect(() => {
     const removeListener = window.api.onSyncGameStatus((_event, message) => {
