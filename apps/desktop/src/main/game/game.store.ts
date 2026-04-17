@@ -5,6 +5,7 @@ import { In, IsNull, Repository, SelectQueryBuilder } from "typeorm";
 import {
   FeaturedGameModel,
   GameFilters,
+  GameInstallationDetails,
   GameListModel,
   GameStoreModel,
   Library,
@@ -18,6 +19,17 @@ type FieldsType = "all" | "featured" | "list";
 type Sort = {
   direction: 1 | -1;
   field: keyof GameStoreModel;
+};
+
+type InstalledGameSyncEntry = {
+  createValues?: Partial<GameStoreModel>;
+  gameId: string;
+  installationDetails: GameInstallationDetails;
+};
+
+type MetadataSyncEntry = {
+  id: string;
+  metadata: Partial<Omit<GameStoreModel, "_id" | "createdAt">>;
 };
 
 const selectMap: Record<FieldsType, (keyof GameEntity)[] | undefined> = {
@@ -95,6 +107,36 @@ export class GameStore {
       case "THIS_YEAR":
         query.andWhere(`game.${field} >= :startOfYear`, { startOfYear });
         break;
+    }
+  }
+
+  async applyMetadataSyncBatch(entries: MetadataSyncEntry[]) {
+    if (!entries.length) return;
+
+    this.logger.debug("Applying metadata sync batch", {
+      count: entries.length,
+    });
+
+    try {
+      const existingGames = await this.repository.findBy({ _id: In(entries.map((entry) => entry.id)) });
+      const existingById = new Map(existingGames.map((game) => [game._id, game] as const));
+      const metadataSyncedAt = new Date();
+      const entities = entries.flatMap((entry) => {
+        const game = existingById.get(entry.id);
+        if (!game) return [];
+        return this.repository.merge(game, {
+          ...entry.metadata,
+          metadataSyncedAt,
+        });
+      });
+
+      if (!entities.length) return;
+      await this.repository.save(entities);
+    } catch (error) {
+      this.logger.error("Database error while applying metadata sync batch", error, {
+        count: entries.length,
+      });
+      throw error;
     }
   }
 
@@ -258,15 +300,92 @@ export class GameStore {
   }
 
   async findUnsyncedGames() {
-    return await this.repository.find({
+    return (await this.repository.find({
       order: { name: "ASC" },
       where: { metadataSyncedAt: IsNull() },
-    });
+    })) as GameStoreModel[];
   }
 
   async insertGame(game: Partial<GameStoreModel>) {
     const entity = this.repository.create(game);
     return await this.repository.save(entity);
+  }
+
+  async reconcileInstalledGames(
+    library: Library,
+    installedGames: InstalledGameSyncEntry[],
+    { upsert = false }: { upsert?: boolean } = {},
+  ) {
+    this.logger.debug("Reconciling installed games", {
+      count: installedGames.length,
+      library,
+      upsert,
+    });
+
+    try {
+      const installedGameIds = installedGames.map((game) => game.gameId);
+      const [currentlyInstalledGames, existingGames] = await Promise.all([
+        this.repository.find({
+          select: {
+            _id: true,
+            gameId: true,
+          },
+          where: { isInstalled: true, library },
+        }),
+        installedGameIds.length ? this.repository.findBy({ gameId: In(installedGameIds), library }) : [],
+      ]);
+
+      const installedByGameId = new Map(installedGames.map((game) => [game.gameId, game] as const));
+      const existingByGameId = new Map(
+        existingGames
+          .filter((game): game is GameEntity & { gameId: string } => typeof game.gameId === "string")
+          .map((game) => [game.gameId, game] as const),
+      );
+      const gamesToUninstall = currentlyInstalledGames
+        .map((game) => game.gameId)
+        .filter((gameId): gameId is string => !!gameId && !installedByGameId.has(gameId));
+
+      const entities = installedGames.flatMap((installedGame) => {
+        const existingGame = existingByGameId.get(installedGame.gameId);
+
+        if (existingGame) {
+          return this.repository.merge(existingGame, {
+            installationDetails: installedGame.installationDetails,
+            isInstalled: true,
+          }) as GameEntity;
+        }
+
+        if (!upsert) return [];
+
+        return this.repository.create({
+          gameId: installedGame.gameId,
+          installationDetails: installedGame.installationDetails,
+          isInstalled: true,
+          library,
+          ...installedGame.createValues,
+        });
+      });
+
+      await this.repository.manager.transaction(async (manager) => {
+        if (gamesToUninstall.length) {
+          await manager.update(
+            GameEntity,
+            { gameId: In(gamesToUninstall), library },
+            { installationDetails: null as unknown as GameInstallationDetails, isInstalled: false },
+          );
+        }
+
+        if (entities.length) {
+          await manager.save(GameEntity, entities);
+        }
+      });
+    } catch (error) {
+      this.logger.error("Database error while reconciling installed games", error, {
+        count: installedGames.length,
+        library,
+      });
+      throw error;
+    }
   }
 
   async removeGameById(id: string) {

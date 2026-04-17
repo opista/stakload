@@ -1,11 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
-import { buildQueryParams } from "@util/build-query-params";
-
 import { Logger } from "../../../logging/logging.service";
-import { OwnedGamesResponse } from "./types";
-
-const STEAM_API_BASE_URL = "https://api.steampowered.com";
+import { fetchOwnedGames } from "./fetch-owned-games";
 
 @Injectable()
 export class SteamApiService {
@@ -16,22 +12,11 @@ export class SteamApiService {
   async getOwnedGames(key: string, steamid: string) {
     this.logger.debug("Fetching owned games from Steam API", { steamid });
     try {
-      const query = buildQueryParams({
-        include_appinfo: "true",
-        include_played_free_games: "true",
-        key,
-        steamid,
-      });
-      const response = await fetch(`${STEAM_API_BASE_URL}/IPlayerService/GetOwnedGames/v1${query}`, {
-        headers: { accept: "application/json" },
-        method: "GET",
-      });
-
-      const parsed: OwnedGamesResponse = await response.json();
+      const parsed = await fetchOwnedGames(key, steamid);
       this.logger.debug("Fetched owned games from Steam API", {
-        gameCount: parsed?.response?.game_count,
+        gameCount: parsed.length,
       });
-      return parsed?.response?.games;
+      return parsed;
     } catch (err) {
       const message = "Request to Steam API failed";
       this.logger.error(message, err);
