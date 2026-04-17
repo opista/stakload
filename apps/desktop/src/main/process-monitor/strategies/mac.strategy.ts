@@ -64,7 +64,7 @@ export class MacProcessMonitor extends BaseProcessMonitor {
       this.logger.error("Failed to check process status", error, {
         pids: pids.join(","),
       });
-      return new Set();
+      throw error;
     }
   }
 }
