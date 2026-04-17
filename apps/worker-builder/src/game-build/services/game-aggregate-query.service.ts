@@ -196,8 +196,11 @@ const GAME_BUILD_QUERY = `
     'ageRatings', COALESCE((
       SELECT JSON_AGG(
         JSON_BUILD_OBJECT(
+          'categoryId', ar."ratingCategory",
+          'contentDescriptionIds', COALESCE(ar."ratingContentDescriptions", '{}'),
           'id', ar."igdbId",
           'name', arc."rating",
+          'organisationId', ar."organization",
           'organisation', aro."name",
           'descriptions', COALESCE(age_rating_descriptions."descriptions", '[]'::json)
         )
@@ -372,6 +375,7 @@ const GAME_BUILD_QUERY = `
     ), '[]'::json),
     'cover', (
       SELECT JSON_BUILD_OBJECT(
+        'id', c."igdbId",
         'animated', c."animated",
         'height', c."height",
         'imageId', c."imageId",
@@ -383,6 +387,7 @@ const GAME_BUILD_QUERY = `
     'artworks', COALESCE((
       SELECT JSON_AGG(
         JSON_BUILD_OBJECT(
+          'id', a."igdbId",
           'animated', a."animated",
           'height', a."height",
           'imageId', a."imageId",
@@ -396,6 +401,7 @@ const GAME_BUILD_QUERY = `
     'screenshots', COALESCE((
       SELECT JSON_AGG(
         JSON_BUILD_OBJECT(
+          'id', s."igdbId",
           'animated', s."animated",
           'height', s."height",
           'imageId', s."imageId",

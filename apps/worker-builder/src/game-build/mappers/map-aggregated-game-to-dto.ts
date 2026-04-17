@@ -55,7 +55,13 @@ export const mapAggregatedGameToDto = (rawGame: RawAggregatedGameDto | string): 
 
   return {
     ...gameWithoutInvolvedCompanies,
-    ageRatings: gameWithoutInvolvedCompanies.ageRatings ?? [],
+    ageRatings:
+      gameWithoutInvolvedCompanies.ageRatings?.map((ageRating) => ({
+        ...ageRating,
+        categoryId: ageRating.categoryId ?? null,
+        contentDescriptionIds: ageRating.contentDescriptionIds ?? [],
+        organisationId: ageRating.organisationId ?? null,
+      })) ?? [],
     alternativeNames: gameWithoutInvolvedCompanies.alternativeNames ?? [],
     bundles: gameWithoutInvolvedCompanies.bundles ?? [],
     checksum: gameWithoutInvolvedCompanies.checksum ?? null,

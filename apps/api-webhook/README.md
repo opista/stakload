@@ -12,6 +12,8 @@ Its current responsibilities are:
 - map IGDB vendor payloads into `@stakload/database` entity shapes
 - persist simple resources directly
 - persist aggregate resources transactionally with relation replacement
+- resolve affected game IDs from Redis dependency sets for cache-affecting resources
+- enqueue `game-build-queue` jobs for `worker-builder` cache rebuilds
 
 ## Request Flow
 
@@ -248,8 +250,6 @@ Coverage currently exists for:
 
 Not implemented yet:
 
-- BullMQ integration
-- Redis/cache invalidation
 - replay tooling
 - production health/readiness endpoints
 - migrations for the webhook app schema
@@ -361,7 +361,9 @@ cp .env.example .env
 That boots:
 
 - `postgres` on `localhost:${POSTGRES_PORT}`
+- `redis` on `localhost:${REDIS_PORT}`
 - `api-webhook` on `localhost:${API_WEBHOOK_PORT}`
+- `worker-builder` for queue-driven Redis cache rebuilds
 
 Required IGDB values in `.env`:
 

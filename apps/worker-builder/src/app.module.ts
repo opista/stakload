@@ -2,11 +2,11 @@ import { BullModule } from "@nestjs/bullmq";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { GAME_BUILD_QUEUE_NAME } from "@stakload/game-cache-contracts";
 import { RedisModule } from "@stakload/nestjs-redis";
 
 import { AppConfigModule } from "./config/app-config.module";
 import { AppConfigService } from "./config/app-config.service";
-import { GAME_BUILD_QUEUE_NAME } from "./constants";
 import { GameBuildProcessor } from "./game-build.processor";
 import { GameAggregateQueryService } from "./game-build/services/game-aggregate-query.service";
 import { GameCacheWriteService } from "./game-build/services/game-cache-write.service";
