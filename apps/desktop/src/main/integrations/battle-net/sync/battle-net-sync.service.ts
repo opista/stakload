@@ -58,7 +58,6 @@ export class BattleNetLibraryService implements SyncService {
       });
       return mappedGames.length;
     } catch (err) {
-      console.log({ err });
       this.logger.error("Failed to add new Battle.net games", err);
       return 0;
     }
@@ -89,8 +88,6 @@ export class BattleNetLibraryService implements SyncService {
     this.logger.log("Updating installed Battle.net games");
     const installedGames = await this.installedGamesStrategy.getInstalledGames();
     const installedGameIds = installedGames.map((game) => game.gameId);
-
-    console.dir({ installedGames }, { depth: Infinity });
 
     const currentlyInstalledGames = await this.gameStore.findFilteredGames(
       {

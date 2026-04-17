@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet } from "react-router";
 import { useShallow } from "zustand/react/shallow";
 
@@ -12,6 +12,7 @@ import { useIntegrationSettingsStore } from "@store/integration-settings.store";
 export const App = () => {
   const fetchCollections = useCollectionStore(useShallow((state) => state.fetchCollections));
   const refreshGameData = useGameStore(useShallow((state) => state.refreshGameData));
+  const hasRequestedStartupSync = useRef(false);
   const { syncOnStartup } = useIntegrationSettingsStore(
     useShallow((state) => ({
       syncOnStartup: state.syncOnStartup,
@@ -20,13 +21,15 @@ export const App = () => {
 
   useGamesQuery(refreshGameData, []);
 
-  if (syncOnStartup) {
-    window.ipc.sync.syncGames();
-  }
-
   useEffect(() => {
     void fetchCollections();
-  }, []);
+  }, [fetchCollections]);
+
+  useEffect(() => {
+    if (!syncOnStartup || hasRequestedStartupSync.current) return;
+    hasRequestedStartupSync.current = true;
+    window.ipc.sync.syncGames();
+  }, [syncOnStartup]);
 
   return (
     <div className="root">
