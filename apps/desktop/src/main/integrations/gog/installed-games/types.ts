@@ -1,5 +1,7 @@
 import { GameInstallationDetails } from "@stakload/contracts/database/games";
 
+export const GOG_INSTALLED_GAMES_STRATEGY = Symbol("GOG_INSTALLED_GAMES_STRATEGY");
+
 export interface GogInstalledBaseProduct {
   installationDate: string;
   installationPath: string;

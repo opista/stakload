@@ -3,15 +3,12 @@ import { Injectable } from "@nestjs/common";
 import { execAsync } from "@util/exec-async";
 
 import { Logger } from "../../logging/logging.service";
-import { ProcessMonitorStrategy } from "../types";
+import { BaseProcessMonitor } from "./base.strategy";
 
 @Injectable()
-export class WindowsProcessMonitor implements ProcessMonitorStrategy {
-  private processCheckInterval: NodeJS.Timeout | null = null;
-  private watchedProcesses: Map<number, () => void> = new Map();
-
-  constructor(private readonly logger: Logger) {
-    this.logger.setContext(this.constructor.name);
+export class WindowsProcessMonitor extends BaseProcessMonitor {
+  constructor(logger: Logger) {
+    super(logger);
   }
 
   async findProcessByParentDirectory(directory: string): Promise<number | null> {
@@ -38,107 +35,35 @@ export class WindowsProcessMonitor implements ProcessMonitorStrategy {
     }
   }
 
-  async isProcessRunning(pid: number): Promise<boolean> {
-    this.logger.debug("Checking if process is running", { pid });
+  protected async getRunningProcessIds(pids: number[]): Promise<Set<number>> {
+    this.logger.debug("Checking watched process status", {
+      pids: pids.join(","),
+    });
+
+    if (pids.length === 0) {
+      return new Set();
+    }
+
     try {
-      const { stdout } = await execAsync(`tasklist /FI "PID eq ${pid}" /NH`);
-      const isRunning = stdout.trim().length > 0;
-      this.logger.debug("Process running status checked", { isRunning, pid });
-      return isRunning;
+      const query = pids.map((pid) => `ProcessId=${pid}`).join(" or ");
+      const { stdout } = await execAsync(`wmic process where "${query}" get ProcessId`);
+      const runningPids = stdout
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => line !== "ProcessId")
+        .map((line) => parseInt(line, 10))
+        .filter((pid): pid is number => !isNaN(pid));
+
+      this.logger.debug("Process running status checked", {
+        runningPids: runningPids.join(","),
+      });
+      return new Set(runningPids);
     } catch (error) {
-      this.logger.error("Failed to check process status", error, { pid });
-      return false;
+      this.logger.error("Failed to check process status", error, {
+        pids: pids.join(","),
+      });
+      throw error;
     }
-  }
-
-  stopWatching() {
-    this.logger.debug("Stopping process monitor", {
-      watchedCount: this.watchedProcesses.size,
-    });
-    if (this.processCheckInterval) {
-      clearTimeout(this.processCheckInterval);
-      this.processCheckInterval = null;
-    }
-    this.watchedProcesses.clear();
-  }
-
-  async waitForProcess(
-    directory: string,
-    options: { maxPollingTime: number; pollingInterval: number },
-  ): Promise<number | null> {
-    const startTime = Date.now();
-    this.logger.debug("Starting to poll for process", { directory });
-
-    while (Date.now() - startTime < options.maxPollingTime) {
-      const pid = await this.findProcessByParentDirectory(directory);
-
-      if (pid) {
-        this.logger.log("Process found", { directory, pid });
-        return pid;
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, options.pollingInterval));
-    }
-
-    this.logger.warn("Process not found after timeout", {
-      directory,
-      timeoutMs: options.maxPollingTime,
-    });
-    return null;
-  }
-
-  async watchProcess(pid: number, onExit: () => void) {
-    this.logger.debug("Setting up process watch", {
-      pid,
-      watchedCount: this.watchedProcesses.size,
-    });
-    this.watchedProcesses.set(pid, onExit);
-
-    if (this.processCheckInterval) return;
-
-    const checkProcesses = async () => {
-      try {
-        const pids = Array.from(this.watchedProcesses.keys());
-        if (pids.length === 0) {
-          this.logger.debug("No more processes to watch, stopping monitor");
-          this.processCheckInterval = null;
-          return;
-        }
-
-        this.logger.debug("Checking watched processes", {
-          pids: pids.join(","),
-        });
-        const { stdout } = await execAsync(`tasklist /FI "PID eq ${pids.join(",")}" /NH /FO CSV`);
-
-        const runningPids = stdout
-          .split("\n")
-          .filter(Boolean)
-          .map((line) => {
-            const match = line.match(/".*?","\d+",/);
-            return match ? parseInt(match[0].split(",")[1].replace(/"/g, "")) : null;
-          })
-          .filter((pid): pid is number => pid !== null);
-
-        for (const [pid, callback] of this.watchedProcesses.entries()) {
-          if (!runningPids.includes(pid)) {
-            this.logger.log("Process terminated", { pid });
-            this.watchedProcesses.delete(pid);
-            callback();
-          }
-        }
-
-        if (this.watchedProcesses.size > 0) {
-          this.processCheckInterval = setTimeout(checkProcesses, 5000);
-        } else {
-          this.logger.debug("No more processes to watch, stopping monitor");
-          this.processCheckInterval = null;
-        }
-      } catch (error) {
-        this.logger.error("Error checking processes", error);
-        this.processCheckInterval = setTimeout(checkProcesses, 5000);
-      }
-    };
-
-    this.processCheckInterval = setTimeout(checkProcesses, 5000);
   }
 }

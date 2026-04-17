@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
 
 import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
@@ -12,24 +12,22 @@ import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
-import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
-import { InstalledGamesStrategy } from "../installed-games/types";
+import { GOG_INSTALLED_GAMES_STRATEGY } from "../installed-games/types";
+import type { InstalledGamesStrategy } from "../installed-games/types";
 
 @Injectable()
 export class GogLibraryService implements SyncService {
-  private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "gog";
 
   constructor(
     private readonly gameStore: GameStore,
     private readonly gogApiService: GogApiService,
-    private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    @Inject(GOG_INSTALLED_GAMES_STRATEGY) private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly logger: Logger,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   private async handleAuthenticationResponse(window: BrowserWindow, _event: unknown, url: string) {

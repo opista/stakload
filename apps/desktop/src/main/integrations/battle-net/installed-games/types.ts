@@ -1,5 +1,7 @@
 import { GameInstallationDetails } from "@stakload/contracts/database/games";
 
+export const BATTLE_NET_INSTALLED_GAMES_STRATEGY = Symbol("BATTLE_NET_INSTALLED_GAMES_STRATEGY");
+
 export interface BattleNetInstallationData {
   installLocation: string;
   lastPlayed?: number;

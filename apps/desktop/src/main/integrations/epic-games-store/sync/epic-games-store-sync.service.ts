@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
 
 import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
@@ -10,26 +10,25 @@ import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
-import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
+import { EPIC_GAMES_STORE_INSTALLED_GAMES_STRATEGY } from "../installed-games/types";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { LegendaryService } from "../legendary/legendary.service";
 import { mapOwnedGameToGameStoreModel } from "./mappers/map-owned-game-to-game-store-model";
 @Injectable()
 export class EpicGamesStoreSyncService implements SyncService {
-  private installedGameStrategy: InstalledGamesStrategy;
   library: Library = "epic-game-store";
 
   constructor(
     private readonly epicGamesStoreApiService: EpicGamesStoreApiService,
     private readonly gameStore: GameStore,
-    private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    @Inject(EPIC_GAMES_STORE_INSTALLED_GAMES_STRATEGY)
+    private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly legendaryService: LegendaryService,
     private readonly logger: Logger,
     private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.installedGameStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   private async handleAuthenticationResponse(window: BrowserWindow, _event: unknown, url: string) {
@@ -130,7 +129,7 @@ export class EpicGamesStoreSyncService implements SyncService {
     this.logger.debug("Updating installed games status", {
       library: this.library,
     });
-    const installedGames = await this.installedGameStrategy.getInstalledGames();
+    const installedGames = await this.installedGamesStrategy.getInstalledGames();
     this.logger.log("Retrieved installed games", {
       count: installedGames.length,
     });
