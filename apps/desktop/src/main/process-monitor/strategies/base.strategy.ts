@@ -1,9 +1,11 @@
+import { OnModuleDestroy } from "@nestjs/common";
+
 import { Logger } from "../../logging/logging.service";
 import { ProcessMonitorOptions, ProcessMonitorStrategy } from "../types";
 
 const PROCESS_CHECK_INTERVAL = 5000;
 
-export abstract class BaseProcessMonitor implements ProcessMonitorStrategy {
+export abstract class BaseProcessMonitor implements OnModuleDestroy, ProcessMonitorStrategy {
   private processCheckTimeout: NodeJS.Timeout | null = null;
   private readonly watchedProcesses = new Map<number, () => void>();
 
@@ -24,15 +26,10 @@ export abstract class BaseProcessMonitor implements ProcessMonitorStrategy {
     });
 
     try {
-      const processStatuses = await Promise.all(
-        pids.map(async (pid) => ({
-          isRunning: await this.isProcessRunning(pid),
-          pid,
-        })),
-      );
+      const runningPids = await this.getRunningProcessIds(pids);
 
-      for (const { isRunning, pid } of processStatuses) {
-        if (isRunning) continue;
+      for (const pid of pids) {
+        if (runningPids.has(pid)) continue;
 
         const callback = this.watchedProcesses.get(pid);
         if (!callback) continue;
@@ -62,7 +59,24 @@ export abstract class BaseProcessMonitor implements ProcessMonitorStrategy {
 
   abstract findProcessByParentDirectory(directory: string): Promise<number | null>;
 
-  protected abstract isProcessRunning(pid: number): Promise<boolean>;
+  protected abstract getRunningProcessIds(pids: number[]): Promise<Set<number>>;
+
+  onModuleDestroy(): void {
+    this.stopWatching();
+  }
+
+  stopWatching(): void {
+    this.logger.debug("Stopping process monitor", {
+      watchedCount: this.watchedProcesses.size,
+    });
+
+    if (this.processCheckTimeout) {
+      clearTimeout(this.processCheckTimeout);
+      this.processCheckTimeout = null;
+    }
+
+    this.watchedProcesses.clear();
+  }
 
   async waitForProcess(directory: string, options: ProcessMonitorOptions): Promise<number | null> {
     const startTime = Date.now();

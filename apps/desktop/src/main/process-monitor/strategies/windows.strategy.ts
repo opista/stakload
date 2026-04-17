@@ -35,16 +35,35 @@ export class WindowsProcessMonitor extends BaseProcessMonitor {
     }
   }
 
-  protected async isProcessRunning(pid: number): Promise<boolean> {
-    this.logger.debug("Checking if process is running", { pid });
+  protected async getRunningProcessIds(pids: number[]): Promise<Set<number>> {
+    this.logger.debug("Checking watched process status", {
+      pids: pids.join(","),
+    });
+
+    if (pids.length === 0) {
+      return new Set();
+    }
+
     try {
-      const { stdout } = await execAsync(`tasklist /FI "PID eq ${pid}" /NH`);
-      const isRunning = stdout.trim().length > 0;
-      this.logger.debug("Process running status checked", { isRunning, pid });
-      return isRunning;
+      const query = pids.map((pid) => `ProcessId=${pid}`).join(" or ");
+      const { stdout } = await execAsync(`wmic process where "${query}" get ProcessId`);
+      const runningPids = stdout
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .filter((line) => line !== "ProcessId")
+        .map((line) => parseInt(line, 10))
+        .filter((pid): pid is number => !isNaN(pid));
+
+      this.logger.debug("Process running status checked", {
+        runningPids: runningPids.join(","),
+      });
+      return new Set(runningPids);
     } catch (error) {
-      this.logger.error("Failed to check process status", error, { pid });
-      return false;
+      this.logger.error("Failed to check process status", error, {
+        pids: pids.join(","),
+      });
+      return new Set();
     }
   }
 }
