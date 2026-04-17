@@ -32,7 +32,7 @@ The webhook cache harness validates this local flow:
 
 1. `api-webhook` receives webhook payloads.
 2. Postgres persistence is checked.
-3. `worker-builder` jobs are enqueued manually via BullMQ.
+3. Webhook handling enqueues `worker-builder` jobs through BullMQ.
 4. Redis cache keys are verified.
 
 Stage entry points:

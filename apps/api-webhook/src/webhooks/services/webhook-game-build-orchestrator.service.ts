@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import type { Queue } from "bullmq";
 
 import {
-  buildGameBuildJobId,
+  buildGameBuildJobOptions,
+  buildGameBuildRequestedVersionKey,
   buildGameDependencySetKey,
   GAME_BUILD_JOB_NAME,
   GAME_BUILD_QUEUE_NAME,
@@ -43,12 +44,22 @@ export class WebhookGameBuildOrchestratorService {
     this.logger.setContext(this.constructor.name);
   }
 
-  private parsePayloadId(payload: DeleteWebhookPayload | RawIgdbPayload): number {
-    if (typeof payload.id !== "number" || Number.isInteger(payload.id) === false) {
-      throw new Error("Webhook payload must include an integer id before enqueueing game rebuilds");
+  private async enqueueGames(gameIds: number[]): Promise<void> {
+    for (let index = 0; index < gameIds.length; index += QUEUE_CHUNK_SIZE) {
+      const chunk = gameIds.slice(index, index + QUEUE_CHUNK_SIZE);
+      await Promise.all(
+        chunk.map(async (gameId) => {
+          await this.redisService.client.incr(buildGameBuildRequestedVersionKey(gameId));
+        }),
+      );
+      await this.gameBuildQueue.addBulk(
+        chunk.map((gameId) => ({
+          data: { gameId },
+          name: GAME_BUILD_JOB_NAME,
+          opts: buildGameBuildJobOptions(gameId),
+        })),
+      );
     }
-
-    return payload.id;
   }
 
   private parseGameIdsFromRedisMembers(members: string[]): number[] {
@@ -57,18 +68,14 @@ export class WebhookGameBuildOrchestratorService {
       .filter((gameId) => Number.isInteger(gameId) && gameId > 0);
   }
 
-  private async resolveDependentGameIds(
-    referenceKinds: readonly GameCacheReferenceKind[],
-    referenceId: number,
-  ): Promise<number[]> {
-    const gameIdSets = await Promise.all(
-      referenceKinds.map(async (referenceKind) => {
-        const members = await this.redisService.client.smembers(buildGameDependencySetKey(referenceKind, referenceId));
-        return this.parseGameIdsFromRedisMembers(members);
-      }),
-    );
+  private parsePayloadId(payload: DeleteWebhookPayload | RawIgdbPayload): number {
+    const payloadId = payload.id;
 
-    return gameIdSets.flatMap((ids) => ids);
+    if (typeof payloadId !== "number" || !Number.isInteger(payloadId)) {
+      throw new Error("Webhook payload must include an integer id before enqueueing game rebuilds");
+    }
+
+    return payloadId;
   }
 
   private async resolveAffectedGameIds(resource: WebhookResource, payloadId: number): Promise<number[]> {
@@ -98,20 +105,18 @@ export class WebhookGameBuildOrchestratorService {
     return Array.from(affectedGameIds);
   }
 
-  private async enqueueGames(gameIds: number[]): Promise<void> {
-    for (let index = 0; index < gameIds.length; index += QUEUE_CHUNK_SIZE) {
-      const chunk = gameIds.slice(index, index + QUEUE_CHUNK_SIZE);
-      await this.gameBuildQueue.addBulk(
-        chunk.map((gameId) => ({
-          data: { gameId },
-          name: GAME_BUILD_JOB_NAME,
-          opts: {
-            jobId: buildGameBuildJobId(gameId),
-            removeOnComplete: true,
-          },
-        })),
-      );
-    }
+  private async resolveDependentGameIds(
+    referenceKinds: readonly GameCacheReferenceKind[],
+    referenceId: number,
+  ): Promise<number[]> {
+    const gameIdSets = await Promise.all(
+      referenceKinds.map(async (referenceKind) => {
+        const members = await this.redisService.client.smembers(buildGameDependencySetKey(referenceKind, referenceId));
+        return this.parseGameIdsFromRedisMembers(members);
+      }),
+    );
+
+    return gameIdSets.flatMap((ids) => ids);
   }
 
   async enqueueGameBuilds(input: EnqueueGameBuildInput): Promise<void> {

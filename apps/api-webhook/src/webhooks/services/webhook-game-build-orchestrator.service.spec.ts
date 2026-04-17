@@ -1,12 +1,13 @@
+import type { Queue } from "bullmq";
+
 import {
-  buildGameBuildJobId,
+  buildGameBuildJobOptions,
+  buildGameBuildRequestedVersionKey,
   buildGameDependencySetKey,
   GAME_BUILD_JOB_NAME,
   GAME_RESOURCE_DEPENDENT_REFERENCE_KINDS,
   type GameBuildJobPayload,
 } from "@stakload/game-cache-contracts";
-import type { Queue } from "bullmq";
-
 import { PinoLogger } from "@stakload/nestjs-logging";
 import { RedisService } from "@stakload/nestjs-redis";
 
@@ -17,14 +18,14 @@ describe("WebhookGameBuildOrchestratorService", () => {
     gameIdsByReferenceKey = {},
   }: {
     gameIdsByReferenceKey?: Record<string, string[]>;
-  } = {}): {
-    gameBuildQueue: Queue<GameBuildJobPayload, void, string>;
-    logger: PinoLogger;
-    redisService: RedisService;
-    service: WebhookGameBuildOrchestratorService;
-    smembers: ReturnType<typeof vi.fn>;
-  } => {
+  } = {}) => {
+    const redisValues = new Map<string, number>();
     const addBulk = vi.fn().mockResolvedValue([]);
+    const incr = vi.fn().mockImplementation(async (key: string) => {
+      const nextVersion = (redisValues.get(key) ?? 0) + 1;
+      redisValues.set(key, nextVersion);
+      return nextVersion;
+    });
     const smembers = vi
       .fn()
       .mockImplementation((key: string) => Promise.resolve(gameIdsByReferenceKey[key] ?? []));
@@ -38,25 +39,25 @@ describe("WebhookGameBuildOrchestratorService", () => {
     } as unknown as Queue<GameBuildJobPayload, void, string>;
     const redisService = {
       client: {
+        incr,
         smembers,
       },
     } as unknown as RedisService;
-    const service = new WebhookGameBuildOrchestratorService(gameBuildQueue, logger, redisService);
 
     return {
-      gameBuildQueue,
-      logger,
-      redisService,
-      service,
+      addBulk,
+      incr,
+      redisValues,
+      service: new WebhookGameBuildOrchestratorService(gameBuildQueue, logger, redisService),
       smembers,
     };
   };
 
-  it("queues rebuilds for games webhooks including dependent game references", async () => {
+  it("queues rebuilds for games webhooks and increments requested rebuild versions", async () => {
     const payloadId = 42;
     const parentKey = buildGameDependencySetKey("parentGame", payloadId);
     const similarKey = buildGameDependencySetKey("similarGame", payloadId);
-    const { gameBuildQueue, service, smembers } = createService({
+    const { addBulk, incr, redisValues, service, smembers } = createService({
       gameIdsByReferenceKey: {
         [parentKey]: ["100", "101"],
         [similarKey]: ["101", "102"],
@@ -76,57 +77,58 @@ describe("WebhookGameBuildOrchestratorService", () => {
       expect(smembers).toHaveBeenCalledWith(buildGameDependencySetKey(referenceKind, payloadId));
     }
 
-    expect(gameBuildQueue.addBulk).toHaveBeenCalledWith(
+    for (const gameId of [42, 100, 101, 102]) {
+      expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(gameId));
+      expect(redisValues.get(buildGameBuildRequestedVersionKey(gameId))).toBe(1);
+    }
+
+    expect(addBulk).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
           data: { gameId: 42 },
           name: GAME_BUILD_JOB_NAME,
-          opts: expect.objectContaining({
-            jobId: buildGameBuildJobId(42),
-            removeOnComplete: true,
-          }),
+          opts: expect.objectContaining(buildGameBuildJobOptions(42)),
         }),
         expect.objectContaining({
           data: { gameId: 100 },
-          opts: expect.objectContaining({ jobId: buildGameBuildJobId(100) }),
+          opts: expect.objectContaining(buildGameBuildJobOptions(100)),
         }),
         expect.objectContaining({
           data: { gameId: 102 },
-          opts: expect.objectContaining({ jobId: buildGameBuildJobId(102) }),
+          opts: expect.objectContaining(buildGameBuildJobOptions(102)),
         }),
       ]),
     );
   });
 
-  it("queues rebuilds for supported cache-affecting non-game resources", async () => {
+  it("increments requested build versions on repeated webhook deliveries", async () => {
     const payloadId = 7;
     const platformKey = buildGameDependencySetKey("platform", payloadId);
-    const { gameBuildQueue, service, smembers } = createService({
+    const { redisValues, service } = createService({
       gameIdsByReferenceKey: {
         [platformKey]: ["22", "23"],
       },
     });
 
-    await expect(
-      service.enqueueGameBuilds({
-        action: "delete",
-        outcome: "handled",
-        payload: { id: payloadId },
-        resource: "platforms",
-      }),
-    ).resolves.toBeUndefined();
+    await service.enqueueGameBuilds({
+      action: "delete",
+      outcome: "handled",
+      payload: { id: payloadId },
+      resource: "platforms",
+    });
+    await service.enqueueGameBuilds({
+      action: "update",
+      outcome: "handled",
+      payload: { id: payloadId },
+      resource: "platforms",
+    });
 
-    expect(smembers).toHaveBeenCalledWith(platformKey);
-    expect(gameBuildQueue.addBulk).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ data: { gameId: 22 } }),
-        expect.objectContaining({ data: { gameId: 23 } }),
-      ]),
-    );
+    expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(2);
+    expect(redisValues.get(buildGameBuildRequestedVersionKey(23))).toBe(2);
   });
 
   it("does not queue jobs for non-handled webhook outcomes", async () => {
-    const { gameBuildQueue, service } = createService();
+    const { addBulk, incr, service } = createService();
 
     await expect(
       service.enqueueGameBuilds({
@@ -137,11 +139,12 @@ describe("WebhookGameBuildOrchestratorService", () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(gameBuildQueue.addBulk).not.toHaveBeenCalled();
+    expect(incr).not.toHaveBeenCalled();
+    expect(addBulk).not.toHaveBeenCalled();
   });
 
   it("does not queue jobs for handled resources that are not cache-affecting", async () => {
-    const { gameBuildQueue, service, smembers } = createService();
+    const { addBulk, incr, service, smembers } = createService();
 
     await expect(
       service.enqueueGameBuilds({
@@ -153,6 +156,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
     ).resolves.toBeUndefined();
 
     expect(smembers).not.toHaveBeenCalled();
-    expect(gameBuildQueue.addBulk).not.toHaveBeenCalled();
+    expect(incr).not.toHaveBeenCalled();
+    expect(addBulk).not.toHaveBeenCalled();
   });
 });
