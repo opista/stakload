@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { GameStoreModel, Library } from "@stakload/contracts/database/games";
 import { mapSortableName } from "@util/map-sortable-name";
@@ -10,23 +10,22 @@ import { Logger } from "../../../logging/logging.service";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { BattleNetApiService } from "../api/battle-net-api.service";
-import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
-import { InstalledGamesStrategy } from "../installed-games/types";
+import { BATTLE_NET_INSTALLED_GAMES_STRATEGY } from "../installed-games/types";
+import type { InstalledGamesStrategy } from "../installed-games/types";
 
 @Injectable()
 export class BattleNetLibraryService implements SyncService {
-  private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "battle-net";
 
   constructor(
     private readonly gameStore: GameStore,
     private readonly battleNetApiService: BattleNetApiService,
-    private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    @Inject(BATTLE_NET_INSTALLED_GAMES_STRATEGY)
+    private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly logger: Logger,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   async addNewGames() {

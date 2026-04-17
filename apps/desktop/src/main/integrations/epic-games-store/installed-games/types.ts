@@ -1,5 +1,7 @@
 import { GameInstallationDetails } from "@stakload/contracts/database/games";
 
+export const EPIC_GAMES_STORE_INSTALLED_GAMES_STRATEGY = Symbol("EPIC_GAMES_STORE_INSTALLED_GAMES_STRATEGY");
+
 export interface EpicInstallationData {
   AppName: string;
   InstallLocation: string;

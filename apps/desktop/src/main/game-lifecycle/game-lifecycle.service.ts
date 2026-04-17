@@ -6,8 +6,8 @@ import { NOTIFICATION_KEYS } from "@stakload/contracts/store/notification";
 import { GameStore } from "../game/game.store";
 import { Logger } from "../logging/logging.service";
 import { NotificationService } from "../notification/notification.service";
-import { ProcessMonitorService } from "../process-monitor/process-monitor.service";
-import { ProcessMonitorStrategy } from "../process-monitor/types";
+import { PROCESS_MONITOR } from "../process-monitor/types";
+import type { ProcessMonitorStrategy } from "../process-monitor/types";
 import { WindowService } from "../window/window.service";
 import { LibraryClientRegistryService } from "./library-client-registry/library-client-registry.service";
 import { LaunchResult, LibraryClientService } from "./types";
@@ -17,18 +17,15 @@ const MAX_POLLING_TIME = 60000;
 
 @Injectable()
 export class GameLifecycleService {
-  private processMonitor: ProcessMonitorStrategy;
-
   constructor(
     @Inject(forwardRef(() => GameStore)) private readonly gameStore: GameStore,
     private readonly libraryClientRegistryService: LibraryClientRegistryService,
     private readonly logger: Logger,
     private readonly notificationService: NotificationService,
-    private readonly processMonitorService: ProcessMonitorService,
+    @Inject(PROCESS_MONITOR) private readonly processMonitor: ProcessMonitorStrategy,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.processMonitor = this.processMonitorService.getStrategy();
   }
 
   private getLauncher(library: Library): LibraryClientService {

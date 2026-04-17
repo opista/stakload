@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 
 import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
 
@@ -10,17 +10,16 @@ import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { SteamApiService } from "../api/steam-api.service";
-import { InstalledGamesRegistryService } from "../installed-games/installed-games-registry.service";
+import { STEAM_INSTALLED_GAMES_STRATEGY } from "../installed-games/types";
 import type { InstalledGamesStrategy } from "../installed-games/types";
 import { mapOwnedGameDetailsToGameStoreModel } from "./mappers/map-owned-game-details-to-game-store-model";
 @Injectable()
 export class SteamLibraryService implements SyncService {
-  private installedGamesStrategy: InstalledGamesStrategy;
   library: Library = "steam";
 
   constructor(
     private readonly gameStore: GameStore,
-    private readonly installedGamesRegistryService: InstalledGamesRegistryService,
+    @Inject(STEAM_INSTALLED_GAMES_STRATEGY) private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly logger: Logger,
     private readonly sharedConfigService: SharedConfigService,
     private readonly steamApiService: SteamApiService,
@@ -28,7 +27,6 @@ export class SteamLibraryService implements SyncService {
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
-    this.installedGamesStrategy = this.installedGamesRegistryService.getStrategy();
   }
 
   async addNewGames() {

@@ -1,5 +1,7 @@
 import { GameInstallationDetails } from "@stakload/contracts/database/games";
 
+export const STEAM_INSTALLED_GAMES_STRATEGY = Symbol("STEAM_INSTALLED_GAMES_STRATEGY");
+
 export interface SteamLibraryFolder {
   contentid: string;
   label: string;
