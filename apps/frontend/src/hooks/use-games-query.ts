@@ -23,16 +23,21 @@ export const useGamesQuery = <T>(query: () => Promise<T>, dependencies: unknown[
   };
 
   useEffect(() => {
-    updateQuery();
-  }, [...dependencies]);
+    void updateQuery();
+  }, [query, ...dependencies]);
 
   useEffect(() => {
-    const removeListener = window.api.onSyncGameStatus(() => updateQuery());
+    const removeListener = window.api.onSyncGameStatus((_event, message) => {
+      if (message?.action !== "complete") return;
+      void updateQuery();
+    });
     return () => removeListener();
   }, [query]);
 
   useEffect(() => {
-    const removeListener = window.api.onGamesListUpdated(() => updateQuery());
+    const removeListener = window.api.onGamesListUpdated(() => {
+      void updateQuery();
+    });
     return () => removeListener();
   }, [query]);
 
