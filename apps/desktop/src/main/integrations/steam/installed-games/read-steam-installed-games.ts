@@ -46,7 +46,7 @@ export const parseSteamManifestFile = async (manifestPath: string): Promise<Stea
 };
 
 export const readSteamInstalledGames = async (applicationPath: string): Promise<InstalledGameData[]> => {
-  const libraries = await getSteamLibraryFolders(applicationPath).catch(() => [applicationPath]);
+  const libraries = Array.from(new Set(await getSteamLibraryFolders(applicationPath).catch(() => [applicationPath])));
   const libraryManifests = await Promise.all(
     libraries.map(async (libraryPath) => {
       const manifestPath = path.join(libraryPath, "steamapps");
