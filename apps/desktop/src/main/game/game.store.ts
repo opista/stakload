@@ -33,6 +33,7 @@ type MetadataSyncEntry = {
 };
 
 const SQLITE_MAX_HOST_PARAMETERS = 900;
+const TYPEORM_SAVE_CHUNK_SIZE = 100;
 
 const selectMap: Record<FieldsType, (keyof GameEntity)[] | undefined> = {
   all: undefined,
@@ -155,7 +156,7 @@ export class GameStore {
 
       if (!entities.length) return;
       await this.repository.manager.transaction(async (manager) => {
-        await manager.save(GameEntity, entities);
+        await manager.save(GameEntity, entities, { chunk: TYPEORM_SAVE_CHUNK_SIZE });
       });
     } catch (error) {
       this.logger.error("Database error while applying metadata sync batch", error, {
@@ -427,7 +428,7 @@ export class GameStore {
         }
 
         if (entities.length) {
-          await manager.save(GameEntity, entities);
+          await manager.save(GameEntity, entities, { chunk: TYPEORM_SAVE_CHUNK_SIZE });
         }
       });
     } catch (error) {
