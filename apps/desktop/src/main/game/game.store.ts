@@ -123,11 +123,8 @@ export class GameStore {
 
   private async findGamesByGameIdChunks(gameIds: string[], library: Library) {
     const chunks = this.chunkSqliteParameters(gameIds);
-    const games: GameEntity[] = [];
-    for (const chunk of chunks) {
-      games.push(...(await this.repository.findBy({ gameId: In(chunk), library })));
-    }
-    return games;
+    const results = await Promise.all(chunks.map((chunk) => this.repository.findBy({ gameId: In(chunk), library })));
+    return results.flat();
   }
 
   async applyMetadataSyncBatch(entries: MetadataSyncEntry[]) {
@@ -138,10 +135,8 @@ export class GameStore {
     });
 
     try {
-      const existingGames: GameEntity[] = [];
-      for (const chunk of this.chunkSqliteParameters(entries.map((entry) => entry.id))) {
-        existingGames.push(...(await this.repository.findBy({ _id: In(chunk) })));
-      }
+      const chunks = this.chunkSqliteParameters(entries.map((entry) => entry.id));
+      const existingGames = (await Promise.all(chunks.map((chunk) => this.repository.findBy({ _id: In(chunk) })))).flat();
 
       const existingById = new Map(existingGames.map((game) => [game._id, game] as const));
       const metadataSyncedAt = new Date();
