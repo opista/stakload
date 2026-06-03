@@ -40,6 +40,10 @@ const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "r
 };
 
 const runMetadataJob = async (message: Extract<SteamSyncWorkerRequest, { type: "run-metadata-job" }>) => {
+  if (!message.apiBaseUrl.trim()) {
+    throw new Error("Stakload API base URL is not configured");
+  }
+
   let processed = 0;
   const requestedBatchSize = Math.floor(message.batchSize);
   const batchSize =

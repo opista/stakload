@@ -361,14 +361,18 @@ export class GameStore {
     installedGames: InstalledGameSyncEntry[],
     { upsert = false }: { upsert?: boolean } = {},
   ) {
+    const uniqueInstalledGames = Array.from(
+      new Map(installedGames.map((game) => [game.gameId, game] as const)).values(),
+    );
+
     this.logger.debug("Reconciling installed games", {
-      count: installedGames.length,
+      count: uniqueInstalledGames.length,
       library,
       upsert,
     });
 
     try {
-      const installedGameIds = installedGames.map((game) => game.gameId);
+      const installedGameIds = uniqueInstalledGames.map((game) => game.gameId);
       const [currentlyInstalledGames, existingGames] = await Promise.all([
         this.repository.find({
           select: {
@@ -380,7 +384,7 @@ export class GameStore {
         installedGameIds.length ? this.findGamesByGameIdChunks(installedGameIds, library) : [],
       ]);
 
-      const installedByGameId = new Map(installedGames.map((game) => [game.gameId, game] as const));
+      const installedByGameId = new Map(uniqueInstalledGames.map((game) => [game.gameId, game] as const));
       const existingByGameId = new Map(
         existingGames
           .filter((game): game is GameEntity & { gameId: string } => typeof game.gameId === "string")
@@ -390,7 +394,7 @@ export class GameStore {
         .map((game) => game.gameId)
         .filter((gameId): gameId is string => !!gameId && !installedByGameId.has(gameId));
 
-      const entities = installedGames.flatMap((installedGame) => {
+      const entities = uniqueInstalledGames.flatMap((installedGame) => {
         const existingGame = existingByGameId.get(installedGame.gameId);
 
         if (existingGame) {
@@ -428,7 +432,7 @@ export class GameStore {
       });
     } catch (error) {
       this.logger.error("Database error while reconciling installed games", error, {
-        count: installedGames.length,
+        count: uniqueInstalledGames.length,
         library,
       });
       throw error;
