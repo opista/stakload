@@ -12,7 +12,7 @@ export interface SteamLibraryFolder {
 }
 
 export interface SteamLibraryFolders {
-  libraryfolders: { [key: string]: SteamLibraryFolder };
+  libraryfolders: { [key: string]: SteamLibraryFolder | string | number | null | undefined };
 }
 
 export interface SteamAppManifest {

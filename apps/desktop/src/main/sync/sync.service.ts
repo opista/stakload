@@ -180,11 +180,23 @@ export class SyncService {
 
   private async synchroniseSteamLibrary() {
     const { applicationPath, steamId, webApiKey } = await this.steamLibraryService.getSyncContext();
-    const { installedGames, ownedGames } = await this.steamSyncWorkerService.runLibraryJob({
+    const { installedGames, ownedGames, ownedGamesError } = await this.steamSyncWorkerService.runLibraryJob({
       applicationPath,
       steamId,
       webApiKey,
     });
+
+    if (ownedGamesError) {
+      this.logger.warn("Steam owned games sync failed; continuing with installed game reconciliation", {
+        error: ownedGamesError,
+      });
+      this.addFailureEntry({
+        action: "library",
+        code: "UNKNOWN_ERROR",
+        library: "steam",
+      });
+    }
+
     const existingGames = await this.gameStore.findGamesByGameIds(
       ownedGames.map((game) => String(game.appid)),
       "steam",

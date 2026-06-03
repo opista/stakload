@@ -49,6 +49,7 @@ export type SteamSyncWorkerResponse =
   | ({
       installedGames: InstalledGameData[];
       library: Library;
+      ownedGamesError?: string;
       ownedGames: OwnedGameDetails[];
       type: "library-scan-results";
     } & BaseSteamSyncWorkerMessage)

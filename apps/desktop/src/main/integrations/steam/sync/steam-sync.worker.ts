@@ -21,8 +21,10 @@ const postMessage = (message: SteamSyncWorkerResponse) => {
 const toErrorMessage = (error: unknown) => (error instanceof Error ? error.message : "Unknown error");
 
 const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "run-library-job" }>) => {
-  const [ownedGames, installedGames] = await Promise.all([
-    fetchOwnedGames(message.webApiKey, message.steamId).catch(() => []),
+  const [ownedGamesResult, installedGames] = await Promise.all([
+    fetchOwnedGames(message.webApiKey, message.steamId)
+      .then((ownedGames) => ({ ownedGames, ownedGamesError: undefined }))
+      .catch((error) => ({ ownedGames: [], ownedGamesError: toErrorMessage(error) })),
     readSteamInstalledGames(message.applicationPath),
   ]);
 
@@ -31,7 +33,8 @@ const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "r
     jobId: message.jobId,
     kind: message.kind,
     library: "steam",
-    ownedGames,
+    ownedGames: ownedGamesResult.ownedGames,
+    ownedGamesError: ownedGamesResult.ownedGamesError,
     type: "library-scan-results",
   });
 };

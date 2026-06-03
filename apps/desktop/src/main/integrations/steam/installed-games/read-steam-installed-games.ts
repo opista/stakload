@@ -6,6 +6,11 @@ import vdf from "vdf";
 import { mapAppManifestToGameInstallationDetails } from "./mappers/map-app-manifest-to-installed-game-data";
 import { InstalledGameData, SteamAppManifest, SteamAppStateFlags, SteamLibraryFolders } from "./types";
 
+const isSteamLibraryFolder = (
+  folder: SteamLibraryFolders["libraryfolders"][string],
+): folder is SteamLibraryFolders["libraryfolders"][string] & { path: string } =>
+  typeof folder === "object" && folder !== null && "path" in folder && typeof folder.path === "string";
+
 export const getSteamLibraryFolders = async (applicationPath: string): Promise<string[]> => {
   const libraryFoldersPath = path.join(applicationPath, "steamapps", "libraryfolders.vdf");
   const content = await fs.readFile(libraryFoldersPath, "utf-8");
@@ -13,7 +18,9 @@ export const getSteamLibraryFolders = async (applicationPath: string): Promise<s
   if (!parsed?.libraryfolders) {
     throw new Error("Invalid or missing libraryfolders in VDF");
   }
-  return Object.values(parsed.libraryfolders).map((folder) => folder.path);
+  return Object.values(parsed.libraryfolders)
+    .filter(isSteamLibraryFolder)
+    .map((folder) => folder.path);
 };
 
 export const parseSteamManifestFile = async (manifestPath: string): Promise<SteamAppManifest | null> => {
