@@ -53,7 +53,7 @@ export class GameEntity {
   igdbId?: number;
 
   @Column({ nullable: true, type: "simple-json" })
-  installationDetails?: GameInstallationDetails;
+  installationDetails?: GameInstallationDetails | null;
 
   @Column({ default: false, type: "boolean" })
   isFavourite!: boolean;

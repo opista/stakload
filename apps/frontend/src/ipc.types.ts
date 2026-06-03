@@ -79,7 +79,7 @@ export type GameStoreModel = {
   gameModes?: IdAndName[];
   genres?: IdAndName[];
   igdbId?: number;
-  installationDetails?: GameInstallationDetails;
+  installationDetails?: GameInstallationDetails | null;
   isFavourite?: boolean;
   isInstalled?: boolean;
   isQuickLaunch?: boolean;

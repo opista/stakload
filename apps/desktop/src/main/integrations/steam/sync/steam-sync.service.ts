@@ -118,6 +118,14 @@ export class SteamLibraryService implements SyncService {
     return { steamId, webApiKey };
   }
 
+  async getSyncContext() {
+    const applicationPath = await this.installedGamesStrategy.getApplicationPath();
+    return {
+      applicationPath,
+      ...this.getSteamCredentials(),
+    };
+  }
+
   async isIntegrationValid(): Promise<boolean> {
     try {
       const { steamId, webApiKey } = this.getSteamCredentials();
