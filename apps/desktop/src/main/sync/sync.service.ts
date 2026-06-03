@@ -289,7 +289,7 @@ export class SyncService {
         const processedSteamGames = Math.max(0, this.processing - steamMetadataStartedAt);
         const remainingSteamGames = Math.max(0, steamGames.length - processedSteamGames);
         this.processing += remainingSteamGames;
-        this.logger.error("Steam metadata synchronisation failed", { error: steamError });
+        this.logger.error("Steam metadata synchronisation failed", steamError);
         this.addFailureEntry({
           action: "metadata",
           code: "UNKNOWN_ERROR",
@@ -302,7 +302,7 @@ export class SyncService {
       await this.metadataQueue.drained();
       this.emitMetadataProgress(true);
     } catch (error: unknown) {
-      this.logger.error("Sync operation failed", { error });
+      this.logger.error("Sync operation failed", error);
       this.addFailureEntry({
         action: "metadata",
         code: "UNKNOWN_ERROR",

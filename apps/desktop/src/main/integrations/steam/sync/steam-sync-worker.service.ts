@@ -54,7 +54,7 @@ export class SteamSyncWorkerService {
         try {
           await worker.terminate();
         } catch (error) {
-          this.logger.error("Failed to terminate Steam library worker", { error, jobId });
+          this.logger.error("Failed to terminate Steam library worker", error, { jobId });
         }
       };
 
@@ -157,7 +157,7 @@ export class SteamSyncWorkerService {
         try {
           await worker.terminate();
         } catch (error) {
-          this.logger.error("Failed to terminate Steam metadata worker", { error, jobId });
+          this.logger.error("Failed to terminate Steam metadata worker", error, { jobId });
         }
       };
 
