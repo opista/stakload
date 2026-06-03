@@ -37,13 +37,17 @@ export const readSteamInstalledGames = async (applicationPath: string): Promise<
   const libraryManifests = await Promise.all(
     libraries.map(async (libraryPath) => {
       const manifestPath = path.join(libraryPath, "steamapps");
-      const files = await fs.readdir(manifestPath);
-      const manifests = await Promise.all(
-        files
-          .filter((file) => file.startsWith("appmanifest_") && file.endsWith(".acf"))
-          .map((file) => parseSteamManifestFile(path.join(manifestPath, file)).catch(() => null)),
-      );
-      return manifests.filter((manifest): manifest is SteamAppManifest => manifest !== null);
+      try {
+        const files = await fs.readdir(manifestPath);
+        const manifests = await Promise.all(
+          files
+            .filter((file) => file.startsWith("appmanifest_") && file.endsWith(".acf"))
+            .map((file) => parseSteamManifestFile(path.join(manifestPath, file)).catch(() => null)),
+        );
+        return manifests.filter((manifest): manifest is SteamAppManifest => manifest !== null);
+      } catch {
+        return [];
+      }
     }),
   );
 

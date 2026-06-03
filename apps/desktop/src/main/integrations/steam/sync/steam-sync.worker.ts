@@ -59,8 +59,15 @@ const runMetadataJob = async (message: Extract<SteamSyncWorkerRequest, { type: "
         };
       }
 
+      if (result.status === "fulfilled") {
+        return {
+          game,
+          status: "not-found",
+        };
+      }
+
       return {
-        error: result.status === "rejected" ? toErrorMessage(result.reason) : "Metadata not found",
+        error: toErrorMessage(result.reason),
         game,
         status: "failure",
       };

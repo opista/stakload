@@ -23,6 +23,9 @@ type LibraryJobInput = {
   webApiKey: string;
 };
 
+const DEFAULT_METADATA_BATCH_SIZE = 50;
+const STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
+
 @Injectable()
 export class SteamSyncWorkerService {
   constructor(private readonly logger: Logger) {
@@ -41,19 +44,51 @@ export class SteamSyncWorkerService {
 
     return await new Promise<Extract<SteamSyncWorkerResponse, { type: "library-scan-results" }>>((resolve, reject) => {
       let result: Extract<SteamSyncWorkerResponse, { type: "library-scan-results" }> | null = null;
+      let settled = false;
+      let timeout: ReturnType<typeof setTimeout>;
 
       const cleanup = async () => {
+        clearTimeout(timeout);
+        worker.removeAllListeners();
         await worker.terminate();
       };
 
       const handleFailure = async (error: unknown) => {
+        if (settled) return;
+        settled = true;
         await cleanup();
         reject(error);
       };
 
+      const handleSuccess = async (
+        response: Extract<SteamSyncWorkerResponse, { type: "library-scan-results" }>,
+      ) => {
+        if (settled) return;
+        settled = true;
+        await cleanup();
+        resolve(response);
+      };
+
+      const refreshTimeout = () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          void handleFailure(new Error("Steam library worker job timed out"));
+        }, STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS);
+      };
+
       worker.on("error", handleFailure);
+      worker.on("exit", (code) => {
+        if (!settled) {
+          const message =
+            code === 0
+              ? "Steam library worker exited before completing"
+              : `Steam library worker exited with code ${code}`;
+          void handleFailure(new Error(message));
+        }
+      });
       worker.on("message", async (message: SteamSyncWorkerResponse) => {
         if (message.jobId !== jobId) return;
+        refreshTimeout();
 
         switch (message.type) {
           case "job-started":
@@ -66,12 +101,11 @@ export class SteamSyncWorkerService {
             await handleFailure(new Error(message.error));
             return;
           case "job-complete":
-            await cleanup();
             if (!result) {
-              reject(new Error("Steam library worker completed without results"));
+              await handleFailure(new Error("Steam library worker completed without results"));
               return;
             }
-            resolve(result);
+            await handleSuccess(result);
             return;
           case "metadata-batch-results":
             return;
@@ -85,7 +119,12 @@ export class SteamSyncWorkerService {
         type: "run-library-job",
       };
 
-      worker.postMessage(message);
+      refreshTimeout();
+      try {
+        worker.postMessage(message);
+      } catch (error) {
+        void handleFailure(error);
+      }
     });
   }
 
@@ -97,26 +136,56 @@ export class SteamSyncWorkerService {
     const worker = this.createWorker();
 
     this.logger.debug("Starting Steam metadata worker job", {
-      batchSize: input.batchSize ?? 10,
+      batchSize: input.batchSize ?? DEFAULT_METADATA_BATCH_SIZE,
       count: input.games.length,
       jobId,
     });
 
     return await new Promise<void>((resolve, reject) => {
       let messageQueue = Promise.resolve();
+      let settled = false;
+      let timeout: ReturnType<typeof setTimeout>;
 
       const cleanup = async () => {
+        clearTimeout(timeout);
+        worker.removeAllListeners();
         await worker.terminate();
       };
 
       const handleFailure = async (error: unknown) => {
+        if (settled) return;
+        settled = true;
         await cleanup();
         reject(error);
       };
 
+      const handleSuccess = async () => {
+        if (settled) return;
+        settled = true;
+        await cleanup();
+        resolve();
+      };
+
+      const refreshTimeout = () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          void handleFailure(new Error("Steam metadata worker job timed out"));
+        }, STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS);
+      };
+
       worker.on("error", handleFailure);
+      worker.on("exit", (code) => {
+        if (!settled) {
+          const message =
+            code === 0
+              ? "Steam metadata worker exited before completing"
+              : `Steam metadata worker exited with code ${code}`;
+          void handleFailure(new Error(message));
+        }
+      });
       worker.on("message", (message: SteamSyncWorkerResponse) => {
         if (message.jobId !== jobId) return;
+        refreshTimeout();
 
         messageQueue = messageQueue
           .then(async () => {
@@ -133,8 +202,7 @@ export class SteamSyncWorkerService {
               case "job-failed":
                 throw new Error(message.error);
               case "job-complete":
-                await cleanup();
-                resolve();
+                await handleSuccess();
                 return;
               case "library-scan-results":
                 return;
@@ -145,14 +213,19 @@ export class SteamSyncWorkerService {
 
       const message: SteamSyncWorkerRequest = {
         apiBaseUrl: input.apiBaseUrl,
-        batchSize: input.batchSize ?? 10,
+        batchSize: input.batchSize ?? DEFAULT_METADATA_BATCH_SIZE,
         games: input.games,
         jobId,
         kind: "metadata",
         type: "run-metadata-job",
       };
 
-      worker.postMessage(message);
+      refreshTimeout();
+      try {
+        worker.postMessage(message);
+      } catch (error) {
+        void handleFailure(error);
+      }
     });
   }
 }

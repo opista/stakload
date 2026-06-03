@@ -139,12 +139,7 @@ export class SyncService {
           game: game.name,
           library: game.library,
         });
-        this.addFailureEntry({
-          action: "metadata",
-          code: "UNKNOWN_ERROR",
-          gameName: game.name,
-          library: game.library,
-        });
+        await this.gameStore.markMetadataSynchronised([game._id]);
         return;
       }
 
@@ -235,6 +230,12 @@ export class SyncService {
 
         if (successfulEntries.length) {
           await this.gameStore.applyMetadataSyncBatch(successfulEntries);
+        }
+
+        const notFoundIds = results.flatMap((result) => (result.status === "not-found" ? [result.game._id] : []));
+
+        if (notFoundIds.length) {
+          await this.gameStore.markMetadataSynchronised(notFoundIds);
         }
 
         results

@@ -19,6 +19,10 @@ export type SteamSyncWorkerMetadataResult =
       status: "success";
     }
   | {
+      game: SteamSyncWorkerGame;
+      status: "not-found";
+    }
+  | {
       error: string;
       game: SteamSyncWorkerGame;
       status: "failure";

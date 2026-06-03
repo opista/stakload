@@ -32,6 +32,8 @@ type MetadataSyncEntry = {
   metadata: Partial<Omit<GameStoreModel, "_id" | "createdAt">>;
 };
 
+const SQLITE_MAX_HOST_PARAMETERS = 900;
+
 const selectMap: Record<FieldsType, (keyof GameEntity)[] | undefined> = {
   all: undefined,
   featured: ["_id", "genres", "name", "screenshots", "summary"],
@@ -108,6 +110,23 @@ export class GameStore {
         query.andWhere(`game.${field} >= :startOfYear`, { startOfYear });
         break;
     }
+  }
+
+  private chunkSqliteParameters<T>(values: T[]) {
+    const chunks: T[][] = [];
+    for (let index = 0; index < values.length; index += SQLITE_MAX_HOST_PARAMETERS) {
+      chunks.push(values.slice(index, index + SQLITE_MAX_HOST_PARAMETERS));
+    }
+    return chunks;
+  }
+
+  private async findGamesByGameIdChunks(gameIds: string[], library: Library) {
+    const chunks = this.chunkSqliteParameters(gameIds);
+    const games: GameEntity[] = [];
+    for (const chunk of chunks) {
+      games.push(...(await this.repository.findBy({ gameId: In(chunk), library })));
+    }
+    return games;
   }
 
   async applyMetadataSyncBatch(entries: MetadataSyncEntry[]) {
@@ -275,7 +294,7 @@ export class GameStore {
   async findGamesByGameIds(gameIds: string[], library: Library) {
     try {
       if (!gameIds.length) return [];
-      return await this.repository.findBy({ gameId: In(gameIds), library });
+      return await this.findGamesByGameIdChunks(gameIds, library);
     } catch (error) {
       this.logger.error("Database error while finding games by ids", error, {
         gameIds,
@@ -311,6 +330,26 @@ export class GameStore {
     return await this.repository.save(entity);
   }
 
+  async markMetadataSynchronised(ids: string[]) {
+    if (!ids.length) return;
+
+    this.logger.debug("Marking metadata as synchronised", {
+      count: ids.length,
+    });
+
+    try {
+      const metadataSyncedAt = new Date();
+      for (const chunk of this.chunkSqliteParameters(ids)) {
+        await this.repository.update({ _id: In(chunk) }, { metadataSyncedAt });
+      }
+    } catch (error) {
+      this.logger.error("Database error while marking metadata as synchronised", error, {
+        count: ids.length,
+      });
+      throw error;
+    }
+  }
+
   async reconcileInstalledGames(
     library: Library,
     installedGames: InstalledGameSyncEntry[],
@@ -332,7 +371,7 @@ export class GameStore {
           },
           where: { isInstalled: true, library },
         }),
-        installedGameIds.length ? this.repository.findBy({ gameId: In(installedGameIds), library }) : [],
+        installedGameIds.length ? this.findGamesByGameIdChunks(installedGameIds, library) : [],
       ]);
 
       const installedByGameId = new Map(installedGames.map((game) => [game.gameId, game] as const));
@@ -368,11 +407,13 @@ export class GameStore {
 
       await this.repository.manager.transaction(async (manager) => {
         if (gamesToUninstall.length) {
-          await manager.update(
-            GameEntity,
-            { gameId: In(gamesToUninstall), library },
-            { installationDetails: null as unknown as GameInstallationDetails, isInstalled: false },
-          );
+          for (const chunk of this.chunkSqliteParameters(gamesToUninstall)) {
+            await manager.update(
+              GameEntity,
+              { gameId: In(chunk), library },
+              { installationDetails: null, isInstalled: false },
+            );
+          }
         }
 
         if (entities.length) {
