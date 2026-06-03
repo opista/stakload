@@ -8,6 +8,7 @@ import { readSteamInstalledGames } from "../installed-games/read-steam-installed
 import { SteamSyncWorkerMetadataResult, SteamSyncWorkerRequest, SteamSyncWorkerResponse } from "./worker.types";
 
 const parent = parentPort;
+const DEFAULT_METADATA_BATCH_SIZE = 50;
 
 if (!parent) {
   throw new Error("Steam sync worker requires a parent port");
@@ -37,9 +38,14 @@ const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "r
 
 const runMetadataJob = async (message: Extract<SteamSyncWorkerRequest, { type: "run-metadata-job" }>) => {
   let processed = 0;
+  const requestedBatchSize = Math.floor(message.batchSize);
+  const batchSize =
+    Number.isFinite(requestedBatchSize) && requestedBatchSize > 0
+      ? requestedBatchSize
+      : DEFAULT_METADATA_BATCH_SIZE;
 
-  for (let index = 0; index < message.games.length; index += message.batchSize) {
-    const chunk = message.games.slice(index, index + message.batchSize);
+  for (let index = 0; index < message.games.length; index += batchSize) {
+    const chunk = message.games.slice(index, index + batchSize);
     const settled = await Promise.allSettled(
       chunk.map(async (game) => {
         if (!game.gameId) {

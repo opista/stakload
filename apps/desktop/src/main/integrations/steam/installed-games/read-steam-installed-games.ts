@@ -25,7 +25,7 @@ export const parseSteamManifestFile = async (manifestPath: string): Promise<Stea
 
   const installedAt = new Date(lastUpdatedUnix * 1000);
   const installLocation = path.join(path.dirname(manifestPath), "common", String(state.installdir));
-  const isInstalled = Number(state.StateFlags) === SteamAppStateFlags.Installed;
+  const isInstalled = (Number(state.StateFlags) & SteamAppStateFlags.Installed) === SteamAppStateFlags.Installed;
   if (!isInstalled) return null;
 
   return {

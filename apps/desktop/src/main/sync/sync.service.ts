@@ -270,7 +270,22 @@ export class SyncService {
       const steamGames = unsyncedGames.filter((game) => game.library === "steam");
       const otherGames = unsyncedGames.filter((game) => game.library !== "steam");
 
-      await this.synchroniseSteamMetadata(steamGames);
+      const steamMetadataStartedAt = this.processing;
+      try {
+        await this.synchroniseSteamMetadata(steamGames);
+      } catch (steamError: unknown) {
+        const processedSteamGames = Math.max(0, this.processing - steamMetadataStartedAt);
+        const remainingSteamGames = Math.max(0, steamGames.length - processedSteamGames);
+        this.processing += remainingSteamGames;
+        this.logger.error("Steam metadata synchronisation failed", { error: steamError });
+        this.addFailureEntry({
+          action: "metadata",
+          code: "UNKNOWN_ERROR",
+          library: "steam",
+        });
+        this.emitMetadataProgress();
+      }
+
       await Promise.all(otherGames.map((game) => this.metadataQueue.push(game)));
       await this.metadataQueue.drained();
       this.emitMetadataProgress(true);
