@@ -51,7 +51,11 @@ export class SteamSyncWorkerService {
       const cleanup = async () => {
         clearTimeout(timeout);
         worker.removeAllListeners();
-        await worker.terminate();
+        try {
+          await worker.terminate();
+        } catch (error) {
+          this.logger.error("Failed to terminate Steam library worker", { error, jobId });
+        }
       };
 
       const handleFailure = async (error: unknown) => {
@@ -150,7 +154,11 @@ export class SteamSyncWorkerService {
       const cleanup = async () => {
         clearTimeout(timeout);
         worker.removeAllListeners();
-        await worker.terminate();
+        try {
+          await worker.terminate();
+        } catch (error) {
+          this.logger.error("Failed to terminate Steam metadata worker", { error, jobId });
+        }
       };
 
       const handleFailure = async (error: unknown) => {

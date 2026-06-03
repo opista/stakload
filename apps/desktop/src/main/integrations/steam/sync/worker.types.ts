@@ -36,7 +36,7 @@ export type SteamSyncWorkerRequest =
       webApiKey: string;
     } & BaseSteamSyncWorkerMessage)
   | ({
-      apiBaseUrl: string;
+      apiBaseUrl?: string;
       batchSize: number;
       games: SteamSyncWorkerGame[];
       type: "run-metadata-job";

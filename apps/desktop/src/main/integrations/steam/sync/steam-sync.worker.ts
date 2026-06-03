@@ -40,7 +40,8 @@ const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "r
 };
 
 const runMetadataJob = async (message: Extract<SteamSyncWorkerRequest, { type: "run-metadata-job" }>) => {
-  if (!message.apiBaseUrl.trim()) {
+  const apiBaseUrl = message.apiBaseUrl?.trim();
+  if (!apiBaseUrl) {
     throw new Error("Stakload API base URL is not configured");
   }
 
@@ -58,7 +59,7 @@ const runMetadataJob = async (message: Extract<SteamSyncWorkerRequest, { type: "
         if (!game.gameId) {
           throw new Error("Missing game id");
         }
-        return await fetchGameMetadata(message.apiBaseUrl, game.gameId, ExternalGameSource.Steam);
+        return await fetchGameMetadata(apiBaseUrl, game.gameId, ExternalGameSource.Steam);
       }),
     );
 
