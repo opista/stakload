@@ -23,7 +23,7 @@ type LibraryJobInput = {
   webApiKey: string;
 };
 
-const DEFAULT_METADATA_BATCH_SIZE = 50;
+const DEFAULT_METADATA_BATCH_SIZE = 10;
 const STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
 
 @Injectable()

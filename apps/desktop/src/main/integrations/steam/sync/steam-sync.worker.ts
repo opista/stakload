@@ -8,7 +8,7 @@ import { readSteamInstalledGames } from "../installed-games/read-steam-installed
 import { SteamSyncWorkerMetadataResult, SteamSyncWorkerRequest, SteamSyncWorkerResponse } from "./worker.types";
 
 const parent = parentPort;
-const DEFAULT_METADATA_BATCH_SIZE = 50;
+const DEFAULT_METADATA_BATCH_SIZE = 10;
 
 if (!parent) {
   throw new Error("Steam sync worker requires a parent port");
@@ -22,7 +22,7 @@ const toErrorMessage = (error: unknown) => (error instanceof Error ? error.messa
 
 const runLibraryJob = async (message: Extract<SteamSyncWorkerRequest, { type: "run-library-job" }>) => {
   const [ownedGames, installedGames] = await Promise.all([
-    fetchOwnedGames(message.webApiKey, message.steamId),
+    fetchOwnedGames(message.webApiKey, message.steamId).catch(() => []),
     readSteamInstalledGames(message.applicationPath),
   ]);
 
