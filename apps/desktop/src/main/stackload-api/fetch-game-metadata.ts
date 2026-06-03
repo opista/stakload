@@ -18,5 +18,5 @@ export const fetchGameMetadata = async (baseUrl: string, gameId: string, source:
     return null;
   }
 
-  throw new Error(response.statusText);
+  throw new Error(`Request failed with status ${response.status}${response.statusText ? `: ${response.statusText}` : ""}`);
 };

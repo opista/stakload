@@ -16,6 +16,10 @@ export const fetchOwnedGames = async (key: string, steamid: string): Promise<Own
     method: "GET",
   });
 
+  if (!response.ok) {
+    throw new Error(`Steam API returned status ${response.status}${response.statusText ? `: ${response.statusText}` : ""}`);
+  }
+
   const parsed: OwnedGamesResponse = await response.json();
   return parsed?.response?.games ?? [];
 };

@@ -16,10 +16,14 @@ export const getSteamLibraryFolders = async (applicationPath: string): Promise<s
 export const parseSteamManifestFile = async (manifestPath: string): Promise<SteamAppManifest | null> => {
   const content = await fs.readFile(manifestPath, "utf-8");
   const manifest = vdf.parse(content);
-  const state = manifest.AppState;
+  const state = manifest?.AppState;
+  if (!state?.appid || !state.installdir) return null;
 
   const gameId = String(state.appid);
-  const installedAt = new Date(Number(state.LastUpdated) * 1000);
+  const lastUpdatedUnix = Number(state.LastUpdated);
+  if (!Number.isFinite(lastUpdatedUnix)) return null;
+
+  const installedAt = new Date(lastUpdatedUnix * 1000);
   const installLocation = path.join(path.dirname(manifestPath), "common", String(state.installdir));
   const isInstalled = Number(state.StateFlags) === SteamAppStateFlags.Installed;
   if (!isInstalled) return null;

@@ -137,7 +137,11 @@ export class GameStore {
     });
 
     try {
-      const existingGames = await this.repository.findBy({ _id: In(entries.map((entry) => entry.id)) });
+      const existingGames: GameEntity[] = [];
+      for (const chunk of this.chunkSqliteParameters(entries.map((entry) => entry.id))) {
+        existingGames.push(...(await this.repository.findBy({ _id: In(chunk) })));
+      }
+
       const existingById = new Map(existingGames.map((game) => [game._id, game] as const));
       const metadataSyncedAt = new Date();
       const entities = entries.flatMap((entry) => {

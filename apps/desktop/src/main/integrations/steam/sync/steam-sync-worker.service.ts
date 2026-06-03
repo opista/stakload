@@ -189,6 +189,8 @@ export class SteamSyncWorkerService {
 
         messageQueue = messageQueue
           .then(async () => {
+            if (settled) return;
+
             switch (message.type) {
               case "job-started":
                 this.logger.debug("Steam metadata worker job started", { jobId });
