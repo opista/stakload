@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { Worker } from "node:worker_threads";
 
 import { Injectable } from "@nestjs/common";
@@ -37,7 +38,7 @@ export class SteamSyncWorkerService {
   }
 
   async runLibraryJob(input: LibraryJobInput) {
-    const jobId = crypto.randomUUID();
+    const jobId = randomUUID();
     const worker = this.createWorker();
 
     this.logger.debug("Starting Steam library worker job", { jobId });
@@ -132,7 +133,7 @@ export class SteamSyncWorkerService {
     input: MetadataJobInput,
     onBatch: (results: SteamSyncWorkerMetadataResult[], progress: { processed: number; total: number }) => Promise<void>,
   ) {
-    const jobId = crypto.randomUUID();
+    const jobId = randomUUID();
     const worker = this.createWorker();
 
     this.logger.debug("Starting Steam metadata worker job", {

@@ -1,6 +1,10 @@
 import { ExternalGameSource, GameStoreModel } from "@stakload/contracts/database/games";
 
 export const fetchGameMetadata = async (baseUrl: string, gameId: string, source: ExternalGameSource) => {
+  if (!baseUrl) {
+    throw new Error("Stakload API base URL is not configured");
+  }
+
   const response = await fetch(`${baseUrl}/games/${gameId}?source=${source}`);
 
   if (response.status === 200) {

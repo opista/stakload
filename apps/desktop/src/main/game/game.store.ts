@@ -154,7 +154,9 @@ export class GameStore {
       });
 
       if (!entities.length) return;
-      await this.repository.save(entities);
+      await this.repository.manager.transaction(async (manager) => {
+        await manager.save(GameEntity, entities);
+      });
     } catch (error) {
       this.logger.error("Database error while applying metadata sync batch", error, {
         count: entries.length,

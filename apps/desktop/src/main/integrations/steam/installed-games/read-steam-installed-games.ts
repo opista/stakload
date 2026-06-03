@@ -10,6 +10,9 @@ export const getSteamLibraryFolders = async (applicationPath: string): Promise<s
   const libraryFoldersPath = path.join(applicationPath, "steamapps", "libraryfolders.vdf");
   const content = await fs.readFile(libraryFoldersPath, "utf-8");
   const parsed: SteamLibraryFolders = vdf.parse(content);
+  if (!parsed?.libraryfolders) {
+    throw new Error("Invalid or missing libraryfolders in VDF");
+  }
   return Object.values(parsed.libraryfolders).map((folder) => folder.path);
 };
 
