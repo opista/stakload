@@ -132,7 +132,12 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
   }
 
   @OnWorkerEvent("completed")
-  async onCompleted(job: Job<GameBuildJobPayload, void, string>): Promise<void> {
+  async onCompleted(job: Job<GameBuildJobPayload, void, string> | undefined): Promise<void> {
+    if (!job) {
+      this.logger.warn("Completed build event did not include a job");
+      return;
+    }
+
     this.logger.info({ gameId: job.data.gameId }, "Successfully completed build job");
 
     try {

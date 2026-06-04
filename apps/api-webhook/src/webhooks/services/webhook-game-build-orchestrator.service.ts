@@ -27,7 +27,7 @@ import type {
 interface EnqueueGameBuildInput {
   action: WebhookAction;
   outcome: WebhookOutcome;
-  payload: DeleteWebhookPayload | RawIgdbPayload;
+  payload: DeleteWebhookPayload | RawIgdbPayload | null | undefined;
   resource: WebhookResource;
 }
 
@@ -92,8 +92,8 @@ export class WebhookGameBuildOrchestratorService {
       .filter((gameId) => Number.isInteger(gameId) && gameId > 0);
   }
 
-  private parsePayloadId(payload: DeleteWebhookPayload | RawIgdbPayload): number {
-    const payloadId = payload.id;
+  private parsePayloadId(payload: DeleteWebhookPayload | RawIgdbPayload | null | undefined): number {
+    const payloadId = payload?.id;
 
     if (typeof payloadId !== "number" || !Number.isInteger(payloadId)) {
       throw new Error("Webhook payload must include an integer id before enqueueing game rebuilds");

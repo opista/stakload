@@ -366,10 +366,14 @@ const waitFor = async (predicate, { description, timeoutMs, intervalMs }) => {
   const startedAt = Date.now();
 
   while (Date.now() - startedAt < timeoutMs) {
-    const result = await predicate();
+    try {
+      const result = await predicate();
 
-    if (result) {
-      return result;
+      if (result) {
+        return result;
+      }
+    } catch {
+      // Ignore temporary polling errors until the timeout expires.
     }
 
     await wait(intervalMs);

@@ -255,4 +255,20 @@ describe("WebhookGameBuildOrchestratorService", () => {
     expect(incr).not.toHaveBeenCalled();
     expect(addBulk).not.toHaveBeenCalled();
   });
+
+  it("throws the expected validation error for a null webhook payload", async () => {
+    const { addBulk, incr, service } = createService();
+
+    await expect(
+      service.enqueueGameBuilds({
+        action: "update",
+        outcome: "handled",
+        payload: null,
+        resource: "games",
+      } as never),
+    ).rejects.toThrow("Webhook payload must include an integer id before enqueueing game rebuilds");
+
+    expect(incr).not.toHaveBeenCalled();
+    expect(addBulk).not.toHaveBeenCalled();
+  });
 });

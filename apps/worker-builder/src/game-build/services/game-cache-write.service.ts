@@ -46,9 +46,13 @@ export class GameCacheWriteService {
   private addDependencyKeysFromItems(
     dependencyKeys: Set<string>,
     referenceKind: GameCacheReferenceKind,
-    items: { id: number }[],
+    items: Array<{ id: number } | null | undefined>,
   ): void {
     for (const item of items) {
+      if (typeof item?.id !== "number") {
+        continue;
+      }
+
       dependencyKeys.add(buildGameDependencySetKey(referenceKind, item.id));
     }
   }
@@ -57,7 +61,10 @@ export class GameCacheWriteService {
     const dependencyKeys = new Set<string>();
     const franchiseItems = [...(game.franchise ? [game.franchise] : []), ...game.franchises];
 
-    const referenceFields: Array<{ items: { id: number }[]; referenceKind: GameCacheReferenceKind }> = [
+    const referenceFields: Array<{
+      items: Array<{ id: number } | null | undefined>;
+      referenceKind: GameCacheReferenceKind;
+    }> = [
       { items: game.genres, referenceKind: "genre" },
       { items: game.platforms, referenceKind: "platform" },
       { items: game.themes, referenceKind: "theme" },

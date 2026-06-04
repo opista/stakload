@@ -265,6 +265,15 @@ describe("GameBuildProcessor", () => {
     expect(logger.info).toHaveBeenCalledWith({ gameId: 7 }, "Successfully completed build job");
   });
 
+  it("should ignore completed events that do not include a job", async () => {
+    const { add, logger, processor } = createProcessor();
+
+    await expect(processor.onCompleted(undefined as never)).resolves.toBeUndefined();
+
+    expect(add).not.toHaveBeenCalled();
+    expect(logger.warn).toHaveBeenCalledWith("Completed build event did not include a job");
+  });
+
   it("should queue a fresh build after completion when a newer request exists", async () => {
     const { add, logger, processor } = createProcessor({
       initialAttemptedVersions: { 7: 1 },

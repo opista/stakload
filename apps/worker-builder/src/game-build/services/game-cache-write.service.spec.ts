@@ -309,6 +309,34 @@ describe("GameCacheWriteService", () => {
     );
   });
 
+  it("should ignore nullish dependency items when writing dependency memberships", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
+    };
+
+    game.genres = [null, undefined, { id: 5, name: "Shooter" }] as unknown as GameDto["genres"];
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.sadd).toHaveBeenCalledWith("genre:5:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:undefined:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:null:games", 42);
+  });
+
   it("should throw when Redis returns no transaction results", async () => {
     const multi = {
       del: vi.fn().mockReturnThis(),
