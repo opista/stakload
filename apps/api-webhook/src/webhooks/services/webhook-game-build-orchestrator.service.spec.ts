@@ -21,6 +21,15 @@ describe("WebhookGameBuildOrchestratorService", () => {
   } = {}) => {
     const redisValues = new Map<string, number>();
     const addBulk = vi.fn().mockResolvedValue([]);
+    const pipeline = {
+      exec: vi.fn().mockResolvedValue([]),
+      incr: vi.fn().mockImplementation((key: string) => {
+        const nextVersion = (redisValues.get(key) ?? 0) + 1;
+        redisValues.set(key, nextVersion);
+        return pipeline;
+      }),
+    };
+    const multi = vi.fn().mockReturnValue(pipeline);
     const incr = vi.fn().mockImplementation(async (key: string) => {
       const nextVersion = (redisValues.get(key) ?? 0) + 1;
       redisValues.set(key, nextVersion);
@@ -39,6 +48,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
     const redisService = {
       client: {
         incr,
+        multi,
         smembers,
       },
     } as unknown as RedisService;
@@ -46,6 +56,8 @@ describe("WebhookGameBuildOrchestratorService", () => {
     return {
       addBulk,
       incr,
+      multi,
+      pipeline,
       redisValues,
       service: new WebhookGameBuildOrchestratorService(gameBuildQueue, logger, redisService),
       smembers,
@@ -56,7 +68,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
     const payloadId = 42;
     const parentKey = buildGameDependencySetKey("parentGame", payloadId);
     const similarKey = buildGameDependencySetKey("similarGame", payloadId);
-    const { addBulk, incr, redisValues, service, smembers } = createService({
+    const { addBulk, incr, multi, pipeline, redisValues, service, smembers } = createService({
       gameIdsByReferenceKey: {
         [parentKey]: ["100", "101"],
         [similarKey]: ["101", "102"],
@@ -77,9 +89,12 @@ describe("WebhookGameBuildOrchestratorService", () => {
     }
 
     for (const gameId of [42, 100, 101, 102]) {
-      expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(gameId));
+      expect(pipeline.incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(gameId));
       expect(redisValues.get(buildGameBuildRequestedVersionKey(gameId))).toBe(1);
     }
+    expect(multi).toHaveBeenCalledTimes(1);
+    expect(pipeline.exec).toHaveBeenCalledTimes(1);
+    expect(incr).not.toHaveBeenCalled();
 
     expect(addBulk).toHaveBeenCalledWith(
       expect.arrayContaining([
@@ -129,7 +144,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
   it("retries queue add failures without incrementing requested versions again", async () => {
     const payloadId = 7;
     const genreKey = buildGameDependencySetKey("genre", payloadId);
-    const { addBulk, incr, redisValues, service } = createService({
+    const { addBulk, incr, pipeline, redisValues, service } = createService({
       gameIdsByReferenceKey: {
         [genreKey]: ["22"],
       },
@@ -147,7 +162,8 @@ describe("WebhookGameBuildOrchestratorService", () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(incr).toHaveBeenCalledTimes(1);
+    expect(pipeline.incr).toHaveBeenCalledTimes(1);
+    expect(incr).not.toHaveBeenCalled();
     expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(1);
     expect(addBulk).toHaveBeenCalledTimes(2);
     expect(addBulk).toHaveBeenLastCalledWith([
@@ -162,7 +178,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
   it("queues rebuilds for stale-rejected cache-affecting webhook outcomes", async () => {
     const payloadId = 7;
     const genreKey = buildGameDependencySetKey("genre", payloadId);
-    const { addBulk, incr, redisValues, service } = createService({
+    const { addBulk, incr, pipeline, redisValues, service } = createService({
       gameIdsByReferenceKey: {
         [genreKey]: ["22"],
       },
@@ -177,7 +193,8 @@ describe("WebhookGameBuildOrchestratorService", () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
+    expect(pipeline.incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
+    expect(incr).not.toHaveBeenCalled();
     expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(1);
     expect(addBulk).toHaveBeenCalledWith([
       {
@@ -191,7 +208,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
   it("ignores malformed dependency set members when resolving affected games", async () => {
     const payloadId = 7;
     const genreKey = buildGameDependencySetKey("genre", payloadId);
-    const { addBulk, incr, service } = createService({
+    const { addBulk, incr, pipeline, service } = createService({
       gameIdsByReferenceKey: {
         [genreKey]: ["22", "22abc", "0", "-1", "3.14", "", "0043"],
       },
@@ -206,9 +223,10 @@ describe("WebhookGameBuildOrchestratorService", () => {
       }),
     ).resolves.toBeUndefined();
 
-    expect(incr).toHaveBeenCalledTimes(2);
-    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
-    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(43));
+    expect(pipeline.incr).toHaveBeenCalledTimes(2);
+    expect(pipeline.incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
+    expect(pipeline.incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(43));
+    expect(incr).not.toHaveBeenCalled();
     expect(addBulk).toHaveBeenCalledWith([
       {
         data: { gameId: 22 },

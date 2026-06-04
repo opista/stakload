@@ -37,8 +37,10 @@ const waitForRenderer = async () => {
         return;
       }
     } catch {
-      await delay(500);
+      // Ignore connection errors while the renderer starts.
     }
+
+    await delay(500);
   }
 
   throw new Error(`Timed out waiting for frontend dev server at ${rendererUrl}`);

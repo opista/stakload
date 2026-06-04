@@ -20,6 +20,8 @@ const run = ({ args, command, cwd, errorMessage }) =>
       stdio: "inherit",
     });
 
+    child.on("error", reject);
+
     child.on("exit", (code) => {
       if (code === 0) {
         resolvePromise();

@@ -174,18 +174,24 @@ export class GameCacheWriteService {
     const dependencyIndexKey = buildGameDependencyIndexKey(game.id);
     const existingDependencyKeys = await this.redisService.client.smembers(dependencyIndexKey);
     const currentDependencyKeys = this.buildDependencyKeys(game);
+    const existingDependencyKeySet = new Set(existingDependencyKeys);
+    const currentDependencyKeySet = new Set(currentDependencyKeys);
     const multi = this.redisService.client.multi() as unknown as RedisDependencyPipeline;
 
     multi.set(buildGameCacheKey(game.id), JSON.stringify(game));
 
     for (const dependencyKey of existingDependencyKeys) {
-      multi.srem(dependencyKey, game.id);
+      if (!currentDependencyKeySet.has(dependencyKey)) {
+        multi.srem(dependencyKey, game.id);
+      }
     }
 
     multi.del(dependencyIndexKey);
 
     for (const dependencyKey of currentDependencyKeys) {
-      multi.sadd(dependencyKey, game.id);
+      if (!existingDependencyKeySet.has(dependencyKey)) {
+        multi.sadd(dependencyKey, game.id);
+      }
     }
 
     if (currentDependencyKeys.length > 0) {

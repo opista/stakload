@@ -87,18 +87,20 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
       this.readRequestedBuildVersion(gameId),
       this.readAttemptedBuildVersion(gameId),
     ]);
+    const requested = requestedVersion ?? 0;
+    const attempted = attemptedVersion ?? 0;
 
-    if (requestedVersion === null || attemptedVersion === null || requestedVersion <= attemptedVersion) {
+    if (requested === 0 || requested <= attempted) {
       return;
     }
 
     await this.gameBuildQueue.add(GAME_BUILD_JOB_NAME, { gameId }, buildGameBuildJobOptions(gameId));
     this.logger.warn(
       {
-        attemptedVersion,
+        attemptedVersion: attempted,
         gameId,
         outcome,
-        requestedVersion,
+        requestedVersion: requested,
       },
       "Queued fresh build job for newer requested version",
     );

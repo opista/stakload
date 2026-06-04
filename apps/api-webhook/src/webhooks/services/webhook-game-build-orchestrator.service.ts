@@ -76,11 +76,13 @@ export class WebhookGameBuildOrchestratorService {
   private async enqueueGames(gameIds: number[]): Promise<void> {
     for (let index = 0; index < gameIds.length; index += QUEUE_CHUNK_SIZE) {
       const chunk = gameIds.slice(index, index + QUEUE_CHUNK_SIZE);
-      await Promise.all(
-        chunk.map(async (gameId) => {
-          await this.redisService.client.incr(buildGameBuildRequestedVersionKey(gameId));
-        }),
-      );
+      const pipeline = this.redisService.client.multi();
+
+      for (const gameId of chunk) {
+        pipeline.incr(buildGameBuildRequestedVersionKey(gameId));
+      }
+
+      await pipeline.exec();
       await this.enqueueGameBuildChunk(chunk);
     }
   }

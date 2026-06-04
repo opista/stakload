@@ -317,4 +317,19 @@ describe("GameBuildProcessor", () => {
       "Queued fresh build job for newer requested version",
     );
   });
+
+  it("should queue a fresh build after failure when no attempted version was recorded", async () => {
+    const { add, logger, processor } = createProcessor({
+      initialRequestedVersions: { 15: 1 },
+    });
+    const error = new Error("build failed before marking attempted version");
+
+    await processor.onFailed(createJob(15), error);
+
+    expect(add).toHaveBeenCalledWith(GAME_BUILD_JOB_NAME, { gameId: 15 }, buildGameBuildJobOptions(15));
+    expect(logger.warn).toHaveBeenCalledWith(
+      { attemptedVersion: 0, gameId: 15, outcome: "failed", requestedVersion: 1 },
+      "Queued fresh build job for newer requested version",
+    );
+  });
 });

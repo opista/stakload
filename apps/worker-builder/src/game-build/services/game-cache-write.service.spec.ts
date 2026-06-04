@@ -337,6 +337,33 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).not.toHaveBeenCalledWith("genre:null:games", 42);
   });
 
+  it("should only remove stale dependency memberships and add new memberships", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue(["genre:3:games", "genre:999:games"]),
+    };
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.srem).toHaveBeenCalledWith("genre:999:games", 42);
+    expect(multi.srem).not.toHaveBeenCalledWith("genre:3:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("genre:5:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:3:games", 42);
+  });
+
   it("should throw when Redis returns no transaction results", async () => {
     const multi = {
       del: vi.fn().mockReturnThis(),
