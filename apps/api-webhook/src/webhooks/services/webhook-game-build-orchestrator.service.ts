@@ -104,7 +104,34 @@ export class WebhookGameBuildOrchestratorService {
     return payloadId;
   }
 
-  private async resolveAffectedGameIds(resource: WebhookResource, payloadId: number): Promise<number[]> {
+  private parsePayloadReferenceId(value: unknown): number | null {
+    if (typeof value === "number" && Number.isInteger(value) && value > 0) {
+      return value;
+    }
+
+    if (typeof value === "object" && value !== null && "id" in value) {
+      return this.parsePayloadReferenceId((value as { id?: unknown }).id);
+    }
+
+    return null;
+  }
+
+  private parsePayloadReferenceIds(value: unknown): number[] {
+    if (Array.isArray(value)) {
+      return value
+        .map((entry) => this.parsePayloadReferenceId(entry))
+        .filter((gameId): gameId is number => gameId !== null);
+    }
+
+    const gameId = this.parsePayloadReferenceId(value);
+    return gameId === null ? [] : [gameId];
+  }
+
+  private async resolveAffectedGameIds(
+    resource: WebhookResource,
+    payloadId: number,
+    payload: DeleteWebhookPayload | RawIgdbPayload | null | undefined,
+  ): Promise<number[]> {
     const affectedGameIds = new Set<number>();
 
     if (resource === "games") {
@@ -128,6 +155,10 @@ export class WebhookGameBuildOrchestratorService {
       affectedGameIds.add(gameId);
     }
 
+    for (const gameId of this.resolvePayloadOwnerGameIds(payload)) {
+      affectedGameIds.add(gameId);
+    }
+
     return Array.from(affectedGameIds);
   }
 
@@ -145,13 +176,29 @@ export class WebhookGameBuildOrchestratorService {
     return gameIdSets.flatMap((ids) => ids);
   }
 
+  private resolvePayloadOwnerGameIds(payload: DeleteWebhookPayload | RawIgdbPayload | null | undefined): number[] {
+    if (!payload) {
+      return [];
+    }
+
+    const payloadRecord = payload as Record<string, unknown>;
+
+    return [
+      ...new Set([
+        ...this.parsePayloadReferenceIds(payloadRecord.game),
+        ...this.parsePayloadReferenceIds(payloadRecord.game_id),
+        ...this.parsePayloadReferenceIds(payloadRecord.games),
+      ]),
+    ];
+  }
+
   async enqueueGameBuilds(input: EnqueueGameBuildInput): Promise<void> {
     if (QUEUEABLE_WEBHOOK_OUTCOMES.includes(input.outcome) === false) {
       return;
     }
 
     const payloadId = this.parsePayloadId(input.payload);
-    const affectedGameIds = await this.resolveAffectedGameIds(input.resource, payloadId);
+    const affectedGameIds = await this.resolveAffectedGameIds(input.resource, payloadId, input.payload);
 
     if (affectedGameIds.length === 0) {
       this.logger.debug(

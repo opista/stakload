@@ -364,6 +364,39 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).not.toHaveBeenCalledWith("genre:3:games", 42);
   });
 
+  it("should index every involved company as a company dependency", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
+    };
+
+    game.involvedCompanies.push({
+      company: { id: 13, name: "Support Studio" },
+      developer: false,
+      id: 1401,
+      porting: false,
+      publisher: false,
+      supporting: true,
+    });
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.sadd).toHaveBeenCalledWith("company:13:games", 42);
+  });
+
   it("should throw when Redis returns no transaction results", async () => {
     const multi = {
       del: vi.fn().mockReturnThis(),

@@ -97,7 +97,11 @@ export class GameCacheWriteService {
       this.addDependencyKeysFromItems(dependencyKeys, referenceKind, items);
     }
 
-    this.addDependencyKeysFromItems(dependencyKeys, "company", [...game.developers, ...game.publishers]);
+    this.addDependencyKeysFromItems(dependencyKeys, "company", [
+      ...game.developers,
+      ...game.publishers,
+      ...game.involvedCompanies.map((involvedCompany) => involvedCompany.company),
+    ]);
 
     this.addDependencyKeysFromIds(
       dependencyKeys,

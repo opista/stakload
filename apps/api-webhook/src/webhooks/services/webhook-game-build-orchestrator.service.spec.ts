@@ -205,6 +205,29 @@ describe("WebhookGameBuildOrchestratorService", () => {
     ]);
   });
 
+  it("queues the owner game from child resource payloads when no dependency set exists yet", async () => {
+    const { addBulk, pipeline, redisValues, service } = createService();
+
+    await expect(
+      service.enqueueGameBuilds({
+        action: "create",
+        outcome: "handled",
+        payload: { game: { id: 42 }, id: 900 },
+        resource: "covers",
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(pipeline.incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(42));
+    expect(redisValues.get(buildGameBuildRequestedVersionKey(42))).toBe(1);
+    expect(addBulk).toHaveBeenCalledWith([
+      {
+        data: { gameId: 42 },
+        name: GAME_BUILD_JOB_NAME,
+        opts: buildGameBuildJobOptions(42),
+      },
+    ]);
+  });
+
   it("ignores malformed dependency set members when resolving affected games", async () => {
     const payloadId = 7;
     const genreKey = buildGameDependencySetKey("genre", payloadId);
