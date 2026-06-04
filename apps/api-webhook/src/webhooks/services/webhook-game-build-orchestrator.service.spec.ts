@@ -31,6 +31,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
       debug: vi.fn(),
       info: vi.fn(),
       setContext: vi.fn(),
+      warn: vi.fn(),
     } as unknown as PinoLogger;
     const gameBuildQueue = {
       addBulk,
@@ -123,6 +124,39 @@ describe("WebhookGameBuildOrchestratorService", () => {
 
     expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(2);
     expect(redisValues.get(buildGameBuildRequestedVersionKey(23))).toBe(2);
+  });
+
+  it("retries queue add failures without incrementing requested versions again", async () => {
+    const payloadId = 7;
+    const genreKey = buildGameDependencySetKey("genre", payloadId);
+    const { addBulk, incr, redisValues, service } = createService({
+      gameIdsByReferenceKey: {
+        [genreKey]: ["22"],
+      },
+    });
+
+    addBulk.mockRejectedValueOnce(new Error("queue unavailable"));
+    addBulk.mockResolvedValueOnce([]);
+
+    await expect(
+      service.enqueueGameBuilds({
+        action: "update",
+        outcome: "handled",
+        payload: { id: payloadId },
+        resource: "genres",
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(incr).toHaveBeenCalledTimes(1);
+    expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(1);
+    expect(addBulk).toHaveBeenCalledTimes(2);
+    expect(addBulk).toHaveBeenLastCalledWith([
+      {
+        data: { gameId: 22 },
+        name: GAME_BUILD_JOB_NAME,
+        opts: buildGameBuildJobOptions(22),
+      },
+    ]);
   });
 
   it("queues rebuilds for stale-rejected cache-affecting webhook outcomes", async () => {

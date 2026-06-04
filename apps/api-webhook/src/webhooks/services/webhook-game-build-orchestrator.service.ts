@@ -32,6 +32,7 @@ interface EnqueueGameBuildInput {
 }
 
 const QUEUE_CHUNK_SIZE = 100;
+const QUEUE_ADD_ATTEMPTS = 3;
 const QUEUEABLE_WEBHOOK_OUTCOMES: readonly WebhookOutcome[] = ["handled", "rejected_stale"];
 
 @Injectable()
@@ -45,6 +46,33 @@ export class WebhookGameBuildOrchestratorService {
     this.logger.setContext(this.constructor.name);
   }
 
+  private async enqueueGameBuildChunk(gameIds: number[]): Promise<void> {
+    const jobs = gameIds.map((gameId) => ({
+      data: { gameId },
+      name: GAME_BUILD_JOB_NAME,
+      opts: buildGameBuildJobOptions(gameId),
+    }));
+    let lastError: unknown;
+
+    for (let attempt = 1; attempt <= QUEUE_ADD_ATTEMPTS; attempt += 1) {
+      try {
+        await this.gameBuildQueue.addBulk(jobs);
+        return;
+      } catch (error) {
+        lastError = error;
+
+        if (attempt < QUEUE_ADD_ATTEMPTS) {
+          this.logger.warn(
+            { attempt, err: error, gameCount: gameIds.length, maxAttempts: QUEUE_ADD_ATTEMPTS },
+            "Failed to queue game build jobs, retrying",
+          );
+        }
+      }
+    }
+
+    throw lastError;
+  }
+
   private async enqueueGames(gameIds: number[]): Promise<void> {
     for (let index = 0; index < gameIds.length; index += QUEUE_CHUNK_SIZE) {
       const chunk = gameIds.slice(index, index + QUEUE_CHUNK_SIZE);
@@ -53,13 +81,7 @@ export class WebhookGameBuildOrchestratorService {
           await this.redisService.client.incr(buildGameBuildRequestedVersionKey(gameId));
         }),
       );
-      await this.gameBuildQueue.addBulk(
-        chunk.map((gameId) => ({
-          data: { gameId },
-          name: GAME_BUILD_JOB_NAME,
-          opts: buildGameBuildJobOptions(gameId),
-        })),
-      );
+      await this.enqueueGameBuildChunk(chunk);
     }
   }
 
