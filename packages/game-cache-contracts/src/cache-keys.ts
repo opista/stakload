@@ -12,6 +12,11 @@ export const buildGameBuildJobId = (gameId: number): string => `game-build-${gam
 export const buildGameBuildRequestedVersionKey = (gameId: number): string => `game-build:${gameId}:requested-version`;
 export const buildGameBuildAttemptedVersionKey = (gameId: number): string => `game-build:${gameId}:attempted-version`;
 export const buildGameBuildJobOptions = (gameId: number) => ({
+  attempts: 3,
+  backoff: {
+    delay: 5000,
+    type: "exponential",
+  },
   jobId: buildGameBuildJobId(gameId),
   removeOnComplete: true,
   removeOnFail: true,

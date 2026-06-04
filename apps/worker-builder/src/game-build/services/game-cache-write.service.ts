@@ -20,6 +20,12 @@ type RedisDependencyPipeline = {
   srem: (key: string, ...members: Array<number | string>) => unknown;
 };
 
+const ZERO_VALUE_REFERENCE_KINDS = new Set<GameCacheReferenceKind>(["gameStatus", "gameType"]);
+const isValidReferenceId = (referenceKind: GameCacheReferenceKind, id: unknown): id is number =>
+  typeof id === "number" &&
+  Number.isInteger(id) &&
+  (id > 0 || (id === 0 && ZERO_VALUE_REFERENCE_KINDS.has(referenceKind)));
+
 @Injectable()
 export class GameCacheWriteService {
   constructor(
@@ -39,7 +45,7 @@ export class GameCacheWriteService {
     }
 
     for (const id of ids) {
-      if (typeof id !== "number") {
+      if (!isValidReferenceId(referenceKind, id)) {
         continue;
       }
 
@@ -57,11 +63,12 @@ export class GameCacheWriteService {
     }
 
     for (const item of items) {
-      if (typeof item?.id !== "number") {
+      const id = item?.id;
+      if (!isValidReferenceId(referenceKind, id)) {
         continue;
       }
 
-      dependencyKeys.add(buildGameDependencySetKey(referenceKind, item.id));
+      dependencyKeys.add(buildGameDependencySetKey(referenceKind, id));
     }
   }
 

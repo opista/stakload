@@ -405,6 +405,52 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).not.toHaveBeenCalledWith("language:undefined:games", 42);
   });
 
+  it("should ignore invalid dependency ids when writing dependency memberships", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
+    };
+
+    game.genres = [
+      { id: Number.NaN, name: "Invalid" },
+      { id: 0, name: "Invalid" },
+      { id: -1, name: "Invalid" },
+      { id: 5, name: "Shooter" },
+    ];
+    game.ageRatings = [
+      {
+        ...game.ageRatings[0],
+        categoryId: Number.NaN,
+        contentDescriptionIds: [-1, 902],
+        organisationId: 0,
+      },
+    ];
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.sadd).toHaveBeenCalledWith("genre:5:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("ageRatingContentDescription:902:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:NaN:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:0:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:-1:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("ageRatingCategory:NaN:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("ageRatingOrganisation:0:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("ageRatingContentDescription:-1:games", 42);
+  });
+
   it("should only remove stale dependency memberships and add new memberships", async () => {
     const game = createGame();
     const multi = {
