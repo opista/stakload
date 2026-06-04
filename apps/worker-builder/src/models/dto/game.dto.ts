@@ -15,6 +15,7 @@ export interface RichReferenceItemDto extends ReferenceItemDto {
 export interface ImageDto {
   animated: boolean | null;
   height: number | null;
+  id: number;
   imageId: string | null;
   width: number | null;
 }
@@ -117,10 +118,13 @@ export interface MultiplayerModeDto {
 }
 
 export interface AgeRatingDto {
+  categoryId: number | null;
+  contentDescriptionIds: number[];
   descriptions: string[];
   id: number;
   name: string | null;
   organisation: string | null;
+  organisationId: number | null;
 }
 
 export interface WebsiteDto {

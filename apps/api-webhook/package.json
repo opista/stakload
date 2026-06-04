@@ -13,6 +13,7 @@
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.json --composite false"
   },
   "dependencies": {
+    "@nestjs/bullmq": "^11.0.2",
     "@nestjs/common": "^11.1.14",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.18",
@@ -20,8 +21,11 @@
     "@nestjs/schedule": "^6.1.1",
     "@nestjs/typeorm": "^11.0.0",
     "@stakload/database": "workspace:*",
+    "@stakload/game-cache-contracts": "workspace:*",
     "@stakload/igdb-vendor": "workspace:*",
     "@stakload/nestjs-logging": "workspace:*",
+    "@stakload/nestjs-redis": "workspace:*",
+    "bullmq": "^5.41.6",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "joi": "^17.13.3",

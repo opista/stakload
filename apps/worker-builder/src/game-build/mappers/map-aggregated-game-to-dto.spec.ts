@@ -4,10 +4,13 @@ describe("mapAggregatedGameToDto", () => {
   const createBaseGame = (): RawAggregatedGameDto => ({
     ageRatings: [
       {
+        categoryId: 2,
+        contentDescriptionIds: [11, 12],
         descriptions: ["Violence", "Strong language"],
         id: 7,
         name: "Mature 17+",
         organisation: "ESRB",
+        organisationId: 4,
       },
     ],
     aggregatedRating: null,

@@ -18,6 +18,7 @@
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.1.18",
     "@nestjs/typeorm": "^11.0.0",
+    "@stakload/game-cache-contracts": "workspace:*",
     "@stakload/nestjs-logging": "workspace:*",
     "@stakload/nestjs-redis": "workspace:*",
     "bullmq": "^5.41.6",

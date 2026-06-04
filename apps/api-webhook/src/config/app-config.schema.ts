@@ -13,4 +13,7 @@ export const APP_CONFIG_SCHEMA = Joi.object({
   PUBLIC_WEBHOOK_BASE_URL: Joi.string()
     .uri({ scheme: ["http", "https"] })
     .required(),
+  REDIS_HOST: Joi.string().required(),
+  REDIS_PASSWORD: Joi.string().required(),
+  REDIS_PORT: Joi.number().integer().min(1).max(65535).required(),
 }).unknown(true);
