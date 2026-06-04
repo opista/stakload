@@ -86,7 +86,21 @@ describe("GameCacheWriteService", () => {
     firstReleaseDate: 1_704_067_200,
     franchise: { id: 700, name: "Main Franchise", slug: null, url: null },
     franchises: [{ id: 701, name: "Sub Franchise", slug: null, url: null }],
-    gameEngines: [{ checksum: null, companies: null, createdAt: null, description: null, id: 800, logo: null, name: "Engine", slug: null, sourceUpdatedAt: null, updatedAt: null, url: null }],
+    gameEngines: [
+      {
+        checksum: null,
+        companies: null,
+        createdAt: null,
+        description: null,
+        id: 800,
+        logo: null,
+        name: "Engine",
+        slug: null,
+        sourceUpdatedAt: null,
+        updatedAt: null,
+        url: null,
+      },
+    ],
     gameModes: [],
     gameStatus: { id: 1, name: "Released" },
     gameType: { id: 0, name: "Main game" },
@@ -97,7 +111,14 @@ describe("GameCacheWriteService", () => {
     ],
     id: 42,
     involvedCompanies: [
-      { company: { id: 10, name: "Dev Studio" }, developer: true, id: 1400, porting: false, publisher: false, supporting: false },
+      {
+        company: { id: 10, name: "Dev Studio" },
+        developer: true,
+        id: 1400,
+        porting: false,
+        publisher: false,
+        supporting: false,
+      },
     ],
     keywords: [],
     languageSupports: [

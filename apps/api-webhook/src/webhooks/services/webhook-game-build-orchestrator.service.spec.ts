@@ -26,9 +26,7 @@ describe("WebhookGameBuildOrchestratorService", () => {
       redisValues.set(key, nextVersion);
       return nextVersion;
     });
-    const smembers = vi
-      .fn()
-      .mockImplementation((key: string) => Promise.resolve(gameIdsByReferenceKey[key] ?? []));
+    const smembers = vi.fn().mockImplementation((key: string) => Promise.resolve(gameIdsByReferenceKey[key] ?? []));
     const logger = {
       debug: vi.fn(),
       info: vi.fn(),
@@ -127,13 +125,77 @@ describe("WebhookGameBuildOrchestratorService", () => {
     expect(redisValues.get(buildGameBuildRequestedVersionKey(23))).toBe(2);
   });
 
-  it("does not queue jobs for non-handled webhook outcomes", async () => {
-    const { addBulk, incr, service } = createService();
+  it("queues rebuilds for stale-rejected cache-affecting webhook outcomes", async () => {
+    const payloadId = 7;
+    const genreKey = buildGameDependencySetKey("genre", payloadId);
+    const { addBulk, incr, redisValues, service } = createService({
+      gameIdsByReferenceKey: {
+        [genreKey]: ["22"],
+      },
+    });
 
     await expect(
       service.enqueueGameBuilds({
         action: "update",
         outcome: "rejected_stale",
+        payload: { id: payloadId },
+        resource: "genres",
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
+    expect(redisValues.get(buildGameBuildRequestedVersionKey(22))).toBe(1);
+    expect(addBulk).toHaveBeenCalledWith([
+      {
+        data: { gameId: 22 },
+        name: GAME_BUILD_JOB_NAME,
+        opts: buildGameBuildJobOptions(22),
+      },
+    ]);
+  });
+
+  it("ignores malformed dependency set members when resolving affected games", async () => {
+    const payloadId = 7;
+    const genreKey = buildGameDependencySetKey("genre", payloadId);
+    const { addBulk, incr, service } = createService({
+      gameIdsByReferenceKey: {
+        [genreKey]: ["22", "22abc", "0", "-1", "3.14", "", "0043"],
+      },
+    });
+
+    await expect(
+      service.enqueueGameBuilds({
+        action: "update",
+        outcome: "handled",
+        payload: { id: payloadId },
+        resource: "genres",
+      }),
+    ).resolves.toBeUndefined();
+
+    expect(incr).toHaveBeenCalledTimes(2);
+    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(22));
+    expect(incr).toHaveBeenCalledWith(buildGameBuildRequestedVersionKey(43));
+    expect(addBulk).toHaveBeenCalledWith([
+      {
+        data: { gameId: 22 },
+        name: GAME_BUILD_JOB_NAME,
+        opts: buildGameBuildJobOptions(22),
+      },
+      {
+        data: { gameId: 43 },
+        name: GAME_BUILD_JOB_NAME,
+        opts: buildGameBuildJobOptions(43),
+      },
+    ]);
+  });
+
+  it("does not queue jobs for ignored webhook outcomes", async () => {
+    const { addBulk, incr, service } = createService();
+
+    await expect(
+      service.enqueueGameBuilds({
+        action: "update",
+        outcome: "ignored_unsupported",
         payload: { id: 42 },
         resource: "platforms",
       }),

@@ -27,6 +27,11 @@ tasks:
     cmds:
       - node scripts/igdb/webhook-cache-e2e.mjs --stage preflight {{.CLI_ARGS}}
 
+  igdb:e2e:local:
+    desc: Validate local service connectivity for webhook cache E2E without IGDB credentials.
+    cmds:
+      - node scripts/igdb/webhook-cache-e2e.mjs --stage local {{.CLI_ARGS}}
+
   igdb:e2e:genres:
     desc: Run preflight plus genre dump and ingest/idempotence checks.
     cmds:

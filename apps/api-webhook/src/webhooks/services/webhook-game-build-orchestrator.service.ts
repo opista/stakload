@@ -32,6 +32,7 @@ interface EnqueueGameBuildInput {
 }
 
 const QUEUE_CHUNK_SIZE = 100;
+const QUEUEABLE_WEBHOOK_OUTCOMES: readonly WebhookOutcome[] = ["handled", "rejected_stale"];
 
 @Injectable()
 export class WebhookGameBuildOrchestratorService {
@@ -64,7 +65,8 @@ export class WebhookGameBuildOrchestratorService {
 
   private parseGameIdsFromRedisMembers(members: string[]): number[] {
     return members
-      .map((member) => Number.parseInt(member, 10))
+      .filter((member) => /^\d+$/u.test(member))
+      .map((member) => Number(member))
       .filter((gameId) => Number.isInteger(gameId) && gameId > 0);
   }
 
@@ -120,7 +122,7 @@ export class WebhookGameBuildOrchestratorService {
   }
 
   async enqueueGameBuilds(input: EnqueueGameBuildInput): Promise<void> {
-    if (input.outcome !== "handled") {
+    if (QUEUEABLE_WEBHOOK_OUTCOMES.includes(input.outcome) === false) {
       return;
     }
 

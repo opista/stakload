@@ -9,10 +9,8 @@ export interface GameBuildJobPayload {
 }
 
 export const buildGameBuildJobId = (gameId: number): string => `game-build-${gameId}`;
-export const buildGameBuildRequestedVersionKey = (gameId: number): string =>
-  `game-build:${gameId}:requested-version`;
-export const buildGameBuildAttemptedVersionKey = (gameId: number): string =>
-  `game-build:${gameId}:attempted-version`;
+export const buildGameBuildRequestedVersionKey = (gameId: number): string => `game-build:${gameId}:requested-version`;
+export const buildGameBuildAttemptedVersionKey = (gameId: number): string => `game-build:${gameId}:attempted-version`;
 export const buildGameBuildJobOptions = (gameId: number) => ({
   jobId: buildGameBuildJobId(gameId),
   removeOnComplete: true,
@@ -23,7 +21,5 @@ export const buildGameCacheKey = (gameId: number): string => `game:${gameId}`;
 
 export const buildGameDependencyIndexKey = (gameId: number): string => `game:${gameId}:dependency-keys`;
 
-export const buildGameDependencySetKey = (
-  referenceKind: GameCacheReferenceKind,
-  referenceId: number,
-): string => `${referenceKind}:${referenceId}:games`;
+export const buildGameDependencySetKey = (referenceKind: GameCacheReferenceKind, referenceId: number): string =>
+  `${referenceKind}:${referenceId}:games`;

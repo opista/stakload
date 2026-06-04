@@ -16,6 +16,7 @@ Use [Task](https://taskfile.dev/docs/getting-started) from the repository root:
 - `task igdb:refresh-descriptions`
 - `task igdb:probe -- <resource> [options]`
 - `task igdb:e2e:preflight`
+- `task igdb:e2e:local`
 - `task igdb:e2e:genres`
 - `task igdb:e2e:create`
 - `task igdb:e2e:webhook-cache`
@@ -37,6 +38,8 @@ The webhook cache harness validates this local flow:
 
 Stage entry points:
 
+- `task igdb:e2e:local`:
+  checks Postgres, Redis, and invalid webhook secret (`401`) behaviour without requiring IGDB credentials.
 - `task igdb:e2e:preflight`:
   checks required env values, IGDB auth, Postgres, Redis, and invalid webhook secret (`401`) behaviour.
 - `task igdb:e2e:genres`:

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { createRequire } from "node:module";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 
 const workerBuilderRequire = createRequire(path.resolve(process.cwd(), "apps/worker-builder/package.json"));
@@ -17,7 +17,7 @@ const GAME_CREATE_PAYLOAD_PATH = path.join(DATA_DIR, "game.create.payload.json")
 const GAME_UPDATE_PAYLOAD_PATH = path.join(DATA_DIR, "game.update.payload.json");
 const REPORT_PATH = path.join(DATA_DIR, "webhook-cache-e2e.report.json");
 
-const STAGES = new Set(["preflight", "genres", "create", "full"]);
+const STAGES = new Set(["local", "preflight", "genres", "create", "full"]);
 
 const printHelp = () => {
   console.log(`Local webhook->worker->redis E2E harness
@@ -27,6 +27,7 @@ Usage:
   node scripts/igdb/webhook-cache-e2e.mjs [options]
 
 Stages:
+  local      Validate local Postgres, Redis, and webhook API connectivity only
   preflight  Validate env + connectivity only
   genres     Preflight + genre dump + ingest checks
   create     Genres stage + game create + Postgres check
@@ -459,27 +460,8 @@ const buildConfig = (options) => {
   };
 };
 
-const runPreflight = async (config, report) => {
+const runLocalPreflight = async (config, report) => {
   assertCondition(typeof config.databaseUrl === "string" && config.databaseUrl.length > 0, "Missing DATABASE_URL");
-  assertCondition(
-    typeof config.igdbClientId === "string" && config.igdbClientId.length > 0,
-    "Missing IGDB_CLIENT_ID",
-  );
-  assertCondition(
-    typeof config.igdbClientSecret === "string" && config.igdbClientSecret.length > 0,
-    "Missing IGDB_CLIENT_SECRET",
-  );
-  assertCondition(
-    typeof config.webhookSecret === "string" && config.webhookSecret.length > 0,
-    "Missing IGDB_WEBHOOK_SECRET",
-  );
-
-  const accessToken = await fetchAccessToken(config.igdbClientId, config.igdbClientSecret);
-  recordCheck(report, {
-    details: "Fetched Twitch access token with configured IGDB credentials",
-    name: "igdb_credentials",
-    passed: true,
-  });
 
   const databaseClient = await createDatabaseClient(config.databaseUrl);
 
@@ -525,6 +507,25 @@ const runPreflight = async (config, report) => {
   recordCheck(report, {
     details: `Received ${unauthorizedStatus} for invalid webhook secret probe`,
     name: "webhook_invalid_secret",
+    passed: true,
+  });
+};
+
+const runIgdbPreflight = async (config, report) => {
+  assertCondition(typeof config.igdbClientId === "string" && config.igdbClientId.length > 0, "Missing IGDB_CLIENT_ID");
+  assertCondition(
+    typeof config.igdbClientSecret === "string" && config.igdbClientSecret.length > 0,
+    "Missing IGDB_CLIENT_SECRET",
+  );
+  assertCondition(
+    typeof config.webhookSecret === "string" && config.webhookSecret.length > 0,
+    "Missing IGDB_WEBHOOK_SECRET",
+  );
+
+  const accessToken = await fetchAccessToken(config.igdbClientId, config.igdbClientSecret);
+  recordCheck(report, {
+    details: "Fetched Twitch access token with configured IGDB credentials",
+    name: "igdb_credentials",
     passed: true,
   });
 
@@ -653,7 +654,10 @@ const verifyGameRow = ({ expectedGamePayload, gameRow, expectUpdatedSummary }) =
   );
 
   if (expectUpdatedSummary) {
-    assertCondition(gameRow.summary === expectedGamePayload.summary, "Postgres summary did not update to expected value");
+    assertCondition(
+      gameRow.summary === expectedGamePayload.summary,
+      "Postgres summary did not update to expected value",
+    );
   }
 };
 
@@ -677,14 +681,11 @@ const verifyWebhookTriggeredRedisUpdate = async ({ config, expectedGamePayload, 
   const queueContext = await createQueueContext(config);
 
   try {
-    const cachedRaw = await waitFor(
-      async () => queueContext.redisClient.get(`game:${expectedGamePayload.id}`),
-      {
-        description: `redis key game:${expectedGamePayload.id}`,
-        intervalMs: 300,
-        timeoutMs: config.jobTimeoutMs,
-      },
-    );
+    const cachedRaw = await waitFor(async () => queueContext.redisClient.get(`game:${expectedGamePayload.id}`), {
+      description: `redis key game:${expectedGamePayload.id}`,
+      intervalMs: 300,
+      timeoutMs: config.jobTimeoutMs,
+    });
     const cachedGame = JSON.parse(cachedRaw);
 
     verifyCachedGamePayload({
@@ -718,9 +719,11 @@ const verifyWebhookTriggeredRedisUpdate = async ({ config, expectedGamePayload, 
 
 const buildUpdatePayload = ({ createPayload, allGenres }) => {
   const usedGenreIds = new Set(sortUniqueIntegerArray(createPayload.genres));
-  const extraGenreId = allGenres.map((genre) => genre.id).find((genreId) => usedGenreIds.has(genreId) === false) ?? null;
+  const extraGenreId =
+    allGenres.map((genre) => genre.id).find((genreId) => usedGenreIds.has(genreId) === false) ?? null;
 
-  const updatedGenres = extraGenreId === null ? sortUniqueIntegerArray(createPayload.genres) : [...usedGenreIds, extraGenreId];
+  const updatedGenres =
+    extraGenreId === null ? sortUniqueIntegerArray(createPayload.genres) : [...usedGenreIds, extraGenreId];
   const updatedSummary = `${createPayload.summary ?? createPayload.name ?? "No summary"} [local webhook cache e2e update]`;
   const originalRating = typeof createPayload.rating === "number" ? createPayload.rating : 70;
   const updatedRating = Math.min(100, Number((originalRating + 0.01).toFixed(2)));
@@ -861,7 +864,14 @@ const main = async () => {
   try {
     console.log(`Running webhook cache E2E stage: ${config.stage}`);
 
-    const accessToken = await runPreflight(config, report);
+    await runLocalPreflight(config, report);
+
+    if (config.stage === "local") {
+      report.success = true;
+      return;
+    }
+
+    const accessToken = await runIgdbPreflight(config, report);
 
     if (config.stage === "preflight") {
       report.success = true;
