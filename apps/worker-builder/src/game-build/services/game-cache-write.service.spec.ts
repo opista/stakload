@@ -337,6 +337,38 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).not.toHaveBeenCalledWith("genre:null:games", 42);
   });
 
+  it("should ignore nullish relation arrays when writing dependency memberships", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
+    };
+
+    game.ageRatings = undefined as unknown as GameDto["ageRatings"];
+    game.externalGames = undefined as unknown as GameDto["externalGames"];
+    game.franchises = undefined as unknown as GameDto["franchises"];
+    game.genres = undefined as unknown as GameDto["genres"];
+    game.involvedCompanies = undefined as unknown as GameDto["involvedCompanies"];
+    game.languageSupports = undefined as unknown as GameDto["languageSupports"];
+    game.websites = undefined as unknown as GameDto["websites"];
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.sadd).not.toHaveBeenCalledWith("genre:undefined:games", 42);
+  });
+
   it("should only remove stale dependency memberships and add new memberships", async () => {
     const game = createGame();
     const multi = {

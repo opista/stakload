@@ -47,24 +47,8 @@ export class GameBuildProcessor extends WorkerHost implements OnModuleInit {
   }
 
   private async processLatestRequestedBuild(gameId: number): Promise<void> {
-    while (true) {
-      const requestedVersion = await this.resolveRequestedBuildVersion(gameId);
-      await this.processRequestedBuildVersion(gameId, requestedVersion);
-
-      const latestRequestedVersion = await this.readRequestedBuildVersion(gameId);
-      if (latestRequestedVersion === null || latestRequestedVersion <= requestedVersion) {
-        return;
-      }
-
-      this.logger.info(
-        {
-          gameId,
-          latestRequestedVersion,
-          requestedVersion,
-        },
-        "Detected newer requested build version, continuing current job",
-      );
-    }
+    const requestedVersion = await this.resolveRequestedBuildVersion(gameId);
+    await this.processRequestedBuildVersion(gameId, requestedVersion);
   }
 
   private async processRequestedBuildVersion(gameId: number, requestedVersion: number): Promise<void> {

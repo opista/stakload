@@ -33,12 +33,19 @@ export class IgdbWebhookController {
   ): Promise<void> {
     this.logger.info({ action, igdbId: payload.id, resource }, "Received IGDB webhook");
     const result = await this.handlerResolver.resolve(resource, action, payload);
-    await this.webhookGameBuildOrchestratorService.enqueueGameBuilds({
-      action,
-      outcome: result.outcome,
-      payload,
-      resource,
-    });
+    try {
+      await this.webhookGameBuildOrchestratorService.enqueueGameBuilds({
+        action,
+        outcome: result.outcome,
+        payload,
+        resource,
+      });
+    } catch (error) {
+      this.logger.error(
+        { action, err: error, igdbId: payload.id, resource },
+        "Failed to enqueue game builds from webhook",
+      );
+    }
 
     response.status(result.statusCode);
     this.logger.info({ action, igdbId: payload.id, outcome: result.outcome, resource }, "Processed IGDB webhook");

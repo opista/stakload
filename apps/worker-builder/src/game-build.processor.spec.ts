@@ -194,10 +194,10 @@ describe("GameBuildProcessor", () => {
     expect(logger.info).toHaveBeenCalledWith({ gameId: 42 }, "Processing build job");
   });
 
-  it("should rerun the build when a newer requested version arrives mid-flight", async () => {
+  it("should process one build and let completion reconciliation queue newer requested versions", async () => {
     const requestedVersionKey = buildGameBuildRequestedVersionKey(42);
     const attemptedVersionKey = buildGameBuildAttemptedVersionKey(42);
-    const { cacheGameAndDependencies, fetchByGameId, logger, processor, redisValues } = createProcessor({
+    const { add, cacheGameAndDependencies, fetchByGameId, logger, processor, redisValues } = createProcessor({
       initialRequestedVersions: { 42: 1 },
     });
     const game = createGameDto();
@@ -210,12 +210,16 @@ describe("GameBuildProcessor", () => {
 
     await processor.process(createJob(42));
 
-    expect(fetchByGameId).toHaveBeenCalledTimes(2);
-    expect(cacheGameAndDependencies).toHaveBeenCalledTimes(2);
-    expect(redisValues.get(attemptedVersionKey)).toBe(2);
-    expect(logger.info).toHaveBeenCalledWith(
-      { gameId: 42, latestRequestedVersion: 2, requestedVersion: 1 },
-      "Detected newer requested build version, continuing current job",
+    expect(fetchByGameId).toHaveBeenCalledTimes(1);
+    expect(cacheGameAndDependencies).toHaveBeenCalledTimes(1);
+    expect(redisValues.get(attemptedVersionKey)).toBe(1);
+
+    await processor.onCompleted(createJob(42));
+
+    expect(add).toHaveBeenCalledWith(GAME_BUILD_JOB_NAME, { gameId: 42 }, buildGameBuildJobOptions(42));
+    expect(logger.warn).toHaveBeenCalledWith(
+      { attemptedVersion: 1, gameId: 42, outcome: "completed", requestedVersion: 2 },
+      "Queued fresh build job for newer requested version",
     );
   });
 
