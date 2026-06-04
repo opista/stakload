@@ -2,13 +2,13 @@ import { Mocked, TestBed } from "@suites/unit";
 
 import { PinoLogger } from "@stakload/nestjs-logging";
 
-type ResponseLike = {
-  status: ReturnType<typeof vi.fn>;
-};
-
 import { IgdbWebhookController } from "./igdb-webhook.controller";
 import { IgdbWebhookHandlerResolver } from "./services/igdb-webhook-handler.resolver";
 import { WebhookGameBuildOrchestratorService } from "./services/webhook-game-build-orchestrator.service";
+
+type ResponseLike = {
+  status: ReturnType<typeof vi.fn>;
+};
 
 const createResponse = (): ResponseLike => ({
   status: vi.fn().mockReturnThis(),
@@ -64,6 +64,26 @@ describe("IgdbWebhookController", () => {
     expect(response.status).toHaveBeenCalledWith(204);
     expect(logger.error).toHaveBeenCalledWith(
       { action: "create", err: enqueueError, igdbId: 7, resource: "platforms" },
+      "Failed to enqueue game builds from webhook",
+    );
+  });
+
+  it("should log enqueue failures without dereferencing a null payload", async () => {
+    const enqueueError = new Error("redis unavailable");
+    void handlerResolver.resolve.mockResolvedValue({
+      outcome: "handled",
+      statusCode: 204,
+    });
+    void webhookGameBuildOrchestratorService.enqueueGameBuilds.mockRejectedValueOnce(enqueueError);
+    const response = createResponse();
+
+    await expect(
+      controller.handleWebhook(null as never, "create", "platforms", response as never),
+    ).resolves.toBeUndefined();
+
+    expect(response.status).toHaveBeenCalledWith(204);
+    expect(logger.error).toHaveBeenCalledWith(
+      { action: "create", err: enqueueError, igdbId: undefined, resource: "platforms" },
       "Failed to enqueue game builds from webhook",
     );
   });

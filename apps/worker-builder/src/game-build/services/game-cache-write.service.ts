@@ -67,12 +67,14 @@ export class GameCacheWriteService {
 
   private buildDependencyKeys(game: GameDto): string[] {
     const dependencyKeys = new Set<string>();
-    const ageRatings = game.ageRatings ?? [];
-    const externalGames = game.externalGames ?? [];
-    const involvedCompanies = game.involvedCompanies ?? [];
-    const languageSupports = game.languageSupports ?? [];
-    const websites = game.websites ?? [];
-    const franchiseItems = [...(game.franchise ? [game.franchise] : []), ...(game.franchises ?? [])];
+    const ageRatings: Array<GameDto["ageRatings"][number] | null | undefined> = game.ageRatings ?? [];
+    const externalGames: Array<GameDto["externalGames"][number] | null | undefined> = game.externalGames ?? [];
+    const franchises: Array<GameDto["franchises"][number] | null | undefined> = game.franchises ?? [];
+    const involvedCompanies: Array<GameDto["involvedCompanies"][number] | null | undefined> =
+      game.involvedCompanies ?? [];
+    const languageSupports: Array<GameDto["languageSupports"][number] | null | undefined> = game.languageSupports ?? [];
+    const websites: Array<GameDto["websites"][number] | null | undefined> = game.websites ?? [];
+    const franchiseItems = [...(game.franchise ? [game.franchise] : []), ...franchises];
 
     const referenceFields: Array<{
       items: Array<{ id: number } | null | undefined>;
@@ -88,7 +90,7 @@ export class GameCacheWriteService {
       { items: game.artworks, referenceKind: "artwork" },
       { items: game.bundles, referenceKind: "bundleGame" },
       { items: game.collections, referenceKind: "collection" },
-      { items: game.externalGames, referenceKind: "externalGame" },
+      { items: externalGames, referenceKind: "externalGame" },
       { items: franchiseItems, referenceKind: "franchise" },
       { items: game.gameEngines, referenceKind: "gameEngine" },
       { items: ageRatings, referenceKind: "ageRating" },
@@ -98,7 +100,7 @@ export class GameCacheWriteService {
       { items: game.screenshots, referenceKind: "screenshot" },
       { items: game.similarGames, referenceKind: "similarGame" },
       { items: game.videos, referenceKind: "gameVideo" },
-      { items: game.websites, referenceKind: "website" },
+      { items: websites, referenceKind: "website" },
       { items: game.parentGame ? [game.parentGame] : [], referenceKind: "parentGame" },
       { items: game.versionParent ? [game.versionParent] : [], referenceKind: "versionParent" },
       { items: game.gameStatus ? [game.gameStatus] : [], referenceKind: "gameStatus" },
@@ -113,56 +115,56 @@ export class GameCacheWriteService {
     this.addDependencyKeysFromItems(dependencyKeys, "company", [
       ...(game.developers ?? []),
       ...(game.publishers ?? []),
-      ...involvedCompanies.map((involvedCompany) => involvedCompany.company),
+      ...involvedCompanies.map((involvedCompany) => involvedCompany?.company),
     ]);
 
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "ageRatingCategory",
-      ageRatings.map((ageRating) => ageRating.categoryId),
+      ageRatings.map((ageRating) => ageRating?.categoryId),
     );
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "ageRatingOrganisation",
-      ageRatings.map((ageRating) => ageRating.organisationId),
+      ageRatings.map((ageRating) => ageRating?.organisationId),
     );
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "ageRatingContentDescription",
-      ageRatings.flatMap((ageRating) => ageRating.contentDescriptionIds),
+      ageRatings.flatMap((ageRating) => ageRating?.contentDescriptionIds ?? []),
     );
 
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "externalGameSource",
-      externalGames.map((externalGame) => externalGame.externalGameSource),
+      externalGames.map((externalGame) => externalGame?.externalGameSource),
     );
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "gameReleaseFormat",
-      externalGames.map((externalGame) => externalGame.gameReleaseFormat),
+      externalGames.map((externalGame) => externalGame?.gameReleaseFormat),
     );
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "platform",
-      externalGames.map((externalGame) => externalGame.platform),
+      externalGames.map((externalGame) => externalGame?.platform),
     );
 
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "language",
-      languageSupports.map((languageSupport) => languageSupport.language),
+      languageSupports.map((languageSupport) => languageSupport?.language),
     );
     this.addDependencyKeysFromIds(
       dependencyKeys,
       "languageSupportType",
-      languageSupports.map((languageSupport) => languageSupport.languageSupportType),
+      languageSupports.map((languageSupport) => languageSupport?.languageSupportType),
     );
 
     this.addDependencyKeysFromItems(
       dependencyKeys,
       "websiteType",
-      websites.filter((website) => website.websiteType != null).map((website) => website.websiteType!),
+      websites.map((website) => website?.websiteType),
     );
 
     return Array.from(dependencyKeys);

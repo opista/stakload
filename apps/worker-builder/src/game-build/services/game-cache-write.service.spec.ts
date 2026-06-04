@@ -369,6 +369,42 @@ describe("GameCacheWriteService", () => {
     expect(multi.sadd).not.toHaveBeenCalledWith("genre:undefined:games", 42);
   });
 
+  it("should ignore nullish nested relation items when deriving dependency memberships", async () => {
+    const game = createGame();
+    const multi = {
+      del: vi.fn().mockReturnThis(),
+      exec: vi.fn().mockResolvedValue([]),
+      sadd: vi.fn().mockReturnThis(),
+      set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
+    };
+    const client = {
+      multi: vi.fn().mockReturnValue(multi),
+      smembers: vi.fn().mockResolvedValue([]),
+    };
+
+    game.ageRatings = [null, undefined, ...game.ageRatings] as unknown as GameDto["ageRatings"];
+    game.externalGames = [null, undefined, ...game.externalGames] as unknown as GameDto["externalGames"];
+    game.involvedCompanies = [null, undefined, ...game.involvedCompanies] as unknown as GameDto["involvedCompanies"];
+    game.languageSupports = [null, undefined, ...game.languageSupports] as unknown as GameDto["languageSupports"];
+    game.websites = [null, undefined, ...game.websites] as unknown as GameDto["websites"];
+
+    Object.defineProperty(redisService, "client", {
+      configurable: true,
+      value: client,
+    });
+
+    await expect(service.cacheGameAndDependencies(game)).resolves.toBeUndefined();
+
+    expect(multi.sadd).toHaveBeenCalledWith("ageRatingCategory:901:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("externalGameSource:500:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("language:1100:games", 42);
+    expect(multi.sadd).toHaveBeenCalledWith("websiteType:1700:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("company:undefined:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("externalGameSource:undefined:games", 42);
+    expect(multi.sadd).not.toHaveBeenCalledWith("language:undefined:games", 42);
+  });
+
   it("should only remove stale dependency memberships and add new memberships", async () => {
     const game = createGame();
     const multi = {

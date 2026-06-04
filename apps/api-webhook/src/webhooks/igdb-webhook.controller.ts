@@ -31,7 +31,7 @@ export class IgdbWebhookController {
     @Param("resource", ParseIgdbWebhookResourcePipe) resource: WebhookResource,
     @Res({ passthrough: true }) response: Response,
   ): Promise<void> {
-    this.logger.info({ action, igdbId: payload.id, resource }, "Received IGDB webhook");
+    this.logger.info({ action, igdbId: payload?.id, resource }, "Received IGDB webhook");
     const result = await this.handlerResolver.resolve(resource, action, payload);
     try {
       await this.webhookGameBuildOrchestratorService.enqueueGameBuilds({
@@ -42,12 +42,12 @@ export class IgdbWebhookController {
       });
     } catch (error) {
       this.logger.error(
-        { action, err: error, igdbId: payload.id, resource },
+        { action, err: error, igdbId: payload?.id, resource },
         "Failed to enqueue game builds from webhook",
       );
     }
 
     response.status(result.statusCode);
-    this.logger.info({ action, igdbId: payload.id, outcome: result.outcome, resource }, "Processed IGDB webhook");
+    this.logger.info({ action, igdbId: payload?.id, outcome: result.outcome, resource }, "Processed IGDB webhook");
   }
 }
