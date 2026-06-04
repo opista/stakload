@@ -30,8 +30,8 @@ const CACHE_AFFECTING_WEBHOOK_RESOURCE_TO_REFERENCE_KINDS = {
   player_perspectives: ["playerPerspective"],
   screenshots: ["screenshot"],
   themes: ["theme"],
-  websites: ["website"],
   website_types: ["websiteType"],
+  websites: ["website"],
 } as const satisfies Record<string, readonly GameCacheReferenceKind[]>;
 
 export type CacheAffectingWebhookResource = keyof typeof CACHE_AFFECTING_WEBHOOK_RESOURCE_TO_REFERENCE_KINDS;

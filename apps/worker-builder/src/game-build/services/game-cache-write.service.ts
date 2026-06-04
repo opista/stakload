@@ -157,9 +157,7 @@ export class GameCacheWriteService {
 
     for (const [error] of results as RedisMultiResult[]) {
       if (error) {
-        const message =
-          operation === "cache" ? "Failed to cache game build payload" : "Failed to purge game cache payload";
-        this.logger.error({ err: error, gameId }, message);
+        this.logger.error({ err: error, gameId }, `Failed to ${operation} game cache payload`);
         throw error;
       }
     }

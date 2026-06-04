@@ -179,8 +179,8 @@ describe("GameCacheWriteService", () => {
       del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue([]),
       sadd: vi.fn().mockReturnThis(),
-      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
@@ -293,8 +293,8 @@ describe("GameCacheWriteService", () => {
       del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue(null),
       sadd: vi.fn().mockReturnThis(),
-      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
@@ -317,8 +317,8 @@ describe("GameCacheWriteService", () => {
       del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue([[writeError, null]]),
       sadd: vi.fn().mockReturnThis(),
-      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),
@@ -331,7 +331,7 @@ describe("GameCacheWriteService", () => {
     });
 
     await expect(service.cacheGameAndDependencies(createGame())).rejects.toThrow("set failed");
-    expect(logger.error).toHaveBeenCalledWith({ err: writeError, gameId: 42 }, "Failed to cache game build payload");
+    expect(logger.error).toHaveBeenCalledWith({ err: writeError, gameId: 42 }, "Failed to cache game cache payload");
   });
 
   it("should purge cached payload and remove all dependency memberships", async () => {
@@ -341,8 +341,8 @@ describe("GameCacheWriteService", () => {
       del: vi.fn().mockReturnThis(),
       exec: vi.fn().mockResolvedValue([]),
       sadd: vi.fn().mockReturnThis(),
-      srem: vi.fn().mockReturnThis(),
       set: vi.fn().mockReturnThis(),
+      srem: vi.fn().mockReturnThis(),
     };
     const client = {
       multi: vi.fn().mockReturnValue(multi),

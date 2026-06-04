@@ -8,7 +8,7 @@ export interface GameBuildJobPayload {
   gameId: number;
 }
 
-export const buildGameBuildJobId = (gameId: number): string => `game-build:${gameId}`;
+export const buildGameBuildJobId = (gameId: number): string => `game-build-${gameId}`;
 export const buildGameBuildRequestedVersionKey = (gameId: number): string =>
   `game-build:${gameId}:requested-version`;
 export const buildGameBuildAttemptedVersionKey = (gameId: number): string =>

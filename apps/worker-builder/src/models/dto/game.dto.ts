@@ -13,9 +13,9 @@ export interface RichReferenceItemDto extends ReferenceItemDto {
 }
 
 export interface ImageDto {
-  id: number;
   animated: boolean | null;
   height: number | null;
+  id: number;
   imageId: string | null;
   width: number | null;
 }
@@ -123,8 +123,8 @@ export interface AgeRatingDto {
   descriptions: string[];
   id: number;
   name: string | null;
-  organisationId: number | null;
   organisation: string | null;
+  organisationId: number | null;
 }
 
 export interface WebsiteDto {

@@ -17,8 +17,8 @@ import { ParseIgdbWebhookActionPipe } from "./pipes/parse-igdb-webhook-action.pi
 import { ParseIgdbWebhookResourcePipe } from "./pipes/parse-igdb-webhook-resource.pipe";
 import { IgdbTombstoneService } from "./services/igdb-tombstone.service";
 import { IgdbUpsertService } from "./services/igdb-upsert.service";
-import { WebhookGameBuildOrchestratorService } from "./services/webhook-game-build-orchestrator.service";
 import { IgdbWebhookHandlerResolver } from "./services/igdb-webhook-handler.resolver";
+import { WebhookGameBuildOrchestratorService } from "./services/webhook-game-build-orchestrator.service";
 
 @Module({
   controllers: [IgdbWebhookController],

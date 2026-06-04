@@ -37,8 +37,8 @@ describe("GameAggregateQueryService", () => {
               descriptions: ["Violence"],
               id: 41,
               name: "Mature 17+",
-              organisationId: 9,
               organisation: "ESRB",
+              organisationId: 9,
             },
           ],
           aggregatedRating: null,
@@ -95,6 +95,7 @@ describe("GameAggregateQueryService", () => {
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_content_descriptions_v2");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("alternative_names");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("external_games");
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain('grf."format"');
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("language_supports");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("multiplayer_modes");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("website_types");

@@ -102,7 +102,7 @@ const GAME_BUILD_QUERY = `
             WHEN grf."igdbId" IS NULL THEN NULL
             ELSE JSON_BUILD_OBJECT(
               'id', grf."igdbId",
-              'name', grf."name",
+              'name', grf."format",
               'checksum', grf."checksum",
               'sourceUpdatedAt', grf."sourceUpdatedAt",
               'createdAt', grf."createdAt",
