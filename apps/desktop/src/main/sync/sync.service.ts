@@ -1,7 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import fastq from "fastq";
 
-import { GAME_ICONS, GameStoreModel, Library } from "@stakload/contracts/database/games";
+import {
+  GAME_ICONS,
+  GameMetadata,
+  GameMetadataSource,
+  GameStoreModel,
+  isGameMetadataSource,
+  Library,
+} from "@stakload/contracts/database/games";
 import { NOTIFICATION_KEYS } from "@stakload/contracts/store/notification";
 import { GameSyncMessage } from "@stakload/contracts/sync";
 
@@ -13,10 +20,38 @@ import { SteamSyncWorkerService } from "../integrations/steam/sync/steam-sync-wo
 import { SteamLibraryService } from "../integrations/steam/sync/steam-sync.service";
 import { Logger } from "../logging/logging.service";
 import { NotificationService } from "../notification/notification.service";
-import { getStakloadApiBaseUrl } from "../stackload-api/get-base-url";
+import { StakloadApiClient } from "../stackload-api/stakload-api.client";
 import { WindowService } from "../window/window.service";
 import { SyncRegistryService } from "./sync-registry/sync-registry.service";
 import { FailureHistoryEntry } from "./types";
+
+type MetadataSyncGame = GameStoreModel & {
+  gameId: string;
+  library: GameMetadataSource;
+};
+
+type MetadataSyncBatch = {
+  games: MetadataSyncGame[];
+  source: GameMetadataSource;
+};
+
+type MetadataSyncPreparationResult =
+  | {
+      game: MetadataSyncGame;
+      kind: "metadata";
+    }
+  | {
+      id: string;
+      kind: "synchronised";
+    };
+
+export type SyncOptions = {
+  metadataMode?: "all" | "pending";
+};
+
+const METADATA_BATCH_CONCURRENCY = 2;
+const METADATA_BATCH_SIZE = 50;
+const METADATA_GAME_PREPARATION_CONCURRENCY = 10;
 
 @Injectable()
 export class SyncService {
@@ -24,7 +59,7 @@ export class SyncService {
   private gamesAdded: number = 0;
   private lastMetadataEventAt: number = 0;
   private libraryQueue = fastq.promise(this.libraryWorker.bind(this), 1);
-  private metadataQueue = fastq.promise(this.metadataWorker.bind(this), 3);
+  private metadataBatchQueue = fastq.promise(this.metadataBatchWorker.bind(this), METADATA_BATCH_CONCURRENCY);
   private metadataToProcess: number = 0;
   private processing: number = 0;
   private syncInProgress = false;
@@ -34,6 +69,7 @@ export class SyncService {
     private logger: Logger,
     private notificationService: NotificationService,
     private sharedConfigService: SharedConfigService,
+    private stakloadApiClient: StakloadApiClient,
     private syncRegistryService: SyncRegistryService,
     private steamLibraryService: SteamLibraryService,
     private steamSyncWorkerService: SteamSyncWorkerService,
@@ -44,6 +80,31 @@ export class SyncService {
 
   private addFailureEntry(entry: FailureHistoryEntry) {
     this.failures.push(entry);
+  }
+
+  private buildMetadataBatches(games: MetadataSyncGame[]): MetadataSyncBatch[] {
+    const batches: MetadataSyncBatch[] = [];
+    const gamesBySource = new Map<GameMetadataSource, MetadataSyncGame[]>();
+
+    for (const game of games) {
+      let sourceGames = gamesBySource.get(game.library);
+      if (!sourceGames) {
+        sourceGames = [];
+        gamesBySource.set(game.library, sourceGames);
+      }
+      sourceGames.push(game);
+    }
+
+    for (const [source, sourceGames] of gamesBySource) {
+      for (let index = 0; index < sourceGames.length; index += METADATA_BATCH_SIZE) {
+        batches.push({
+          games: sourceGames.slice(index, index + METADATA_BATCH_SIZE),
+          source,
+        });
+      }
+    }
+
+    return batches;
   }
 
   private emitMetadataProgress(force = false) {
@@ -105,68 +166,156 @@ export class SyncService {
       this.logger.error("Error synchronising library", { error, library });
       this.addFailureEntry({
         action: "library",
-        code: "AUTHENTICATION_ERROR",
+        code: "UNKNOWN_ERROR",
         library,
       });
     }
   }
 
-  private async metadataWorker(game: GameStoreModel) {
-    this.logger.log("Starting metadata sync", {
-      game: game.name,
-      library: game.library,
-    });
+  private mapMetadataToGameUpdates(metadata: GameMetadata): Partial<Omit<GameStoreModel, "_id" | "createdAt">> {
+    const updates = { ...metadata };
+    Reflect.deleteProperty(updates, "externalGameId");
+    Reflect.deleteProperty(updates, "source");
+    return updates;
+  }
 
-    const libraryImpl = this.syncRegistryService.getLibrary(game.library);
-    if (!libraryImpl) {
-      this.logger.error("Library integration not supported", {
-        library: game.library,
-      });
-      this.addFailureEntry({
-        action: "library",
-        code: "UNSUPPORTED_LIBRARY",
-        library: game.library,
-      });
-      this.processing++;
-      this.emitMetadataProgress();
-      return;
-    }
-
+  private async metadataBatchWorker(batch: MetadataSyncBatch) {
     try {
-      const metadata = await libraryImpl.getGameMetadata(game);
-      if (!metadata) {
-        this.logger.warn("No metadata returned for game", {
-          game: game.name,
-          library: game.library,
-        });
-        await this.gameStore.markMetadataSynchronised([game._id]);
-        return;
+      this.logger.log("Starting metadata sync batch", {
+        count: batch.games.length,
+        source: batch.source,
+      });
+      const metadata = await this.stakloadApiClient.getGamesMetadata(
+        batch.source,
+        batch.games.map((game) => game.gameId),
+      );
+      const metadataByExternalGameId = new Map(metadata.map((entry) => [entry.externalGameId, entry] as const));
+      const successfulEntries = batch.games.flatMap((game) => {
+        const entry = metadataByExternalGameId.get(game.gameId);
+        if (!entry) return [];
+
+        return [
+          {
+            id: game._id,
+            metadata: this.mapMetadataToGameUpdates(entry),
+          },
+        ];
+      });
+
+      if (successfulEntries.length) {
+        await this.gameStore.applyMetadataSyncBatch(successfulEntries);
       }
 
-      await this.gameStore.updateGameById(game._id, {
-        ...metadata,
-        metadataSyncedAt: new Date(),
-      });
-      this.logger.log("Successfully synchronised metadata", {
-        game: game.name,
-        library: game.library,
+      const missingIds = batch.games
+        .filter((game) => !metadataByExternalGameId.has(game.gameId))
+        .map((game) => game._id);
+
+      if (missingIds.length) {
+        await this.gameStore.markMetadataSynchronised(missingIds);
+      }
+
+      this.logger.log("Metadata sync batch complete", {
+        found: successfulEntries.length,
+        missing: missingIds.length,
+        source: batch.source,
       });
     } catch (error: unknown) {
-      this.logger.error("Error synchronising metadata", {
+      this.logger.error("Error synchronising metadata batch", {
+        count: batch.games.length,
         error,
-        game: game.name,
-        library: game.library,
+        source: batch.source,
       });
       this.addFailureEntry({
         action: "metadata",
         code: "UNKNOWN_ERROR",
-        gameName: game.name,
-        library: game.library,
+        library: batch.source,
       });
     } finally {
-      this.processing++;
+      this.processing += batch.games.length;
       this.emitMetadataProgress();
     }
+  }
+
+  private async prepareMetadataSyncGame(game: GameStoreModel): Promise<MetadataSyncPreparationResult> {
+    if (!isGameMetadataSource(game.library)) {
+      return {
+        id: game._id,
+        kind: "synchronised",
+      };
+    }
+
+    let gameId = game.gameId;
+    if (!gameId) {
+      const libraryImpl = this.syncRegistryService.getLibrary(game.library);
+      gameId = (await libraryImpl?.resolveMetadataGameId?.(game)) ?? undefined;
+    }
+
+    if (!gameId) {
+      return {
+        id: game._id,
+        kind: "synchronised",
+      };
+    }
+
+    return {
+      game: {
+        ...game,
+        gameId,
+        library: game.library,
+      },
+      kind: "metadata",
+    };
+  }
+
+  private async prepareMetadataSyncGames(games: GameStoreModel[]): Promise<MetadataSyncGame[]> {
+    const metadataPreparationQueue = fastq.promise(
+      this.prepareMetadataSyncGame.bind(this),
+      METADATA_GAME_PREPARATION_CONCURRENCY,
+    );
+    const preparationResults = await Promise.allSettled(games.map((game) => metadataPreparationQueue.push(game)));
+    const preparedGames: MetadataSyncGame[] = [];
+    const synchronisedIds: string[] = [];
+    let failedCount = 0;
+
+    preparationResults.forEach((result, index) => {
+      const game = games[index];
+      if (result.status === "rejected") {
+        failedCount += 1;
+        this.logger.error("Failed to prepare game for metadata sync", {
+          error: result.reason,
+          gameId: game?._id,
+          library: game?.library,
+          name: game?.name,
+        });
+        this.addFailureEntry({
+          action: "metadata",
+          code: "UNKNOWN_ERROR",
+          gameName: game?.name,
+          library: game?.library,
+        });
+        return;
+      }
+
+      if (result.value.kind === "metadata") {
+        preparedGames.push(result.value.game);
+        return;
+      }
+
+      synchronisedIds.push(result.value.id);
+    });
+
+    if (synchronisedIds.length) {
+      await this.gameStore.markMetadataSynchronised(synchronisedIds);
+      this.processing += synchronisedIds.length;
+      this.emitMetadataProgress();
+    }
+
+    if (failedCount) {
+      this.processing += failedCount;
+      this.emitMetadataProgress();
+    }
+
+    return preparedGames;
   }
 
   private reset() {
@@ -220,86 +369,23 @@ export class SyncService {
     });
   }
 
-  private async synchroniseSteamMetadata(games: GameStoreModel[]) {
-    if (!games.length) return;
-
-    await this.steamSyncWorkerService.runMetadataJob(
-      {
-        apiBaseUrl: getStakloadApiBaseUrl(),
-        games: games.map(({ _id, gameId, name }) => ({ _id, gameId, name })),
-      },
-      async (results, progress) => {
-        const successfulEntries = results.flatMap((result) =>
-          result.status === "success"
-            ? [
-                {
-                  id: result.game._id,
-                  metadata: result.metadata,
-                },
-              ]
-            : [],
-        );
-
-        if (successfulEntries.length) {
-          await this.gameStore.applyMetadataSyncBatch(successfulEntries);
-        }
-
-        const notFoundIds = results.flatMap((result) => (result.status === "not-found" ? [result.game._id] : []));
-
-        if (notFoundIds.length) {
-          await this.gameStore.markMetadataSynchronised(notFoundIds);
-        }
-
-        results
-          .filter((result) => result.status === "failure")
-          .forEach((result) => {
-            this.logger.warn("Steam metadata synchronisation failed", {
-              error: result.error,
-              game: result.game.name,
-            });
-            this.addFailureEntry({
-              action: "metadata",
-              code: "UNKNOWN_ERROR",
-              gameName: result.game.name,
-              library: "steam",
-            });
-          });
-
-        this.processing += results.length;
-        this.emitMetadataProgress(progress.processed === progress.total);
-      },
-    );
-  }
-
-  private async syncLibraries(libraries: Library[]) {
+  private async syncLibraries(libraries: Library[], options: SyncOptions = {}) {
     try {
-      this.logger.log("Starting sync for enabled libraries", { libraries });
+      this.logger.log("Starting sync for enabled libraries", { libraries, options });
       await Promise.all(libraries.map((library) => this.libraryQueue.push(library)));
       await this.libraryQueue.drained();
 
-      const unsyncedGames = await this.gameStore.findUnsyncedGames();
-      this.metadataToProcess = unsyncedGames.length;
-      const steamGames = unsyncedGames.filter((game) => game.library === "steam");
-      const otherGames = unsyncedGames.filter((game) => game.library !== "steam");
+      const metadataSyncCandidates =
+        options.metadataMode === "all" ? await this.gameStore.findUnarchivedGames() : await this.gameStore.findUnsyncedGames();
 
-      const steamMetadataStartedAt = this.processing;
-      try {
-        await this.synchroniseSteamMetadata(steamGames);
-      } catch (steamError: unknown) {
-        const processedSteamGames = Math.max(0, this.processing - steamMetadataStartedAt);
-        const remainingSteamGames = Math.max(0, steamGames.length - processedSteamGames);
-        this.processing += remainingSteamGames;
-        this.logger.error("Steam metadata synchronisation failed", steamError);
-        this.addFailureEntry({
-          action: "metadata",
-          code: "UNKNOWN_ERROR",
-          library: "steam",
-        });
-        this.emitMetadataProgress();
-      }
+      this.metadataToProcess = metadataSyncCandidates.length;
+      this.emitMetadataProgress(true);
 
-      await Promise.all(otherGames.map((game) => this.metadataQueue.push(game)));
-      await this.metadataQueue.drained();
+      const metadataGames = await this.prepareMetadataSyncGames(metadataSyncCandidates);
+      const metadataBatches = this.buildMetadataBatches(metadataGames);
+
+      await Promise.all(metadataBatches.map((batch) => this.metadataBatchQueue.push(batch)));
+      await this.metadataBatchQueue.drained();
       this.emitMetadataProgress(true);
     } catch (error: unknown) {
       this.logger.error("Sync operation failed", error);
@@ -353,17 +439,17 @@ export class SyncService {
     return isValid;
   }
 
-  sync() {
+  sync(options: SyncOptions = {}) {
     if (this.syncInProgress) {
       this.logger.warn("Sync operation already in progress");
       return false;
     }
 
     const enabledLibraries = this.getEnabledLibraries();
-    this.logger.log("Initiating sync", { enabledLibraries });
+    this.logger.log("Initiating sync", { enabledLibraries, options });
     this.reset();
     this.syncInProgress = true;
-    void this.syncLibraries(enabledLibraries);
+    void this.syncLibraries(enabledLibraries, options);
 
     return true;
   }

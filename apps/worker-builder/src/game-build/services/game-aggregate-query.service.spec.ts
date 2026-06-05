@@ -23,7 +23,7 @@ describe("GameAggregateQueryService", () => {
     void dataSource.query.mockResolvedValueOnce([]);
 
     await expect(service.fetchByGameId(404)).resolves.toBeNull();
-    expect(dataSource.query).toHaveBeenCalledWith(expect.any(String), [404]);
+    expect(dataSource.query).toHaveBeenCalledWith(expect.any(String), [[404]]);
   });
 
   it("executes a raw SQL query with UNNEST and maps the result", async () => {
@@ -90,6 +90,7 @@ describe("GameAggregateQueryService", () => {
       publishers: [{ id: 10, name: "Dev Studio" }],
     });
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain('UNNEST(g."genres")');
+    expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain('g."igdbId" = ANY');
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_categories");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_organizations");
     expect(dataSource.query.mock.calls.at(0)?.at(0)).toContain("age_rating_content_descriptions_v2");

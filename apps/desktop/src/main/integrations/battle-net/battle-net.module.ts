@@ -2,7 +2,6 @@ import { forwardRef, Module } from "@nestjs/common";
 
 import { GameModule } from "../../game/game.module";
 import { resolvePlatformImplementation } from "../../platform/resolve-platform-implementation";
-import { StackloadAPIModule } from "../../stackload-api/stackload-api.module";
 import { WindowModule } from "../../window/window.module";
 import { BattleNetApiService } from "./api/battle-net-api.service";
 import { BattleNetClientService } from "./client/battle-net-client.service";
@@ -13,7 +12,7 @@ import { BattleNetLibraryService } from "./sync/battle-net-sync.service";
 
 @Module({
   exports: [BattleNetLibraryService, BattleNetClientService],
-  imports: [forwardRef(() => GameModule), StackloadAPIModule, WindowModule],
+  imports: [forwardRef(() => GameModule), WindowModule],
   providers: [
     BattleNetApiService,
     BattleNetClientService,

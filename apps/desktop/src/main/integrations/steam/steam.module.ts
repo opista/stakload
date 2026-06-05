@@ -2,7 +2,6 @@ import { forwardRef, Module } from "@nestjs/common";
 
 import { GameModule } from "../../game/game.module";
 import { resolvePlatformImplementation } from "../../platform/resolve-platform-implementation";
-import { StackloadAPIModule } from "../../stackload-api/stackload-api.module";
 import { WindowModule } from "../../window/window.module";
 import { SteamApiService } from "./api/steam-api.service";
 import { SteamClientService } from "./client/steam-client.service";
@@ -14,7 +13,7 @@ import { SteamLibraryService } from "./sync/steam-sync.service";
 
 @Module({
   exports: [SteamLibraryService, SteamClientService, SteamSyncWorkerService],
-  imports: [forwardRef(() => GameModule), StackloadAPIModule, WindowModule],
+  imports: [forwardRef(() => GameModule), WindowModule],
   providers: [
     SteamApiService,
     SteamClientService,

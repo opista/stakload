@@ -13,7 +13,7 @@ type GamesCarouselProps<T> = {
 };
 
 export const GamesCarousel = <
-  T extends Partial<GameListModel> & {
+  T extends GameListModel & {
     _id: string;
     name: string;
     screenshots?: string[];
@@ -42,11 +42,7 @@ export const GamesCarousel = <
           const mappedGame: GameListModel = {
             ...game,
             cover: game.cover ?? game.screenshots?.[0],
-            isFavourite: game.isFavourite,
-            isInstalled: game.isInstalled,
-            isQuickLaunch: game.isQuickLaunch,
-            library: game.library,
-          } as GameListModel;
+          };
 
           return (
             <GameCover

@@ -22,6 +22,11 @@ tasks:
     cmds:
       - node scripts/igdb/probe-igdb.mjs {{.CLI_ARGS}}
 
+  igdb:backfill-steam-metadata:
+    desc: Backfill local Steam metadata through real IGDB webhook payloads.
+    cmds:
+      - node scripts/igdb/backfill-steam-metadata.mjs {{.CLI_ARGS}}
+
   igdb:e2e:preflight:
     desc: Validate local env and service connectivity for webhook cache E2E.
     cmds:

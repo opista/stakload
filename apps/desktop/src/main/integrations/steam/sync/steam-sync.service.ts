@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
+import { Library } from "@stakload/contracts/database/games";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { SharedConfigService } from "../../../config/shared-config.service";
 import { GameStore } from "../../../game/game.store";
 import { Logger } from "../../../logging/logging.service";
-import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { SteamApiService } from "../api/steam-api.service";
@@ -23,7 +22,6 @@ export class SteamLibraryService implements SyncService {
     private readonly logger: Logger,
     private readonly sharedConfigService: SharedConfigService,
     private readonly steamApiService: SteamApiService,
-    private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -95,13 +93,6 @@ export class SteamLibraryService implements SyncService {
       library: this.library,
       success,
     });
-  }
-
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata for Steam", {
-      gameId: game.gameId,
-    });
-    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Steam);
   }
 
   getSteamCredentials() {

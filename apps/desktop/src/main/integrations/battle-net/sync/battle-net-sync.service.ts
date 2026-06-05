@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 
-import { GameStoreModel, Library } from "@stakload/contracts/database/games";
+import { Library } from "@stakload/contracts/database/games";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
 
@@ -71,13 +71,6 @@ export class BattleNetLibraryService implements SyncService {
       library: this.library,
       success,
     });
-  }
-
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external Battle.net endpoint", { gameId: game.gameId });
-    // TODO: Implement this when IGDB support Battle.net games
-    return null;
-    // return await this.StakloadApiClient.getGameMetadata(game.gameId!, this.library);
   }
 
   async isIntegrationValid(): Promise<boolean> {

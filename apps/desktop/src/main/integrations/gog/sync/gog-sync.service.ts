@@ -1,14 +1,13 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
 
-import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
+import { Library } from "@stakload/contracts/database/games";
 import { mapSortableName } from "@util/map-sortable-name";
 import { removeSpecialChars } from "@util/remove-special-chars";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { GameStore } from "../../../game/game.store";
 import { Logger } from "../../../logging/logging.service";
-import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { CLIENT_ID, GogApiService, REDIRECT_URI } from "../api/gog-api.service";
@@ -24,7 +23,6 @@ export class GogLibraryService implements SyncService {
     private readonly gogApiService: GogApiService,
     @Inject(GOG_INSTALLED_GAMES_STRATEGY) private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly logger: Logger,
-    private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -101,13 +99,6 @@ export class GogLibraryService implements SyncService {
       width: 410,
     });
     window.show();
-  }
-
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
-    this.logger.debug("Fetching game metadata from external GOG endpoint", {
-      gameId: game.gameId,
-    });
-    return await this.StakloadApiClient.getGameMetadata(game.gameId!, ExternalGameSource.Gog);
   }
 
   async isIntegrationValid(): Promise<boolean> {

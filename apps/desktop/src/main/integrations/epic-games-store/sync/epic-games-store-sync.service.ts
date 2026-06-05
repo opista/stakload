@@ -1,12 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { BrowserWindow } from "electron";
 
-import { ExternalGameSource, GameStoreModel, Library } from "@stakload/contracts/database/games";
+import { GameStoreModel, Library } from "@stakload/contracts/database/games";
 
 import { EVENT_CHANNELS } from "../../../../preload/channels";
 import { GameStore } from "../../../game/game.store";
 import { Logger } from "../../../logging/logging.service";
-import { StakloadApiClient } from "../../../stackload-api/stakload-api.client";
 import { SyncService } from "../../../sync/sync-registry/types";
 import { WindowService } from "../../../window/window.service";
 import { EpicGamesStoreApiService } from "../api/epic-games-store-api.service";
@@ -25,7 +24,6 @@ export class EpicGamesStoreSyncService implements SyncService {
     private readonly installedGamesStrategy: InstalledGamesStrategy,
     private readonly legendaryService: LegendaryService,
     private readonly logger: Logger,
-    private readonly StakloadApiClient: StakloadApiClient,
     private readonly windowService: WindowService,
   ) {
     this.logger.setContext(this.constructor.name);
@@ -89,13 +87,13 @@ export class EpicGamesStoreSyncService implements SyncService {
     window.show();
   }
 
-  async getGameMetadata(game: GameStoreModel): Promise<GameStoreModel | null> {
+  async resolveMetadataGameId(game: GameStoreModel): Promise<string | null> {
     if (game.gameId) {
-      this.logger.debug("Fetching game metadata using existing gameId", {
+      this.logger.debug("Using existing EpicGamesStore gameId for metadata", {
         gameId: game.gameId,
         name: game.name,
       });
-      return await this.StakloadApiClient.getGameMetadata(game.gameId, ExternalGameSource.EpicGames);
+      return game.gameId;
     }
     this.logger.debug("No gameId found, fetching gameId from EpicGamesStore API", {
       name: game.name,
@@ -115,7 +113,7 @@ export class EpicGamesStoreSyncService implements SyncService {
       namespace: game.libraryMeta!.namespace,
     });
     await this.gameStore.updateGameById(game._id, { gameId });
-    return await this.StakloadApiClient.getGameMetadata(gameId, ExternalGameSource.EpicGames);
+    return gameId;
   }
 
   async isIntegrationValid(): Promise<boolean> {

@@ -2,7 +2,6 @@ import { forwardRef, Module } from "@nestjs/common";
 
 import { GameModule } from "../../game/game.module";
 import { resolvePlatformImplementation } from "../../platform/resolve-platform-implementation";
-import { StackloadAPIModule } from "../../stackload-api/stackload-api.module";
 import { WindowModule } from "../../window/window.module";
 import { EpicGamesStoreApiService } from "./api/epic-games-store-api.service";
 import { EpicGamesStoreClientService } from "./client/epic-games-store-client.service";
@@ -17,7 +16,7 @@ import { EpicGamesStoreSyncService } from "./sync/epic-games-store-sync.service"
 
 @Module({
   exports: [EpicGamesStoreSyncService, EpicGamesStoreClientService],
-  imports: [forwardRef(() => GameModule), StackloadAPIModule, WindowModule],
+  imports: [forwardRef(() => GameModule), WindowModule],
   providers: [
     EpicGamesStoreApiService,
     EpicGamesStoreClientService,
