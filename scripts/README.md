@@ -15,6 +15,7 @@ Use [Task](https://taskfile.dev/docs/getting-started) from the repository root:
 - `task igdb:apply`
 - `task igdb:refresh-descriptions`
 - `task igdb:probe -- <resource> [options]`
+- `task igdb:backfill-steam-metadata`
 - `task igdb:e2e:preflight`
 - `task igdb:e2e:local`
 - `task igdb:e2e:genres`
@@ -25,6 +26,7 @@ Examples:
 
 - `task igdb:extract -- --input-html scripts/igdb/data/igdb-endpoints.html`
 - `task igdb:probe -- games --fields "name,slug" --limit 5`
+- `task igdb:backfill-steam-metadata -- --limit 50`
 - `task igdb:e2e:webhook-cache -- --post-concurrency 20`
 
 ## Local Webhook Cache E2E
@@ -57,6 +59,17 @@ Generated artefacts:
 - `scripts/igdb/data/webhook-cache-e2e.report.json`
 
 The harness assumes services are already running (Tilt or Docker Compose).
+
+## Local Steam Metadata Backfill
+
+`task igdb:backfill-steam-metadata` reads Steam ids from the local desktop SQLite
+database by default, fetches matching real IGDB records, posts them through
+`api-webhook`, and waits for `worker-builder` to write Redis `game:*` cache
+entries. It is intended for local API testing without handwritten seed rows.
+
+Generated report:
+
+- `scripts/igdb/data/steam-metadata-backfill.report.json`
 
 ## Notes
 

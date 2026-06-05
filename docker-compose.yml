@@ -7,7 +7,11 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stakload}
       POSTGRES_USER: ${POSTGRES_USER:-stakload}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-stakload} -d ${POSTGRES_DB:-stakload}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-stakload} -d ${POSTGRES_DB:-stakload}",
+        ]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -49,7 +53,7 @@ services:
       IGDB_CLIENT_ID: ${IGDB_CLIENT_ID}
       IGDB_CLIENT_SECRET: ${IGDB_CLIENT_SECRET}
       IGDB_SCHEDULED_SYNC_ENABLED: ${IGDB_SCHEDULED_SYNC_ENABLED:-false}
-      IGDB_WEBHOOK_SECRET: ${IGDB_WEBHOOK_SECRET}
+      IGDB_WEBHOOK_SECRET: ${IGDB_WEBHOOK_SECRET:-webhook-secret}
       LOG_LEVEL: ${LOG_LEVEL:-info}
       NODE_ENV: ${NODE_ENV:-development}
       PUBLIC_WEBHOOK_BASE_URL: ${PUBLIC_WEBHOOK_BASE_URL:-http://localhost:3001}
