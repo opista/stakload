@@ -1,18 +1,36 @@
-import { mkdirSync } from "fs";
+import { copyFileSync, existsSync, mkdirSync } from "fs";
 import path from "path";
 
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { app } from "electron";
 
-import { APP_DIR_NAME } from "../app-paths";
+import { APP_DIR_NAME, userDataPath } from "../app-paths";
 import { CollectionEntity } from "../collection/collection.entity";
 import { GameEntity } from "../game/game.entity";
 
+const DATABASE_DIRECTORY_NAME = "databases";
+const DATABASE_FILE_NAME = "stakload.db";
+
+const copyTemporaryDatabaseIfNeeded = (databasePath: string) => {
+  const temporaryDatabasePath = path.join(
+    path.dirname(userDataPath),
+    `${APP_DIR_NAME}-data`,
+    DATABASE_DIRECTORY_NAME,
+    DATABASE_FILE_NAME,
+  );
+
+  if (existsSync(databasePath) || !existsSync(temporaryDatabasePath)) return;
+
+  copyFileSync(temporaryDatabasePath, databasePath);
+};
+
 const resolveDatabasePath = () => {
-  const databaseDirectory = path.join(app.getPath("appData"), `${APP_DIR_NAME}-data`, "databases");
+  const databaseDirectory = path.join(userDataPath, DATABASE_DIRECTORY_NAME);
   mkdirSync(databaseDirectory, { recursive: true });
-  return path.join(databaseDirectory, "stakload.db");
+  const databasePath = path.join(databaseDirectory, DATABASE_FILE_NAME);
+  copyTemporaryDatabaseIfNeeded(databasePath);
+  return databasePath;
 };
 
 @Module({

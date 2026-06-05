@@ -23,6 +23,8 @@ type ExternalGameLookupRow = {
   igdbId: number;
 };
 
+const CACHE_MGET_BATCH_SIZE = 250;
+
 const EXTERNAL_GAME_LOOKUP_QUERY = `
   SELECT eg."uid" AS "externalGameId", eg."game" AS "igdbId"
   FROM external_games eg
@@ -61,22 +63,25 @@ export class GamesService {
     const cacheKeys = igdbIds.map(buildGameCacheKey);
 
     try {
-      const cachedValues = await this.redisService.client.mget(...cacheKeys);
-      if (!Array.isArray(cachedValues)) {
-        this.logger.warn({ responseType: typeof cachedValues }, "Unexpected game metadata cache response");
-        return cachedGames;
-      }
-
-      cachedValues.forEach((cachedValue, index) => {
-        if (!cachedValue) return;
-
-        try {
-          const game = mapAggregatedGameToDto(cachedValue);
-          cachedGames.set(game.id, game);
-        } catch (error) {
-          this.logger.warn({ err: error, gameId: igdbIds[index] }, "Failed to parse cached game metadata");
+      for (let offset = 0; offset < cacheKeys.length; offset += CACHE_MGET_BATCH_SIZE) {
+        const cacheKeyBatch = cacheKeys.slice(offset, offset + CACHE_MGET_BATCH_SIZE);
+        const cachedValues = await this.redisService.client.mget(...cacheKeyBatch);
+        if (!Array.isArray(cachedValues)) {
+          this.logger.warn({ responseType: typeof cachedValues }, "Unexpected game metadata cache response");
+          continue;
         }
-      });
+
+        cachedValues.forEach((cachedValue, index) => {
+          if (!cachedValue) return;
+
+          try {
+            const game = mapAggregatedGameToDto(cachedValue);
+            cachedGames.set(game.id, game);
+          } catch (error) {
+            this.logger.warn({ err: error, gameId: igdbIds[offset + index] }, "Failed to parse cached game metadata");
+          }
+        });
+      }
     } catch (error) {
       this.logger.warn({ err: error }, "Failed to read game metadata cache");
     }
