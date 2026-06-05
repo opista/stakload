@@ -62,6 +62,11 @@ export class GamesService {
 
     try {
       const cachedValues = await this.redisService.client.mget(...cacheKeys);
+      if (!Array.isArray(cachedValues)) {
+        this.logger.warn({ responseType: typeof cachedValues }, "Unexpected game metadata cache response");
+        return cachedGames;
+      }
+
       cachedValues.forEach((cachedValue, index) => {
         if (!cachedValue) return;
 

@@ -1,5 +1,5 @@
-import type { GameDto, ImageDto, ReferenceItemDto } from "../models/game.dto";
 import type { GameMetadata, GameMetadataSource, WebsiteMetadata } from "../models/game-metadata";
+import type { GameDto, ImageDto, ReferenceItemDto } from "../models/game.dto";
 
 const IGDB_IMAGE_BASE_URL = "https://images.igdb.com/igdb/image/upload";
 const KNOWN_WEBSITE_TYPES = new Set([
@@ -54,8 +54,16 @@ const mapMedia = (image: ImageDto) => {
   };
 };
 
-const mapFirstReleaseDate = (firstReleaseDate: number | null): string | undefined =>
-  firstReleaseDate === null ? undefined : new Date(firstReleaseDate * 1000).toISOString();
+const mapFirstReleaseDate = (firstReleaseDate: number | null): string | undefined => {
+  if (firstReleaseDate === null) return undefined;
+
+  try {
+    const date = new Date(firstReleaseDate * 1000);
+    return Number.isNaN(date.getTime()) ? undefined : date.toISOString();
+  } catch {
+    return undefined;
+  }
+};
 
 const mapWebsiteType = (name: string | null | undefined): string | null => {
   if (!name) return null;

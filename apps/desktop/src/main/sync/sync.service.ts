@@ -273,18 +273,45 @@ export class SyncService {
       METADATA_GAME_PREPARATION_CONCURRENCY,
     );
     const preparationResults = await Promise.allSettled(games.map((game) => metadataPreparationQueue.push(game)));
-    const results = preparationResults.map((result) => {
+    const preparedGames: MetadataSyncGame[] = [];
+    const synchronisedIds: string[] = [];
+    let failedCount = 0;
+
+    preparationResults.forEach((result, index) => {
+      const game = games[index];
       if (result.status === "rejected") {
-        throw result.reason;
+        failedCount += 1;
+        this.logger.error("Failed to prepare game for metadata sync", {
+          error: result.reason,
+          gameId: game?._id,
+          library: game?.library,
+          name: game?.name,
+        });
+        this.addFailureEntry({
+          action: "metadata",
+          code: "UNKNOWN_ERROR",
+          gameName: game?.name,
+          library: game?.library,
+        });
+        return;
       }
-      return result.value;
+
+      if (result.value.kind === "metadata") {
+        preparedGames.push(result.value.game);
+        return;
+      }
+
+      synchronisedIds.push(result.value.id);
     });
-    const preparedGames = results.flatMap((result) => (result.kind === "metadata" ? [result.game] : []));
-    const synchronisedIds = results.flatMap((result) => (result.kind === "synchronised" ? [result.id] : []));
 
     if (synchronisedIds.length) {
       await this.gameStore.markMetadataSynchronised(synchronisedIds);
       this.processing += synchronisedIds.length;
+      this.emitMetadataProgress();
+    }
+
+    if (failedCount) {
+      this.processing += failedCount;
       this.emitMetadataProgress();
     }
 
