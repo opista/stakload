@@ -537,21 +537,21 @@ const waitForCacheKeys = async ({ config, gameIds }) => {
   const pending = new Set(gameIds.map(String));
 
   while (pending.size > 0 && Date.now() - startedAt < config.jobTimeoutMs) {
-    const redisRows = execFileSync(
-      "docker",
-      ["exec", "stakload-redis", "redis-cli", "-a", "stakload", "MGET", ...[...pending].map((id) => `${GAME_CACHE_KEY_PREFIX}${id}`)],
-      { encoding: "utf8" },
-    )
-      .split(/\r?\n/u)
-      .map((line) => line.trim())
-      .filter(Boolean);
+    for (const id of [...pending]) {
+      try {
+        const exists = execFileSync(
+          "docker",
+          ["exec", "stakload-redis", "redis-cli", "-a", "stakload", "EXISTS", `${GAME_CACHE_KEY_PREFIX}${id}`],
+          { encoding: "utf8" },
+        ).trim();
 
-    const pendingIds = [...pending];
-    redisRows.forEach((value, index) => {
-      if (value !== "(nil)") {
-        pending.delete(pendingIds[index]);
+        if (exists === "1") {
+          pending.delete(id);
+        }
+      } catch {
+        break;
       }
-    });
+    }
 
     if (pending.size === 0) break;
     await new Promise((resolve) => setTimeout(resolve, 500));

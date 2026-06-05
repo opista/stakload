@@ -1,24 +1,32 @@
-import path from "path";
 import { mkdirSync } from "fs";
+import path from "path";
 
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { app } from "electron";
 
+import { APP_DIR_NAME } from "../app-paths";
 import { CollectionEntity } from "../collection/collection.entity";
 import { GameEntity } from "../game/game.entity";
-import { APP_DIR_NAME } from "../app-paths";
 
-const databaseDirectory = path.join(app.getPath("appData"), `${APP_DIR_NAME}-data`, "databases");
-mkdirSync(databaseDirectory, { recursive: true });
+const resolveDatabasePath = () => {
+  const databaseDirectory = path.join(app.getPath("appData"), `${APP_DIR_NAME}-data`, "databases");
+  mkdirSync(databaseDirectory, { recursive: true });
+  return path.join(databaseDirectory, "stakload.db");
+};
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      database: path.join(databaseDirectory, "stakload.db"),
-      entities: [GameEntity, CollectionEntity],
-      synchronize: true,
-      type: "better-sqlite3",
+    TypeOrmModule.forRootAsync({
+      useFactory: async () => {
+        await app.whenReady();
+        return {
+          database: resolveDatabasePath(),
+          entities: [GameEntity, CollectionEntity],
+          synchronize: true,
+          type: "better-sqlite3",
+        };
+      },
     }),
   ],
 })

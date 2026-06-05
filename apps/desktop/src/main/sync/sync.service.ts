@@ -35,12 +35,23 @@ type MetadataSyncBatch = {
   source: GameMetadataSource;
 };
 
+type MetadataSyncPreparationResult =
+  | {
+      game: MetadataSyncGame;
+      kind: "metadata";
+    }
+  | {
+      id: string;
+      kind: "synchronised";
+    };
+
 export type SyncOptions = {
   metadataMode?: "all" | "pending";
 };
 
 const METADATA_BATCH_CONCURRENCY = 2;
 const METADATA_BATCH_SIZE = 50;
+const METADATA_GAME_PREPARATION_CONCURRENCY = 10;
 
 @Injectable()
 export class SyncService {
@@ -76,7 +87,12 @@ export class SyncService {
     const gamesBySource = new Map<GameMetadataSource, MetadataSyncGame[]>();
 
     for (const game of games) {
-      gamesBySource.set(game.library, [...(gamesBySource.get(game.library) ?? []), game]);
+      let sourceGames = gamesBySource.get(game.library);
+      if (!sourceGames) {
+        sourceGames = [];
+        gamesBySource.set(game.library, sourceGames);
+      }
+      sourceGames.push(game);
     }
 
     for (const [source, sourceGames] of gamesBySource) {
@@ -220,33 +236,51 @@ export class SyncService {
     }
   }
 
-  private async prepareMetadataSyncGames(games: GameStoreModel[]): Promise<MetadataSyncGame[]> {
-    const preparedGames: MetadataSyncGame[] = [];
-    const synchronisedIds: string[] = [];
+  private async prepareMetadataSyncGame(game: GameStoreModel): Promise<MetadataSyncPreparationResult> {
+    if (!isGameMetadataSource(game.library)) {
+      return {
+        id: game._id,
+        kind: "synchronised",
+      };
+    }
 
-    for (const game of games) {
-      if (!isGameMetadataSource(game.library)) {
-        synchronisedIds.push(game._id);
-        continue;
-      }
+    let gameId = game.gameId;
+    if (!gameId) {
+      const libraryImpl = this.syncRegistryService.getLibrary(game.library);
+      gameId = (await libraryImpl?.resolveMetadataGameId?.(game)) ?? undefined;
+    }
 
-      let gameId = game.gameId;
-      if (!gameId) {
-        const libraryImpl = this.syncRegistryService.getLibrary(game.library);
-        gameId = (await libraryImpl?.resolveMetadataGameId?.(game)) ?? undefined;
-      }
+    if (!gameId) {
+      return {
+        id: game._id,
+        kind: "synchronised",
+      };
+    }
 
-      if (!gameId) {
-        synchronisedIds.push(game._id);
-        continue;
-      }
-
-      preparedGames.push({
+    return {
+      game: {
         ...game,
         gameId,
         library: game.library,
-      });
-    }
+      },
+      kind: "metadata",
+    };
+  }
+
+  private async prepareMetadataSyncGames(games: GameStoreModel[]): Promise<MetadataSyncGame[]> {
+    const metadataPreparationQueue = fastq.promise(
+      this.prepareMetadataSyncGame.bind(this),
+      METADATA_GAME_PREPARATION_CONCURRENCY,
+    );
+    const preparationResults = await Promise.allSettled(games.map((game) => metadataPreparationQueue.push(game)));
+    const results = preparationResults.map((result) => {
+      if (result.status === "rejected") {
+        throw result.reason;
+      }
+      return result.value;
+    });
+    const preparedGames = results.flatMap((result) => (result.kind === "metadata" ? [result.game] : []));
+    const synchronisedIds = results.flatMap((result) => (result.kind === "synchronised" ? [result.id] : []));
 
     if (synchronisedIds.length) {
       await this.gameStore.markMetadataSynchronised(synchronisedIds);
