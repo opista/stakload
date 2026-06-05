@@ -4,7 +4,7 @@ import { Controller } from "@nestjs/common";
 import type { Library } from "@stakload/contracts/database/games";
 
 import { Logger } from "../logging/logging.service";
-import { SyncService } from "./sync.service";
+import { SyncService, type SyncOptions } from "./sync.service";
 
 @IpcController()
 @Controller()
@@ -30,10 +30,10 @@ export class SyncController {
   }
 
   @IpcOn()
-  syncGames() {
-    this.logger.log("Handling IPC message");
+  syncGames(options?: SyncOptions) {
+    this.logger.log("Handling IPC message", { options });
     try {
-      const result = this.syncService.sync();
+      const result = this.syncService.sync(options);
       this.logger.log("Sync operation initiated", { result });
       return result;
     } catch (error: unknown) {

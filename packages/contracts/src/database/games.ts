@@ -3,6 +3,13 @@
 // the impact of this will be
 export type Library = "battle-net" | "epic-game-store" | "gog" | "steam";
 
+export const GAME_METADATA_SOURCES = ["epic-game-store", "gog", "steam"] as const;
+
+export type GameMetadataSource = (typeof GAME_METADATA_SOURCES)[number];
+
+export const isGameMetadataSource = (value: string): value is GameMetadataSource =>
+  (GAME_METADATA_SOURCES as readonly string[]).includes(value);
+
 export enum ExternalGameSource {
   BattleNet = 99,
   EpicGames = 26,
@@ -121,6 +128,32 @@ export type GameStoreModel = {
   summary?: string;
   videos?: string[];
   websites?: Website[];
+};
+
+export type GameMetadata = Pick<
+  GameStoreModel,
+  | "ageRatings"
+  | "artworks"
+  | "cover"
+  | "developers"
+  | "firstReleaseDate"
+  | "gameModes"
+  | "genres"
+  | "igdbId"
+  | "multiplayerModes"
+  | "name"
+  | "platforms"
+  | "playerPerspectives"
+  | "publishers"
+  | "screenshots"
+  | "sortableName"
+  | "storyline"
+  | "summary"
+  | "videos"
+  | "websites"
+> & {
+  externalGameId: string;
+  source: GameMetadataSource;
 };
 
 export type DateRange =

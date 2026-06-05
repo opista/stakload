@@ -5,18 +5,7 @@ import { Injectable } from "@nestjs/common";
 
 import { Logger } from "../../../logging/logging.service";
 import workerPath from "./steam-sync.worker?modulePath";
-import {
-  SteamSyncWorkerRequest,
-  SteamSyncWorkerResponse,
-  SteamSyncWorkerGame,
-  SteamSyncWorkerMetadataResult,
-} from "./worker.types";
-
-type MetadataJobInput = {
-  apiBaseUrl: string;
-  batchSize?: number;
-  games: SteamSyncWorkerGame[];
-};
+import { SteamSyncWorkerRequest, SteamSyncWorkerResponse } from "./worker.types";
 
 type LibraryJobInput = {
   applicationPath: string;
@@ -24,7 +13,6 @@ type LibraryJobInput = {
   webApiKey: string;
 };
 
-const DEFAULT_METADATA_BATCH_SIZE = 10;
 const STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
 
 @Injectable()
@@ -112,8 +100,6 @@ export class SteamSyncWorkerService {
             }
             await handleSuccess(result);
             return;
-          case "metadata-batch-results":
-            return;
         }
       });
 
@@ -133,110 +119,4 @@ export class SteamSyncWorkerService {
     });
   }
 
-  async runMetadataJob(
-    input: MetadataJobInput,
-    onBatch: (results: SteamSyncWorkerMetadataResult[], progress: { processed: number; total: number }) => Promise<void>,
-  ) {
-    const jobId = randomUUID();
-    const worker = this.createWorker();
-
-    this.logger.debug("Starting Steam metadata worker job", {
-      batchSize: input.batchSize ?? DEFAULT_METADATA_BATCH_SIZE,
-      count: input.games.length,
-      jobId,
-    });
-
-    return await new Promise<void>((resolve, reject) => {
-      let messageQueue = Promise.resolve();
-      let settled = false;
-      let timeout: ReturnType<typeof setTimeout>;
-
-      const cleanup = async () => {
-        clearTimeout(timeout);
-        worker.removeAllListeners();
-        try {
-          await worker.terminate();
-        } catch (error) {
-          this.logger.error("Failed to terminate Steam metadata worker", error, { jobId });
-        }
-      };
-
-      const handleFailure = async (error: unknown) => {
-        if (settled) return;
-        settled = true;
-        await cleanup();
-        reject(error);
-      };
-
-      const handleSuccess = async () => {
-        if (settled) return;
-        settled = true;
-        await cleanup();
-        resolve();
-      };
-
-      const refreshTimeout = () => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-          void handleFailure(new Error("Steam metadata worker job timed out"));
-        }, STEAM_SYNC_WORKER_INACTIVITY_TIMEOUT_MS);
-      };
-
-      worker.on("error", handleFailure);
-      worker.on("exit", (code) => {
-        if (!settled) {
-          const message =
-            code === 0
-              ? "Steam metadata worker exited before completing"
-              : `Steam metadata worker exited with code ${code}`;
-          void handleFailure(new Error(message));
-        }
-      });
-      worker.on("message", (message: SteamSyncWorkerResponse) => {
-        if (message.jobId !== jobId) return;
-        refreshTimeout();
-
-        messageQueue = messageQueue
-          .then(async () => {
-            if (settled) return;
-
-            switch (message.type) {
-              case "job-started":
-                this.logger.debug("Steam metadata worker job started", { jobId });
-                return;
-              case "metadata-batch-results":
-                await onBatch(message.results, {
-                  processed: message.processed,
-                  total: message.total,
-                });
-                return;
-              case "job-failed":
-                throw new Error(message.error);
-              case "job-complete":
-                await handleSuccess();
-                return;
-              case "library-scan-results":
-                return;
-            }
-          })
-          .catch(handleFailure);
-      });
-
-      const message: SteamSyncWorkerRequest = {
-        apiBaseUrl: input.apiBaseUrl,
-        batchSize: input.batchSize ?? DEFAULT_METADATA_BATCH_SIZE,
-        games: input.games,
-        jobId,
-        kind: "metadata",
-        type: "run-metadata-job",
-      };
-
-      refreshTimeout();
-      try {
-        worker.postMessage(message);
-      } catch (error) {
-        void handleFailure(error);
-      }
-    });
-  }
 }

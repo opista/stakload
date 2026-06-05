@@ -2,7 +2,6 @@ import { forwardRef, Module } from "@nestjs/common";
 
 import { GameModule } from "../../game/game.module";
 import { resolvePlatformImplementation } from "../../platform/resolve-platform-implementation";
-import { StackloadAPIModule } from "../../stackload-api/stackload-api.module";
 import { WindowModule } from "../../window/window.module";
 import { GogApiService } from "./api/gog-api.service";
 import { GogClientService } from "./client/gog-client.service";
@@ -13,7 +12,7 @@ import { GogLibraryService } from "./sync/gog-sync.service";
 
 @Module({
   exports: [GogLibraryService, GogClientService],
-  imports: [forwardRef(() => GameModule), StackloadAPIModule, WindowModule],
+  imports: [forwardRef(() => GameModule), WindowModule],
   providers: [
     GogApiService,
     GogClientService,

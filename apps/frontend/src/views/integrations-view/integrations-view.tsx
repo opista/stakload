@@ -49,7 +49,7 @@ const GeneralSettings = () => {
   );
   const { t } = useTranslation();
 
-  const onSyncClick = () => window.ipc.sync.syncGames();
+  const onSyncClick = () => window.ipc.sync.syncGames({ metadataMode: "all" });
 
   return (
     <div className="flex flex-col gap-4">

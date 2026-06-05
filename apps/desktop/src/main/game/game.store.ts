@@ -320,6 +320,13 @@ export class GameStore {
     }
   }
 
+  async findUnarchivedGames() {
+    return (await this.repository.find({
+      order: { name: "ASC" },
+      where: { archivedAt: IsNull() },
+    })) as GameStoreModel[];
+  }
+
   async findUnsyncedGames() {
     return (await this.repository.find({
       order: { name: "ASC" },

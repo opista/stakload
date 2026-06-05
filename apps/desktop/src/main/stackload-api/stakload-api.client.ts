@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 
-import { ExternalGameSource } from "@stakload/contracts/database/games";
+import { GameMetadataSource } from "@stakload/contracts/database/games";
 
 import { Logger } from "../logging/logging.service";
-import { fetchGameMetadata } from "./fetch-game-metadata";
+import { fetchGamesMetadata } from "./fetch-games-metadata";
 import { getStakloadApiBaseUrl } from "./get-base-url";
 
 @Injectable()
@@ -12,17 +12,16 @@ export class StakloadApiClient {
     this.logger.setContext(this.constructor.name);
   }
 
-  async getGameMetadata(gameId: string, source: ExternalGameSource) {
-    this.logger.debug("Processing game metadata request", { gameId, source });
+  async getGamesMetadata(source: GameMetadataSource, externalGameIds: string[]) {
+    this.logger.debug("Processing games metadata request", {
+      count: externalGameIds.length,
+      source,
+    });
     try {
-      const metadata = await fetchGameMetadata(getStakloadApiBaseUrl(), gameId, source);
-      if (metadata === null) {
-        this.logger.warn("Game metadata not found", { gameId, source });
-      }
-      return metadata;
+      return await fetchGamesMetadata(getStakloadApiBaseUrl(), source, externalGameIds);
     } catch (error: unknown) {
-      this.logger.error("Failed to get game metadata", {
-        gameId,
+      this.logger.error("Failed to get games metadata", {
+        count: externalGameIds.length,
         source,
         statusText: error instanceof Error ? error.message : "Unknown error",
       });
