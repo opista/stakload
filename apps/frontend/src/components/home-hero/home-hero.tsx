@@ -1,4 +1,4 @@
-import { IconInfoCircle, IconPlayerPlay } from "@tabler/icons-react";
+import { IconDownload, IconInfoCircle, IconPlayerPlay } from "@tabler/icons-react";
 import { ReactNode } from "react";
 import { NavLink } from "react-router";
 
@@ -12,7 +12,17 @@ type HomeHeroProps = {
 };
 
 export const HomeHero = ({ children, game }: HomeHeroProps) => {
-  const screenshot = game.screenshots?.[0] ?? "https://images.igdb.com/igdb/image/upload/t_1080p/ar4jgj.webp";
+  const screenshot = game.screenshots?.[0] ?? game.cover ?? "https://images.igdb.com/igdb/image/upload/t_1080p/ar4jgj.webp";
+  const primaryActionIcon = game.isInstalled ? IconPlayerPlay : IconDownload;
+  const primaryActionLabel = game.isInstalled ? "Launch Game" : "Install Game";
+  const onPrimaryActionClick = () => {
+    if (game.isInstalled) {
+      window.ipc.game.launchGame(game._id);
+      return;
+    }
+
+    window.ipc.game.installGame(game._id);
+  };
 
   return (
     <div className="relative flex min-h-full w-full flex-col justify-end">
@@ -39,10 +49,11 @@ export const HomeHero = ({ children, game }: HomeHeroProps) => {
         <div className="mt-10 flex gap-4">
           <Button
             className="gap-3 px-8 py-4 text-sm font-black tracking-widest uppercase"
-            leftIcon={IconPlayerPlay}
+            leftIcon={primaryActionIcon}
+            onClick={onPrimaryActionClick}
             size="lg"
           >
-            Launch Game
+            {primaryActionLabel}
           </Button>
           <Button
             variant="ghost"

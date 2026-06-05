@@ -37,7 +37,18 @@ const TYPEORM_SAVE_CHUNK_SIZE = 100;
 
 const selectMap: Record<FieldsType, (keyof GameEntity)[] | undefined> = {
   all: undefined,
-  featured: ["_id", "genres", "name", "screenshots", "summary"],
+  featured: [
+    "_id",
+    "cover",
+    "genres",
+    "isFavourite",
+    "isInstalled",
+    "isQuickLaunch",
+    "library",
+    "name",
+    "screenshots",
+    "summary",
+  ],
   list: ["_id", "cover", "isFavourite", "isInstalled", "isQuickLaunch", "library", "name"],
 };
 

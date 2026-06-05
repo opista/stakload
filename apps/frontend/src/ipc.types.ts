@@ -29,7 +29,7 @@ export type EpicLibraryMeta = {
     namespace: string;
 };
 
-export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "genres" | "name" | "screenshots" | "summary">;
+export type FeaturedGameModel = Pick<GameStoreModel, "_id" | "cover" | "genres" | "isFavourite" | "isInstalled" | "isQuickLaunch" | "library" | "name" | "screenshots" | "summary">;
 
 export type GameFilters = {
     ageRatings?: string[];
