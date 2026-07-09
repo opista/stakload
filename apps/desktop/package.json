@@ -42,7 +42,7 @@
     "nest-winston": "^1.10.2",
     "protobufjs": "^8.6.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.28",
+    "typeorm": "^0.3.29",
     "vdf": "^0.0.2",
     "winreg": "^1.2.5",
     "winston": "^3.19.0",
